@@ -41,7 +41,7 @@ public abstract class ErrorGui extends JDialog implements ErrorStatus {
     private Thread reporter;
     private boolean done;
     
-    public ErrorGui(java.awt.Frame parent) {
+    public ErrorGui(Frame parent) {
 	super(parent, "Haven error!", true);
 	setMinimumSize(new Dimension(300, 100));
 	setResizable(false);

@@ -26,6 +26,8 @@
 
 package haven;
 
+import nurgling.NLoginScreen;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -162,7 +164,7 @@ public class Bootstrap implements UI.Receiver, UI.Runner {
 
     public UI.Runner run(UI ui) throws InterruptedException {
 	ui.setreceiver(this);
-	ui.bind(ui.root.add(new LoginScreen(hostname)), 1);
+	ui.bind(ui.root.add(new NLoginScreen(hostname)), 1);
 	String loginname = getpref("loginname", "");
 	boolean savepw = false;
 	transtoken();

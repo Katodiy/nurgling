@@ -42,11 +42,11 @@ import haven.render.Render;
 public class UI {
     public static int MOD_SHIFT = KeyMatch.S, MOD_CTRL = KeyMatch.C, MOD_META = KeyMatch.M, MOD_SUPER = KeyMatch.SUPER;
     public RootWidget root;
-    private final LinkedList<Grab> keygrab = new LinkedList<Grab>(), mousegrab = new LinkedList<Grab>();
+    public final LinkedList<Grab> keygrab = new LinkedList<Grab>(), mousegrab = new LinkedList<Grab>();
     private final Map<Integer, Widget> widgets = new TreeMap<Integer, Widget>();
-    private final Map<Widget, Integer> rwidgets = new HashMap<Widget, Integer>();
-    Environment env;
-    Receiver rcvr;
+    public final Map<Widget, Integer> rwidgets = new HashMap<Widget, Integer>();
+    public Environment env;
+    public Receiver rcvr;
     public Coord mc = Coord.z, lcc = Coord.z;
     public Session sess;
     public boolean modshift, modctrl, modmeta, modsuper;
@@ -179,6 +179,7 @@ public class UI {
 	synchronized(widgets) {
 	    widgets.put(id, w);
 	    rwidgets.put(w, id);
+		w.bound();
 	}
     }
 

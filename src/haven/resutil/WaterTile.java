@@ -41,7 +41,7 @@ import static haven.render.sl.Cons.*;
 public class WaterTile extends Tiler {
     public final int depth;
     private static final Pipe.Op bcol = new Light.PhongLight(true, new Color(128, 128, 128), new Color(255, 255, 255), new Color(0, 0, 0), new Color(0, 0, 0), 0);
-    public final Tiler.MCons bottom;
+    public final MCons bottom;
     
     public static class Bottom extends MapMesh.Hooks {
 	final MapMesh m;
@@ -314,7 +314,7 @@ public class WaterTile extends Tiler {
     private static final Pipe.Op botmat = Pipe.Op.compose(waterfog, new States.DepthBias(4, 4));
 
     public static class ObFog extends State implements InstanceBatch.AttribState {
-	public static final Slot<ObFog> slot = new Slot<>(State.Slot.Type.DRAW, ObFog.class)
+	public static final Slot<ObFog> slot = new Slot<>(Slot.Type.DRAW, ObFog.class)
 	    .instanced(new Instancable<ObFog>() {
 		    final Instancer<ObFog> nil = Instancer.dummy();
 		    public Instancer<ObFog> instid(ObFog st) {
@@ -364,7 +364,7 @@ public class WaterTile extends Tiler {
 	public Tiler create(int id, Tileset set) {
 	    int a = 0;
 	    int depth = (Integer)set.ta[a++];
-	    Tiler.MCons bottom = new GroundTile(id, set);
+	    MCons bottom = new GroundTile(id, set);
 	    while(a < set.ta.length) {
 		Object[] desc = (Object[])set.ta[a++];
 		String p = (String)desc[0];
@@ -372,14 +372,14 @@ public class WaterTile extends Tiler {
 		    Resource bres = set.getres().pool.load((String)desc[1], (Integer)desc[2]).get();
 		    Tileset ts = bres.flayer(Tileset.class);
 		    Tiler b = ts.tfac().create(id, ts);
-		    bottom = (Tiler.MCons)b;
+		    bottom = (MCons)b;
 		}
 	    }
 	    return(new WaterTile(id, bottom, depth));
 	}
     }
 
-    public WaterTile(int id, Tiler.MCons bottom, int depth) {
+    public WaterTile(int id, MCons bottom, int depth) {
 	super(id);
 	this.bottom = bottom;
 	this.depth = depth;

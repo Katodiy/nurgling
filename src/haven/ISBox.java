@@ -26,11 +26,13 @@
 
 package haven;
 
+import nurgling.NISBox;
+
 public class ISBox extends Widget implements DTarget {
     static Tex bg = Resource.loadtex("gfx/hud/bosq");
     static Text.Foundry lf;
     private Indir<Resource> res;
-    private Text label;
+    protected Text label;
     static {
         lf = new Text.Foundry(Text.fraktur, 22, java.awt.Color.WHITE);
         lf.aa = true;
@@ -44,7 +46,7 @@ public class ISBox extends Widget implements DTarget {
 		res = Resource.remote().load((String)args[0]);
 	    else
 		res = ui.sess.getres((Integer)args[0]);
-	    return(new ISBox(res, (Integer)args[1], (Integer)args[2], (Integer)args[3]));
+	    return(new NISBox(res, (Integer)args[1], (Integer)args[2], (Integer)args[3]));
 	}
     }
     

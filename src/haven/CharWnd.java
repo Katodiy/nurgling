@@ -31,8 +31,12 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.function.*;
-import haven.resutil.FoodInfo;
-import haven.resutil.Curiosity;
+
+import nurgling.NCuriosity;
+import nurgling.NFoodInfo;
+import nurgling.NQuestInfo;
+
+import static haven.CharWnd.Constipations.*;
 import static haven.PUtils.*;
 
 /* XXX: There starts to seem to be reason to split the while character
@@ -43,6 +47,7 @@ public class CharWnd extends Window {
     public static final Text.Furnace catf = new BlurFurn(new TexFurn(new Text.Foundry(Text.fraktur, 25).aa(true), Window.ctex), UI.scale(3), UI.scale(2), new Color(96, 48, 0));
     public static final Text.Furnace failf = new BlurFurn(new TexFurn(new Text.Foundry(Text.fraktur, 25).aa(true), Resource.loadimg("gfx/hud/fontred")), UI.scale(3), UI.scale(2), new Color(96, 48, 0));
     public static final Text.Foundry attrf = new Text.Foundry(Text.fraktur, 18).aa(true);
+	public static final Text.Foundry attrf2 = new Text.Foundry(Text.sans, 18).aa(true);
     public static final Color debuff = new Color(255, 128, 128);
     public static final Color buff = new Color(128, 255, 128);
     public static final Color tbuff = new Color(128, 128, 255);
@@ -341,9 +346,9 @@ public class CharWnd extends Window {
 	    if(tip != lasttip) {
 		for(El el : els)
 		    el.hl = false;
-		FoodInfo finf;
+		NFoodInfo finf;
 		try {
-		    finf = (tip == null)?null:ItemInfo.find(FoodInfo.class, tip.info());
+		    finf = (tip == null)?null:ItemInfo.find(NFoodInfo.class, tip.info());
 		} catch(Loading l) {
 		    finf = null;
 		}
@@ -638,7 +643,7 @@ public class CharWnd extends Window {
 
     public static class StudyInfo extends Widget {
 	public final Widget study;
-	public int texp, tw, tenc;
+	public int texp, tw, tenc, tlph;
 
 	private StudyInfo(Coord sz, Widget study) {
 	    super(sz);
@@ -652,25 +657,30 @@ public class CharWnd extends Window {
 	    plbl = add(new Label("Experience cost:"), pval.pos("bl").adds(0, 2).xs(2));
 	    pval = adda(new RLabel<Integer>(() -> tenc, Utils::thformat, new Color(255, 255, 192, 255)),
 			plbl.pos("br").adds(0, 2).x(sz.x - UI.scale(2)), 1.0, 0.0);
-	    pval = adda(new RLabel<Integer>(() -> texp, Utils::thformat, new Color(192, 192, 255, 255)),
-			pos("cbr").subs(2, 2), 1.0, 1.0);
-	    plbl = adda(new Label("Learning points:"), pval.pos("ul").subs(0, 2).xs(2), 0.0, 1.0);
+
+	    plbl = add(new Label("Learning points:"), pval.pos("bl").adds(0, 2).xs(2));
+		pval = adda(new RLabel<Integer>(() -> texp, Utils::thformat, new Color(192, 192, 255, 255)),
+				plbl.pos("br").adds(0, 2).x(sz.x - UI.scale(2)), 1.0, 0.0);
+		plbl = add(new Label("LP/hour:"), pval.pos("bl").adds(0, 2).xs(2));
+		pval = adda(new RLabel<Integer>(() -> tlph, Utils::thformat, new Color(192, 255, 255, 255)),
+				plbl.pos("br").adds(0, 2).x(sz.x - UI.scale(2)), 1.0, 0.0);
 	}
 
 	private void upd() {
-	    int texp = 0, tw = 0, tenc = 0;
+	    int texp = 0, tw = 0, tenc = 0, tlph = 0;
 	    for(GItem item : study.children(GItem.class)) {
 		try {
-		    Curiosity ci = ItemInfo.find(Curiosity.class, item.info());
+		    NCuriosity ci = ItemInfo.find(NCuriosity.class, item.info());
 		    if(ci != null) {
 			texp += ci.exp;
 			tw += ci.mw;
 			tenc += ci.enc;
+			tlph += ci.lph;
 		    }
 		} catch(Loading l) {
 		}
 	    }
-	    this.texp = texp; this.tw = tw; this.tenc = tenc;
+	    this.texp = texp; this.tw = tw; this.tenc = tenc; this.tlph = NCuriosity.lph(tlph);
 	}
 
 	public void tick(double dt) {
@@ -701,7 +711,7 @@ public class CharWnd extends Window {
 	}
     }
 
-    public static final PUtils.Convolution iconfilter = new PUtils.Lanczos(3);
+    public static final Convolution iconfilter = new Lanczos(3);
     public class Skill {
 	public final String nm;
 	public final Indir<Resource> res;
@@ -1147,10 +1157,28 @@ public class CharWnd extends Window {
 			}
 			ncond.add(cond);
 		    }
-		    this.cond = ncond.toArray(new Condition[0]);
-		    refresh();
-		    if(cqv != null)
-			cqv.update();
+
+			if(title!= null) {
+				if (!NQuestInfo.condData.containsKey(title))
+					NQuestInfo.condData.put(title, ncond);
+				else {
+					for (Condition c : ncond) {
+						for (Condition qc : NQuestInfo.condData.get(title)) {
+							if (c.desc.contains(qc.desc)) {
+								qc.done = c.done;
+								break;
+							}
+						}
+					}
+				}
+				NQuestInfo.update = true;
+			}
+			if(NQuestInfo.isReady.get()==1) {
+				this.cond = ncond.toArray(new Condition[0]);
+				refresh();
+				if (cqv != null)
+					cqv.update();
+			}
 		} else {
 		    super.uimsg(msg, args);
 		}
@@ -1293,6 +1321,7 @@ public class CharWnd extends Window {
 		    }
 		}
 		glowt = 0.0;
+		NQuestInfo.update(info.title(),c);
 	    }
 	}
 
@@ -1329,7 +1358,7 @@ public class CharWnd extends Window {
 		    }
 		    if(cond[i].wdata != null) {
 			Indir<Resource> wres = ui.sess.getres((Integer)cond[i].wdata[0]);
-			nw[i] = (CondWidget)wres.get().getcode(Widget.Factory.class, true).create(ui, new Object[] {cond[i]});
+			nw[i] = (CondWidget)wres.get().getcode(Factory.class, true).create(ui, new Object[] {cond[i]});
 		    } else {
 			nw[i] = new DefaultCond(cont, cond[i]);
 		    }
@@ -1856,7 +1885,7 @@ public class CharWnd extends Window {
     }
 
     public static <T extends Widget> T settip(T wdg, String resnm) {
-	wdg.tooltip = new Widget.PaginaTip(new Resource.Spec(Resource.local(), resnm));
+	wdg.tooltip = new PaginaTip(new Resource.Spec(Resource.local(), resnm));
 	return(wdg);
     }
 
@@ -2227,6 +2256,7 @@ public class CharWnd extends Window {
 		if(args[a] instanceof byte[])
 		    t.sdt = new MessageBuf((byte[])args[a++]);
 		double m = ((Number)args[a++]).doubleValue();
+		ui.sess.character.constipation.update(t, m);
 		cons.update(t, m);
 	    }
 	} else if(nm == "csk") {
@@ -2307,4 +2337,36 @@ public class CharWnd extends Window {
 	    super.uimsg(nm, args);
 	}
     }
+
+	public static Color color(double a) {
+		return (a > 1.0)?buffed:Utils.blendcol(none, full, a);
+	}
+
+	public Glob.CAttr findattr(String name) {
+		for (SAttr skill : this.skill) {
+			if(name.equals(skill.attr.nm)) {
+				return skill.attr;
+			}
+		}
+		for (Attr stat : base) {
+			if(name.equals(stat.attr.nm)) {
+				return stat.attr;
+			}
+		}
+		return null;
+	}
+
+	public int getObjectiveIndex(String name) {
+		Set<Quest.Box> wdgs = children(Quest.Box.class);
+		if(!wdgs.isEmpty()) {
+			for (Quest.Box wdg : wdgs) {
+				for (int i = 0; i < wdg.cond.length; i++) {
+					if(wdg.cond[i].desc.contains(name)) {
+						return i;
+					}
+				}
+			}
+		}
+		return 0;
+	}
 }

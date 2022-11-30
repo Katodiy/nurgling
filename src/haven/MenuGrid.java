@@ -32,26 +32,30 @@ import java.awt.event.KeyEvent;
 import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
 import haven.Resource.AButton;
+import nurgling.NMenuGrid;
+
 import java.util.*;
 
 public class MenuGrid extends Widget implements KeyBinding.Bindable {
     public final static Tex bg = Resource.loadtex("gfx/hud/invsq");
     public final static Coord bgsz = bg.sz().add(-UI.scale(1), -UI.scale(1));
     public final static RichText.Foundry ttfnd = new RichText.Foundry(TextAttribute.FAMILY, "SansSerif", TextAttribute.SIZE, UI.scale(10f));
-    private static Coord gsz = new Coord(4, 4);
+    protected static Coord gsz = new Coord(4, 4);
     public final Set<Pagina> paginae = new HashSet<Pagina>();
     public Pagina cur;
     private Pagina dragging;
-    private Collection<PagButton> curbtns = Collections.emptyList();
-    private PagButton pressed, layout[][] = new PagButton[gsz.x][gsz.y];
+    public Collection<PagButton> curbtns = Collections.emptyList();
+    private PagButton pressed;
+	protected PagButton[][] layout = new PagButton[gsz.x][gsz.y];
     private UI.Grab grab;
-    private int curoff = 0;
-    private boolean recons = true, showkeys = false;
+    protected int curoff = 0;
+    protected boolean recons = true;
+	protected boolean showkeys = false;
 	
     @RName("scm")
     public static class $_ implements Factory {
 	public Widget create(UI ui, Object[] args) {
-	    return(new MenuGrid());
+	    return(new NMenuGrid());
 	}
     }
 
@@ -149,7 +153,7 @@ public class MenuGrid extends Widget implements KeyBinding.Bindable {
 		info = ItemInfo.buildinfo(this, pag.rawinfo);
 	    return(info);
 	}
-	private static final OwnerContext.ClassResolver<PagButton> ctxr = new OwnerContext.ClassResolver<PagButton>()
+	private static final ClassResolver<PagButton> ctxr = new ClassResolver<PagButton>()
 	    .add(Glob.class, p -> p.pag.scm.ui.sess.glob)
 	    .add(Session.class, p -> p.pag.scm.ui.sess);
 	public <T> T context(Class<T> cl) {return(ctxr.context(cl, this));}
@@ -244,7 +248,7 @@ public class MenuGrid extends Widget implements KeyBinding.Bindable {
 	    return(res.get());
 	}
 
-	public Resource.AButton act() {
+	public AButton act() {
 	    return(res().layer(Resource.action));
 	}
 
@@ -279,7 +283,7 @@ public class MenuGrid extends Widget implements KeyBinding.Bindable {
 	}
     }
 
-    private boolean cons(Pagina p, Collection<PagButton> buf) {
+    protected boolean cons(Pagina p, Collection<PagButton> buf) {
 	Pagina[] cp = new Pagina[0];
 	Collection<Pagina> open, close = new HashSet<Pagina>();
 	synchronized(paginae) {
@@ -328,7 +332,7 @@ public class MenuGrid extends Widget implements KeyBinding.Bindable {
 	super(bgsz.mul(gsz).add(UI.scale(1), UI.scale(1)));
     }
 
-    private void updlayout() {
+    protected void updlayout() {
 	synchronized(paginae) {
 	    List<PagButton> cur = new ArrayList<>();
 	    recons = !cons(this.cur, cur);

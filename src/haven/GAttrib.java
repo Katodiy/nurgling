@@ -44,7 +44,7 @@ public abstract class GAttrib {
     }
 
     /* Private to Gob.java */
-    Collection<RenderTree.Slot> slots;
+    protected Collection<RenderTree.Slot> slots;
     public void added(RenderTree.Slot slot) {
 	if(slots == null)
 	    slots = new ArrayList<>(1);

@@ -50,7 +50,7 @@ public class Button extends SIWidget {
     public BufferedImage cont;
     public Runnable action = null;
     static Text.Foundry tf = new Text.Foundry(Text.serif.deriveFont(Font.BOLD, UI.scale(12f))).aa(true);
-    static Text.Furnace nf = new PUtils.BlurFurn(new PUtils.TexFurn(tf, Window.ctex), 1, 1, new Color(80, 40, 0));
+    public static Text.Furnace nf = new PUtils.BlurFurn(new PUtils.TexFurn(tf, Window.ctex), 1, 1, new Color(80, 40, 0));
     private boolean a = false, dis = false;
     private UI.Grab d = null;
 	
@@ -226,4 +226,9 @@ public class Button extends SIWidget {
 	}
 	return(false);
     }
+
+	public void setText(String value){
+		text = Button.nf.render(value);
+		cont = text.img;
+	}
 }

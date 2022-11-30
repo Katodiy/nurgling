@@ -83,7 +83,7 @@ public class RUtils {
 	}
     }
 
-    public abstract static class StateNode<R extends RenderTree.Node> implements Node {
+    public abstract static class StateNode<R extends Node> implements Node {
 	public final R r;
 	private final Collection<Slot> slots = new ArrayList<>(1);
 	private Op cstate;
@@ -116,7 +116,7 @@ public class RUtils {
 	    slots.remove(slot);
 	}
 
-	public static <R extends RenderTree.Node> StateNode from(R r, Supplier<? extends Op> st) {
+	public static <R extends Node> StateNode from(R r, Supplier<? extends Op> st) {
 	    return(new StateNode<R>(r) {
 		    protected Op state() {return(st.get());}
 		});
@@ -127,7 +127,7 @@ public class RUtils {
 	}
     }
 
-    public static abstract class StateTickNode<R extends RenderTree.Node> extends StateNode<R> implements TickList.TickNode, TickList.Ticking {
+    public static abstract class StateTickNode<R extends Node> extends StateNode<R> implements TickList.TickNode, TickList.Ticking {
 	public StateTickNode(R r) {
 	    super(r);
 	}
@@ -137,7 +137,7 @@ public class RUtils {
 	    update();
 	}
 
-	public static <R extends RenderTree.Node> StateTickNode from(R r, Supplier<? extends Op> st) {
+	public static <R extends Node> StateTickNode from(R r, Supplier<? extends Op> st) {
 	    return(new StateTickNode<R>(r) {
 		    protected Op state() {return(st.get());}
 		});

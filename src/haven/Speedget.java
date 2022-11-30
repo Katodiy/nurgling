@@ -26,6 +26,8 @@
 
 package haven;
 
+import nurgling.NUtils;
+
 import java.awt.event.KeyEvent;
 
 public class Speedget extends Widget {
@@ -117,7 +119,7 @@ public class Speedget extends Widget {
     }
 
     public static final KeyBinding kb_speedup = KeyBinding.get("speed-up", KeyMatch.forchar('R', KeyMatch.S | KeyMatch.C | KeyMatch.M, KeyMatch.C));
-    public static final KeyBinding kb_speeddn = KeyBinding.get("speed-down", KeyMatch.forchar('R', KeyMatch.S | KeyMatch.C | KeyMatch.M, KeyMatch.S | KeyMatch.C));
+    public static final KeyBinding kb_speeddn = KeyBinding.get("speed-down", KeyMatch.forchar('R', KeyMatch.S | KeyMatch.C | KeyMatch.M,  KeyMatch.S));
     public static final KeyBinding[] kb_speeds = {
 	KeyBinding.get("speed-set/0", KeyMatch.nil),
 	KeyBinding.get("speed-set/1", KeyMatch.nil),
@@ -144,4 +146,9 @@ public class Speedget extends Widget {
 	}
 	return(super.globtype(key, ev));
     }
+	@Override
+	public void bound() {
+		super.bound();
+		NUtils.setSpeedget(this);
+	}
 }

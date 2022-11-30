@@ -27,6 +27,8 @@
 package haven.resutil;
 
 import haven.*;
+import nurgling.NCuriosity;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -53,7 +55,7 @@ public class Curiosity extends ItemInfo.Tip implements GItem.ColorInfo {
 
     static String[] units = {"s", "m", "h", "d"};
     static int[] div = {60, 60, 24};
-    static String timefmt(int time) {
+    protected static String timefmt(int time) {
 	int[] vals = new int[units.length];
 	vals[0] = time;
 	for(int i = 0; i < div.length; i++) {
@@ -87,8 +89,8 @@ public class Curiosity extends ItemInfo.Tip implements GItem.ColorInfo {
 
     public Color olcol() {
 	Object tip = (ui == null) ? null : ui.lasttip;
-	if(tip instanceof ItemInfo.InfoTip) {
-	    Curiosity that = ItemInfo.find(Curiosity.class, ((ItemInfo.InfoTip)tip).info());
+	if(tip instanceof InfoTip) {
+	    NCuriosity that = ItemInfo.find(NCuriosity.class, ((InfoTip)tip).info());
 	    if(that != null) {
 		double crate = (double)that.exp / (double)that.time;
 		double trate = (double)this.exp / (double)this.time;

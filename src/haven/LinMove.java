@@ -109,4 +109,10 @@ public class LinMove extends Moving {
 		lm.e = Double.NaN;
 	}
     }
+
+	@Override
+	public Coord3f gett() {
+		double mt = Double.isNaN(e) ? lt + MAXOVER : e;
+		return (gob.glob.map.getzp(s.add(v.mul(mt))));
+	}
 }

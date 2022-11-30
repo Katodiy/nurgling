@@ -42,12 +42,12 @@ public abstract class Tiler {
     
     public static class MPart {
 	public Coord lc, gc;
-	public Surface.Vertex[] v;
+	public Vertex[] v;
 	public float[] tcx, tcy;
 	public int[] f;
 	public Pipe.Op mat = null;
 
-	public MPart(Coord lc, Coord gc, Surface.Vertex[] v, float[] tcx, float[] tcy, int[] f) {
+	public MPart(Coord lc, Coord gc, Vertex[] v, float[] tcx, float[] tcy, int[] f) {
 	    this.lc = lc; this.gc = gc; this.v = v; this.tcx = tcx; this.tcy = tcy; this.f = f;
 	}
 
@@ -105,7 +105,7 @@ public abstract class Tiler {
 
 	public static final float[] ctcx = {0, 0, 1, 1}, ctcy = {0, 1, 1, 0};
 	public static final int[] rdiag = {0, 1, 2, 0, 2, 3}, ldiag = {0, 1, 3, 1, 2, 3};
-	public static MPart splitquad(Coord lc, Coord gc, Surface.Vertex[] corners, boolean diag) {
+	public static MPart splitquad(Coord lc, Coord gc, Vertex[] corners, boolean diag) {
 	    return(new MPart(lc, gc, corners, ctcx, ctcy, diag?ldiag:rdiag));
 	}
     }

@@ -73,8 +73,8 @@ public abstract class GSprite implements Drawn {
     public static GSprite create(Owner owner, Resource res, Message sdt) {
 	{
 	    Factory f = res.getcode(Factory.class, false);
-	    if(f != null)
-		return(f.create(owner, res, sdt));
+	    if(f != null && owner!=null)
+			return(f.create(owner, res, sdt));
 	}
 	for(Factory f : factories) {
 	    GSprite ret = f.create(owner, res, sdt);

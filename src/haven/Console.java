@@ -29,7 +29,7 @@ package haven;
 import java.util.*;
 import java.io.*;
 
-public class Console {
+public class  Console {
     static private Map<String, Command> scommands = new TreeMap<String, Command>();
     private Map<String, Command> commands = new TreeMap<String, Command>();
     private Collection<Directory> dirs = new LinkedList<Directory>();

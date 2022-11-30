@@ -26,6 +26,13 @@
 
 package haven;
 
+import haven.res.ui.tt.q.quality.Quality;
+import haven.resutil.Curiosity;
+import haven.resutil.FoodInfo;
+import nurgling.NCuriosity;
+import nurgling.NFoodInfo;
+import nurgling.NGItem;
+
 import java.util.*;
 import java.util.function.*;
 import java.lang.reflect.*;
@@ -185,7 +192,10 @@ public abstract class ItemInfo {
 	}
 
 	public Name(Owner owner, String str) {
-	    this(owner, Text.render(str));
+				this(owner, Text.render(str));
+		if(str.contains("kg of") && owner instanceof NGItem){
+			((NGItem)owner).quantity = Double.parseDouble(str.substring(0,str.indexOf("kg")));
+		}
 	}
 
 	public BufferedImage tipimg() {
@@ -209,8 +219,11 @@ public abstract class ItemInfo {
 	    public ItemInfo build(Owner owner, Object... args) {
 		if(owner instanceof SpriteOwner) {
 		    GSprite spr = ((SpriteOwner)owner).sprite();
-		    if(spr instanceof Dynamic)
-			return(new Name(owner, ((Dynamic)spr).name()));
+		    if(spr != null) {
+				if (spr instanceof Dynamic)
+					return (new Name(owner, ((Dynamic) spr).name()));
+			}
+			return null;
 		}
 		if(!(owner instanceof ResOwner))
 		    return(null);
@@ -247,7 +260,16 @@ public abstract class ItemInfo {
     public static class Contents extends Tip {
 	public final List<ItemInfo> sub;
 	private static final Text.Line ch = Text.render("Contents:");
-	
+
+	public double getQuality(){
+		for(ItemInfo inf : sub){
+			if(inf instanceof Quality){
+				return ((Quality)inf).q;
+			}
+		}
+		return -1;
+	}
+
 	public Contents(Owner owner, List<ItemInfo> sub) {
 	    super(owner);
 	    this.sub = sub;
@@ -353,28 +375,54 @@ public abstract class ItemInfo {
     public static List<ItemInfo> buildinfo(Owner owner, Raw raw) {
 	List<ItemInfo> ret = new ArrayList<ItemInfo>();
 	for(Object o : raw.data) {
-	    if(o instanceof Object[]) {
-		Object[] a = (Object[])o;
-		Resource ttres;
-		if(a[0] instanceof Integer) {
-		    ttres = owner.glob().sess.getres((Integer)a[0]).get();
-		} else if(a[0] instanceof Resource) {
-		    ttres = (Resource)a[0];
-		} else if(a[0] instanceof Indir) {
-		    ttres = (Resource)((Indir)a[0]).get();
-		} else {
-		    throw(new ClassCastException("Unexpected info specification " + a[0].getClass()));
+		try {
+			if(o instanceof Object[]) {
+				Object[] a = (Object[])o;
+				Resource ttres;
+				if(a[0] instanceof Integer) {
+					ttres = owner.glob().sess.getres((Integer)a[0]).get();
+				} else if(a[0] instanceof Resource) {
+					ttres = (Resource)a[0];
+				} else if(a[0] instanceof Indir) {
+					ttres = (Resource)((Indir)a[0]).get();
+				} else {
+					throw(new ClassCastException("Unexpected info specification " + a[0].getClass()));
+				}
+				InfoFactory f = ttres.getcode(InfoFactory.class, true);
+			ItemInfo inf = null;
+			try {
+				if(owner instanceof NGItem){
+					while (((NGItem) owner).spr() == null) {
+					}
+				}
+				inf = f.build(owner, raw, a);
+				if(inf instanceof Name){
+					if(inf.owner instanceof NGItem) {
+						if (((NGItem) inf.owner).quantity != -1)
+							ret.add(new NGItem.Quantity(owner,((NGItem) inf.owner).quantity));
+					}
+				}
+				if(inf instanceof FoodInfo){
+					inf = new NFoodInfo((FoodInfo) inf);
+				}else if(inf instanceof Curiosity){
+					inf = new NCuriosity((Curiosity)inf);
+				}
+			}catch(Exception e){
+//				e.printStackTrace();
+			}
+			if (inf != null)
+				ret.add(inf);
+		} else if(o instanceof String) {
+				ret.add(new AdHoc(owner, (String)o));
+			} else {
+				throw(new ClassCastException("Unexpected object type " + o.getClass() + " in item info array."));
+			}
+		}catch (RuntimeException e){
+//			e.printStackTrace();
 		}
-		InfoFactory f = ttres.getcode(InfoFactory.class, true);
-		ItemInfo inf = f.build(owner, raw, a);
-		if(inf != null)
-		    ret.add(inf);
-	    } else if(o instanceof String) {
-		ret.add(new AdHoc(owner, (String)o));
-	    } else {
-		throw(new ClassCastException("Unexpected object type " + o.getClass() + " in item info array."));
-	    }
 	}
+	if(owner instanceof GItem)
+		ret.add(new ResourcePath(owner));
 	return(ret);
     }
 
@@ -414,10 +462,10 @@ public abstract class ItemInfo {
 	public R get() {
 	    try {
 		List<ItemInfo> info = from.get();
-		if(info != forinfo) {
+//		if(info != forinfo) {
 		    save = data.apply(info);
 		    forinfo = info;
-		}
+//		}
 		return(save.get());
 	    } catch(Loading l) {
 		return(null);
@@ -447,4 +495,19 @@ public abstract class ItemInfo {
     public static interface InfoTip {
 	public List<ItemInfo> info();
     }
+
+	public static class ResourcePath extends Tip {
+		public ResourcePath(Owner owner) {
+			super(owner);
+
+		}
+
+		public BufferedImage tipimg() {
+			return ( RichText.render(((GItem)owner).getres().name, UI.scale(200)).img);
+		}
+
+		public int order() {
+			return (10000);
+		}
+	}
 }

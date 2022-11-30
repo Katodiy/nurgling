@@ -32,7 +32,7 @@ import java.lang.ref.*;
 import haven.render.*;
 
 /* XXX: This whole file is a bit of a mess and could use a bit of a
- * rewrite some rainy day. Synchronization especially is quite hairy. */
+ * rewrite some rainy day. Synchronization eNUtilsly is quite hairy. */
 public class MCache implements MapSource {
     public static final Coord2d tilesz = Coord2d.of(11, 11);
     public static final Coord tilesz2 = tilesz.round(); /* XXX: Remove me in due time. */
@@ -65,13 +65,13 @@ public class MCache implements MapSource {
 	    this.map = map;
 	}
 
-	public void waitfor(Runnable callback, Consumer<Waitable.Waiting> reg) {
+	public void waitfor(Runnable callback, Consumer<Waiting> reg) {
 	    synchronized(map.grids) {
 		if(map.grids.containsKey(gc)) {
-		    reg.accept(Waitable.Waiting.dummy);
+		    reg.accept(Waiting.dummy);
 		    callback.run();
 		} else {
-		    reg.accept(new Waitable.Checker(callback) {
+		    reg.accept(new Checker(callback) {
 			    protected Object monitor() {return(map.grids);}
 			    double st = Utils.rtime();
 			    protected boolean check() {
@@ -81,7 +81,7 @@ public class MCache implements MapSource {
 				}
 				return(map.grids.containsKey(gc));
 			    }
-			    protected Waitable.Waiting add() {return(map.gridwait.add(this));}
+			    protected Waiting add() {return(map.gridwait.add(this));}
 			}.addi());
 		}
 	    }
@@ -998,4 +998,8 @@ public class MCache implements MapSource {
 	    }
 	}
     }
+
+	public boolean isLoaded(){
+		return cached !=null;
+	}
 }

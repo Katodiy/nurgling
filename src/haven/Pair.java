@@ -28,7 +28,7 @@ package haven;
 
 public class Pair<A, B> {
     public final A a;
-    public final B b;
+    public B b;
 
     public Pair(A a, B b) {
 	this.a = a;

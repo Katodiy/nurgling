@@ -36,6 +36,9 @@ import haven.MapFile.GridInfo;
 import haven.MapFile.Marker;
 import haven.MapFile.PMarker;
 import haven.MapFile.SMarker;
+import nurgling.NGob;
+import nurgling.NMiniMap;
+
 import static haven.MCache.cmaps;
 import static haven.MCache.tilesz;
 import static haven.OCache.posres;
@@ -319,11 +322,11 @@ public class MiniMap extends Widget {
 	public static final Resource.Image flagbg, flagfg;
 	public static final Coord flagcc;
 	public final Marker m;
-	public final Text tip;
+	public Text tip;
 	public Area hit;
-	private Resource.Image img;
+	protected Resource.Image img;
 	private Coord imgsz;
-	private Coord cc;
+	protected Coord cc;
 
 	static {
 	    Resource flag = Resource.local().loadwait("gfx/hud/mmap/flag");
@@ -450,16 +453,16 @@ public class MiniMap extends Widget {
 	    return(ret.get());
 	}
 
-	private Collection<DisplayMarker> markers = Collections.emptyList();
+	private Collection<NMiniMap.NDisplayMarker> markers = Collections.emptyList();
 	private int markerseq = -1;
-	public Collection<DisplayMarker> markers(boolean remark) {
+	public Collection<NMiniMap.NDisplayMarker> markers(boolean remark) {
 	    if(remark && (markerseq != file.markerseq)) {
 		if(file.lock.readLock().tryLock()) {
 		    try {
-			ArrayList<DisplayMarker> marks = new ArrayList<>();
+			ArrayList<NMiniMap.NDisplayMarker> marks = new ArrayList<>();
 			for(Marker mark : file.markers) {
 			    if((mark.seg == this.seg.id) && mapext.contains(mark.tc))
-				marks.add(new DisplayMarker(mark));
+				marks.add(new NMiniMap.NDisplayMarker(mark));
 			}
 			marks.trimToSize();
 			markers = (marks.size() == 0) ? Collections.emptyList() : marks;
@@ -473,7 +476,7 @@ public class MiniMap extends Widget {
 	}
     }
 
-    private float scalef() {
+    protected float scalef() {
 	return(UI.unscale((float)(1 << dlvl)));
     }
 
@@ -505,15 +508,25 @@ public class MiniMap extends Widget {
 	    dtext = Area.sized(next.ul.mul(zmaps), next.sz().mul(zmaps));
 	}
 	dloc = loc;
-	if(file.lock.readLock().tryLock()) {
-	    try {
-		for(Coord c : dgext) {
-		    if(display[dgext.ri(c)] == null)
-			display[dgext.ri(c)] = new DisplayGrid(dloc.seg, c, dlvl, dloc.seg.grid(dlvl, c.mul(1 << dlvl)));
+	boolean isUpdated = false;
+	while(!isUpdated) {
+		if (file.lock.readLock().tryLock()) {
+			try {
+				for (Coord c : dgext) {
+					if (display[dgext.ri(c)] == null)
+						display[dgext.ri(c)] = new DisplayGrid(dloc.seg, c, dlvl, dloc.seg.grid(dlvl, c.mul(1 << dlvl)));
+				}
+			} finally {
+				file.lock.readLock().unlock();
+				isUpdated = true;
+			}
+		}else{
+			try {
+				Thread.sleep(5);
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
 		}
-	    } finally {
-		file.lock.readLock().unlock();
-	    }
 	}
 	for(DisplayIcon icon : icons)
 	    icon.dispupdate();
@@ -580,7 +593,13 @@ public class MiniMap extends Widget {
 				disp.col = BuddyWnd.gc[kin.group];
 			    ret.add(disp);
 			}
-		    }
+//			if((conf != null) && conf.ring){
+//				gob.noteImg = icon.img().tex;
+//				gob.addTag(NGob.Tags.notified);
+//			}else{
+//				gob.removeTag(NGob.Tags.notified);
+//			}
+		}
 		} catch(Loading l) {}
 	    }
 	}
@@ -607,14 +626,6 @@ public class MiniMap extends Widget {
 
     public void remparty() {
 	Map<Long, Party.Member> memb = ui.sess.glob.party.memb;
-	if(memb.isEmpty()) {
-	    /* XXX: This is a bit of a hack to avoid unknown-player
-	     * notifications only before initial party information has
-	     * been received. Not sure if there's a better
-	     * solution. */
-	    icons.clear();
-	    return;
-	}
 	for(Iterator<DisplayIcon> it = icons.iterator(); it.hasNext();) {
 	    DisplayIcon icon = it.next();
 	    if(memb.containsKey(icon.gob.id))

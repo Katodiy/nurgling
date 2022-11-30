@@ -458,7 +458,7 @@ public class VorbisFile{
   // fetch and process a packet.  Handles the case where we're at a
   // bitstream boundary and dumps the decoding machine.  If the decoding
   // machine is unloaded, it loads it.  It also keeps pcm_offset up to
-  // date (seek and read both use this.  seek uses a special hack with
+  // date (seek and read both use this.  seek uses a NUtils hack with
   // readp). 
   //
   // return: -1) hole in the data (lost packet) 
@@ -1335,7 +1335,7 @@ public class VorbisFile{
     return vc;
   }
 
-  public void close() throws java.io.IOException{
+  public void close() throws IOException{
     datasource.close();
   }
 
@@ -1343,53 +1343,53 @@ public class VorbisFile{
     java.io.RandomAccessFile raf=null;
     final String mode="r";
 
-    SeekableInputStream(String file) throws java.io.IOException{
+    SeekableInputStream(String file) throws IOException{
       raf=new java.io.RandomAccessFile(file, mode);
     }
 
-    public int read() throws java.io.IOException{
+    public int read() throws IOException{
       return raf.read();
     }
 
-    public int read(byte[] buf) throws java.io.IOException{
+    public int read(byte[] buf) throws IOException{
       return raf.read(buf);
     }
 
-    public int read(byte[] buf, int s, int len) throws java.io.IOException{
+    public int read(byte[] buf, int s, int len) throws IOException{
       return raf.read(buf, s, len);
     }
 
-    public long skip(long n) throws java.io.IOException{
+    public long skip(long n) throws IOException{
       return (long)(raf.skipBytes((int)n));
     }
 
-    public long getLength() throws java.io.IOException{
+    public long getLength() throws IOException{
       return raf.length();
     }
 
-    public long tell() throws java.io.IOException{
+    public long tell() throws IOException{
       return raf.getFilePointer();
     }
 
-    public int available() throws java.io.IOException{
+    public int available() throws IOException{
       return (raf.length()==raf.getFilePointer()) ? 0 : 1;
     }
 
-    public void close() throws java.io.IOException{
+    public void close() throws IOException{
       raf.close();
     }
 
     public synchronized void mark(int m){
     }
 
-    public synchronized void reset() throws java.io.IOException{
+    public synchronized void reset() throws IOException{
     }
 
     public boolean markSupported(){
       return false;
     }
 
-    public void seek(long pos) throws java.io.IOException{
+    public void seek(long pos) throws IOException{
       raf.seek(pos);
     }
   }

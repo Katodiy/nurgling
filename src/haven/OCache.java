@@ -31,6 +31,7 @@ import java.util.function.Consumer;
 import java.lang.annotation.*;
 import java.lang.reflect.*;
 import haven.render.*;
+import nurgling.NDmgOverlay;
 
 public class OCache implements Iterable<Gob> {
     public static final int OD_REM = 0;
@@ -295,6 +296,28 @@ public class OCache implements Iterable<Gob> {
 		Gob.Overlay nol = null;
 		if(ol == null) {
 		    g.addol(nol = new Gob.Overlay(g, olid, res, sdt), false);
+			if(sdt.rt == 7) {
+				MessageBuf buf = new MessageBuf(sdt);
+				int dmg = buf.int32();
+				buf.uint8();
+				int type = buf.uint16();
+				if(type == 64527) { // hhp
+					Gob.Overlay ool = g.findol(2777);
+					if(ool == null)
+						g.addol(ool = new Gob.Overlay(g, new NDmgOverlay(nol.gob, res.get ()), 2777));
+					((NDmgOverlay)ool.spr).updDmg(dmg, 1);
+				} else if(type == 36751) { // armor
+					Gob.Overlay ool = g.findol(2777);
+					if(ool == null)
+						g.addol(ool = new Gob.Overlay(g, new NDmgOverlay(nol.gob, res.get()), 2777));
+					((NDmgOverlay)ool.spr).updDmg(dmg, 2);
+				} else if(type == 61455) { // soft hp
+					Gob.Overlay ool = g.findol(2777);
+					if(ool == null)
+						g.addol(ool = new Gob.Overlay(g, new NDmgOverlay(nol.gob, res.get()), 2777));
+					((NDmgOverlay)ool.spr).updDmg(dmg, 0);
+				}
+			}
 		} else if(!ol.sdt.equals(sdt)) {
 		    if(ol.spr instanceof Sprite.CUpd) {
 			MessageBuf copy = new MessageBuf(sdt);

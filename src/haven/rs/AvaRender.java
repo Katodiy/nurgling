@@ -133,6 +133,6 @@ public class AvaRender {
 	List<ED> equ = new LinkedList<ED>();
 	BufferedImage img = render(new Coord(512, 512), base, "avacam", mod, equ);
 	img = PUtils.convolvedown(img, new Coord(128, 128), new PUtils.Lanczos(2));
-	javax.imageio.ImageIO.write(img, "PNG", new java.io.File("/tmp/bard.png"));
+	javax.imageio.ImageIO.write(img, "PNG", new File("/tmp/bard.png"));
     }
 }

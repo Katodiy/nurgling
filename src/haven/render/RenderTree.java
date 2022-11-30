@@ -247,7 +247,7 @@ public class RenderTree implements RenderList.Adapter, Disposable {
 	    this.parent = parent;
 	}
 
-	public DepPipe prep(Pipe.Op op) {
+	public DepPipe prep(Op op) {
 	    if(op != null)
 		op.apply(this);
 	    return(this);
@@ -778,7 +778,7 @@ public class RenderTree implements RenderList.Adapter, Disposable {
 	public static class Track1 implements Node {
 	    protected Slot slot = null;
 
-	    public void added(RenderTree.Slot slot) {
+	    public void added(Slot slot) {
 		synchronized(this) {
 		    if(this.slot != null)
 			throw(new RuntimeException());
@@ -786,7 +786,7 @@ public class RenderTree implements RenderList.Adapter, Disposable {
 		}
 	    }
 
-	    public void removed(RenderTree.Slot slot) {
+	    public void removed(Slot slot) {
 		synchronized(this) {
 		    if(this.slot != slot)
 			throw(new RuntimeException());

@@ -37,7 +37,7 @@ import static haven.render.sl.Type.*;
 
 public class ShadowMap extends State {
     public final static Slot<ShadowMap> smap = new Slot<ShadowMap>(Slot.Type.DRAW, ShadowMap.class);
-    public final static State.StandAlone maskshadow = new State.StandAlone(Slot.Type.GEOM) {
+    public final static StandAlone maskshadow = new StandAlone(Slot.Type.GEOM) {
 	    public ShaderMacro shader() {return(null);}
 	};
     public final Texture2D lbuf;
@@ -87,13 +87,13 @@ public class ShadowMap extends State {
 	public static final Pipe.Op shadowbasic = Pipe.Op.compose(new States.Depthtest(States.Depthtest.Test.LE),
 								  new States.Facecull(),
 								  Homo3D.state);
-	private final RenderList.Adapter master;
+	private final Adapter master;
 	private final ProxyPipe basic = new ProxyPipe();
 	private final Map<Slot<? extends Rendered>, Shadowslot> slots = new HashMap<>();
 	private DrawList back = null;
 	private DefPipe curbasic = null;
 
-	public ShadowList(RenderList.Adapter master) {
+	public ShadowList(Adapter master) {
 	    asyncadd(this.master = master, Rendered.class);
 	}
 

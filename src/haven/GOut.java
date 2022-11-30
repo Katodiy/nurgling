@@ -34,6 +34,7 @@ import java.util.function.*;
 import haven.render.*;
 import haven.render.DataBuffer;
 import haven.render.sl.FragData;
+import nurgling.NUtils;
 
 public class GOut {
     public static final VertexArray.Layout vf_pos = new VertexArray.Layout(new VertexArray.Layout.Input(Ortho2D.pos, new VectorFormat(2, NumberFormat.FLOAT32), 0, 0, 8));
@@ -640,4 +641,18 @@ public class GOut {
     public void getimage(Texture.Image<?> img, boolean flip, Consumer<BufferedImage> cb) {
 	getimage(out, img, flip, cb);
     }
+
+	public void clippedLine(Coord c1, Coord c2, double w) {
+		Pair<Coord, Coord> clipped = NUtils.clipLine(c1, c2, Coord.z, sz());
+		if(clipped != null) {
+			line(clipped.a, clipped.b, w);
+		}
+	}
+
+	public void line(Coord3f c1, Coord3f c2, double w) {
+		usestate(new States.LineWidth(w));
+		float[] data = {c1.x + tx.x + 0.5f, c1.y + tx.y + 0.5f,
+				c2.x + tx.x + 0.5f, c2.y + tx.y + 0.5f};
+		drawp(Model.Mode.LINES, data);
+	}
 }

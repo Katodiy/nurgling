@@ -26,6 +26,8 @@
 
 package haven;
 
+import nurgling.NCharlist;
+
 public class RemoteUI implements UI.Receiver, UI.Runner {
     public final Session sess;
     private Session ret;
@@ -86,6 +88,7 @@ public class RemoteUI implements UI.Receiver, UI.Runner {
 		    }
 		    if(!sess.alive())
 			return(null);
+			NCharlist.play();
 		    sess.wait();
 		}
 	    }

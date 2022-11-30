@@ -26,6 +26,8 @@
 
 package haven;
 
+import nurgling.NDTarget2;
+
 public class ItemDrag extends WItem {
     public Coord doff;
     
@@ -51,6 +53,10 @@ public class ItemDrag extends WItem {
 	    if(((DTarget)w).drop(c, c.add(doff.inv())))
 		return(true);
 	}
+	if(w instanceof NDTarget2) {
+		if(((NDTarget2)w).drop(this, c, c.add(doff.inv())))
+			return(true);
+	}
 	for(Widget wdg = w.lchild; wdg != null; wdg = wdg.prev) {
 	    if((wdg == this) || !wdg.visible)
 		continue;
@@ -68,6 +74,10 @@ public class ItemDrag extends WItem {
 	    if(((DTarget)w).iteminteract(c, c.add(doff.inv())))
 		return(true);
 	}
+	if(w instanceof NDTarget2) {
+		if(((NDTarget2)w).iteminteract(this, c, c.add(doff.inv())))
+			return(true);
+	}
 	for(Widget wdg = w.lchild; wdg != null; wdg = wdg.prev) {
 	    if((wdg == this) || !wdg.visible)
 		continue;
@@ -81,7 +91,7 @@ public class ItemDrag extends WItem {
     }
 	
     public boolean mousedown(Coord c, int button) {
-	if(ui.modctrl && !ui.modshift && !ui.modmeta) {
+	if(ui.modctrl && ui.modshift && !ui.modmeta) {
 	    /* XXX */
 	    GameUI gui = getparent(GameUI.class);
 	    if((gui != null) && (gui.map != null)) {

@@ -26,6 +26,8 @@
 
 package haven;
 
+import nurgling.NCharacterInfo;
+
 import java.net.*;
 import java.util.*;
 import java.util.function.*;
@@ -67,11 +69,13 @@ public class Session implements Resource.Resolver {
     Map<Integer, PMessage> waiting = new TreeMap<Integer, PMessage>();
     LinkedList<RMessage> pending = new LinkedList<RMessage>();
     Map<Long, ObjAck> objacks = new TreeMap<Long, ObjAck>();
-    String username;
+    public String username;
     byte[] cookie;
     final Map<Integer, CachedRes> rescache = new TreeMap<Integer, CachedRes>();
     public final Glob glob;
     public byte[] sesskey;
+
+	public final NCharacterInfo character;
 
     @SuppressWarnings("serial")
     public static class MessageException extends RuntimeException {
@@ -93,10 +97,10 @@ public class Session implements Resource.Resolver {
 	    this.resid = res.resid;
 	}
 
-	public void waitfor(Runnable callback, Consumer<Waitable.Waiting> reg) {
+	public void waitfor(Runnable callback, Consumer<Waiting> reg) {
 	    synchronized(res) {
 		if(res.resnm != null) {
-		    reg.accept(Waitable.Waiting.dummy);
+		    reg.accept(Waiting.dummy);
 		    callback.run();
 		} else {
 		    reg.accept(res.wq.add(callback));
@@ -643,6 +647,7 @@ public class Session implements Resource.Resolver {
 	this.cookie = cookie;
 	this.args = args;
 	glob = new Glob(this);
+	character = new NCharacterInfo();
 	try {
 	    sk = new DatagramSocket();
 	} catch(SocketException e) {

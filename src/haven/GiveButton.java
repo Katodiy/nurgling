@@ -32,7 +32,7 @@ public class GiveButton extends Widget {
     public static Tex or = Resource.loadtex("gfx/hud/combat/knapp/or");
     public static Tex sl = Resource.loadtex("gfx/hud/combat/knapp/sl");
     public static Tex sr = Resource.loadtex("gfx/hud/combat/knapp/sr");
-    int state;
+    public int state;
     
     @RName("give")
     public static class $_ implements Factory {

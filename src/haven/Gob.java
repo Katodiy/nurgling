@@ -27,10 +27,12 @@
 package haven;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.*;
 import haven.render.*;
+import nurgling.*;
 
-public class Gob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, EquipTarget, Skeleton.HasPose {
+public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, EquipTarget, Skeleton.HasPose {
     public Coord2d rc;
     public double a;
     public boolean virtual = false;
@@ -38,15 +40,15 @@ public class Gob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, Eq
     public long id;
     public boolean removed = false;
     public final Glob glob;
-    Map<Class<? extends GAttrib>, GAttrib> attr = new HashMap<Class<? extends GAttrib>, GAttrib>();
-    public final Collection<Overlay> ols = new ArrayList<Overlay>();
+    public Map<Class<? extends GAttrib>, GAttrib> attr = new HashMap<Class<? extends GAttrib>, GAttrib>();
+    public final Collection<Overlay> ols = new ArrayList<>();
     public final Collection<RenderTree.Slot> slots = new ArrayList<>(1);
     public int updateseq = 0;
     private final Collection<SetupMod> setupmods = new ArrayList<>();
     private final LinkedList<Runnable> deferred = new LinkedList<>();
     private Loader.Future<?> deferral = null;
 
-    public static class Overlay implements RenderTree.Node {
+	public static class Overlay implements RenderTree.Node {
 	public final int id;
 	public final Gob gob;
 	public final Indir<Resource> res;
@@ -57,7 +59,7 @@ public class Gob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, Eq
 	private boolean added = false;
 
 	public Overlay(Gob gob, int id, Indir<Resource> res, Message sdt) {
-	    this.gob = gob;
+		    this.gob = gob;
 	    this.id = id;
 	    this.res = res;
 	    this.sdt = new MessageBuf(sdt);
@@ -70,6 +72,14 @@ public class Gob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, Eq
 	    this.res = null;
 	    this.sdt = null;
 	    this.spr = spr;
+	}
+
+	public Overlay(Gob gob, Sprite spr, int id) {
+		this.gob = gob;
+		this.id = id;
+		this.res = null;
+		this.sdt = null;
+		this.spr = spr;
 	}
 
 	private void init() {
@@ -108,7 +118,8 @@ public class Gob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, Eq
 		return;
 	    }
 	    remove0();
-	    gob.ols.remove(this);
+	    if(gob.ols.remove(this))
+			gob.checkol(this, false);
 	}
 
 	public void remove() {
@@ -139,7 +150,14 @@ public class Gob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, Eq
 	this.id = id;
 	if(id < 0)
 	    virtual = true;
+	else
+		updwait(this::installTags, waiting -> {});
+
     }
+
+	public void installTags(){
+		installTags(getres());
+	}
 
     public Gob(Glob glob, Coord2d c) {
 	this(glob, c, -1);
@@ -165,6 +183,7 @@ public class Gob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, Eq
 	updstate();
 	if(virtual && ols.isEmpty() && (getattr(Drawable.class) == null))
 	    glob.oc.remove(this);
+	updateCustom();
     }
 
     public void gtick(Render g) {
@@ -219,11 +238,22 @@ public class Gob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, Eq
 	}
 	ol.init();
 	ol.add0();
-	ols.add(ol);
+	if(ols.add(ol))
+		checkol( ol, true);
     }
     public void addol(Overlay ol) {
 	addol(ol, true);
     }
+
+	public void findoraddol(Overlay ol) {
+		if(findol(ol.spr.getClass())==null)
+			synchronized (ols) {
+				addol(ol, true);
+			}
+	}
+	public void findoraddol(Sprite ol) {
+		findoraddol(new Overlay(this, ol));
+	}
     public void addol(Sprite ol) {
 	addol(new Overlay(this, ol));
     }
@@ -288,6 +318,7 @@ public class Gob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, Eq
 
     private void setattr(Class<? extends GAttrib> ac, GAttrib a) {
 	GAttrib prev = attr.remove(ac);
+	checkattr(this, ac, a, prev);
 	if(prev != null) {
 	    if((prev instanceof RenderTree.Node) && (prev.slots != null))
 		RUtils.multirem(new ArrayList<>(prev.slots));
@@ -345,9 +376,9 @@ public class Gob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, Eq
 	public Object[] clickargs(ClickData cd) {
 	    Object[] ret = {0, (int)gob.id, gob.rc.floor(OCache.posres), 0, -1};
 	    for(Object node : cd.array()) {
-		if(node instanceof Gob.Overlay) {
+		if(node instanceof Overlay) {
 		    ret[0] = 1;
-		    ret[3] = ((Gob.Overlay)node).id;
+		    ret[3] = ((Overlay)node).id;
 		}
 		if(node instanceof FastMesh.ResourceMesh)
 		    ret[4] = ((FastMesh.ResourceMesh)node).id;
@@ -465,10 +496,10 @@ public class Gob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, Eq
 	    this.updseq = gob.updateseq;
 	}
 
-	public void waitfor(Runnable callback, Consumer<Waitable.Waiting> reg) {
+	public void waitfor(Runnable callback, Consumer<Waiting> reg) {
 	    synchronized(gob) {
 		if(gob.updateseq != this.updseq) {
-		    reg.accept(Waitable.Waiting.dummy);
+		    reg.accept(Waiting.dummy);
 		    callback.run();
 		} else {
 		    gob.updwait(callback, reg);
@@ -565,7 +596,7 @@ public class Gob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, Eq
 		    throw(new Loading(bl) {
 			    public String getMessage() {return(bl.getMessage());}
 
-			    public void waitfor(Runnable callback, Consumer<Waitable.Waiting> reg) {
+			    public void waitfor(Runnable callback, Consumer<Waiting> reg) {
 				Waitable.or(callback, reg, bl, Gob.this::updwait);
 			    }
 			});
@@ -654,4 +685,45 @@ public class Gob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, Eq
 	public TickList.Ticking ticker() {return(this);}
     }
     public final Placed placed = new Placed();
+
+	public String getResName(){
+		if(getres()!=null)
+			return getres().name;
+		return null;
+	}
+
+
+	public void removeol(Class<? extends Sprite> spr ) {
+		synchronized (ols){
+			for (Overlay ol: ols){
+				if(ol.spr.getClass() == spr){
+					if(ol.spr instanceof NSprite){
+						((NSprite)ol.spr).setIsKilled(true);
+					}
+					ol.delign = false;
+				}
+			}
+		}
+	}
+
+	public void removeolIf(Predicate<? super Overlay> filter) {
+		Objects.requireNonNull(filter);
+		final Iterator<Overlay> each = ols.iterator();
+		while (each.hasNext()) {
+			Overlay ol = each.next();
+			if (filter.test(ol)) {
+				ol.delign = false;
+			}
+		}
+	}
+
+
+	public Overlay findol(Class<? extends Sprite> spr ) {
+			for (Overlay ol : ols) {
+				if (ol.spr.getClass() == spr)
+					return (ol);
+			}
+		return(null);
+	}
+
 }

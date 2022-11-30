@@ -221,7 +221,7 @@ public class InstanceList implements RenderList<Rendered>, RenderList.Adapter, D
 	}
     }
 
-    private class InstancedSlot implements RenderList.Slot<Rendered>, InstanceBatch {
+    private class InstancedSlot implements Slot<Rendered>, InstanceBatch {
 	final InstKey key;
 	final Instanced rend;
 	final InstanceState ist;
@@ -346,8 +346,8 @@ public class InstanceList implements RenderList<Rendered>, RenderList.Adapter, D
 	    rend.iupdate(idx);
 	    for(int i = 0; i < ist.mask.length; i++) {
 		State st = ist.get(State.Slot.byid(ist.mask[i]));
-		if(st instanceof InstanceBatch.Client)
-		    ((InstanceBatch.Client)st).iupdate(idx);
+		if(st instanceof Client)
+		    ((Client)st).iupdate(idx);
 	    }
 	    selfdirty = true;
 	    dirty.add(this);
@@ -357,8 +357,8 @@ public class InstanceList implements RenderList<Rendered>, RenderList.Adapter, D
 	    rend.itrim(idx);
 	    for(int i = 0; i < ist.mask.length; i++) {
 		State st = ist.get(State.Slot.byid(ist.mask[i]));
-		if(st instanceof InstanceBatch.Client)
-		    ((InstanceBatch.Client)st).itrim(idx);
+		if(st instanceof Client)
+		    ((Client)st).itrim(idx);
 	    }
 	    selfdirty = true;
 	    dirty.add(this);

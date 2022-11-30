@@ -179,7 +179,7 @@ public interface UIPanel extends Runnable {
     }
 
     public static Cursor makeawtcurs(BufferedImage img, Coord hs) {
-	java.awt.Dimension cd = Toolkit.getDefaultToolkit().getBestCursorSize(img.getWidth(), img.getHeight());
+	Dimension cd = Toolkit.getDefaultToolkit().getBestCursorSize(img.getWidth(), img.getHeight());
 	BufferedImage buf = TexI.mkbuf(new Coord((int)cd.getWidth(), (int)cd.getHeight()));
 	java.awt.Graphics g = buf.getGraphics();
 	g.drawImage(img, 0, 0, null);

@@ -80,7 +80,7 @@ public class Loading extends RuntimeException implements Waitable {
 	}
     }
 
-    public void waitfor(Runnable callback, Consumer<Waitable.Waiting> reg) {
+    public void waitfor(Runnable callback, Consumer<Waiting> reg) {
 	throw(new UnwaitableEvent(this));
     }
 
@@ -90,7 +90,7 @@ public class Loading extends RuntimeException implements Waitable {
 
     private void queuewait() throws InterruptedException {
 	boolean[] buf = {false};
-	Waitable.Waiting[] wbuf = {null};
+	Waiting[] wbuf = {null};
 	waitfor(() -> {
 		synchronized(buf) {
 		    buf[0] = true;

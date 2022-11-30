@@ -328,10 +328,6 @@ public abstract class PView extends Widget {
 			fragcol.dispose();
 		    fragcol = fmt.maketex();
 		    fragsamp = fragcol.sampler();
-		    if(fragsamp instanceof Texture2D.Sampler2D) {
-			fragsamp.minfilter(Texture.Filter.LINEAR).magfilter(Texture.Filter.LINEAR);
-			fragsamp.swrap(Texture.Wrapping.CLAMP).twrap(Texture.Wrapping.CLAMP);
-		    }
 		}
 		fmt.cfmt = Texture.DEPTH;
 		if(!fmt.matching(depth)) {

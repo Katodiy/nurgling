@@ -53,7 +53,7 @@ public class Window extends Widget implements DTarget {
     public static final Coord dlmrgn = UI.scale(23, 14);
     public static final Coord dsmrgn = UI.scale(9, 9);
     public static final BufferedImage ctex = Resource.loadimg("gfx/hud/fonttex");
-    public static final Text.Furnace cf = new Text.Imager(new PUtils.TexFurn(new Text.Foundry(Text.fraktur, 15).aa(true), ctex)) {
+    public static final Text.Furnace cf = new Text.Imager(new TexFurn(new Text.Foundry(Text.fraktur, 15).aa(true), ctex)) {
 	    protected BufferedImage proc(Text text) {
 		// return(rasterimg(blurmask2(text.img.getRaster(), 1, 1, Color.BLACK)));
 		return(rasterimg(blurmask2(text.img.getRaster(), UI.rscale(0.75), UI.rscale(1.0), Color.BLACK)));
@@ -306,11 +306,19 @@ public class Window extends Widget implements DTarget {
 
     public void wdgmsg(Widget sender, String msg, Object... args) {
 	if(sender == cbtn) {
-	    wdgmsg("close");
+		if(justclose)
+			close();
+		else
+			wdgmsg("close");
 	} else {
 	    super.wdgmsg(sender, msg, args);
 	}
     }
+
+	public boolean justclose = false;
+	public void close(){
+		ui.destroy(this);
+	}
 
     public boolean keydown(java.awt.event.KeyEvent ev) {
 	if(super.keydown(ev))

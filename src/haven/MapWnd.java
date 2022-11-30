@@ -44,6 +44,9 @@ import static haven.MCache.cmaps;
 import static haven.Utils.eq;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.*;
+import nurgling.NMiniMap;
+import nurgling.minimap.NPMarker;
+import nurgling.minimap.NSMarker;
 
 public class MapWnd extends Window implements Console.Directory {
     public static final Resource markcurs = Resource.local().loadwait("gfx/hud/curs/flag");
@@ -57,14 +60,14 @@ public class MapWnd extends Window implements Console.Directory {
     private final Widget toolbar;
     private final Frame viewf;
     private GroupSelector colsel;
-    private Button mremove;
+    protected Button mremove;
     private Predicate<Marker> mflt = pmarkers;
     private Comparator<ListMarker> mcmp = namecmp;
     private List<ListMarker> markers = Collections.emptyList();
     private int markerseq = -1;
-    private boolean domark = false;
+    protected boolean domark = false;
     private int olalpha = 64;
-    private final Collection<Runnable> deferred = new LinkedList<>();
+    protected final Collection<Runnable> deferred = new LinkedList<>();
 
     private final static Predicate<Marker> pmarkers = (m -> m instanceof PMarker);
     private final static Predicate<Marker> smarkers = (m -> m instanceof SMarker);
@@ -266,7 +269,7 @@ public class MapWnd extends Window implements Console.Directory {
 	}
     }
 
-    private class View extends MiniMap {
+    private class View extends NMiniMap {
 	View(MapFile file) {
 	    super(file);
 	}
@@ -314,7 +317,7 @@ public class MapWnd extends Window implements Console.Directory {
 
 	public boolean clickloc(Location loc, int button, boolean press) {
 	    if(domark && (button == 1) && !press) {
-		Marker nm = new PMarker(loc.seg.id, loc.tc, "New marker", BuddyWnd.gc[new Random().nextInt(BuddyWnd.gc.length)]);
+		Marker nm = new NPMarker(loc.seg.id, loc.tc, "New marker", BuddyWnd.gc[new Random().nextInt(BuddyWnd.gc.length)]);
 		file.add(nm);
 		focus(nm);
 		domark = false;
@@ -419,7 +422,7 @@ public class MapWnd extends Window implements Console.Directory {
 
 	public Tex icon() {
 	    if(icon == null) {
-		Resource.Image fg = MiniMap.DisplayMarker.flagfg, bg = MiniMap.DisplayMarker.flagbg;
+		Resource.Image fg = DisplayMarker.flagfg, bg = DisplayMarker.flagbg;
 		WritableRaster buf = PUtils.imgraster(new Coord(Math.max(fg.o.x + fg.sz.x, bg.o.x + bg.sz.x),
 								Math.max(fg.o.y + fg.sz.y, bg.o.y + bg.sz.y)));
 		PUtils.blit(buf, PUtils.coercergba(fg.img).getRaster(), fg.o);
@@ -780,7 +783,7 @@ public class MapWnd extends Window implements Console.Directory {
 			    Coord sc = tc.add(info.sc.sub(obg.gc).mul(cmaps));
 			    SMarker prev = view.file.smarkers.get(oid);
 			    if(prev == null) {
-				view.file.add(new SMarker(info.seg, sc, rnm, oid, new Resource.Spec(Resource.remote(), res.name, res.ver)));
+				view.file.add(new NSMarker(info.seg, sc, rnm, oid, new Resource.Spec(Resource.remote(), res.name, res.ver)));
 			    } else {
 				if((prev.seg != info.seg) || !eq(prev.tc, sc) || !eq(prev.nm, rnm)) {
 				    prev.seg = info.seg;

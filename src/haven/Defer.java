@@ -88,16 +88,16 @@ public class Defer extends ThreadGroup {
 	    return(msg);
 	}
 
-	public void waitfor(Runnable callback, Consumer<Waitable.Waiting> reg) {
+	public void waitfor(Runnable callback, Consumer<Waiting> reg) {
 	    synchronized(future) {
 		if(future.done()) {
-		    reg.accept(Waitable.Waiting.dummy);
+		    reg.accept(Waiting.dummy);
 		    callback.run();
 		} else {
-		    reg.accept(new Waitable.Checker(callback) {
+		    reg.accept(new Checker(callback) {
 			    protected Object monitor() {return(future);}
 			    protected boolean check() {return(future.done());}
-			    protected Waitable.Waiting add() {return(future.wq.add(this));}
+			    protected Waiting add() {return(future.wq.add(this));}
 			}.addi());
 		}
 	    }

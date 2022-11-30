@@ -26,6 +26,9 @@
 
 package haven;
 
+import nurgling.NGItem;
+import nurgling.NUtils;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -36,16 +39,16 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
     public MessageBuf sdt;
     public int meter = 0;
     public int num = -1;
-    private GSprite spr;
-    private ItemInfo.Raw rawinfo;
-    private List<ItemInfo> info = Collections.emptyList();
+    public GSprite spr;
+    public ItemInfo.Raw rawinfo;
+    protected List<ItemInfo> info = Collections.emptyList();
 
     @RName("item")
     public static class $_ implements Factory {
 	public Widget create(UI ui, Object[] args) {
 	    int res = (Integer)args[0];
 	    Message sdt = (args.length > 1)?new MessageBuf((byte[])args[1]):Message.nil;
-	    return(new GItem(ui.sess.getres(res), sdt));
+	    return(new NGItem(ui.sess.getres(res), sdt));
 	}
     }
 
@@ -83,7 +86,7 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 	}
 
 	public default Tex overlay() {
-	    return(new TexI(GItem.NumberInfo.numrender(itemnum(), numcolor())));
+	    return(new TexI(NumberInfo.numrender(itemnum(), numcolor())));
 	}
 
 	public default void drawoverlay(GOut g, Tex tex) {
@@ -110,6 +113,20 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 	public int itemnum() {
 	    return(num);
 	}
+
+	public void drawoverlay(GOut g, Tex tex) {
+		if (NUtils.checkName(((GItem) owner).getres().name, "truffle")) {
+			if(num>=5) {
+				g.chcolor(new Color(0, 255, 0, 255));
+				g.aimage(tex, g.sz(), 1, 1);
+				g.chcolor();
+			}else{
+				g.aimage(tex, g.sz(), 1, 1);
+			}
+		} else {
+			g.aimage(tex, g.sz(), 1, 1);
+		}
+	}
     }
 
     public GItem(Indir<Resource> res, Message sdt) {
@@ -128,7 +145,7 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 	return(rnd);
     }
     public Resource getres() {return(res.get());}
-    private static final OwnerContext.ClassResolver<GItem> ctxr = new OwnerContext.ClassResolver<GItem>()
+    private static final ClassResolver<GItem> ctxr = new ClassResolver<GItem>()
 	.add(Glob.class, wdg -> wdg.ui.sess.glob)
 	.add(Session.class, wdg -> wdg.ui.sess);
     public <T> T context(Class<T> cl) {return(ctxr.context(cl, this));}
@@ -163,8 +180,8 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
     }
 
     public GSprite sprite() {
-	if(spr == null)
-	    throw(new Loading("Still waiting for sprite to be constructed"));
+//		if(spr == null)
+//			throw(new Loading("Still waiting for sprite to be constructed"));
 	return(spr);
     }
 

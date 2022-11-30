@@ -64,4 +64,6 @@ public class MixColor extends State {
     public ShaderMacro shader() {return(shader);}
 
     public void apply(Pipe p) {p.put(slot, this);}
+
+
 }

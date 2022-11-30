@@ -59,7 +59,7 @@ public class Ridges extends MapMesh.Hooks {
 	public int[] rn;
 	public float[] rh;
 
-	public RPart(Coord lc, Coord gc, Surface.Vertex[] v, float[] tcx, float[] tcy, int[] f, float[] rcx, float[] rcy, int[] rn, float[] rh) {
+	public RPart(Coord lc, Coord gc, Vertex[] v, float[] tcx, float[] tcy, int[] f, float[] rcx, float[] rcy, int[] rn, float[] rh) {
 	    super(lc, gc, v, tcx, tcy, f);
 	    this.rcx = rcx; this.rcy = rcy;
 	    this.rn = rn; this.rh = rh;

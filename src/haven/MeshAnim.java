@@ -34,8 +34,8 @@ import static haven.render.sl.Cons.*;
 import static haven.render.sl.Type.*;
 
 public class MeshAnim extends State {
-    public static final State.Slot<MeshAnim> anim = new State.Slot<>(State.Slot.Type.GEOM, MeshAnim.class);
-    public static final State.Slot<Animated> frame = new State.Slot<>(State.Slot.Type.GEOM, Animated.class)
+    public static final Slot<MeshAnim> anim = new Slot<>(Slot.Type.GEOM, MeshAnim.class);
+    public static final Slot<Animated> frame = new Slot<>(Slot.Type.GEOM, Animated.class)
 	.instanced(new Instancable<Animated>() {
 		final Instancer<Animated> nil = Instancer.dummy();
 		public Instancer<Animated> instid(Animated st) {

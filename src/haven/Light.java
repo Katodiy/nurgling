@@ -32,6 +32,8 @@ import haven.render.*;
 import haven.render.RenderList;
 import haven.render.sl.ShaderMacro;
 import haven.render.sl.Uniform;
+import nurgling.NConfiguration;
+
 import static haven.Utils.c2fa;
 
 public abstract class Light implements RenderTree.Node {
@@ -86,14 +88,19 @@ public abstract class Light implements RenderTree.Node {
 	    synchronized(ll) {
 		cl = new Object[ll.size()][];
 		for(int i = 0; i < cl.length; i++) {
+			if(ll.get(0).obj ().amb[0]!= 1.f && NConfiguration.getInstance().nightVision) {
+				ll.get ( 0 ).obj ().amb[0] = 0.9f;
+				ll.get ( 0 ).obj ().amb[1] = 0.9f;
+				ll.get ( 0 ).obj ().amb[2] = 0.9f;
+			}
 		    cl[i] = ll.get(i).obj().params(ll.get(i).state());
 		}
 	    }
-	    return(cl);
+		return(cl);
 	}
 
 	public State compile() {
-	    return(new Lighting.SimpleLights(params()));
+		return(new Lighting.SimpleLights(params()));
 	}
 
 	public void add(RenderList.Slot<Light> light) {

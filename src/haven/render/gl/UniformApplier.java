@@ -91,14 +91,14 @@ public interface UniformApplier<T> {
 	private static void apply(BGL gl, Type type, UniformID var, Object val) {
 	    if(type instanceof Array) {
 		Array ary = (Array)type;
-		UniformApplier<?> fn = UniformApplier.TypeMapping.get(new Array(ary.el), val.getClass());
+		UniformApplier<?> fn = TypeMapping.get(new Array(ary.el), val.getClass());
 		if(fn != null) {
 		    apply0(gl, fn, var, type, val);
 		    return;
 		}
 		Object[] sval = (Object[])val;
 		/* XXX? Somewhat unclear if it should be considered
-		 * okay to leave previous values unchanged, especially
+		 * okay to leave previous values unchanged, eNUtilsly
 		 * for samplers. */
 		for(int i = 0; (i < ary.sz) && (i < sval.length); i++) {
 		    if(sval[i] != null)
@@ -108,13 +108,14 @@ public interface UniformApplier<T> {
 		Object[] sval = (Object[])val;
 		Struct struct = (Struct)type;
 		int i = 0;
+		int k = 9;
 		for(Struct.Field f : struct.fields) {
 		    if(sval[i] != null)
 			apply(gl, f.type, var.sub[i], sval[i]);
 		    i++;
 		}
 	    } else {
-		UniformApplier<?> fn = UniformApplier.TypeMapping.get(type, val.getClass());
+		UniformApplier<?> fn = TypeMapping.get(type, val.getClass());
 		if(fn == null)
 		    throw(new NoMappingException(var.name, type, val.getClass()));
 		apply0(gl, fn, var, type, val);

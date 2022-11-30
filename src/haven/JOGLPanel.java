@@ -31,10 +31,12 @@ import java.awt.Toolkit;
 import java.awt.Robot;
 import java.awt.Point;
 import com.jogamp.opengl.*;
-import com.jogamp.opengl.awt.*;
+import com.jogamp.opengl.awt.GLCanvas;
 import haven.render.*;
 import haven.render.States;
 import haven.render.gl.*;
+import haven.render.gl.GLException;
+import nurgling.NUI;
 
 public class JOGLPanel extends GLCanvas implements Runnable, UIPanel, Console.Directory, UI.Context {
     private static final boolean dumpbgl = true;
@@ -232,14 +234,14 @@ public class JOGLPanel extends GLCanvas implements Runnable, UIPanel, Console.Di
 	    long start = System.nanoTime();
 	    boolean iswap = iswap();
 	    if(debuggl)
-		haven.render.gl.GLException.checkfor(gl, null);
+		GLException.checkfor(gl, null);
 	    if(iswap != aswap)
 		gl.setSwapInterval((aswap = iswap) ? 1 : 0);
 	    if(debuggl)
-		haven.render.gl.GLException.checkfor(gl, null);
+		GLException.checkfor(gl, null);
 	    JOGLPanel.this.swapBuffers();
 	    if(debuggl)
-		haven.render.gl.GLException.checkfor(gl, null);
+		GLException.checkfor(gl, null);
 	    ridletime += System.nanoTime() - start;
 	    framelag = JOGLPanel.this.frameno - frameno;
 	}
@@ -444,20 +446,21 @@ public class JOGLPanel extends GLCanvas implements Runnable, UIPanel, Console.Di
     @SuppressWarnings("deprecation")
     private void drawstats(UI ui, GOut g, GLRender buf) {
 	int y = g.sz().y - UI.scale(190), dy = FastText.h;
-	FastText.aprintf(g, new Coord(10, y -= dy), 0, 1, "FPS: %d (%d%%, %d%% idle, latency %d)", fps, (int)(uidle * 100.0), (int)(ridle * 100.0), framelag);
+	int x = g.sz().x - UI.scale(300);
+	FastText.aprintf(g, new Coord( x, y -= dy), 0, 1, "FPS: %d (%d%%, %d%% idle, latency %d)", fps, (int)(uidle * 100.0), (int)(ridle * 100.0), framelag);
 	Runtime rt = Runtime.getRuntime();
 	long free = rt.freeMemory(), total = rt.totalMemory();
 	if(free < prevfree)
 	    framealloc = ((prevfree - free) + (framealloc * 19)) / 20;
 	prevfree = free;
-	FastText.aprintf(g, new Coord(10, y -= dy), 0, 1, "Mem: %,011d/%,011d/%,011d/%,011d (%,d)", free, total - free, total, rt.maxMemory(), framealloc);
-	FastText.aprintf(g, new Coord(10, y -= dy), 0, 1, "State slots: %d", State.Slot.numslots());
-	FastText.aprintf(g, new Coord(10, y -= dy), 0, 1, "GL progs: %d", buf.env.numprogs());
-	FastText.aprintf(g, new Coord(10, y -= dy), 0, 1, "V-Mem: %s", buf.env.memstats());
+	FastText.aprintf(g, new Coord( x, y -= dy), 0, 1, "Mem: %,011d/%,011d/%,011d/%,011d (%,d)", free, total - free, total, rt.maxMemory(), framealloc);
+	FastText.aprintf(g, new Coord( x, y -= dy), 0, 1, "State slots: %d", State.Slot.numslots());
+	FastText.aprintf(g, new Coord( x, y -= dy), 0, 1, "GL progs: %d", buf.env.numprogs());
+	FastText.aprintf(g, new Coord( x, y -= dy), 0, 1, "V-Mem: %s", buf.env.memstats());
 	MapView map = ui.root.findchild(MapView.class);
 	if((map != null) && (map.back != null)) {
-	    FastText.aprintf(g, new Coord(10, y -= dy), 0, 1, "Camera: %s", map.camstats());
-	    FastText.aprintf(g, new Coord(10, y -= dy), 0, 1, "Mapview: %s", map.stats());
+	    FastText.aprintf(g, new Coord( x, y -= dy), 0, 1, "Camera: %s", map.camstats());
+	    FastText.aprintf(g, new Coord( x, y -= dy), 0, 1, "Mapview: %s", map.stats());
 	    // FastText.aprintf(g, new Coord(10, y -= dy), 0, 1, "Click: Map: %s, Obj: %s", map.clmaplist.stats(), map.clobjlist.stats());
 	}
 	if(ui.sess != null)
@@ -649,7 +652,7 @@ public class JOGLPanel extends GLCanvas implements Runnable, UIPanel, Console.Di
     }
 
     public UI newui(UI.Runner fun) {
-	UI prevui, newui = new UI(this, new Coord(getSize()), fun);
+	UI prevui, newui = new NUI(this, new Coord(getSize()), fun);
 	newui.env = this.env;
 	if(getParent() instanceof Console.Directory)
 	    newui.cons.add((Console.Directory)getParent());

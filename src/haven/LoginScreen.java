@@ -38,8 +38,8 @@ public class LoginScreen extends Widget {
     public final Credbox login;
     public final String hostname;
     private Text error, progress;
-    private Button optbtn;
-    private OptWnd opts;
+    protected Button optbtn;
+    protected OptWnd opts;
 
     private String getpref(String name, String def) {
 	return(Utils.getpref(name + "@" + hostname, def));
@@ -59,7 +59,7 @@ public class LoginScreen extends Widget {
     public static final KeyBinding kb_deltoken = KeyBinding.get("login/deltoken", KeyMatch.forchar('F', KeyMatch.M));
     public class Credbox extends Widget {
 	public final UserEntry user;
-	private final TextEntry pass;
+	public final TextEntry pass;
 	private final CheckBox savetoken;
 	private final Button fbtn;
 	private final IButton exec;
@@ -207,7 +207,7 @@ public class LoginScreen extends Widget {
 		}
 		if(ret == null)
 		    ret = new AuthClient.NativeCred(user.text(), pw);
-		pass.rsettext("");
+//		pass.rsettext("");
 	    }
 	    return(ret);
 	}
@@ -279,7 +279,7 @@ public class LoginScreen extends Widget {
 	    this.error = textf.render(error, java.awt.Color.RED);
     }
 
-    private void progress(String p) {
+    protected void progress(String p) {
 	if(progress != null)
 	    progress = null;
 	if(p != null)

@@ -30,6 +30,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.Color;
 import haven.render.*;
+import nurgling.*;
 
 public class KinInfo extends GAttrib implements RenderTree.Node, PView.Render2D {
     public static final BufferedImage vlg = Resource.loadimg("gfx/hud/vilind");
@@ -135,9 +136,53 @@ public class KinInfo extends GAttrib implements RenderTree.Node, PView.Render2D 
 		} else {
 		    b.update(name, group, btype);
 		}
+		if (NUtils.getGameUI() != null && NUtils.getGameUI().map != null && g.tags.contains(NGob.Tags.notplayer)) {
+			g.removeTag(NGob.Tags.unknown, NGob.Tags.notmarked, NGob.Tags.foe);
+
+			g.removeol(NMarkedRing.class);
+			g.removeol(NTargetRing.class);
+			Gob player = NOCache.getgob(NGob.Tags.player);
+			if (player != null) {
+				for (Gob.Overlay ol : player.ols) {
+					if (ol.spr instanceof NDirArrow) {
+						if (((NDirArrow) ol.spr).target.id == g.id) {
+							ol.remove();
+							break;
+						}
+					}
+				}
+			}
+			if (group == 0) {
+				g.addTag(NGob.Tags.unknown, NGob.Tags.notmarked);
+			} else if (group == 2) {
+				g.addTag(NGob.Tags.foe, NGob.Tags.notmarked);
+			}
+		}
 	    } else {
 		g.delattr(KinInfo.class);
 	    }
 	}
     }
+
+	public boolean isVillager() {return (type & 2) != 0;}
+	public static boolean isFoe(Gob gob) {
+		if(gob != null) {
+			KinInfo ki = gob.getattr(KinInfo.class);
+			if(ki != null) {
+				//mark as foe if in RED(2) group or WHITE(0) and not villager
+				return ki.group == 2 || ki.group == 0 && !ki.isVillager();
+			}
+		}
+		return true;
+	}
+
+	public static int getGroup(Gob gob) {
+		if(gob != null) {
+			KinInfo ki = gob.getattr(KinInfo.class);
+			if(ki != null) {
+				return ki.group;
+			}
+		}
+		return -1;
+	}
 }

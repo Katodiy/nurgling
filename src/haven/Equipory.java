@@ -26,11 +26,14 @@
 
 package haven;
 
+import nurgling.NEquipory;
+import nurgling.NWItem;
+
 import java.util.*;
 import static haven.Inventory.invsq;
 
 public class Equipory extends Widget implements DTarget {
-    private static final Tex bg = Resource.loadtex("gfx/hud/equip/bg");
+    public static final Tex bg = Resource.loadtex("gfx/hud/equip/bg");
     private static final int
 	rx = invsq.sz().x + bg.sz().x,
 	yo = Inventory.sqsz.y;
@@ -76,7 +79,7 @@ public class Equipory extends Widget implements DTarget {
 	    }
 	}
     }
-    Map<GItem, Collection<WItem>> wmap = new HashMap<>();
+    public Map<GItem, Collection<WItem>> wmap = new HashMap<>();
     private final Avaview ava;
 
     @RName("epry")
@@ -89,7 +92,7 @@ public class Equipory extends Widget implements DTarget {
 		gobid = -1;
 	    else
 		gobid = Utils.uint32((Integer)args[0]);
-	    return(new Equipory(gobid));
+	    return(new NEquipory(gobid));
 	}
     }
 
@@ -132,7 +135,7 @@ public class Equipory extends Widget implements DTarget {
 	    for(int i = 0; i < args.length; i++) {
 		int ep = (Integer)args[i];
 		if(ep < ecoords.length)
-		    v.add(add(new WItem(g), ecoords[ep].add(1, 1)));
+		    v.add(add(new NWItem(g), ecoords[ep].add(1, 1)));
 	    }
 	    v.trimToSize();
 	    wmap.put(g, v);
@@ -210,6 +213,6 @@ public class Equipory extends Widget implements DTarget {
     }
 
     public boolean iteminteract(Coord cc, Coord ul) {
-	return(false);
+		return(false);
     }
 }

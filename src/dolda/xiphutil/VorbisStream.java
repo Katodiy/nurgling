@@ -65,7 +65,7 @@ public class VorbisStream {
      * that the fields containing the Vorbis metadata have been
      * initialized when it returns.
      *
-     * @exception java.io.IOException if the
+     * @exception IOException if the
      * <code>PacketStream</code> itself throws an
      * <code>IOException</code>.
      * @exception FormatException if a format
@@ -108,7 +108,7 @@ public class VorbisStream {
      * have ensured that the fields containing the Vorbis metadata
      * have been initialized when it returns.
      *
-     * @exception java.io.IOException if the <code>InputStream</code>
+     * @exception IOException if the <code>InputStream</code>
      * itself throws an <code>IOException</code>.
      * @exception FormatException if a format error is found in
      * the input.
@@ -134,7 +134,7 @@ public class VorbisStream {
      * @return The decoded data, or <code>null</code> when the stream
      * ends.
      * 
-     * @exception java.io.IOException if the backing input stream
+     * @exception IOException if the backing input stream
      * itself throws an <code>IOException</code>.
      * @exception FormatException if a format error is found in
      * the input.
@@ -257,7 +257,7 @@ public class VorbisStream {
     /**
      * Closes the stream backing this object.
      *
-     * @exception java.io.IOException if the backing input stream
+     * @exception IOException if the backing input stream
      * itself throws an <code>IOException</code>.
      */
     public void close() throws IOException {

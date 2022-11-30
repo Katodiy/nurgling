@@ -26,13 +26,16 @@
 
 package haven;
 
+import nurgling.NGob;
+import nurgling.NUtils;
+
 import java.awt.Color;
 import java.util.*;
 
 public abstract class LayerMeter extends Widget implements ItemInfo.Owner {
     protected ItemInfo.Raw rawinfo = null;
     protected List<ItemInfo> info = Collections.emptyList();
-    protected List<Meter> meters = Collections.emptyList();
+    public List<Meter> meters = Collections.emptyList();
 
     public LayerMeter(Coord sz) {
 	super(sz);
@@ -43,6 +46,8 @@ public abstract class LayerMeter extends Widget implements ItemInfo.Owner {
 	public final Color c;
 	
 	public Meter(double a, Color c) {
+		if(c.getRed() == 255 && c.getGreen()==104 && c.getBlue() == 40 && NUtils.getGameUI().map!=null && NUtils.getGameUI().map.player()!=null && NUtils.getGameUI().map.player().isTag(NGob.Tags.mounted) && a<0.04)
+			NUtils.getGameUI().map.player().addTag(NGob.Tags.angryhorse);
 	    this.a = a;
 	    this.c = c;
 	}
@@ -75,7 +80,7 @@ public abstract class LayerMeter extends Widget implements ItemInfo.Owner {
 	return(buf);
     }
 
-    private static final OwnerContext.ClassResolver<LayerMeter> ctxr = new OwnerContext.ClassResolver<LayerMeter>()
+    private static final ClassResolver<LayerMeter> ctxr = new ClassResolver<LayerMeter>()
 	.add(Glob.class, wdg -> wdg.ui.sess.glob)
 	.add(Session.class, wdg -> wdg.ui.sess);
     public <T> T context(Class<T> cl) {return(ctxr.context(cl, this));}

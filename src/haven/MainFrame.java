@@ -26,6 +26,8 @@
 
 package haven;
 
+import nurgling.NConfiguration;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -398,7 +400,7 @@ public class MainFrame extends java.awt.Frame implements Console.Directory {
 			bitbucket.print(LoginScreen.textfs);
 		    }
 		});
-	} catch(java.lang.reflect.InvocationTargetException e) {
+	} catch(InvocationTargetException e) {
 	    /* Oh, how I love Swing! */
 	    throw(new Error(e));
 	}
@@ -407,7 +409,18 @@ public class MainFrame extends java.awt.Frame implements Console.Directory {
     }
 
     private static void main2(String[] args) {
-	Config.cmdline(args);
+		for(String value: args){
+			if(value.contains("-bots")){
+				NConfiguration.enableBotMod(args[1]);
+				break;
+			}
+			else {
+				Config.cmdline(args);
+			}
+		}
+
+		NConfiguration.initDefault();
+
 	try {
 	    javabughack();
 	} catch(InterruptedException e) {

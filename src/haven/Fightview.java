@@ -26,6 +26,9 @@
 
 package haven;
 
+import nurgling.NFightView;
+import nurgling.NUtils;
+
 import java.util.*;
 import static haven.Utils.uint32;
 
@@ -49,7 +52,6 @@ public class Fightview extends Widget {
     public double lastuse = 0;
     public Mainrel curdisp;
     private List<Relation> nonmain = Collections.emptyList();
-
     public class Relation {
         public final long gobid;
 	public final Bufflist buffs = add(new Bufflist()); {buffs.hide();}
@@ -118,7 +120,7 @@ public class Fightview extends Widget {
 	    super(Coord.of(bg.sz().x, ((bg.sz().y + ymarg) * h) - ymarg), bg.sz().y, ymarg);
 	}
 
-	protected List<Relation> items() {
+	public List<Relation> items() {
 	    return(nonmain);
 	}
 
@@ -192,7 +194,9 @@ public class Fightview extends Widget {
     @RName("frv")
     public static class $_ implements Factory {
 	public Widget create(UI ui, Object[] args) {
-	    return(new Fightview());
+		NFightView res = new NFightView ();
+		NUtils.setFightView(res);
+		return(res);
 	}
     }
     

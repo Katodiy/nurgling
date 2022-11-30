@@ -30,6 +30,7 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import haven.ItemInfo.AttrCache;
+import nurgling.NBuff;
 
 public class Buff extends Widget implements ItemInfo.ResOwner, Bufflist.Managed {
     public static final Text.Foundry nfnd = new Text.Foundry(Text.dfont, 10);
@@ -49,15 +50,15 @@ public class Buff extends Widget implements ItemInfo.ResOwner, Bufflist.Managed 
     private List<ItemInfo> info = Collections.emptyList();
     /* Deprecated */
     String tt = null;
-    int ameter = -1;
-    int nmeter = -1;
-    Tex ntext = null;
+    public int ameter = -1;
+    protected int nmeter = -1;
+    protected Tex ntext = null;
 
     @RName("buff")
     public static class $_ implements Factory {
 	public Widget create(UI ui, Object[] args) {
 	    Indir<Resource> res = ui.sess.getres((Integer)args[0]);
-	    return(new Buff(res));
+	    return(new NBuff(res));
 	}
     }
 
@@ -69,7 +70,7 @@ public class Buff extends Widget implements ItemInfo.ResOwner, Bufflist.Managed 
     public Resource resource() {
 	return(res.get());
     }
-    private static final OwnerContext.ClassResolver<Buff> ctxr = new OwnerContext.ClassResolver<Buff>()
+    private static final ClassResolver<Buff> ctxr = new ClassResolver<Buff>()
 	.add(Glob.class, wdg -> wdg.ui.sess.glob)
 	.add(Session.class, wdg -> wdg.ui.sess);
     public <T> T context(Class<T> cl) {return(ctxr.context(cl, this));}
@@ -104,9 +105,9 @@ public class Buff extends Widget implements ItemInfo.ResOwner, Bufflist.Managed 
 	public Tip shortvar() {return(this);}
     }
 
-    private final AttrCache<Double> ameteri = new AttrCache<>(this::info, AttrCache.map1(AMeterInfo.class, minf -> minf::ameter));
+    protected final AttrCache<Double> ameteri = new AttrCache<>(this::info, AttrCache.map1(AMeterInfo.class, minf -> minf::ameter));
     private final AttrCache<Tex> nmeteri = new AttrCache<>(this::info, AttrCache.map1s(GItem.NumberInfo.class, ninf -> new TexI(GItem.NumberInfo.numrender(ninf.itemnum(), ninf.numcolor()))));
-    private final AttrCache<Double> cmeteri = new AttrCache<>(this::info, AttrCache.map1(GItem.MeterInfo.class, minf -> minf::meter));
+    protected final AttrCache<Double> cmeteri = new AttrCache<>(this::info, AttrCache.map1(GItem.MeterInfo.class, minf -> minf::meter));
 
     public void draw(GOut g) {
 	g.chcolor(255, 255, 255, a);

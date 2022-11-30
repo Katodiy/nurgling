@@ -26,6 +26,9 @@
 
 package haven;
 
+import nurgling.NInventory;
+import nurgling.NWItem;
+
 import java.util.*;
 import java.awt.image.WritableRaster;
 
@@ -58,7 +61,7 @@ public class Inventory extends Widget implements DTarget {
     @RName("inv")
     public static class $_ implements Factory {
 	public Widget create(UI ui, Object[] args) {
-	    return(new Inventory((Coord)args[0]));
+	    return(new NInventory((Coord)args[0]));
 	}
     }
 
@@ -95,7 +98,7 @@ public class Inventory extends Widget implements DTarget {
 	Coord c = (Coord)args[0];
 	if(child instanceof GItem) {
 	    GItem i = (GItem)child;
-	    wmap.put(i, add(new WItem(i), c.mul(sqsz).add(1, 1)));
+	    wmap.put(i, add(new NWItem(i), c.mul(sqsz).add(1, 1)));
 	}
     }
     

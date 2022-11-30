@@ -30,9 +30,13 @@ import java.util.*;
 import java.awt.Color;
 import haven.render.*;
 import haven.render.sl.*;
+import nurgling.NOCache;
+import nurgling.NTimer;
+
+import static nurgling.NMakewindow.fnd;
 
 public class Glob {
-    public final OCache oc = new OCache(this);
+    public final OCache oc = new NOCache(this);
     public final MCache map;
     public final Session sess;
     public final Loader loader = new Loader();
@@ -67,7 +71,7 @@ public class Glob {
     public static class CAttr {
 	public final String nm;
 	public int base, comp;
-	
+	private Text.Line compLine = null;
 	public CAttr(String nm, int base, int comp) {
 	    this.nm = nm.intern();
 	    this.base = base;
@@ -79,6 +83,21 @@ public class Glob {
 		return;
 	    this.base = base;
 	    this.comp = comp;
+		isUpdated = true;
+	}
+	boolean isUpdated = false;
+	public Text.Line compline() {
+		if(compLine == null || isUpdated) {
+			Color c = Color.WHITE;
+			if(comp > base) {
+				c = CharWnd.buff;
+			} else if(comp < base) {
+				c = CharWnd.debuff;
+			}
+			compLine = Text.renderstroked(Integer.toString(comp), c, Color.BLACK, fnd);
+			isUpdated = false;
+		}
+		return compLine;
 	}
     }
     
@@ -132,7 +151,7 @@ public class Glob {
 	tickgtime(now, dt);
 	oc.ctick(dt);
 	map.ctick(dt);
-
+	NTimer.tick(dt);
 	lastctick = now;
     }
 
@@ -186,6 +205,7 @@ public class Glob {
 	    int n = 0;
 	    if(t == "tm") {
 		updgtime(((Number)a[n++]).doubleValue(), inc);
+		NTimer.server((long) (1000 * sgtime));
 	    } else if(t == "astro") {
 		double dt = ((Number)a[n++]).doubleValue();
 		double mp = ((Number)a[n++]).doubleValue();

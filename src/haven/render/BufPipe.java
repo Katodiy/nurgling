@@ -39,7 +39,7 @@ public class BufPipe implements Pipe {
     }
 
     public BufPipe() {
-	this(new State[State.Slot.slots.idlist.length]);
+	this(new State[Slot.slots.idlist.length]);
     }
 
     @SuppressWarnings("unchecked")

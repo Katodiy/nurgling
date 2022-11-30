@@ -42,8 +42,8 @@ public class Avaview extends PView {
     public Resource.Resolver resmap = null;
     private Composited comp;
     private RenderTree.Slot compslot;
-    private List<Composited.MD> cmod = null;
-    private List<Composited.ED> cequ = null;
+    private List<MD> cmod = null;
+    private List<ED> cequ = null;
     private final String camnm;
 
     @RName("av")

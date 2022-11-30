@@ -26,6 +26,8 @@
 
 package haven;
 
+import nurgling.NCharlist;
+
 import java.awt.Color;
 import java.util.*;
 
@@ -43,7 +45,7 @@ public class Charlist extends Widget {
     @RName("charlist")
     public static class $_ implements Factory {
 	public Widget create(UI ui, Object[] args) {
-	    return(new Charlist((Integer)args[0]));
+	    return(new NCharlist((Integer)args[0]));
 	}
     }
 

@@ -27,6 +27,8 @@
 package haven;
 
 import haven.render.*;
+import nurgling.NFightSess;
+
 import java.util.*;
 import java.awt.Color;
 import java.awt.event.InputEvent;
@@ -48,7 +50,7 @@ public class Fightsess extends Widget {
     public int use = -1, useb = -1;
     public Coord pcc;
     public int pho;
-    private Fightview fv;
+    protected Fightview fv;
 
     public static class Action {
 	public final Indir<Resource> res;
@@ -63,7 +65,7 @@ public class Fightsess extends Widget {
     public static class $_ implements Factory {
 	public Widget create(UI ui, Object[] args) {
 	    int nact = (Integer)args[0];
-	    return(new Fightsess(nact));
+	    return(new NFightSess(nact));
 	}
     }
 
@@ -83,7 +85,7 @@ public class Fightsess extends Widget {
 	pcc = sz.div(2);
     }
 
-    private void updatepos() {
+    protected void updatepos() {
 	MapView map;
 	Gob pl;
 	if(((map = getparent(GameUI.class).map) == null) || ((pl = map.player()) == null))
@@ -107,10 +109,10 @@ public class Fightsess extends Widget {
 	}
     }
 
-    private static final Resource tgtfx = Resource.local().loadwait("gfx/hud/combat/trgtarw");
+    protected static final Resource tgtfx = Resource.local().loadwait("gfx/hud/combat/trgtarw");
     private final Collection<Effect> curfx = new ArrayList<>();
 
-    private Effect fxon(long gobid, Resource fx, Effect cur) {
+    protected Effect fxon(long gobid, Resource fx, Effect cur) {
 	MapView map = getparent(GameUI.class).map;
 	Gob gob = ui.sess.glob.oc.getgob(gobid);
 	if((map == null) || (gob == null))
@@ -162,26 +164,28 @@ public class Fightsess extends Widget {
     }
 
     private static final Text.Furnace ipf = new PUtils.BlurFurn(new Text.Foundry(Text.serif, 18, new Color(128, 128, 255)).aa(true), 1, 1, new Color(48, 48, 96));
-    private final Text.UText<?> ip = new Text.UText<Integer>(ipf) {
+    protected final Text.UText<?> ip = new Text.UText<Integer>(ipf) {
 	public String text(Integer v) {return("IP: " + v);}
 	public Integer value() {return(fv.current.ip);}
     };
-    private final Text.UText<?> oip = new Text.UText<Integer>(ipf) {
+    protected final Text.UText<?> oip = new Text.UText<Integer>(ipf) {
 	public String text(Integer v) {return("IP: " + v);}
 	public Integer value() {return(fv.current.oip);}
     };
 
-    private static Coord actc(int i) {
+    protected static Coord actc(int i) {
 	int rl = 5;
 	return(new Coord((actpitch * (i % rl)) - (((rl - 1) * actpitch) / 2), UI.scale(125) + ((i / rl) * actpitch)));
     }
 
-    private static final Coord cmc = UI.scale(new Coord(0, 67));
-    private static final Coord usec1 = UI.scale(new Coord(-65, 67));
-    private static final Coord usec2 = UI.scale(new Coord(65, 67));
-    private Indir<Resource> lastact1 = null, lastact2 = null;
-    private Text lastacttip1 = null, lastacttip2 = null;
-    private Effect curtgtfx;
+    protected static final Coord cmc = UI.scale(new Coord(0, 67));
+    protected static final Coord usec1 = UI.scale(new Coord(-65, 67));
+    protected static final Coord usec2 = UI.scale(new Coord(65, 67));
+    protected Indir<Resource> lastact1 = null;
+	protected Indir<Resource> lastact2 = null;
+    protected Text lastacttip1 = null;
+	protected Text lastacttip2 = null;
+    protected Effect curtgtfx;
     public void draw(GOut g) {
 	updatepos();
 	double now = Utils.rtime();

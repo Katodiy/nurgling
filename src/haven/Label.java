@@ -31,7 +31,7 @@ import java.awt.Color;
 public class Label extends Widget {
     Text.Foundry f;
     Text text;
-    String texts;
+    public String texts;
     Color col = Color.WHITE;
 	
     @RName("lbl")

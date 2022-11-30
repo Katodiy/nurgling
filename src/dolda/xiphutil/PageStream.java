@@ -30,7 +30,7 @@ public class PageStream {
      *
      * @return the page fetched, or <code>null</code> if at the end of
      * the stream.
-     * @exception java.io.IOException if the <code>InputStream</code>
+     * @exception IOException if the <code>InputStream</code>
      * itself throws an <code>IOException</code>.
      * @exception FormatException if a format error is found in the
      * stream.
@@ -59,7 +59,7 @@ public class PageStream {
     /**
      * Closes the stream backing this object.
      *
-     * @exception java.io.IOException if the backing input stream
+     * @exception IOException if the backing input stream
      * itself throws an <code>IOException</code>.
      */
     public void close() throws IOException {

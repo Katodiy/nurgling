@@ -26,6 +26,9 @@
 
 package haven;
 
+
+import nurgling.NConfiguration;
+
 import java.util.*;
 import java.util.function.*;
 import java.io.*;
@@ -85,6 +88,9 @@ public class GobIcon extends GAttrib {
 	if(this.img == null) {
 	    synchronized(cache) {
 		Image img = cache.get(res);
+		if(res.get().name.contains("tanning")){
+			int a = 0;
+		}
 		if(img == null) {
 		    img = new Image(res.get().layer(Resource.imgc));
 		    cache.put(res, img);
@@ -159,7 +165,7 @@ public class GobIcon extends GAttrib {
 
     public static class Setting implements Serializable {
 	public Resource.Spec res;
-	public boolean show, defshow, notify;
+	public boolean show, defshow, notify, ring;
 	public String resns;
 	public Path filens;
 
@@ -167,7 +173,15 @@ public class GobIcon extends GAttrib {
 	    this.res = res;
 	}
 
-	public Consumer<UI> notification() {
+	public Setting(Resource.Spec res, boolean show, boolean defshow, boolean notify, boolean ring) {
+		this.res = res;
+		this.show = show;
+		this.defshow = defshow;
+		this.notify = notify;
+		this.ring = ring;
+	}
+
+		public Consumer<UI> notification() {
 	    if(resns != null)
 		return(notiflimit(resnotif(resns), resns));
 	    if(filens != null)
@@ -286,6 +300,7 @@ public class GobIcon extends GAttrib {
 		    set.defshow = set.show;
 		ret.settings.put(res.name, set);
 	    }
+		ret.settings.putAll(NConfiguration.getInstance().iconsettings);
 	    return(ret);
 	}
     }
@@ -323,8 +338,8 @@ public class GobIcon extends GAttrib {
     public static class SettingsWindow extends Window {
 	public final Settings conf;
 	private final Runnable save;
-	private final PackCont.LinPack cont;
-	private final IconList list;
+	protected final PackCont.LinPack cont;
+	protected IconList list;
 	private Widget setbox;
 
 	public static class Icon {
@@ -334,7 +349,7 @@ public class GobIcon extends GAttrib {
 	    public Icon(Setting conf) {this.conf = conf;}
 	}
 
-	private <T> Consumer<T> andsave(Consumer<T> main) {
+	protected <T> Consumer<T> andsave(Consumer<T> main) {
 	    return(val -> {main.accept(val); if(save != null) save.run();});
 	}
 
@@ -345,7 +360,7 @@ public class GobIcon extends GAttrib {
 	    private Map<String, Setting> cur = null;
 	    private boolean reorder = false;
 
-	    private IconList(Coord sz) {
+	    protected IconList(Coord sz) {
 		super(sz, elh);
 	    }
 
@@ -357,7 +372,9 @@ public class GobIcon extends GAttrib {
 				sz.x - UI.scale(2) - (sz.y / 2), sz.y / 2, 0.5, 0.5);
 		    prev = adda(new CheckBox("").state(() -> icon.conf.show).set(andsave(val -> icon.conf.show = val)).settip("Display"),
 				prev.c.x - UI.scale(2) - (sz.y / 2), sz.y / 2, 0.5, 0.5);
-		    add(SListWidget.IconText.of(Coord.of(prev.c.x - UI.scale(2), sz.y), () -> item.conf.res.loadsaved(Resource.remote())), Coord.z);
+			prev = adda(new CheckBox("").state(() -> icon.conf.ring).set(andsave(val -> icon.conf.ring = val)).settip("Ring"),
+					prev.c.x - UI.scale(2) - (sz.y / 2), sz.y / 2, 0.5, 0.5);
+		    add(IconText.of(Coord.of(prev.c.x - UI.scale(2), sz.y), () -> item.conf.res.loadsaved(Resource.remote())), Coord.z);
 		}
 	    }
 

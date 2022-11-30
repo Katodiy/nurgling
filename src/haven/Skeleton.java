@@ -1035,7 +1035,7 @@ public class Skeleton {
 	private Track[] iaIaCthulhuFhtagn(Skeleton skel) {
 	    Track[] remap = new Track[skel.blist.length];
 	    for(Track t : tracks) {
-		Skeleton.Bone b = skel.bones.get(t.bone);
+		Bone b = skel.bones.get(t.bone);
 		if(b == null)
 		    throw(new RuntimeException("Bone \"" + t.bone + "\" in animation reference does not exist in skeleton " + skel));
 		remap[b.idx] = t;

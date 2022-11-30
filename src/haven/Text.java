@@ -113,7 +113,7 @@ public class Text implements Disposable {
 	    font = f;
 	    this.defcol = defcol;
 	    BufferedImage junk = TexI.mkbuf(new Coord(10, 10));
-	    java.awt.Graphics tmpl = junk.getGraphics();
+	    Graphics tmpl = junk.getGraphics();
 	    tmpl.setFont(f);
 	    m = tmpl.getFontMetrics();
 	}
@@ -190,6 +190,28 @@ public class Text implements Disposable {
 	public Line render(String text) {
 	    return(render(text, defcol));
 	}
+
+	public Line renderstroked(String text, Color c, Color stroke) {
+		Coord sz = strsize(text);
+		if (sz.x < 1)
+			sz = sz.add(1, 0);
+		sz = sz.add(2, 0);
+		BufferedImage img = TexI.mkbuf(sz);
+		Graphics g = img.createGraphics();
+		if (aa)
+			Utils.AA(g);
+		g.setFont(font);
+		FontMetrics m = g.getFontMetrics();
+		g.setColor(stroke);
+		g.drawString(text, 0, m.getAscent());
+		g.drawString(text, 2, m.getAscent());
+		g.drawString(text, 1, m.getAscent() - 1);
+		g.drawString(text, 1, m.getAscent() + 1);
+		g.setColor(c);
+		g.drawString(text, 1, m.getAscent());
+		g.dispose();
+		return (new Line(text, img, m));
+	}
     }
 
     public static abstract class Imager extends Furnace {
@@ -255,7 +277,7 @@ public class Text implements Disposable {
 	}
     }
 
-    protected Text(String text, BufferedImage img) {
+    public Text(String text, BufferedImage img) {
 	this.text = text;
 	this.img = img;
     }
@@ -317,4 +339,29 @@ public class Text implements Disposable {
 	    }
 	}
     }
+
+
+	public static Line renderstroked(String text, Color c, Color s, Foundry fnd) {
+		return fnd.renderstroked(text, c, s);
+	}
+
+	public static Line renderstroked(String text, Color c, Color s) {
+		return renderstroked(text, c, s, std);
+	}
+
+	public static Line renderstroked(String text, Color c) {
+		return renderstroked(text, c, Utils.contrast(c));
+	}
+
+	public static Line renderstroked(String text, Color c, Foundry fnd) {
+		return renderstroked(text, c, Utils.contrast(c), fnd);
+	}
+
+	public static Line renderstroked(String text) {
+		return renderstroked(text, Color.WHITE, Color.BLACK);
+	}
+
+	public static Line renderstroked(String text, Foundry fnd) {
+		return renderstroked(text, Color.WHITE, Color.BLACK, fnd);
+	}
 }

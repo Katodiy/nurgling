@@ -34,7 +34,7 @@ import haven.Audio.CS;
 import haven.Audio.VolAdjust;
 
 public class ActAudio extends State {
-    public static final Slot<ActAudio> audio = new State.Slot<>(Slot.Type.SYS, ActAudio.class);
+    public static final Slot<ActAudio> audio = new Slot<>(Slot.Type.SYS, ActAudio.class);
     public final Channel pos;
     public final Channel amb;
     private final Map<Global, Global> global = new HashMap<Global, Global>();
@@ -104,7 +104,7 @@ public class ActAudio extends State {
     public static class RootChannel implements Channel {
 	public final String name;
 	public double volume;
-	private Audio.VolAdjust volc = null;
+	private VolAdjust volc = null;
 	private Audio.Mixer mixer = null;
 
 	private RootChannel(String name) {
@@ -117,7 +117,7 @@ public class ActAudio extends State {
 	    if(ret == null) {
 		synchronized(this) {
 		    if((ret = this.mixer) == null) {
-			this.volc = new Audio.VolAdjust(ret = this.mixer = new Audio.Mixer(true));
+			this.volc = new VolAdjust(ret = this.mixer = new Audio.Mixer(true));
 			this.volc.vol = volume;
 			Audio.play(this.volc);
 		    }

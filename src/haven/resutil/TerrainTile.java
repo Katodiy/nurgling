@@ -368,13 +368,13 @@ public class TerrainTile extends Tiler implements Tiler.MCons, Tiler.CTrans {
     }
 
     public static class RidgeTile extends TerrainTile implements Ridges.RidgeTile {
-	public final Tiler.MCons rcons;
+	public final MCons rcons;
 	public final int rth;
 
 	@ResName("trn-r")
 	public static class RFactory implements Tiler.Factory {
 	    public Tiler create(int id, Tileset set) {
-		TerrainTile base = new Factory().create(id, set);
+		TerrainTile base = new TerrainTile.Factory().create(id, set);
 		double rth = 20;
 		Pipe.Op mat = null;
 		float texh = 11f;

@@ -32,6 +32,9 @@ import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.function.*;
 import haven.ItemInfo.AttrCache;
+import haven.res.ui.tt.leashed.Leashed;
+import haven.res.ui.tt.q.quality.Quality;
+
 import static haven.ItemInfo.find;
 import static haven.Inventory.sqsz;
 
@@ -116,7 +119,6 @@ public class WItem extends Widget implements DTarget {
 		    shorttip = new ShortTip(info);
 		return(shorttip);
 	    } else {
-		if(longtip == null)
 		    longtip = new LongTip(info);
 		return(longtip);
 	    }
@@ -125,7 +127,7 @@ public class WItem extends Widget implements DTarget {
 	}
     }
 
-    private List<ItemInfo> info() {return(item.info());}
+    protected List<ItemInfo> info() {return(item.info());}
     public final AttrCache<Color> olcol = new AttrCache<>(this::info, info -> {
 	    ArrayList<GItem.ColorInfo> ols = new ArrayList<>();
 	    for(ItemInfo inf : info) {
@@ -153,10 +155,21 @@ public class WItem extends Widget implements DTarget {
 		if(inf instanceof GItem.OverlayInfo)
 		    buf.add(GItem.InfoOverlay.create((GItem.OverlayInfo<?>)inf));
 	    }
+		buf.sort(new Comparator<GItem.InfoOverlay<?>>() {
+			@Override
+			public int compare(GItem.InfoOverlay<?> o1, GItem.InfoOverlay<?> o2) {
+				if(o2.inf instanceof Quality)
+					return -1;
+				else if(o1.inf instanceof Quality)
+					return 1;
+				else
+					return 0;
+			}
+		});
 	    GItem.InfoOverlay<?>[] ret = buf.toArray(new GItem.InfoOverlay<?>[0]);
 	    return(() -> ret);
 	});
-    public final AttrCache<Double> itemmeter = new AttrCache<>(this::info, AttrCache.map1(GItem.MeterInfo.class, minf -> minf::meter));
+    public final AttrCache<Double> itemmeter = new AttrCache<Double>(this::info, AttrCache.map1(GItem.MeterInfo.class, minf -> minf::meter));
 
     private GSprite lspr = null;
     public void tick(double dt) {
@@ -177,17 +190,18 @@ public class WItem extends Widget implements DTarget {
 
     public void draw(GOut g) {
 	GSprite spr = item.spr();
-	if(spr != null) {
+	if(spr != null ) {
 	    Coord sz = spr.sz();
 	    g.defstate();
-	    if(olcol.get() != null)
-		g.usestate(new ColorMask(olcol.get()));
+		if(olcol.get() != null)
+			g.usestate(new ColorMask(olcol.get()));
 	    drawmain(g, spr);
 	    g.defstate();
 	    GItem.InfoOverlay<?>[] ols = itemols.get();
 	    if(ols != null) {
+
 		for(GItem.InfoOverlay<?> ol : ols)
-		    ol.draw(g);
+			ol.draw(g);
 	    }
 	    Double meter = (item.meter > 0) ? Double.valueOf(item.meter / 100.0) : itemmeter.get();
 	    if((meter != null) && (meter > 0)) {

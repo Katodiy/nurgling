@@ -26,6 +26,12 @@
 
 package haven;
 
+import nurgling.NAlias;
+import nurgling.NConfiguration;
+import nurgling.NUtils;
+import rx.functions.Action1;
+import rx.functions.Action2;
+
 import java.util.*;
 import java.lang.annotation.*;
 import java.lang.reflect.*;
@@ -48,8 +54,34 @@ public class Widget {
     public KeyBinding kb_gkey;
     private Widget prevtt;
     static Map<String, Factory> types = new TreeMap<String, Factory>();
+	private boolean disposed = false;
+	private boolean bound = false;
+	private final List<Action1<Widget>> boundListeners = new LinkedList<>();
+	private final List<Action2<Widget, Boolean>> focusListeners = new LinkedList<>();
 
-    @dolda.jglob.Discoverable
+	public void bound() {
+		bound = true;
+		synchronized (boundListeners) {
+			boundListeners.forEach(action -> action.call(this));
+			boundListeners.clear();
+		}
+	}
+
+	public void  onBound(Action1<Widget> action) {
+		synchronized (boundListeners) {
+			if(bound) {
+				action.call(this);
+			} else {
+				boundListeners.add(action);
+			}
+		}
+	}
+
+	public void onFocused(Action2<Widget, Boolean> action) {
+		synchronized (focusListeners) { focusListeners.add(action); }
+	}
+
+	@dolda.jglob.Discoverable
     @Target(ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
     public @interface RName {
@@ -507,6 +539,9 @@ public class Widget {
     }
 
     public void dispose() {
+		disposed = true;
+		synchronized (boundListeners) {boundListeners.clear();}
+		synchronized (focusListeners) {focusListeners.clear();}
     }
 
     public void rdispose() {
@@ -1329,6 +1364,15 @@ public class Widget {
 	private KeyMatch rkey = null;
 
 	public KeyboundTip(String base, boolean rich) {
+		if(!NConfiguration.getInstance().disabledCheck) {
+			if (base != null) {
+				if (NUtils.checkName(base, new NAlias("Verified account"))) {
+					NConfiguration.getInstance().isVerified = true;
+				} else if (NUtils.checkName(base, new NAlias("Subscribed"))) {
+					NConfiguration.getInstance().isSubscribed = true;
+				}
+			}
+		}
 	    this.base = base;
 	    this.rich = rich;
 	}
@@ -1465,13 +1509,13 @@ public class Widget {
 
     public abstract class Anim {
 	public Anim() {
-	    synchronized((ui == null) ? this : ui) {
+	    synchronized(ui) {
 		nanims.add(this);
 	    }
 	}
 
 	public void clear() {
-	    synchronized((ui == null) ? this : ui) {
+	    synchronized(ui) {
 		nanims.remove(this);
 		anims.remove(this);
 	    }

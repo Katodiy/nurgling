@@ -29,11 +29,12 @@ package haven;
 import java.util.*;
 import java.util.function.*;
 import haven.render.*;
+import nurgling.NGob;
 
 public class ResDrawable extends Drawable implements EquipTarget {
     public final Indir<Resource> res;
     public final Sprite spr;
-    MessageBuf sdt;
+    public MessageBuf sdt;
     // private double delay = 0; XXXRENDER
 
     public ResDrawable(Gob gob, Indir<Resource> res, Message sdt) {
@@ -94,8 +95,10 @@ public class ResDrawable extends Drawable implements EquipTarget {
 	    if((d != null) && (d.res == res) && !d.sdt.equals(sdt) && (d.spr != null) && (d.spr instanceof Sprite.CUpd)) {
 		((Sprite.CUpd)d.spr).update(sdt);
 		d.sdt = sdt;
+		NGob.checkMark(g);
 	    } else if((d == null) || (d.res != res) || !d.sdt.equals(sdt)) {
 		g.setattr(new ResDrawable(g, res, sdt));
+		NGob.checkMark(g);
 	    }
 	}
     }

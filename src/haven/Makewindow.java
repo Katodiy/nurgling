@@ -26,6 +26,8 @@
 
 package haven;
 
+import nurgling.NMakewindow;
+
 import java.util.*;
 import java.awt.Font;
 import java.awt.Color;
@@ -42,12 +44,14 @@ public class Makewindow extends Widget {
     public List<SpecWidget> outputs = Collections.emptyList();
     public List<Indir<Resource>> qmod = Collections.emptyList();
     public List<Indir<Resource>> tools = new ArrayList<>();;
-    private final int xoff = UI.scale(45), qmy = UI.scale(38), outy = UI.scale(65);
+    protected final int xoff = UI.scale(45);
+    protected final int qmy = UI.scale(38);
+    protected final int outy = UI.scale(65);
 
     @RName("make")
     public static class $_ implements Factory {
 	public Widget create(UI ui, Object[] args) {
-	    return(new Makewindow((String)args[0]));
+	    return(new NMakewindow((String)args[0]));
 	}
     }
 
@@ -58,7 +62,7 @@ public class Makewindow extends Widget {
 	public Indir<Resource> res;
 	public MessageBuf sdt;
 	public Tex num;
-	private GSprite spr;
+	public GSprite spr;
 	private Object[] rawinfo;
 	private List<ItemInfo> info;
 
@@ -80,7 +84,9 @@ public class Makewindow extends Widget {
 
 	public void draw(GOut g) {
 	    try {
-		sprite().draw(g);
+			if(spr!=null) {
+				sprite().draw(g);
+			}
 	    } catch(Loading e) {}
 	    if(num != null)
 		g.aimage(num, Inventory.sqsz, 1.0, 1.0);
@@ -221,13 +227,13 @@ public class Makewindow extends Widget {
 	    tools.add(ui.sess.getres((Integer)args[0]));
 	} else if(msg == "inprcps") {
 	    int idx = (Integer)args[0];
-	    List<MenuGrid.Pagina> rcps = new ArrayList<>();
+	    Collection<MenuGrid.Pagina> rcps = new ArrayList<>();
 	    GameUI gui = getparent(GameUI.class);
 	    if((gui != null) && (gui.menu != null)) {
 		for(int a = 1; a < args.length; a++)
 		    rcps.add(gui.menu.paginafor(ui.sess.getres((Integer)args[a])));
 	    }
-	    inputs.get(idx).recipes(rcps);
+	    inputs.get(idx).recipes(rcps);;
 	} else {
 	    super.uimsg(msg, args);
 	}
@@ -235,7 +241,7 @@ public class Makewindow extends Widget {
 
     public static final Coord qmodsz = UI.scale(20, 20);
     private static final Map<Indir<Resource>, Tex> qmicons = new WeakHashMap<>();
-    private static Tex qmicon(Indir<Resource> qm) {
+    protected static Tex qmicon(Indir<Resource> qm) {
 	return(qmicons.computeIfAbsent(qm, res -> new TexI(PUtils.convolve(res.get().flayer(Resource.imgc).img, qmodsz, CharWnd.iconfilter))));
     }
 
@@ -297,7 +303,7 @@ public class Makewindow extends Widget {
 
     public class Input extends SpecWidget {
 	public final int idx;
-	private List<MenuGrid.Pagina> rpag = null;
+	private Collection<MenuGrid.Pagina> rpag = null;
 	private Coord cc = null;
 
 	public Input(Spec spec, int idx) {
@@ -319,16 +325,30 @@ public class Makewindow extends Widget {
 	    super.tick(dt);
 	    if((cc != null) && (rpag != null)) {
 		if(!rpag.isEmpty()) {
-		    SListMenu.of(UI.scale(250, 120), rpag,
-				 pag -> pag.button().name(), pag ->pag.button().img(),
-				 pag -> pag.button().use(new MenuGrid.Interaction(1, ui.modflags())))
-			.addat(this, cc.add(UI.scale(5, 5))).tick(dt);
+		    try {
+			List<MenuGrid.PagButton> btns = new ArrayList<>();
+			for(MenuGrid.Pagina pag : rpag)
+			    btns.add(pag.button());
+			new SListMenu<MenuGrid.PagButton, Widget>(UI.scale(250, 120), CharWnd.attrf.height()) {
+			    public List<MenuGrid.PagButton> items() {return(btns);}
+			    public Widget makeitem(MenuGrid.PagButton btn, int idx, Coord sz) {
+				return(SListWidget.IconText.of(sz, btn::img, btn::name));
+			    }
+			    public void choice(MenuGrid.PagButton btn) {
+				if(btn != null)
+				    btn.use(new MenuGrid.Interaction(1, ui.modflags()));
+				destroy();
+			    }
+			}.addat(this, cc.add(UI.scale(5, 5))).tick(dt);
+		    } catch(Loading l) {
+			return;
+		    }
 		}
 		cc = null;
 	    }
 	}
 
-	public void recipes(List<MenuGrid.Pagina> pag) {
+	public void recipes(Collection<MenuGrid.Pagina> pag) {
 	    rpag = pag;
 	}
     }
@@ -368,7 +388,7 @@ public class Makewindow extends Widget {
 	super.draw(g);
     }
 
-    private int qmx, toolx;
+	protected int qmx, toolx;
     public Object tooltip(Coord mc, Widget prev) {
 	Spec tspec = null;
 	Coord c;

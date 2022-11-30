@@ -70,7 +70,7 @@ public class FragColor<T> extends State {
 	return(new FragBlend(mode));
     }
 
-    private static class ColorValue extends ValBlock.Value {
+    private static class ColorValue extends Value {
 	boolean srgb = false;
 
 	ColorValue(ValBlock vals) {

@@ -43,10 +43,10 @@ import java.awt.image.*;
 public class Utils {
     public static final java.nio.charset.Charset utf8 = java.nio.charset.Charset.forName("UTF-8");
     public static final java.nio.charset.Charset ascii = java.nio.charset.Charset.forName("US-ASCII");
-    public static final java.awt.image.ColorModel rgbm = java.awt.image.ColorModel.getRGBdefault();
+    public static final ColorModel rgbm = ColorModel.getRGBdefault();
     private static Preferences prefs = null;
 
-    static Coord imgsz(BufferedImage img) {
+    public static Coord imgsz(BufferedImage img) {
 	return(new Coord(img.getWidth(), img.getHeight()));
     }
 
@@ -104,7 +104,7 @@ public class Utils {
 	if(url == null) throw(new IllegalArgumentException(String.valueOf(cl) + " has no location"));
 	try {
 	    return(Paths.get(url.toURI()));
-	} catch(java.net.URISyntaxException e) {
+	} catch(URISyntaxException e) {
 	    throw(new IllegalArgumentException(String.valueOf(cl) + " has a malformed location", e));
 	}
     }
@@ -530,7 +530,7 @@ public class Utils {
 	if(e == -128) {
 	    if(m == 0)
 		return(0.0);
-	    throw(new RuntimeException("Invalid special float encoded (" + m + ")"));
+	    throw(new RuntimeException("Invalid NUtils float encoded (" + m + ")"));
 	}
 	double v = (((double)m) / 2147483648.0) + 1.0;
 	if(s)
@@ -1739,7 +1739,7 @@ public class Utils {
 	byte[] enc;
 	try {
 	    enc = in.getBytes("utf-8");
-	} catch(java.io.UnsupportedEncodingException e) {
+	} catch(UnsupportedEncodingException e) {
 	    /* ¦] */
 	    throw(new Error(e));
 	}
@@ -1774,7 +1774,7 @@ public class Utils {
 	}
 	try {
 	    return(new URL(base.getProtocol(), base.getHost(), base.getPort(), file + buf.toString()));
-	} catch(java.net.MalformedURLException e) {
+	} catch(MalformedURLException e) {
 	    throw(new RuntimeException(e));
 	}
     }

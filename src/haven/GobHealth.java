@@ -28,6 +28,7 @@ package haven;
 
 import java.awt.Color;
 import haven.render.*;
+import nurgling.NGobHealth;
 
 public class GobHealth extends GAttrib implements Gob.SetupMod {
     public final float hp;
@@ -49,7 +50,7 @@ public class GobHealth extends GAttrib implements Gob.SetupMod {
     public static class $health implements OCache.Delta {
 	public void apply(Gob g, Message msg) {
 	    int hp = msg.uint8();
-	    g.setattr(new GobHealth(g, hp / 4.0f));
+	    g.setattr(new NGobHealth(g, hp / 4.0f));
 	}
     }
 }

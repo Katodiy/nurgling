@@ -26,9 +26,12 @@
 
 package haven;
 
+import nurgling.NFlowerMenu;
+
 import java.awt.Color;
 import java.awt.Font;
 import static java.lang.Math.PI;
+import static nurgling.NWItem.selectedItem;
 
 public class FlowerMenu extends Widget {
     public static final Color pink = new Color(255, 0, 128);
@@ -38,7 +41,8 @@ public class FlowerMenu extends Widget {
     public static final Tex pbg = Window.bg;
     public static final int ph = UI.scale(30), ppl = 8;
     public Petal[] opts;
-    private UI.Grab mg, kg;
+    protected UI.Grab mg;
+    protected UI.Grab kg;
 
     @RName("sm")
     public static class $_ implements Factory {
@@ -46,7 +50,7 @@ public class FlowerMenu extends Widget {
 	    String[] opts = new String[args.length];
 	    for(int i = 0; i < args.length; i++)
 		opts[i] = (String)args[i];
-	    return(new FlowerMenu(opts));
+	    return(new NFlowerMenu(opts));
 	}
     }
 
@@ -98,7 +102,7 @@ public class FlowerMenu extends Widget {
     }
 
     public class Opening extends NormAnim {
-	Opening() {super(0.25);}
+	protected Opening() {super(0.25);}
 	
 	public void ntick(double s) {
 	    double ival = 0.8;
@@ -166,7 +170,7 @@ public class FlowerMenu extends Widget {
 	}
     }
 
-    private void organize(Petal[] opts) {
+    protected void organize(Petal[] opts) {
 	Area bounds = parent.area().xl(c.inv());
 	int l = 1, p = 0, i = 0, mp = 0, ml = 1, t = 0, tt = -1;
 	boolean muri = false;
@@ -263,6 +267,9 @@ public class FlowerMenu extends Widget {
 	if(option == null) {
 	    wdgmsg("cl", -1);
 	} else {
+		if(option.name.contains("Eat"))
+			ui.sess.character.constipation.lastItem = selectedItem;
+		selectedItem = null;
 	    wdgmsg("cl", option.num, ui.modflags());
 	}
     }

@@ -35,6 +35,9 @@ import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import haven.render.*;
 import haven.Defer.Future;
+import nurgling.minimap.NPMarker;
+import nurgling.minimap.NSMarker;
+
 import static haven.MCache.cmaps;
 
 public class MapFile {
@@ -275,9 +278,34 @@ public class MapFile {
 	    this.tc = tc;
 	    this.nm = nm;
 	}
+
+	public String name() {
+		return nm;
+	}
+
+	public String tip(final UI ui) {
+		return nm;
+	}
+
+	public abstract void draw(final GOut g, final Coord c, final Text tip, final float scale, final MapFile file);
+
+	public abstract Area area();
+
+	@Override
+	public boolean equals(Object o) {
+		if(this == o) return true;
+		if(o == null || getClass() != o.getClass()) return false;
+		Marker marker = (Marker) o;
+		return seg == marker.seg && tc.equals(marker.tc) && nm.equals(marker.nm);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(seg, tc, nm);
+	}
     }
 
-    public static class PMarker extends Marker {
+    public static abstract class PMarker extends Marker {
 	public Color color;
 
 	public PMarker(long seg, Coord tc, String nm, Color color) {
@@ -286,15 +314,57 @@ public class MapFile {
 	}
     }
 
-    public static class SMarker extends Marker {
-	public long oid;
-	public Resource.Spec res;
+    public static abstract class SMarker extends Marker {
+		public final long oid;
+		public final Resource.Spec res;
 
-	public SMarker(long seg, Coord tc, String nm, long oid, Resource.Spec res) {
-	    super(seg, tc, nm);
-	    this.oid = oid;
-	    this.res = res;
-	}
+		public SMarker(long seg, Coord tc, String nm, long oid, Resource.Spec res) {
+			super(seg, tc, nm);
+			this.oid = oid;
+			this.res = res;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if(this == o) return true;
+			if(o == null || getClass() != o.getClass()) return false;
+			if(!super.equals(o)) return false;
+			SMarker sMarker = (SMarker) o;
+			return oid == sMarker.oid && res.equals(sMarker.res);
+		}
+
+		@Override
+		public void draw(GOut g, Coord c, Text tip, final float scale, final MapFile file) {
+			try {
+				final Resource res = this.res.loadsaved(Resource.remote());
+				final Resource.Image img = res.layer(Resource.imgc);
+				final Resource.Neg neg = res.layer(Resource.negc);
+				final Coord cc = neg != null ? neg.cc : img.ssz.div(2);
+				final Coord ul = c.sub(cc);
+				g.image(img, ul);
+				if(tip != null ) {
+					g.aimage(tip.tex(), c.addy(UI.scale(3)), 0.5, 0);
+				}
+			} catch (Loading ignored) {}
+		}
+
+		@Override
+		public Area area() {
+			try {
+				final Resource res = this.res.loadsaved(Resource.remote());
+				final Resource.Image img = res.layer(Resource.imgc);
+				final Resource.Neg neg = res.layer(Resource.negc);
+				final Coord cc = neg != null ? neg.cc : img.ssz.div(2);
+				return Area.sized(cc.inv(), img.ssz);
+			} catch (Loading ignored) {
+				return null;
+			}
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(super.hashCode(), oid, res);
+		}
     }
 
     private static Marker loadmarker(Message fp) {
@@ -307,11 +377,11 @@ public class MapFile {
 	    switch(type) {
 	    case 'p':
 		Color color = fp.color();
-		return(new PMarker(seg, tc, nm, color));
+		return(new NPMarker(seg, tc, nm, color));
 	    case 's':
 		long oid = fp.int64();
 		Resource.Spec res = new Resource.Spec(Resource.remote(), fp.string(), fp.uint16());
-		return(new SMarker(seg, tc, nm, oid, res));
+		return(new NSMarker(seg, tc, nm, oid, res));
 	    default:
 		throw(new Message.FormatError("Unknown marker type: " + (int)type));
 	    }
@@ -1014,7 +1084,10 @@ public class MapFile {
 	    }
 	    try(StreamMessage out = new StreamMessage(fp)) {
 		save(out);
-	    }
+	    }catch (Exception e){
+			/// TODO AccessDeniedException
+//			e.printStackTrace();
+		}
 	}
 
 	public static ZoomGrid load(MapFile file, long seg, int lvl, Coord sc) {

@@ -29,7 +29,7 @@ public class PacketStream {
      *
      * @return the packet fetched, or <code>null</code> if at the end
      * of the stream.
-     * @exception java.io.IOException if the <code>PageStream</code>
+     * @exception IOException if the <code>PageStream</code>
      * itself throws an <code>IOException</code>.
      * @exception FormatException if a format error is found in the
      * stream.
@@ -64,7 +64,7 @@ public class PacketStream {
     /**
      * Closes the stream backing this object.
      *
-     * @exception java.io.IOException if the backing input stream
+     * @exception IOException if the backing input stream
      * itself throws an <code>IOException</code>.
      */
     public void close() throws IOException {

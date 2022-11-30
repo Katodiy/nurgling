@@ -84,4 +84,18 @@ public class Homing extends Moving {
 	    }
 	}
     }
+
+	public Gob tgt(){
+		return gob.glob.oc.getgob(this.tgt);
+	}
+
+	@Override
+	public Coord3f gett() {
+		Gob tgt = tgt();
+		if(tgt == null) {
+			return gob.glob.map.getzp(tc);
+		} else {
+			return tgt.getc();
+		}
+	}
 }

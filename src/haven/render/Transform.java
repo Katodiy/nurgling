@@ -31,7 +31,7 @@ import java.util.function.*;
 
 public abstract class Transform extends State {
     private static final Pair<Matrix4f, Matrix4f> NONE = new Pair<>(null, null);
-    private final Function<Matrix4f, Matrix4f> xf;
+    protected final Function<Matrix4f, Matrix4f> xf;
     private Pair<Matrix4f, Matrix4f> last = NONE;
 
     public Transform(Function<Matrix4f, Matrix4f> xf) {
@@ -43,11 +43,15 @@ public abstract class Transform extends State {
     }
 
     public haven.render.sl.ShaderMacro shader() {return(null);}
-
+	public Coord3f pos = new Coord3f(0,0,0);
     public Matrix4f fin(Matrix4f p) {
 	Pair<Matrix4f, Matrix4f> last = this.last;
 	if(p != last.a)
-	    this.last = last = new Pair<>(p, xf.apply(p));
+	{
+		this.last = last = new Pair<>(p, xf.apply(p));
+		Matrix4f posm = p.invert();
+		pos = new Coord3f(posm.get(3, 0), posm.get(3, 1), posm.get(3, 2));
+	}
 	return(last.b);
     }
 
