@@ -12,12 +12,14 @@ public class CattailPicker extends Bot {
         
         runActions.add ( new CattailAction( ) );
     }
-    
-    
+
+
     @Override
-    public void initAction () {
+    public void initAction ()
+            throws InterruptedException {
+        super.initAction();
     }
-    
+
     @Override
     public void endAction () {
         super.endAction ();

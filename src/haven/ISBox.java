@@ -34,7 +34,7 @@ public class ISBox extends Widget implements DTarget {
     private Indir<Resource> res;
     protected Text label;
     static {
-        lf = new Text.Foundry(Text.fraktur, 22, java.awt.Color.WHITE);
+        lf = new Text.Foundry(Text.sans, 22, java.awt.Color.WHITE);
         lf.aa = true;
     }
     

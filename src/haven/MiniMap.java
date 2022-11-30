@@ -593,12 +593,12 @@ public class MiniMap extends Widget {
 				disp.col = BuddyWnd.gc[kin.group];
 			    ret.add(disp);
 			}
-//			if((conf != null) && conf.ring){
-//				gob.noteImg = icon.img().tex;
-//				gob.addTag(NGob.Tags.notified);
-//			}else{
-//				gob.removeTag(NGob.Tags.notified);
-//			}
+			if((conf != null) && conf.ring){
+				gob.noteImg = icon.img().tex;
+				gob.addTag(NGob.Tags.notified);
+			}else{
+				gob.removeTag(NGob.Tags.notified);
+			}
 		}
 		} catch(Loading l) {}
 	    }

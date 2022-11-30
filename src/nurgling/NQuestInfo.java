@@ -47,7 +47,7 @@ public class NQuestInfo extends Widget {
     private Tex glowon;
 
     public static boolean update = true;
-    public final Text.Foundry prsf = new Text.Foundry(Text.fraktur, 25).aa(true);
+    public final Text.Foundry prsf = new Text.Foundry(Text.sans, 25).aa(true);
     public NQuestInfo() {
         super ( new Coord( NUtils.getGameUI().sz.x-500, NUtils.getGameUI().sz.y-200 ) );
         add(new NMiniMapWnd.NMenuCheckBox("lbtn-hidenq", GameUI.kb_vil, "Show/hide without quest"), 0, 0).changed(a -> {update=true; isNQvisible = a;});

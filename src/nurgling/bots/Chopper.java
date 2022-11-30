@@ -35,7 +35,7 @@ public class Chopper extends Bot {
             throws InterruptedException {
         super.initAction ();
         //        new Thread (new BattleServer ()).start ();
-        Widget prev = window.add (new Button ( window.buttons_size, "Деревья" ) {
+        Widget prev = window.add (new Button ( window.buttons_size, "Trees for chopping" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;
@@ -46,7 +46,7 @@ public class Chopper extends Bot {
                 }
             }
         } );
-        prev = window.add(new CheckBox("Корчевать пни"){
+        prev = window.add(new CheckBox("Uproot stumps"){
             {
                 a = stump_mod.get();
             }
@@ -56,7 +56,7 @@ public class Chopper extends Bot {
                 a = val;
             }
         }, prev.c.add(0,40));
-        window.add(new CheckBox("Игнорировать поросль"){
+        window.add(new CheckBox("Ignore the growth"){
             {
                 a = no_kid_mod.get();
             }

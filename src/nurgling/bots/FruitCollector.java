@@ -46,7 +46,7 @@ public class FruitCollector extends Bot {
     public void initAction ()
             throws InterruptedException { super.initAction();
         int y = 0;
-        window.add ( new Button ( window.buttons_size, "Деревья" ) {
+        window.add ( new Button ( window.buttons_size, "Fruit Collector" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;
@@ -58,7 +58,7 @@ public class FruitCollector extends Bot {
             }
         }, new Coord ( 0, y ) );
         y+=25;
-        window.add ( new Button ( window.buttons_size, "Пайлы" ) {
+        window.add ( new Button ( window.buttons_size, "Output piles" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;
