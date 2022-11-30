@@ -43,7 +43,7 @@ public class PlaceLifted implements Action {
             pf.run ();
             NUtils.place ( coord );
             NUtils.waitEvent(()->!NUtils.isPose(gui.map.player(),new NAlias("banzai")),200);
-            NArea checkArea = new NArea( hitBox, coord );
+            NArea checkArea = new NArea(coord,2.75);
             if ( Finder.isGobInArea ( checkArea, item )) {
                 return new Results ( Results.Types.SUCCESS );
             }

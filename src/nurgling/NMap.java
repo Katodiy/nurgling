@@ -87,32 +87,33 @@ public class NMap {
         }
         checkTiles ( gui );
     }
-    
+    private boolean debug = false;
     public void print (int ii, int jj){
-        try {
-            File file = new File("notes3.txt");
-            file.createNewFile(); // если файл существует - команда игнорируется
-            FileOutputStream fileOutputStream = new FileOutputStream(file, false);
-            Writer writer = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
+        if(debug) {
+            try {
+                File file = new File("notes3.txt");
+                file.createNewFile(); // если файл существует - команда игнорируется
+                FileOutputStream fileOutputStream = new FileOutputStream(file, false);
+                Writer writer = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
 
-        for ( int i = 0; i < cell_num ; i++ ) {
-            for ( int j = cell_num-1 ; j >= 0 ; j-- ) {
-                if(i == ii && j == jj){
-                    writer.write( "◉");
-                }
-                    else {
-                        if (array[i][j].isVisited)
-                            writer.write("◙");
-                        else
-                            writer.write((array[i][j].isFree) ? "⊡" : "⊠");
-                }
+                for (int i = 0; i < cell_num; i++) {
+                    for (int j = cell_num - 1; j >= 0; j--) {
+                        if (i == ii && j == jj) {
+                            writer.write("◉");
+                        } else {
+                            if (array[i][j].isVisited)
+                                writer.write("◙");
+                            else
+                                writer.write((array[i][j].isFree) ? "⊡" : "⊠");
+                        }
 
+                    }
+                    writer.write('\n');
+                }
+                writer.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-            writer.write ( '\n' );
-        }
-        writer.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 

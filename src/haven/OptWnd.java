@@ -1683,8 +1683,10 @@ public class OptWnd extends Window {
 
 		class AreaSettings extends Widget {
 			AreaIconSelecter area;
+			Dropbox<String> dropbox;
 			public AreaSettings() {
-			prev = add(new Dropbox<String>(100, 5, 16) {
+				prev =  add(new Label("Select an existing area to set the image for SIGN"));
+				prev = dropbox = add(new Dropbox<String>(100, 5, 16) {
 					@Override
 					protected String listitem(int i) {
 						return Stream.of(AreasID.values())
@@ -1710,9 +1712,20 @@ public class OptWnd extends Window {
 						area.setAreaID(AreasID.valueOf(item));
 						super.change(item);
 					}
-				});
-
-				prev = area = (AreaIconSelecter)add(new AreaIconSelecter(AreasID.branch),prev.pos("bl").adds(0, 5));
+				},prev.pos("bl").adds(0, 10));
+				TextEntry name = add(new TextEntry(110,""), prev.pos("ur").adds(5, -2));
+				add(new Button(50,"Set"){
+					@Override
+					public void click() {
+						try {
+							dropbox.change(name.text());
+						}catch (IllegalArgumentException e){
+							NUtils.getGameUI().msg("NAME NOT FOUND");
+						}
+					}
+				}, name.pos("ur").adds(5, -2));
+				prev = add(new Label("Setup correct image, using marker key (PRESS SHIFT and MOVE cursor on SIGN with image) or enter resName without PATH"),prev.pos("bl").adds(0, 10));
+				prev = area = (AreaIconSelecter)add(new AreaIconSelecter(AreasID.branch),prev.pos("bl").adds(0, 10));
 
 				pack();
 			}

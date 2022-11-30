@@ -36,6 +36,7 @@ public class IngredientSettings extends Widget {
     public IngredientSettings() {
         item = new AItem();
         icon = (Icon)(prev = add(new Icon()));
+        add(new Label("Drag item from inventory here(and LEFT CLICK). And setup where you want take it and stored it (Barters or/and containers)"), prev.pos("ur").adds(15, 2));
         int y = 10;
         prev = add(new Label("Barter (In):"), prev.pos("bl").adds(0, y));
         Widget right = add( new AreaViewer(item.barter_in), prev.pos("ur").adds(15, 2));

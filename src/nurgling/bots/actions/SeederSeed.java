@@ -23,7 +23,7 @@ public class SeederSeed implements Action {
         }
     }
 
-    void seedCrop(
+    boolean seedCrop(
             NGameUI gui,
             SeedArea area
     )
@@ -32,10 +32,9 @@ public class SeederSeed implements Action {
             if (!gui.hand.isEmpty())
                 NUtils.transferToInventory();
             new TakeFromBarrels(in.outArea, gui.getInventory().getFreeSpace(), in.items).run(gui);
+            return false;
         }
         new PathFinder(gui, area.seedArea.begin).run();
-
-        NArea checkArea = new NArea(NHitBox.getByName("iconsign"), area.begin);
 
         do {
 
@@ -50,13 +49,12 @@ public class SeederSeed implements Action {
                 Thread.sleep(50);
             }
             gui.map.wdgmsg("sel", area.seedArea.begin.round().div(MCache.tilesz2), area.seedArea.end.round().div(MCache.tilesz2), 1);
-            checkArea.correct(checkArea.center,0);
-            checkArea.begin = checkArea.begin.add(checkArea.center);
-            checkArea.end = checkArea.end.add(checkArea.center);
-            NUtils.waitEvent(() -> checkArea.countTiles()== Finder.findObjectsInArea( in.items,checkArea).size(), 20);
+
+            NUtils.waitEvent(() -> area.seedArea.countTiles()== Finder.findObjectsInArea( in.items,area.seedArea).size(), 20);
 //            System.out.println(Finder.findObjectsInArea( in.items,checkArea).size());
         }
-        while (!Finder.isGobInArea(checkArea, in.items));
+        while (Finder.findObjectsInArea( in.items,area.seedArea).size()!=area.seedArea.countTiles());
+        return true;
     }
 
     @Override
@@ -93,7 +91,8 @@ public class SeederSeed implements Action {
             long size = hpos.countTiles();
             System.out.println(Finder.findObjectsInArea( in.items,hpos).size() +","+ String.valueOf(size));
             while (Finder.findObjectsInArea( in.items,hpos).size()<size) {
-                seedCrop(gui, hpos);
+                if(!seedCrop(gui, hpos))
+                    return new Results(Results.Types.NO_ITEMS);
                 if (NUtils.getStamina() <= 0.3) {
                     if (!gui.hand.isEmpty())
                         NUtils.transferToInventory();

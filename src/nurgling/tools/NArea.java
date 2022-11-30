@@ -39,6 +39,15 @@ public class NArea {
         this.end = new Coord2d ( start.x + shift, start.y + shift );
         this.center = new Coord2d ( ( end.x - begin.x ) / 2. + begin.x, ( end.y - begin.y ) / 2. + begin.y );
         this.orientation = 0;
+        polyVertexes[0] = end ;
+        polyVertexes[1] = new Coord2d ( begin.x, end.y );
+        polyVertexes[2] = begin;
+        polyVertexes[3] = new Coord2d ( end.x, begin.y );
+        coord2ds[0] = polyVertexes[2];
+        coord2ds[1] = polyVertexes[1];
+        coord2ds[2] = polyVertexes[0];
+        coord2ds[3] = polyVertexes[3];
+        this.radius = Math.max(Math.abs(end.x - begin.x), Math.abs(end.y - begin.y))/2;
     }
     
     public NArea(ArrayList<Coord2d> tilesArray ) {
@@ -143,20 +152,7 @@ public class NArea {
         
         
     }
-    
-    public NArea(
-            NHitBox hitBox,
-            Coord2d shift
-    ) {
-        this.orientation = 0;
-        this.begin = new Coord2d ( hitBox.begin.x, hitBox.begin.y );
-        this.end = new Coord2d ( hitBox.end.x, hitBox.end.y );
-        this.center = shift;
-        coord2ds[0] = begin.rotate ( 0 ).shift ( shift ) ;
-        coord2ds[1] = new Coord2d ( begin.x, end.y ).rotate ( 0 ).shift ( shift ) ;
-        coord2ds[2] = end.rotate ( 0 ).shift ( shift ) ;
-        coord2ds[3] = new Coord2d ( end.x, begin.y ).rotate ( 0 ).shift ( shift ) ;
-    }
+
     
     public NArea() {
         this ( new Coord2d (), new Coord2d () );

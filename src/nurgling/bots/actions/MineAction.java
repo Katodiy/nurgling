@@ -76,7 +76,7 @@ public class MineAction implements Action {
                         }
                     }
                     if ( res_beg != null ) {
-                        if ( NUtils.checkName ( res_beg.name, new NAlias( "rock" ) ) ) {
+                        if ( NUtils.checkName ( res_beg.name, new NAlias( "rock", "tiles/cave" ) ) ) {
                             Coord2d target_pos = new Coord2d ( tile.coord.x, tile.coord.y );
                             PathFinder pf = new PathFinder( gui, target_pos );
                             pf.setPhantom ( target_pos, NHitBox.getByName ( "cupboard" ) );
@@ -97,7 +97,7 @@ public class MineAction implements Action {
                             Thread.sleep ( 100 );
                             res_beg = gui.ui.sess.glob.map.tilesetr ( gui.ui.sess.glob.map.gettile ( tile_pos ) );
                             if ( res_beg != null ) {
-                                if ( !NUtils.checkName ( res_beg.name, new NAlias ( "rock" ) ) ) {
+                                if ( !NUtils.checkName ( res_beg.name, new NAlias ( "rock", "tiles/cave" ) ) ) {
                                     tile.isAvailible = false;
                                 }
                             }
