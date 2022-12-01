@@ -26,7 +26,7 @@ public class FriedFish extends Bot {
     public void initAction () throws InterruptedException{
         super.initAction ();
         int y = 0;
-        window.add ( new Button( window.buttons_size, "Сырая рыба" ) {
+        window.add ( new Button( window.buttons_size, "Fresh Fish" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;

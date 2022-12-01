@@ -25,7 +25,7 @@ public class BrickMaker extends Bot {
     @Override
     public void initAction () throws InterruptedException {
         int y = 0;
-        window.add ( new Button ( window.buttons_size, "Глина" ) {
+        window.add ( new Button ( window.buttons_size, "Piles of clay" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;
@@ -37,7 +37,7 @@ public class BrickMaker extends Bot {
             }
         }, new Coord ( 0, y ) );
         y += 25;
-        window.add ( new Button ( window.buttons_size, "Кирпичи" ) {
+        window.add ( new Button ( window.buttons_size, "Output bricks" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;

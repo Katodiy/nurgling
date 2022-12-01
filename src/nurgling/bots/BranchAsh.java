@@ -29,7 +29,7 @@ public class BranchAsh extends Bot {
             throws InterruptedException {
         super.initAction ();
         int y = 0;
-        window.add ( new Button ( window.buttons_size, "Блоки" ) {
+        window.add ( new Button ( window.buttons_size, "Blocks piles/Log" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;
@@ -41,7 +41,7 @@ public class BranchAsh extends Bot {
             }
         }, new Coord ( 0, y ) );
         y += 25;
-        window.add ( new Button ( window.buttons_size, "Бочка" ) {
+        window.add ( new Button ( window.buttons_size, "Barrel for ash" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;

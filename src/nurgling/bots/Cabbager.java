@@ -27,7 +27,7 @@ public class Cabbager extends Bot {
             throws InterruptedException {
         super.initAction ();
         int y = 0;
-        window.add ( new Button ( window.buttons_size, "Не готовые" ) {
+        window.add ( new Button ( window.buttons_size, "Input(Not ready)" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;
@@ -39,7 +39,7 @@ public class Cabbager extends Bot {
             }
         }, new Coord ( 0, y ) );
         y += 25;
-        window.add ( new Button ( window.buttons_size, "Готовые" ) {
+        window.add ( new Button ( window.buttons_size, "Output(Ready)" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;

@@ -14,12 +14,12 @@ public class SeederSeed implements Action {
 
 
     class SeedArea extends NArea{
-        public NArea seedArea;
+//        public NArea seedArea;
 
 
         public SeedArea(Coord2d begin, Coord2d end) {
             super(new Coord2d(Math.min(begin.x,end.x),Math.min(begin.y,end.y)),new Coord2d(Math.max(begin.x,end.x),Math.max(begin.y,end.y)));
-            seedArea = new NArea(begin,end);
+//            seedArea = new NArea(begin,end);
         }
     }
 
@@ -32,9 +32,13 @@ public class SeederSeed implements Action {
             if (!gui.hand.isEmpty())
                 NUtils.transferToInventory();
             new TakeFromBarrels(in.outArea, gui.getInventory().getFreeSpace(), in.items).run(gui);
-            return false;
+            if (gui.getInventory().getItems(in.items).size() < 2)
+                return false;
         }
-        new PathFinder(gui, area.seedArea.begin).run();
+        if(gui.map.player().rc.dist(area.begin)<gui.map.player().rc.dist(area.end))
+            new PathFinder(gui, area.begin).run();
+        else
+            new PathFinder(gui, area.begin).run();
 
         do {
 
@@ -48,12 +52,12 @@ public class SeederSeed implements Action {
                 }
                 Thread.sleep(50);
             }
-            gui.map.wdgmsg("sel", area.seedArea.begin.round().div(MCache.tilesz2), area.seedArea.end.round().div(MCache.tilesz2), 1);
+            gui.map.wdgmsg("sel", area.begin.round().div(MCache.tilesz2), area.end.round().div(MCache.tilesz2), 1);
 
-            NUtils.waitEvent(() -> area.seedArea.countTiles()== Finder.findObjectsInArea( in.items,area.seedArea).size(), 20);
+            NUtils.waitEvent(() -> area.countTiles()== Finder.findObjectsInArea( in.items,area).size(), 20);
 //            System.out.println(Finder.findObjectsInArea( in.items,checkArea).size());
         }
-        while (Finder.findObjectsInArea( in.items,area.seedArea).size()!=area.seedArea.countTiles());
+        while (Finder.findObjectsInArea( in.items,area).size()!=area.countTiles());
         return true;
     }
 

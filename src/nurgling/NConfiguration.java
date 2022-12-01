@@ -60,6 +60,7 @@ public class NConfiguration {
     public HashMap<String,HashMap<String, HashMap<Integer, String>>> allKeys = new HashMap<String,HashMap<String, HashMap<Integer, String>>>();
 
     public ArrayList<String> fishCandidates = new ArrayList<>();
+    public boolean isInfo = true;
 
     public static String getCharKey()
     {

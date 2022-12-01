@@ -29,7 +29,7 @@ public class BlockAndBoard extends Bot {
     public void initAction ()
             throws InterruptedException { super.initAction();
         int y = 0;
-        window.add ( new Button ( window.buttons_size, "Доски" ) {
+        window.add ( new Button ( window.buttons_size, "Log for Boards" ) {
             @Override
             public void click () {
                 _boards.set ( true );
@@ -45,7 +45,7 @@ public class BlockAndBoard extends Bot {
             }
         }, new Coord ( 0, y  ) );
         y+=25;
-        window.add ( new Button ( window.buttons_size, "Блоки" ) {
+        window.add ( new Button ( window.buttons_size, "Log for Blocks" ) {
             @Override
             public void click () {
                 _boards.set ( false );
@@ -61,7 +61,7 @@ public class BlockAndBoard extends Bot {
             }
         }, new Coord ( 0, y ) );
         y+=25;
-        window.add ( new Button ( window.buttons_size, "Пайлы" ) {
+        window.add ( new Button ( window.buttons_size, "Output piles" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;

@@ -34,7 +34,7 @@ public class CabbageMaker extends Bot {
     public void initAction ()
             throws InterruptedException { super.initAction();
         int y = 0;
-        r_1 = window.add ( new Button ( window.buttons_size, "Мясо" ) {
+        r_1 = window.add ( new Button ( window.buttons_size, "Nutjerck" ) {
             @Override
             public void click () {
                 command.command = new char[]{ 'c', 'f', 'w', 'p', 'n' };
@@ -53,7 +53,7 @@ public class CabbageMaker extends Bot {
             }
         }, new Coord ( 0, y ) );
         y += 25;
-        r_2 = window.add ( new Button ( window.buttons_size, "Рыба" ) {
+        r_2 = window.add ( new Button ( window.buttons_size, "Fishwrap" ) {
             @Override
             public void click () {
                 command.command = new char[]{ 'c', 'f', 'w', 'p', 'i' };
@@ -72,7 +72,7 @@ public class CabbageMaker extends Bot {
             }
         }, new Coord ( 0, y ) );
         y += 25;
-        r_3 = window.add ( new Button ( window.buttons_size, "Фрукты" ) {
+        r_3 = window.add ( new Button ( window.buttons_size, "Fruitroast" ) {
             @Override
             public void click () {
                 command.command = new char[]{ 'c', 'f', 'w', 'p', 'f' };
@@ -94,7 +94,7 @@ public class CabbageMaker extends Bot {
             }
         }, new Coord ( 0, y ) );
         y += 25;
-        window.add ( new Button ( window.buttons_size, "Результаты" ) {
+        window.add ( new Button ( window.buttons_size, "Output" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;

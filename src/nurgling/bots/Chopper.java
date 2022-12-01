@@ -25,10 +25,9 @@ public class Chopper extends Bot {
     public Chopper(NGameUI gameUI ) {
         super ( gameUI );
         win_title = "Chopper";
-        win_sz.y = 100;
-        
+
     }
-    
+
     
     @Override
     public void initAction ()
