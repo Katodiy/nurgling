@@ -35,10 +35,13 @@ public class SeederSeed implements Action {
             if (gui.getInventory().getItems(in.items).size() < 2)
                 return false;
         }
+        boolean isReverse = false;
         if(gui.map.player().rc.dist(area.begin)<gui.map.player().rc.dist(area.end))
             new PathFinder(gui, area.begin).run();
-        else
-            new PathFinder(gui, area.begin).run();
+        else {
+            isReverse = true;
+            new PathFinder(gui, area.end).run();
+        }
 
         do {
 
@@ -52,7 +55,10 @@ public class SeederSeed implements Action {
                 }
                 Thread.sleep(50);
             }
-            gui.map.wdgmsg("sel", area.begin.round().div(MCache.tilesz2), area.end.round().div(MCache.tilesz2), 1);
+            if(!isReverse)
+                gui.map.wdgmsg("sel", area.begin.round().div(MCache.tilesz2), area.end.round().div(MCache.tilesz2), 1);
+            else
+                gui.map.wdgmsg("sel", area.end.round().div(MCache.tilesz2), area.begin.round().div(MCache.tilesz2), 1);
 
             NUtils.waitEvent(() -> area.countTiles()== Finder.findObjectsInArea( in.items,area).size(), 20);
 //            System.out.println(Finder.findObjectsInArea( in.items,checkArea).size());
@@ -93,7 +99,7 @@ public class SeederSeed implements Action {
         for (SeedArea hpos : harvestCoord) {
             hpos.installBox();
             long size = hpos.countTiles();
-            System.out.println(Finder.findObjectsInArea( in.items,hpos).size() +","+ String.valueOf(size));
+//            System.out.println(Finder.findObjectsInArea( in.items,hpos).size() +","+ String.valueOf(size));
             while (Finder.findObjectsInArea( in.items,hpos).size()<size) {
                 if(!seedCrop(gui, hpos))
                     return new Results(Results.Types.NO_ITEMS);

@@ -18,7 +18,7 @@ public class TransferToTrough implements Action {
         while ( !gui.getInventory ().getItems ( items ).isEmpty () ) {
             
             Gob gob = Finder
-                    .findObjectInArea ( new NAlias( "trough" ), 2000, Finder.findNearestMark ( AreasID.silo ) );
+                    .findObjectInArea ( new NAlias( "trough" ), 2000, Finder.findNearestMark ( AreasID.swill) );
             
             
             new PathFinder( gui, gob ).run ();
@@ -43,7 +43,7 @@ public class TransferToTrough implements Action {
                         Gob cistern = Finder.findObjectInArea ( new NAlias ( new ArrayList<> ( Arrays
                                         .asList ( "cistern")) ),
                                 1000,
-                                Finder.findNearestMark ( AreasID.silo ) );
+                                Finder.findNearestMark ( AreasID.swill) );
                         PathFinder pf = new PathFinder ( gui, cistern );
                         pf.ignoreGob ( gob );
                         pf.run ();
@@ -54,7 +54,7 @@ public class TransferToTrough implements Action {
                             counter++;
                             Thread.sleep ( 50 );
                         }
-                        new PlaceLifted ( AreasID.silo, NHitBox.getByName ( "trough" ),new NAlias ("trough") ).run ( gui );
+                        new PlaceLifted ( AreasID.swill, NHitBox.getByName ( "trough" ),new NAlias ("trough") ).run ( gui );
                     }
                 }
                 while ( !gui.hand.isEmpty () );

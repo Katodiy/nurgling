@@ -17,6 +17,14 @@ public class OpenTargetContainer implements Action {
             gui.map.wdgmsg ( "click", Coord.z, gob.rc.floor ( posres ), 3, 0, 0, ( int ) gob.id,
                     gob.rc.floor ( posres ), 0, -1 );
             NUtils.waitEvent ( ()->gui.getWindow ( cap )!=null,300 );
+            if(cap.contains("Stockpile"))
+            {
+                NUtils.waitEvent (gui::isStockpile,500 );
+            }
+            else
+            {
+                NUtils.waitEvent ( ()->gui.getInventory ( cap )!=null,500 );
+            }
             wnd = gui.getWindow ( cap );
             if ( wnd == null ) {
                 return new Results ( Results.Types.OPEN_FAIL );

@@ -45,16 +45,11 @@ public class FillFuelFromPiles implements Action {
                     }
                 }
                 while (need > 0);
-                NUtils.getGameUI().msg("Fuel taked");
                 new PathFinder(gui, gob).run();
-                for (int i = 0; i < size; i++) {
+                while (!gui.getInventory().getItems(items).isEmpty()) {
                     new TakeToHand(items).run(gui);
-                    int counter = 0;
-                    while (!gui.hand.isEmpty() && counter < 20) {
-                        NUtils.activateItem(gob);
-                        Thread.sleep(50);
-                        counter++;
-                    }
+                    NUtils.activateItem(gob);
+                    NUtils.waitEvent(()->gui.hand.isEmpty(),200);
                 }
             }
         }

@@ -22,7 +22,7 @@ public class TransferTrash implements Action {
         for ( WItem item : items ) {
             NUtils.drop ( item );
         }
-        
+
         ArrayList<WItem> items2 = gui.getInventory ().getItems (
                 new NAlias ( new ArrayList<String> ( Arrays.asList ( "intestines" ) ) ), AreasID.getTh(AreasID.inten), false );
         /// Переносим предметы в инвентарь
@@ -31,7 +31,7 @@ public class TransferTrash implements Action {
             NUtils.drop ( item );
         }
         new TransferItemsToBarter ( AreasID.inten,new NAlias ( "intest" ), false ).run ( gui );
-        new TransferItemsToBarter (AreasID.inten,new NAlias ( "entrails" ), false ).run ( gui );
+        new TransferItemsToBarter (AreasID.entr,new NAlias ( "entrails" ), false ).run ( gui );
         
         
         new TransferToPile ( AreasID.inten, NHitBox.getByName ( "stockpile" ), new NAlias ( "stockpile" ),

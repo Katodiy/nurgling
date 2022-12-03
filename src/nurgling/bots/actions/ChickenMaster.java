@@ -217,8 +217,7 @@ public class ChickenMaster implements Action {
                 return new Results(Results.Types.NO_ITEMS);
             }
             new SelectFlowerAction(roost_dead, "Pluck", SelectFlowerAction.Types.Inventory).run(gui);
-            NUtils.waitEvent(()-> gui.getInventory().getItem(new NAlias("chicken-plucked"))!=null,200);
-            NUtils.waitEvent(()-> gui.getInventory().getItems(new NAlias("feather")).size()>=3,200);
+            NUtils.waitEvent(()-> gui.getInventory().getItems(new NAlias("feather")).size()>=3 && gui.getInventory().getItem(new NAlias("chicken-plucked"))!=null,500);
 
             /// Сбрасываем перья
 
@@ -242,7 +241,7 @@ public class ChickenMaster implements Action {
                 return new Results(Results.Types.NO_ITEMS);
             }
             new SelectFlowerAction(chicken_plucked, "Clean", SelectFlowerAction.Types.Inventory).run(gui);
-            NUtils.waitEvent(()-> gui.getInventory().getItem(new NAlias("entrails"))!=null,200);
+            NUtils.waitEvent(()-> gui.getInventory().getItem(new NAlias("entrails"))!=null && gui.getInventory().getItem(new NAlias("chicken-cleaned"))!=null,500);
             new TransferTrash().run(gui);
             /// Разделываем курицу
             WItem chicken_cleaned = gui.getInventory().getItem(new NAlias("chicken-cleaned"));
@@ -321,7 +320,7 @@ public class ChickenMaster implements Action {
                 return new Results ( Results.Types.NO_ITEMS );
             }
             new SelectFlowerAction ( hen_dead, "Pluck", SelectFlowerAction.Types.Inventory ).run ( gui );
-            NUtils.waitEvent(()-> gui.getInventory().getItems(new NAlias("feather")).size()>=3,200);
+            NUtils.waitEvent(()-> gui.getInventory().getItems(new NAlias("feather")).size()>=3 && gui.getInventory().getItem(new NAlias("chicken-plucked"))!=null,500);
             /// Сбрасываем перья
             ArrayList<WItem> items = gui.getInventory()
                     .getItems(new NAlias(new ArrayList<String>(Arrays.asList("feather"))),
@@ -344,7 +343,7 @@ public class ChickenMaster implements Action {
                 return new Results ( Results.Types.NO_ITEMS );
             }
             new SelectFlowerAction ( chicken_plucked, "Clean", SelectFlowerAction.Types.Inventory ).run ( gui );
-            NUtils.waitEvent(()-> gui.getInventory().getItem(new NAlias("entrails"))!=null,200);
+            NUtils.waitEvent(()-> gui.getInventory().getItem(new NAlias("entrails"))!=null && gui.getInventory().getItem(new NAlias("chicken-cleaned"))!=null,500);
 
             new TransferTrash ().run ( gui );
             /// Разделываем курицу
@@ -383,14 +382,14 @@ public class ChickenMaster implements Action {
         double chicken_th = qtop.get ( 0 );
 
 
-        if ( Finder.findObjectInArea ( new NAlias ( "barter" ), 1000, Finder.findNearestMark ( AreasID.meat4 ) ) !=
+        if ( Finder.findObjectInArea ( new NAlias ( "barter" ), 1000, Finder.findNearestMark ( AreasID.eggs ) ) !=
                 null ) {
             new TransferFromContainerToBarter ( new NAlias("egg"), AreasID.hens, AreasID.eggs, chicken_th, false, false ).run ( gui );
         }
         else {
             new TransferFromContainerToContainer ( new NAlias ( new ArrayList<> ( Arrays.asList ( "egg" ) ) ),
                     AreasID.hens, AreasID.eggs, chicken_th, false ).run ( gui );
-            
+
         }
         return new Results ( Results.Types.SUCCESS );
     }

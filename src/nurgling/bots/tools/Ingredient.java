@@ -52,4 +52,8 @@ public class Ingredient extends AItem{
     public static AItem get(WItem item) {
         return IngredientSettings.data.get(NUtils.getInfo(item));
     }
+
+    public static AItem get(String info) {
+        return IngredientSettings.data.get(info);
+    }
 }

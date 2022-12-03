@@ -190,7 +190,18 @@ public class NGameUI extends GameUI {
     public NInventory getInventory ( String name ) {
         return getInventory(name, true);
     }
-
+    public boolean isStockpile (  ) {
+        Window spwnd = getWindow("Stockpile");
+        if(spwnd!=null) {
+            for (Widget sp = spwnd.lchild; sp != null; sp = sp.prev) {
+                /// Выбираем внутренний контейнер
+                if (sp instanceof NISBox) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     public NInventory getInventory ( String name , boolean check) {
         Window spwnd = getWindow ( name );

@@ -54,7 +54,17 @@ public class HarvestCarrotAction implements Action {
             
         }
         if ( !gui.getInventory ().getItems ( new NAlias ( "carrot" ) ).isEmpty () ) {
-            new TransferToTrough ( new NAlias ( "carrot" ) ).run ( gui );
+            if(!isFull) {
+                if ( new OpenBarrelAndTransfer ( 5000, new NAlias ( new ArrayList<> (Arrays.asList (
+                        "carrot" , "Carrot"))),
+                        AreasID.carrot,barrel )
+                        .run ( gui ).type == Results.Types.FULL ) {
+                }
+            }
+            else
+            {
+                new TransferToTrough(new NAlias("carrot")).run(gui);
+            }
         }
         return new Results ( Results.Types.SUCCESS );
     }

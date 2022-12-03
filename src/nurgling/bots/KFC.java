@@ -28,9 +28,9 @@ public class KFC extends Bot {
         runActions.add ( new FillFluid ( AreasID.water, AreasID.hens, 1, new NAlias ( "chickencoop" ),
                 new NAlias ( "water" ) ) );
         /// досыпаем корма
-        runActions.add ( new FillFluid ( AreasID.silo, AreasID.chicken, 2, new NAlias ( "chickencoop" ),
+        runActions.add ( new FillFluid ( AreasID.swill, AreasID.chicken, 2, new NAlias ( "chickencoop" ),
                 new NAlias ( new ArrayList<> ( Arrays.asList ( "flax", "wheat", "swill" ) ) ) ) );
-        runActions.add ( new FillFluid ( AreasID.silo, AreasID.hens, 2, new NAlias ( "chickencoop" ),
+        runActions.add ( new FillFluid ( AreasID.swill, AreasID.hens, 2, new NAlias ( "chickencoop" ),
                 new NAlias ( new ArrayList<> ( Arrays.asList ( "flax", "wheat", "swill" ) ) ) ) );
         /// Повышаем качество курочки , собираем урожай
         runActions.add ( new ChickenMaster() );
