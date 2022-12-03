@@ -49,46 +49,61 @@ public class FillContainers implements Action
 
         OutContainer.sort(outContainers);
 
-        do {
-            int current = gui.getInventory().getItems(items).size();
-            for (OutContainer outContainer: outContainers) {
-                if (!outContainer.isFull) {
-                    if(items!=null && NConfiguration.getInstance().ingrTh.get(items.keys.get(0))!=null) {
-
-                        for (WItem item : gui.getInventory().getItems(items)) {
-                            int th = NConfiguration.getInstance().ingrTh.get(NUtils.getInfo(item));
-                            if(((NWItem)item).quality()<th)
-                                NUtils.drop(item);
-                        }
-                    }
-                    if(gui.getInventory().getItems(items).isEmpty())
-                    {
-                        break;
-                    }
-                    new PathFinder(gui, outContainer.gob).run();
-                    if (new OpenTargetContainer(outContainer.gob, NUtils.getContainerType(outContainer.gob).cap).run(gui).type != Results.Types.SUCCESS) {
-                        return new Results(Results.Types.OPEN_FAIL);
-                    }
-
-                    if (new TransferToContainer(items,  NUtils.getContainerType(outContainer.gob).cap, needed).run(gui).type == Results.Types.FULL) {
-                        outContainer.isFull = true;
-                    }
-                }
-            }
-            if(current!= 0 && current == gui.getInventory().getItems(items).size())
-            {
-                return new Results(Results.Types.NO_ITEMS);
-            }
-            if(takeMaxFromContainers!=null) {
-                takeMaxFromContainers.run(gui);
-                if (gui.getInventory().getItems(items).size() == 0) {
-                    return new Results(Results.Types.NO_ITEMS);
-                }
+        if(allPiles()) {
+            if (outArea != null ) {
+                new TransferToPile(outArea,NHitBox._default,new NAlias("stockpile"), items).run(gui);
+            }else if (outId != null) {
+                new TransferToPile(outId,NHitBox._default,new NAlias("stockpile"), items).run(gui);
             }
         }
-        while(!OutContainer.allFull(outContainers) && takeMaxFromContainers!=null && !InContainer.allFree(takeMaxFromContainers.inContainers));
+        else {
+            do {
+                int current = gui.getInventory().getItems(items).size();
+                for (OutContainer outContainer : outContainers) {
+                    if (!outContainer.isFull) {
+                        if (items != null && NConfiguration.getInstance().ingrTh.get(items.keys.get(0)) != null) {
 
+                            for (WItem item : gui.getInventory().getItems(items)) {
+                                int th = NConfiguration.getInstance().ingrTh.get(NUtils.getInfo(item));
+                                if (((NWItem) item).quality() < th)
+                                    NUtils.drop(item);
+                            }
+                        }
+                        if (gui.getInventory().getItems(items).isEmpty()) {
+                            break;
+                        }
+                        new PathFinder(gui, outContainer.gob).run();
+                        if (new OpenTargetContainer(outContainer.gob, NUtils.getContainerType(outContainer.gob).cap).run(gui).type != Results.Types.SUCCESS) {
+                            return new Results(Results.Types.OPEN_FAIL);
+                        }
+                        if (new TransferToContainer(items, NUtils.getContainerType(outContainer.gob).cap, needed).run(gui).type == Results.Types.FULL) {
+                            outContainer.isFull = true;
+                        }
+                    }
+                }
+                if (current != 0 && current == gui.getInventory().getItems(items).size()) {
+                    return new Results(Results.Types.NO_ITEMS);
+                }
+                if (takeMaxFromContainers != null) {
+                    takeMaxFromContainers.run(gui);
+                    if (gui.getInventory().getItems(items).size() == 0) {
+                        return new Results(Results.Types.NO_ITEMS);
+                    }
+                }
+            }
+            while (!OutContainer.allFull(outContainers) && takeMaxFromContainers != null && !InContainer.allFree(takeMaxFromContainers.inContainers));
+
+        }
         return new Results(Results.Types.SUCCESS);
+    }
+
+    boolean allPiles(){
+        for(OutContainer cont : outContainers){
+            if(!NUtils.isIt(cont.gob,"stockpile")){
+                return false;
+            }
+        }
+        return true;
     }
 
     int getNumFree(ArrayList<Pair<Gob, Boolean>> out){

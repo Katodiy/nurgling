@@ -23,7 +23,7 @@ public class SmelterAction implements Action {
             throws InterruptedException {
         while ( !Finder.findObjectsInArea ( new NAlias ( "ore" ), Finder.findNearestMark ( AreasID.ore ) )
                        .isEmpty () ) {
-            /// Ждем пока смелтеры не потухнут
+            /// Wait until the smelters go out
             new WaitAction ( () -> {
                 for ( Gob gob : Finder.findObjects ( smelter_name ) ) {
                         if(NUtils.isIt(gob,"primsmelter")){
@@ -36,9 +36,9 @@ public class SmelterAction implements Action {
                 return false;
             }, 50 ).run ( gui );
 
-            /// Забираем слитки и переносим их в сундуки
+            /// We pick up the ingots and transfer them to the chests
             new TransferBars ().run ( gui );
-            /// Выбрасываем шлак
+            /// We throw out slag
             if ( Finder.findNearestMark ( AreasID.slag ) == null ) {
                 new ClearContainers ( smelter_name, isPrim?"Furnace":"Ore Smelter", new NAlias ( "slag" ) ).run ( gui );
             }
@@ -46,13 +46,13 @@ public class SmelterAction implements Action {
                 new TransferToPileFromContainer ( smelter_name, new NAlias ( "stockpile-stone" ), new NAlias ( "slag" ),
                         AreasID.slag, isPrim?"Furnace":"Ore Smelter" ).run ( gui );
             }
-            /// Заполняем смелтеры с пайлов
+            //Filling Smelters with Stockpiles
             new TransferFromContainerToContainer ( new NAlias ( "stockpile-ore" ), smelter_name, ores, AreasID.ore,
                     "Stockpile", isPrim?"Furnace":"Ore Smelter", 1024 ).run ( gui );
 
-            /// Заполняем смелтеры топливом с пайлов
+            //Fill the smelter with fuel from the piles
             new FillFuelSmelter ( smelter_name ).run ( gui );
-            /// Поджигаем
+            /// Light fire
             new LightGob ( new NAlias ( "smelter" ), 2 ).run ( gui );
         }
         return new Results ( Results.Types.SUCCESS );

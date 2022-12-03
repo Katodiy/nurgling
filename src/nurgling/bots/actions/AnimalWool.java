@@ -26,7 +26,7 @@ public class AnimalWool<C extends Entry> implements Action {
         ArrayList<Gob> targets = new ArrayList<>();
 
         for (Gob gob : gobs) {
-            if (gob.getattr(CattleId.class) == null) {
+            if (gob.getattr(CattleId.class) == null && !gob.isTag(NGob.Tags.knocked)) {
                 new PathFinder(gui, gob, PathFinder.Type.dyn).run();
                 new SelectFlowerAction(gob, "Memorize", SelectFlowerAction.Types.Gob).run(gui);
                 NUtils.waitEvent(() -> gob.getattr(CattleId.class) != null, 5000);

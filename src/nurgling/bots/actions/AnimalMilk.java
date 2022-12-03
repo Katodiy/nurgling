@@ -27,7 +27,7 @@ public class AnimalMilk<C extends Entry> implements Action {
         ArrayList<Gob> targets = new ArrayList<>();
 
         for (Gob gob : gobs) {
-            if (gob.getattr(CattleId.class) == null) {
+            if (gob.getattr(CattleId.class) == null && !gob.isTag(NGob.Tags.knocked)) {
                 new PathFinder(gui, gob, PathFinder.Type.dyn).run();
                 new SelectFlowerAction(gob, "Memorize", SelectFlowerAction.Types.Gob).run(gui);
                 NUtils.waitEvent(() -> gob.getattr(CattleId.class) != null, 5000);
@@ -53,6 +53,11 @@ public class AnimalMilk<C extends Entry> implements Action {
                 NUtils.activate(cistern);
                 NUtils.waitEvent(()->barrel.isTag(NGob.Tags.free),50);
             }
+        }
+        if(!barrel.isTag(NGob.Tags.free)) {
+            new PathFinder(gui, cistern, PathFinder.Type.dyn).run();
+            NUtils.activate(cistern);
+            NUtils.waitEvent(() -> barrel.isTag(NGob.Tags.free), 50);
         }
         new PlaceLifted(Finder.findSubArea(current,sub),barrel.getHitBox(), new NAlias(barrel.getResName())).run(gui);
 

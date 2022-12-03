@@ -97,8 +97,7 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
                     "bots/icons/branchash" ) );
             layouts.get ( 2 ).add ( new NButton ( "Tanning", new Tanning ( gui ),
                     "bots/icons/tanning" ) );
-            layouts.get ( 2 ).add ( new NButton ( "KFC", new KFC ( gui ),
-                    "bots/icons/kfc" ) );
+
 
 
 //            layouts.get ( 2 ).add ( new NButton ( "GardenPot", new Gardener ( gui ),
@@ -200,13 +199,15 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
             layouts.get ( 5 ).add ( new NButton ( "Carrot", new FarmerCarrot (  gui ),
                     "bots/icons/carrot" ) );
             layouts.get ( 5 ).add ( new NButton ( "Pigs", new Pigs ( gui ),
-                    "bots/icons/hide" ) );
+                    "bots/icons/pigs" ) );
             layouts.get ( 5 ).add ( new NButton ( "Ochs", new Cows ( gui ),
-                    "bots/icons/carrot" ) );
+                    "bots/icons/cows" ) );
             layouts.get ( 5 ).add ( new NButton ( "Sheeps", new Sheeps ( gui ),
-                    "bots/icons/cabbagemaker" ) );
+                    "bots/icons/sheeps" ) );
             layouts.get ( 5 ).add ( new NButton ( "Goats", new Goats ( gui ),
-                    "bots/icons/cabbagemaker" ) );
+                    "bots/icons/goats" ) );
+            layouts.get ( 2 ).add ( new NButton ( "KFC", new KFC ( gui ),
+                    "bots/icons/kfc" ) );
 //            layouts.put ( 5, new Layout ( this, Special.getPath () + "/icons/farming.png" ) );
 //            layouts.get ( 5 ).add ( new NButton ( "FarmerQ", new FarmerQ (  gui ),
 //                    Special.getPath () + "/icons/farmerq.png" ) );

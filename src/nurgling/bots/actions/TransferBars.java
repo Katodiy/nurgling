@@ -1,8 +1,11 @@
 package nurgling.bots.actions;
 
+import haven.WItem;
 import nurgling.NAlias;
 import nurgling.NGameUI;
 import nurgling.NUtils;
+import nurgling.bots.tools.AItem;
+import nurgling.bots.tools.Ingredient;
 import nurgling.tools.AreasID;
 import nurgling.tools.Finder;
 
@@ -23,40 +26,18 @@ public class TransferBars implements Action {
                             new ArrayList<> ( Arrays.asList ( "cinna" ) ) ),
                     new NAlias ( "smelter" ) , new ArrayList<>() ).run (
                     gui ).type;
-//
-//            new TransferItemsToBarter ( Objects.requireNonNull (NUtils.getWarhouse ( "tin" ) ) ).run ( gui );
-//            new TransferItemsToBarter ( Objects.requireNonNull (NUtils.getWarhouse ( "copper" ) ) ).run ( gui );
-//            new TransferItemsToBarter ( Objects.requireNonNull (NUtils.getWarhouse ( "cast" ) ) ).run ( gui );
-//            new TransferItemsToBarter ( Objects.requireNonNull (NUtils.getWarhouse ( "lead" ) ) ).run ( gui );
-//
-//            new TransferItemsToBarter ( Objects.requireNonNull (NUtils.getWarhouse ( "nugget-gold" ) ) ).run ( gui );
-//            new TransferItemsToBarter ( Objects.requireNonNull (NUtils.getWarhouse ( "pebble-gold" ) ) ).run ( gui );
-//            new TransferItemsToBarter ( Objects.requireNonNull (NUtils.getWarhouse ( "bronze" ) ) ).run ( gui );
-//            new TransferItemsToBarter ( Objects.requireNonNull (NUtils.getWarhouse ( "nugget-silver" ) ) ).run ( gui );
-//
-//            new TransferItemsToContainers ( -1, AreasID.copper, null, "", new NAlias ( "Bar of Copper" ), true ).run (
-//                    gui );
-//
-//            new TransferItemsToContainers ( -1, AreasID.tin, null, "", new NAlias ( "Bar of Tin" ), true ).run ( gui );
-//
-//            new TransferItemsToContainers ( -1, AreasID.ciron, null, "", new NAlias ( "Bar of Cast Iron" ), true ).run (
-//                    gui );
-//
-//            new TransferItemsToContainers ( -1, AreasID.lead, null, "", new NAlias ( "Bar of Lead" ), true ).run (
-//                    gui );
-//
-//            new TransferItemsToContainers ( -1, AreasID.silver, null, "", new NAlias ( "Silver Nugget" ), true ).run (
-//                    gui );
-//
-//            new TransferItemsToContainers ( -1, AreasID.gold, null, "",
-//                    new NAlias ( new ArrayList<> ( Arrays.asList ( "Gold Nugget", "Gold Pebbles" ) ) ), true ).run (
-//                    gui );
-            
-            
-            new TransferItemsToContainers ( -1, AreasID.bar, null, "",
-                    new NAlias ( new ArrayList<> ( Arrays.asList ( "bar", "pebble", "nugget" ) ) ), false ).run ( gui );
-            
-            
+
+            ArrayList<WItem> items = gui.getInventory().getItems(new NAlias("bar", "nugget", "pebble-gold"));
+            for(WItem item : items){
+                AItem ingredient = Ingredient.get(item);
+                NAlias name = new NAlias(NUtils.getInfo(item));
+                if(ingredient!=null) {
+                    new TransferItemsToBarter(ingredient.barter_out, name, true).run(gui);
+                    new FillContainers(name, ingredient.area_out, new ArrayList<>()).run(gui);
+                }
+            }
+
+            new FillContainers(new NAlias("bar", "nugget", "pebble-gold"), AreasID.bar,new ArrayList<>()).run(gui);
         }
         while ( res != Results.Types.FAIL );
         
