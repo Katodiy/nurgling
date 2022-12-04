@@ -20,9 +20,9 @@ public class TransferToContainer implements Action {
         if ( spwnd != null ) {
             /// Находим все необходимые предметы в инвентаре
             ArrayList<WItem> items;
-            items = gui.getInventory ().getItems ( names );
+            items = gui.getInventory ().getItems ( names, q );
             if ( items.isEmpty () ) {
-                items = gui.getInventory ().getItemsWithInfo ( names );
+                items = gui.getInventory ().getItemsWithInfo ( names , q , true);
             }
             if(aFreeSpace==-1) {
                 /// Переносим предметы в контейнер
@@ -43,7 +43,7 @@ public class TransferToContainer implements Action {
                     return new Results ( Results.Types.FULL );
                 }
                 for(int i = 0; i <freeSpace; i++){
-                    WItem item = gui.getInventory ().getItem ( names );
+                    WItem item = gui.getInventory ().getItem ( names, q );
                     if (item!=null) {
                         NUtils.transferItem ( gui.getInventory (), item, gui.getInventory ( cap ));
                         if ( gui.getInventory ( cap ).getFreeSpace () - aFreeSpace <= 0 ) {
@@ -77,9 +77,21 @@ public class TransferToContainer implements Action {
         this.cap = cap;
     }
 
+    public TransferToContainer(
+
+            NAlias names,
+            String cap,
+            int needed,
+            double q
+    ) {
+        this(names,cap,needed);
+        this.q = q;
+    }
+
 
     int aFreeSpace = -1;
     NAlias names;
     String cap;
     boolean isInfo;
+    double q;
 }

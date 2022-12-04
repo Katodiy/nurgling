@@ -1,6 +1,7 @@
 package nurgling;
 
 import haven.*;
+import haven.res.ui.barterbox.Shopbox;
 
 import java.util.*;
 
@@ -202,6 +203,20 @@ public class NGameUI extends GameUI {
         }
         return false;
     }
+
+    public boolean isBarter (  ) {
+        Window spwnd = getWindow("Barter Stand");
+        if(spwnd!=null) {
+            for (Widget sp = spwnd.lchild; sp != null; sp = sp.prev) {
+                /// Выбираем внутренний контейнер
+                if (sp instanceof Shopbox) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
     public NInventory getInventory ( String name , boolean check) {
         Window spwnd = getWindow ( name );

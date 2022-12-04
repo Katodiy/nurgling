@@ -51,32 +51,32 @@ public class FillContainers implements Action
 
         if(allPiles()) {
             if (outArea != null ) {
-                new TransferToPile(outArea,NHitBox._default,new NAlias("stockpile"), items).run(gui);
+                new TransferToPile(outArea,NHitBox._default,new NAlias("stockpile"), items,q).run(gui);
             }else if (outId != null) {
-                new TransferToPile(outId,NHitBox._default,new NAlias("stockpile"), items).run(gui);
+                new TransferToPile(outId,NHitBox._default,new NAlias("stockpile"), items,q).run(gui);
             }
         }
         else {
             do {
-                int current = gui.getInventory().getItems(items).size();
+                int current = gui.getInventory().getItems(items,q).size();
                 for (OutContainer outContainer : outContainers) {
                     if (!outContainer.isFull) {
                         if (items != null && NConfiguration.getInstance().ingrTh.get(items.keys.get(0)) != null) {
 
-                            for (WItem item : gui.getInventory().getItems(items)) {
+                            for (WItem item : gui.getInventory().getItems(items,q)) {
                                 int th = NConfiguration.getInstance().ingrTh.get(NUtils.getInfo(item));
                                 if (((NWItem) item).quality() < th)
                                     NUtils.drop(item);
                             }
                         }
-                        if (gui.getInventory().getItems(items).isEmpty()) {
+                        if (gui.getInventory().getItems(items,q).isEmpty()) {
                             break;
                         }
                         new PathFinder(gui, outContainer.gob).run();
                         if (new OpenTargetContainer(outContainer.gob, NUtils.getContainerType(outContainer.gob).cap).run(gui).type != Results.Types.SUCCESS) {
                             return new Results(Results.Types.OPEN_FAIL);
                         }
-                        if (new TransferToContainer(items, NUtils.getContainerType(outContainer.gob).cap, needed).run(gui).type == Results.Types.FULL) {
+                        if (new TransferToContainer(items, NUtils.getContainerType(outContainer.gob).cap, needed, q).run(gui).type == Results.Types.FULL) {
                             outContainer.isFull = true;
                         }
                     }
@@ -131,6 +131,12 @@ public class FillContainers implements Action
         this.outContainers = outContainers;
     }
 
+    public FillContainers(NAlias items, Object o, ArrayList<OutContainer> outContainers, double q){
+        this(items,o,outContainers);
+        this.q = q;
+
+    }
+
     public FillContainers(NAlias items, Object o, ArrayList<OutContainer> outContainers, TakeMaxFromContainers takeMaxFromContainers) {
         this.items = items;
         if (o instanceof NArea) {
@@ -152,5 +158,6 @@ public class FillContainers implements Action
 
     int needed = -1;
 
+    double q = -1;
     TakeMaxFromContainers takeMaxFromContainers = null;
 }

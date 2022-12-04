@@ -21,9 +21,13 @@ public class OpenTargetContainer implements Action {
             {
                 NUtils.waitEvent (gui::isStockpile,500 );
             }
+            else if(cap.contains("Barter Stand"))
+            {
+                NUtils.waitEvent ( gui::isBarter,500 );
+            }
             else
             {
-                NUtils.waitEvent ( ()->gui.getInventory ( cap )!=null,500 );
+                NUtils.waitEvent  ( ()->gui.getInventory ( cap )!=null,500 );
             }
             wnd = gui.getWindow ( cap );
             if ( wnd == null ) {
