@@ -2,12 +2,10 @@
 package haven.res.ui.tt.wear;
 
 import haven.*;
-import nurgling.NGItem;
-
 import java.awt.image.BufferedImage;
 
 /* >tt: Wear */
-@FromResource(name = "ui/tt/wear", version = 3)
+@haven.FromResource(name = "ui/tt/wear", version = 4)
 public class Wear extends ItemInfo.Tip {
     public final int d, m;
 
@@ -15,11 +13,6 @@ public class Wear extends ItemInfo.Tip {
 	super(owner);
 	this.d = d;
 	this.m = m;
-    if(owner instanceof GItem) {
-        ((NGItem) owner).wear = ((double)d) /m;
-        ((NGItem) owner).d = d;
-        ((NGItem) owner).m = m;
-    }
     }
 
     public static ItemInfo mkinfo(Owner owner, Object... args) {
@@ -27,6 +20,8 @@ public class Wear extends ItemInfo.Tip {
     }
 
     public BufferedImage tipimg() {
-	return(Text.render(String.format("Wear: %,d/%,d", d, m)).img);
+	if(d >= m)
+	    return(RichText.render(String.format("Wear: $col[255,128,128]{%,d/%,d}", d, m), 0).img);
+	return(RichText.render(String.format("Wear: %,d/%,d", d, m)).img);
     }
 }
