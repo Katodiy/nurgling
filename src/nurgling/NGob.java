@@ -3,10 +3,16 @@ package nurgling;
 import haven.*;
 import haven.Composite;
 import haven.res.gfx.fx.fishline.FishLine;
+import haven.res.lib.itemtex.ItemTex;
 import haven.res.lib.tree.TreeScale;
+import nurgling.tools.AreasID;
+import nurgling.tools.Finder;
 
 import java.awt.*;
 import java.util.*;
+
+import static haven.res.lib.itemtex.ItemTex.made_id;
+import static haven.res.lib.itemtex.ItemTex.made_str;
 
 public class NGob {
     public Tex noteImg = null;
@@ -105,7 +111,7 @@ public class NGob {
         consobj,
         growth,
         trellis,
-        gate, cellar;
+        gate, cellar, iconsign;
     }
 
     public final HashSet<Tags> tags = new HashSet<>();
@@ -228,6 +234,8 @@ public class NGob {
             }
             else if (NUtils.checkName(name, new NAlias(new ArrayList<>(Arrays.asList("cheeserack", "bumlings", "cupboard", "demijohn","table", "dugout", "candelabrum", "gardenpot", "barrel", "chest", "crate", "log", "trough", "casket", "meatgri", "cauldron", "beehive", "dreca", "barrow", "rowboat", "potterswheel", "churn", "metalcabinet", "iconsign", "plow", "ttub")), new ArrayList<>(Arrays.asList("wild", "tree"))))) {
                 addTag(Tags.liftable);
+                if (NUtils.checkName(name, "iconsign"))
+                    addTag(Tags.iconsign);
                 if (NUtils.checkName(name, "table","cupboard", "chest", "crate", "metalcabinet", "boiler", "casket", "ttub")) {
                     addTag(Tags.container);
                     addTag(Tags.marked);
@@ -396,6 +404,25 @@ public class NGob {
                         if(gob.findol(NHighlightRing.class)==null) {
                             gob.findoraddol(new NHighlightRing(gob));
                             gob.setattr(new NGobHighlight(gob));
+                        }
+                    }
+                    if (isTag(Tags.iconsign)) {
+                        if(NConfiguration.getInstance().showAreas) {
+                            if ( NUtils.getGameUI().updated()) {
+                                for (String name : made_id.keySet()) {
+                                    if (made_id.get(name) == ((Gob) this).modelAttribute)
+                                        try {
+                                            NOCache.constructOverlay(AreasID.find(name));
+                                        } catch (IllegalArgumentException e) {
+//                                    e.printStackTrace();
+                                        } catch (Resource.Loading | MCache.LoadingMap e) {
+                                            status = Status.undefined;
+                                        }
+                                }
+                            } else {
+                                status = Status.undefined;
+                                return;
+                            }
                         }
                     }
                     if (isTag(Tags.plant) && NConfiguration.getInstance().showCropStage ) {

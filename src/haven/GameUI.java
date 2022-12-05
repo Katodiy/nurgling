@@ -1131,6 +1131,8 @@ public class GameUI extends ConsoleHost implements Console.Directory, UI.Message
 
     private Coord lastsavegrid = null;
     private int lastsaveseq = -1;
+
+	public boolean updated = false;
     private void mapfiletick() {
 	MapView map = this.map;
 	MiniMap mmap = this.mmap;
@@ -1145,10 +1147,12 @@ public class GameUI extends ConsoleHost implements Console.Directory, UI.Message
 	try {
 	    MCache.Grid grid = ui.sess.glob.map.getgrid(gc);
 	    if((grid != null) && (!Utils.eq(gc, lastsavegrid) || (lastsaveseq != grid.seq))) {
+		updated = false;
 		mmap.file.update(ui.sess.glob.map, gc);
 //		mapfile.file.update(ui.sess.glob.map, gc);
 		lastsavegrid = gc;
 		lastsaveseq = grid.seq;
+		updated = true;
 	    }
 	} catch(Loading l) {
 	}

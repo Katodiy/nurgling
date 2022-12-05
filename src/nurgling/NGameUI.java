@@ -40,6 +40,10 @@ public class NGameUI extends GameUI {
         t3.updateButtons(NConfiguration.getInstance().toolBelts.get("belt2").toolKeys);
     }
 
+    public boolean updated() {
+        return map!=null && map.glob!=null && map.glob.map!=null && !map.glob.map.isLoading();
+    }
+
     public class PaginaBeltSlot extends BeltSlot {
         public final MenuGrid.Pagina pagina;
 

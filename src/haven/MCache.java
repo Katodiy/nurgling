@@ -30,6 +30,10 @@ import java.util.*;
 import java.util.function.*;
 import java.lang.ref.*;
 import haven.render.*;
+import nurgling.NAlias;
+import nurgling.NUtils;
+import nurgling.tools.AreasID;
+import nurgling.tools.Finder;
 
 /* XXX: This whole file is a bit of a mess and could use a bit of a
  * rewrite some rainy day. Synchronization eNUtilsly is quite hairy. */
@@ -257,6 +261,23 @@ public class MCache implements MapSource {
 	    update(new Area(c1, c2.add(1, 1)));
 	}
     }
+
+	public class AreaOverlay extends Overlay{
+
+		public AreaOverlay(Area a, OverlayInfo id, AreasID a_id) {
+			super(a, id);
+			this.a_id = a_id;
+			first = Finder.findSign ( new NAlias( "iconsign" ), 5000, a_id );
+			second = Finder.findSignButNotThis ( new NAlias( "iconsign" ), 5000, a_id , first);
+		}
+		AreasID a_id;
+		Gob first;
+		Gob second;
+
+		public boolean tick(){
+			return NUtils.getGob(first.id) == null || NUtils.getGob(second.id) == null;
+		}
+	}
 
     private void cktileid(int id) {
 	if(id >= nsets.length) {
@@ -779,6 +800,12 @@ public class MCache implements MapSource {
 	    return(cached);
 	}
     }
+
+	public boolean isLoading(){
+		synchronized (grids) {
+				return (cached == null);
+		}
+	}
 
     public Grid getgridt(Coord tc) {
 	return(getgrid(tc.div(cmaps)));

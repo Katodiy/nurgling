@@ -1,14 +1,12 @@
 package nurgling;
 
-import haven.Coord;
-import haven.Indir;
-import haven.Resource;
-import haven.UI;
+import haven.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 public class NUI extends UI {
     public boolean inspectMode = false;
@@ -27,6 +25,25 @@ public class NUI extends UI {
             tickId+=1;
         }catch (Exception e){
             e.printStackTrace();
+        }
+        if(NConfiguration.getInstance().showAreas && NUtils.getGameUI()!=null ) {
+            ArrayList<NOCache.OverlayInfo> forRemove = new ArrayList<>();
+            for (NOCache.OverlayInfo ol : ((NOCache) NUtils.getGameUI().ui.sess.glob.oc).overlays) {
+                if (ol.ol.tick())
+                    forRemove.add(ol);
+            }
+            for (NOCache.OverlayInfo ol : forRemove) {
+                ol.ol.destroy();
+                ((NOCache) NUtils.getGameUI().ui.sess.glob.oc).overlays.remove(ol);
+            }
+        }else{
+            if(NUtils.getGameUI()!=null && !((NOCache) NUtils.getGameUI().ui.sess.glob.oc).overlays.isEmpty())
+            {
+                for (NOCache.OverlayInfo ol : ((NOCache) NUtils.getGameUI().ui.sess.glob.oc).overlays) {
+                    ol.ol.destroy();
+                }
+                ((NOCache) NUtils.getGameUI().ui.sess.glob.oc).overlays.clear();
+            }
         }
     }
 

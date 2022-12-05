@@ -83,6 +83,12 @@ public enum AreasID {
     public static String get(AreasID id) {
         return data.get(id);
     }
+    public static AreasID find(String name) {
+        for(AreasID key: data.keySet())
+            if(data.get(key).equals(name))
+                return key;
+        return null;
+    }
 
     public static double getTh(AreasID id) {
         if(thresholds.get(id)!= null){
