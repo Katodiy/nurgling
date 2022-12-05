@@ -1476,7 +1476,7 @@ public class Resource implements Serializable {
 			if(NUtils.checkName(name,"Pointer")){
 				ret =  getParent().loadClass("nurgling." + name);
 			}
-			else if(NUtils.checkName(name,"Leashed", "Armor", "Gast", "Level") && !NUtils.checkName(name,"haven.res.ui.tt"))
+			else if(NUtils.checkName(name,"Leashed", "Armor", "Gast", "Level", "TipLabel", "RelCont") && !NUtils.checkName(name,"haven.res.ui.tt"))
 			{
 				ret = getParent().loadClass("haven.res.ui.tt." + name.toLowerCase() + "." + name);
 			}

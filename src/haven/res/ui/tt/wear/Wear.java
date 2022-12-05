@@ -2,6 +2,8 @@
 package haven.res.ui.tt.wear;
 
 import haven.*;
+import nurgling.NGItem;
+
 import java.awt.image.BufferedImage;
 
 /* >tt: Wear */
@@ -13,6 +15,11 @@ public class Wear extends ItemInfo.Tip {
 	super(owner);
 	this.d = d;
 	this.m = m;
+    if(owner instanceof GItem) {
+        ((NGItem) owner).wear = ((double)d) /m;
+        ((NGItem) owner).d = d;
+        ((NGItem) owner).m = m;
+    }
     }
 
     public static ItemInfo mkinfo(Owner owner, Object... args) {

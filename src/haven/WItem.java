@@ -199,7 +199,6 @@ public class WItem extends Widget implements DTarget {
 	    g.defstate();
 	    GItem.InfoOverlay<?>[] ols = itemols.get();
 	    if(ols != null) {
-
 		for(GItem.InfoOverlay<?> ol : ols)
 			ol.draw(g);
 	    }

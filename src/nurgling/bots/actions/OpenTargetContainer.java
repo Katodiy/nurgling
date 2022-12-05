@@ -25,6 +25,10 @@ public class OpenTargetContainer implements Action {
             {
                 NUtils.waitEvent ( gui::isBarter,500 );
             }
+            else if(cap.contains("Barrel"))
+            {
+                NUtils.waitEvent ( gui::isBarrel,500 );
+            }
             else
             {
                 NUtils.waitEvent  ( ()->gui.getInventory ( cap )!=null,500 );

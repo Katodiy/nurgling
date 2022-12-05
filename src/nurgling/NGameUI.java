@@ -2,8 +2,11 @@ package nurgling;
 
 import haven.*;
 import haven.res.ui.barterbox.Shopbox;
+import haven.res.ui.tt.tiplabel.TipLabel;
+import haven.res.ui.tt.relcont.RelCont;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 
 public class NGameUI extends GameUI {
@@ -217,6 +220,45 @@ public class NGameUI extends GameUI {
         return false;
     }
 
+    public boolean isBarrel (  ) {
+        Window spwnd = getWindow("Barrel");
+        if(spwnd!=null) {
+            for (Widget sp = spwnd.lchild; sp != null; sp = sp.prev) {
+                /// Выбираем внутренний контейнер
+                if (sp instanceof RelCont) {
+                    for(Pair<Widget, Supplier<Coord>> pair:((RelCont) sp).childpos)
+                        if(pair.a instanceof TipLabel)
+                            return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public double getBarrelContent(NAlias content){
+        Window spwnd = getWindow ( "Barrel" );
+        if(spwnd!=null) {
+            for (Widget sp = spwnd.lchild; sp != null; sp = sp.prev) {
+                /// Выбираем внутренний контейнер
+                if (sp instanceof RelCont) {
+                    for(Pair<Widget, Supplier<Coord>> pair:((RelCont) sp).childpos)
+                        if(pair.a instanceof TipLabel)
+                            for(ItemInfo inf : ((TipLabel)pair.a).info) {
+                                if(inf instanceof ItemInfo.Name) {
+                                    String name = ((ItemInfo.Name) inf).str.text;
+                                    if (NUtils.checkName(name.toLowerCase(), content))
+                                        return Double.parseDouble(name.substring(0, name.indexOf(' ')));
+                                }else if(inf instanceof ItemInfo.AdHoc){
+                                    if (NUtils.checkName(((ItemInfo.AdHoc)inf).str.text, "Empty")) {
+                                        return 0;
+                                    }
+                                }
+                            }
+                }
+            }
+        }
+        return -1;
+    }
 
     public NInventory getInventory ( String name , boolean check) {
         Window spwnd = getWindow ( name );

@@ -593,6 +593,15 @@ public class NUtils {
             waitEvent(()->getGob(gob.id)!=null,50);
     }
 
+    public static double getAmount(GItem item) {
+        for(ItemInfo inf : item.info()){
+            if(inf instanceof GItem.Amount){
+                return ((GItem.Amount)inf).itemnum();
+            }
+        }
+        return 1;
+    }
+
 
     static class AutoBot implements Runnable{
 
