@@ -69,7 +69,7 @@ public class PlaceLifted implements Action {
             NAlias item
     ) {
         this.area_id = area_id;
-        this.hitBox = hitBox;
+        this.hitBox = new NHitBox(hitBox);
         this.item = item;
     }
 
@@ -79,7 +79,7 @@ public class PlaceLifted implements Action {
             NAlias item
     ) {
         this.area = area;
-        this.hitBox = hitBox;
+        this.hitBox = new NHitBox(hitBox);
         this.item = item;
     }
 
@@ -89,30 +89,17 @@ public class PlaceLifted implements Action {
             Gob obj
     ) {
         this.area_id = area_id;
-        this.hitBox = hitBox;
+        this.hitBox = new NHitBox(hitBox);
         this.plObj = obj;
     }
 
-    public PlaceLifted (
-            AreasID area_id,
-            NHitBox hitBox,
-            NAlias item,
-            long id
-    ) {
-        this.area_id = area_id;
-        this.hitBox = hitBox;
-        this.item = item;
-        this.id = id;
-        this.withId = true;
-    }
-    
     public PlaceLifted (
             Coord2d place,
             NHitBox hitBox,
             NAlias item
     ) {
         this.coord = place;
-        this.hitBox = hitBox;
+        this.hitBox = new NHitBox(hitBox);
         this.item = item;
     }
 

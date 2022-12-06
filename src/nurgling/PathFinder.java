@@ -742,7 +742,7 @@ public class PathFinder {
                     do {
 
                         NUtils.waitEvent(()->NUtils.isPose(gui.map.player(),new NAlias("walk")),10,50);
-                        while (gui.map.player().rc.dist(vert.coord) > 2.75 || NUtils.isPose(gui.map.player(), new NAlias("walk"))) {
+                        while ( NUtils.isPose(gui.map.player(), new NAlias("walk"))) {
                             if (withAlarm) {
                                 if (NUtils.alarm()) {
                                     /// Тревога валим

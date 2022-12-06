@@ -8,7 +8,7 @@ import haven.res.gfx.hud.rosters.sheep.SheepRoster;
 import haven.res.ui.croster.*;
 import java.util.*;
 
-@FromResource(name = "gfx/hud/rosters/goat", version = 61)
+@FromResource(name = "gfx/hud/rosters/goat", version = 62)
 public class Goat extends Entry {
     public int meat, milk, wool;
     public int meatq, milkq, woolq, hideq;
