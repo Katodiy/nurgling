@@ -37,6 +37,7 @@ public class PathFinder {
     private double cell_half = 1.375;
     private int cell_num = 32;
 
+    boolean oneSize = false;
     int battleCount = 0;
     public void setWithAlarm(boolean withAlarm) {
         this.withAlarm = withAlarm;
@@ -581,17 +582,19 @@ public class PathFinder {
             fi += delta;
         }
 
-        fi = i;
-        fj = j + delta;
-        while (fj < map.array.length) {
-            int res = checkVertex(fi, fj);
-            if (res == -1) {
-                break;
-            }else if (res == 1) {
-                calculates.add(new PFCalculate(edge.start,map.array.length*fi+fj,vertex));
-                break;
+        if(!oneSize) {
+            fi = i;
+            fj = j + delta;
+            while (fj < map.array.length) {
+                int res = checkVertex(fi, fj);
+                if (res == -1) {
+                    break;
+                } else if (res == 1) {
+                    calculates.add(new PFCalculate(edge.start, map.array.length * fi + fj, vertex));
+                    break;
+                }
+                fj += delta;
             }
-            fj += delta;
         }
 
         fi = i - delta;
@@ -607,17 +610,19 @@ public class PathFinder {
             fi -= delta;
         }
 
-        fi = i;
-        fj = j - delta;
-        while (fj >= 0) {
-            int res = checkVertex(fi, fj);
-            if (res == -1) {
-                break;
-            }else if (res == 1) {
-                calculates.add(new PFCalculate(edge.start,map.array.length*fi+fj,vertex));
-                break;
+        if(!oneSize) {
+            fi = i;
+            fj = j - delta;
+            while (fj >= 0) {
+                int res = checkVertex(fi, fj);
+                if (res == -1) {
+                    break;
+                } else if (res == 1) {
+                    calculates.add(new PFCalculate(edge.start, map.array.length * fi + fj, vertex));
+                    break;
+                }
+                fj -= delta;
             }
-            fj -= delta;
         }
 
         if (!hardMode) {
@@ -737,7 +742,7 @@ public class PathFinder {
                     do {
 
                         NUtils.waitEvent(()->NUtils.isPose(gui.map.player(),new NAlias("walk")),10,50);
-                        while (gui.map.player().rc.dist(vert.coord) > 2.75 && NUtils.isPose(gui.map.player(), new NAlias("walk"))) {
+                        while (gui.map.player().rc.dist(vert.coord) > 2.75 || NUtils.isPose(gui.map.player(), new NAlias("walk"))) {
                             if (withAlarm) {
                                 if (NUtils.alarm()) {
                                     /// Тревога валим
@@ -867,7 +872,9 @@ public class PathFinder {
     public void setHardMode(boolean battleMode) {
         this.hardMode = battleMode;
     }
-
+    public void setOneSize(boolean oneSize) {
+        this.oneSize = oneSize;
+    }
     boolean battleMode = false;
     boolean hardMode = false;
     boolean horseMode = false;

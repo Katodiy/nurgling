@@ -1170,14 +1170,15 @@ public class Finder {
             throws NoFreeSpace {
         double shift_x = ohitBox.end.x - ohitBox.begin.x;
         double shift_y = ohitBox.end.y - ohitBox.begin.y;
-        shift_x = Math.max(shift_x,shift_y);
-        shift_y = shift_x;
-        NHitBox hitBox = new NHitBox(new Coord2d(-shift_x/2.,-shift_x/2.),new Coord2d(shift_x/2.,shift_x/2.));
+       // shift_x = Math.max(shift_x,shift_y);
+       // shift_y = shift_x;
+        NHitBox hitBox = new NHitBox(new Coord2d(-shift_x/2.,-shift_y/2.),new Coord2d(shift_x/2.,shift_y/2.));
 
         hitBox.begin.x += 0.01;
         hitBox.begin.y += 0.01;
         hitBox.end.x -= 0.01;
         hitBox.end.y -= 0.01;
+        hitBox.correct(Coord2d.z, 0);
         double x_pos = area.begin.x + shift_x / 2;
         double y_pos = area.begin.y + shift_y / 2;
         while ( x_pos < area.end.x ) {

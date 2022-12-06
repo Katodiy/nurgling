@@ -109,7 +109,7 @@ public class NHitBox extends NArea {
         hitboxes.put("gfx/terobjs/plants/trellis", new NHitBox(new Coord2d(-1.375, -5.5), new Coord2d(1.375, 5.5)));
         hitboxes.put("gfx/terobjs/arch/hwall", new NHitBox(new Coord2d(-0.02, -5.5), new Coord2d(0.02, 5.5)));
         hitboxes.put("gfx/terobjs/vehicle/dugout", new NHitBox(new Coord2d(-11, -2.75), new Coord2d(11, 2.75)));
-        hitboxes.put("gfx/terobjs/trees/oldtrunk", new NHitBox(new Coord2d(-11, -2.75), new Coord2d(11, 2.75)));
+        ///hitboxes.put("gfx/terobjs/trees/oldtrunk", new NHitBox(new Coord2d(-11, -2.75), new Coord2d(11, 2.75)));
         ///TODO:dreca
         hitboxes.put("gfx/terobjs/furn/boughbed", new NHitBox(new Coord2d(-11, -5.5), new Coord2d(11, 5.5)));
         hitboxes.put("gfx/terobjs/htable", new NHitBox(new Coord2d(-5.5, -8.25), new Coord2d(5.5, 8.25)));
@@ -219,7 +219,7 @@ public class NHitBox extends NArea {
 //        else if ( name.contains ( "hwall" ) ) {
 //            return new NHitBox ( new Coord2d ( -0.02, -5.5 ), new Coord2d ( 0.02, 5.5 ) );
 //        }
-        if ( name.contains ( "log" ) ) {
+        if ( name.contains ( "log" ) || name.contains ( "oldtrunk" ) ) {
             return new NHitBox ( new Coord2d ( -11, -2.75 ), new Coord2d ( 11, 2.75 ) );
         }
         else if ( name.contains ( "ptrellis" ) ) {

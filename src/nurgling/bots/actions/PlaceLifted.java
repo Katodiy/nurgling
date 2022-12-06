@@ -40,7 +40,10 @@ public class PlaceLifted implements Action {
             pf.setPhantom ( coord, hitBox );
             pf.ignoreGob ( plObj );
             pf.setHardMode ( true );
+            pf.setOneSize ( true );
             pf.run ();
+            //double shift_x = hitBox.end.x - hitBox.begin.x;
+            //double shift_y = hitBox.end.y - hitBox.begin.y;
             NUtils.place ( coord );
             NUtils.waitEvent(()->!NUtils.isPose(gui.map.player(),new NAlias("banzai")),200);
             NArea checkArea = new NArea(coord,2.75);
@@ -53,7 +56,13 @@ public class PlaceLifted implements Action {
         }
         return new Results ( Results.Types.FAIL );
     }
-    
+
+    public PlaceLifted(NArea output_area, NHitBox hitBox, Gob gob) {
+        plObj = gob;
+        this.area = output_area;
+        this.hitBox = hitBox;
+    }
+
     public PlaceLifted (
             AreasID area_id,
             NHitBox hitBox,
