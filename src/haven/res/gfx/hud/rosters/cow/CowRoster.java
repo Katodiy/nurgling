@@ -29,7 +29,7 @@ public class CowRoster extends CattleRoster<Ochs> {
 	new Column<Ochs>(Resource.local().load("hud/rosters/hidequality", 1), Comparator.comparing((Ochs e) -> e.hideq).reversed()),
 
 	new Column<Ochs>(Resource.local().load("hud/rosters/breedingquality", 1), Comparator.comparing((Ochs e) -> e.seedq).reversed()),
-	new Column<Ochs>(Resource.local().load("hud/rosters/rang", 1), Comparator.comparing((Ochs e) -> e.rang).reversed())
+	new Column<Ochs>(Resource.local().load("hud/rosters/rang", 1), Comparator.comparing(Ochs::rang).reversed())
     );
     protected List<Column> cols() {return(cols);}
 
@@ -58,7 +58,6 @@ public class CowRoster extends CattleRoster<Ochs> {
 	ret.milkq = (Integer)args[n++];
 	ret.hideq = (Integer)args[n++];
 	ret.seedq = (Integer)args[n++];
-	ret.rang = ret.rang();
 	return(ret);
     }
 

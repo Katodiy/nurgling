@@ -5,7 +5,11 @@ import haven.Button;
 import haven.Composite;
 import haven.Label;
 import haven.Window;
+import haven.res.gfx.hud.rosters.pig.Pig;
 import haven.res.ui.barterbox.Shopbox;
+import haven.res.ui.croster.CattleId;
+import haven.res.ui.croster.Entry;
+import haven.res.ui.croster.RosterWindow;
 import haven.res.ui.tt.q.qbuff.QBuff;
 import haven.res.ui.tt.q.quality.Quality;
 import nurgling.bots.*;
@@ -1762,13 +1766,27 @@ public class NUtils {
         return false;
     }
 
-    private static final NAlias raw_hides = new NAlias(new ArrayList<String>(Arrays.asList("blood", "raw", "fresh")),
-            new ArrayList<String>(Arrays.asList("stern")));
-    private static final NAlias hides = new NAlias(new ArrayList<>(Arrays.asList("hide", "scale")),
-            new ArrayList<>(Arrays.asList("blood", "raw", "Fresh", "Jacket", "hidejacket")));
 
+    public static RosterWindow getRosterWindow(Class<? extends Entry> cattleRoster) throws InterruptedException {
+        RosterWindow w;
+        if((w = (RosterWindow)NUtils.getGameUI().getWindow("Cattle Roster")) == null) {
+            NUtils.command(new char[]{'a', 'c'});
+            NUtils.waitEvent(() -> NUtils.getGameUI().getWindow("Cattle Roster") != null, 500);
 
+            w = (RosterWindow) NUtils.getGameUI().getWindow("Cattle Roster");
+            NUtils.waitEvent(w::allLoaded, 1000);
+        }
+        w.show(cattleRoster);
+        return w;
+    }
 
+    public static Entry getAnimalEntity(Gob gob, Class<? extends Entry> cattleRoster ){
+        try {
+            return (Entry) ((RosterWindow) NUtils.getGameUI().getWindow("Cattle Roster")).roster(cattleRoster).entries.get(((CattleId) gob.getattr(CattleId.class)).id);
+        }catch (NullPointerException e){
+            return null;
+        }
+    }
 
     public static Optional<Coord2d> intersect(Pair<Coord2d, Coord2d> lineA, Pair<Coord2d, Coord2d> lineB) {
         double a1 = lineA.b.y - lineA.a.y;

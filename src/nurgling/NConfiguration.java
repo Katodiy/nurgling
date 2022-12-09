@@ -1,6 +1,5 @@
 package nurgling;
 
-import dolda.jglob.Loader;
 import haven.*;
 
 import java.awt.*;
@@ -11,7 +10,6 @@ import java.net.URL;
 import java.util.*;
 import java.util.List;
 
-import haven.render.BufPipe;
 import nurgling.bots.settings.IngredientSettings;
 import nurgling.bots.tools.AItem;
 import nurgling.json.*;
@@ -92,6 +90,65 @@ public class NConfiguration {
             this.isEnable = isEnable;
         }
     }
+
+    public class GoatsHerd{
+        public int totalGoats = 4;
+
+        public double milkq = 1.5;
+        public double milkquan = 1;
+
+        public double woolq = 0.33;
+        public double woolquan = 0.33;
+
+        public double meatq = 0;
+        public double meatquan = 0;
+
+        public int breedingGap = 10;
+    }
+
+    public class SheepsHerd{
+        public int totalSheeps = 4;
+
+        public double milkq = 1.5;
+        public double milkquan = 1;
+
+        public double woolq = 0.33;
+        public double woolquan = 0.33;
+
+        public double meatq = 0;
+        public double meatquan = 0;
+
+        public int breedingGap = 10;
+    }
+
+    public class PigsHerd{
+        public int totalPigs = 4;
+
+        public double trufSnout = 0;
+
+        public double meatq = 1.5;
+        public double meatquan = 1;
+
+        public int breedingGap = 10;
+    }
+
+
+    public class CowsHerd{
+        public int totalCows = 4;
+
+        public double milkq = 1.5;
+        public double milkquan = 1;
+
+        public double meatq = 0;
+        public double meatquan = 0;
+
+        public int breedingGap = 10;
+    }
+
+    public GoatsHerd goatsHerd = new GoatsHerd();
+    public SheepsHerd sheepsHerd = new SheepsHerd();
+    public PigsHerd pigsHerd = new PigsHerd();
+    public CowsHerd cowsHerd = new CowsHerd();
 
     public ArrayList<PickingAction> pickingActions = new ArrayList<>();
 
@@ -391,6 +448,45 @@ public class NConfiguration {
 
         JSONObject obj = new JSONObject ();
 
+        JSONObject jGoatHerd = new JSONObject();
+        jGoatHerd.put("female_count",goatsHerd.totalGoats);
+        jGoatHerd.put("breading_gap",goatsHerd.breedingGap);
+        jGoatHerd.put("mq",goatsHerd.milkq);
+        jGoatHerd.put("m",goatsHerd.milkquan);
+        jGoatHerd.put("wq",goatsHerd.woolq);
+        jGoatHerd.put("w",goatsHerd.woolquan);
+        jGoatHerd.put("meatq",goatsHerd.meatq);
+        jGoatHerd.put("meat",goatsHerd.meatquan);
+        obj.put("goatsHerd",jGoatHerd);
+
+        JSONObject jShepsHerd = new JSONObject();
+        jShepsHerd.put("female_count",sheepsHerd.totalSheeps);
+        jShepsHerd.put("breading_gap",sheepsHerd.breedingGap);
+        jShepsHerd.put("mq",sheepsHerd.milkq);
+        jShepsHerd.put("m",sheepsHerd.milkquan);
+        jShepsHerd.put("wq",sheepsHerd.woolq);
+        jShepsHerd.put("w",sheepsHerd.woolquan);
+        jShepsHerd.put("meatq",sheepsHerd.meatq);
+        jShepsHerd.put("meat",sheepsHerd.meatquan);
+        obj.put("sheepsHerd",jShepsHerd);
+
+        JSONObject jCowsHerd = new JSONObject();
+        jCowsHerd.put("female_count",cowsHerd.totalCows);
+        jCowsHerd.put("breading_gap",cowsHerd.breedingGap);
+        jCowsHerd.put("mq",cowsHerd.milkq);
+        jCowsHerd.put("m",cowsHerd.milkquan);
+        jCowsHerd.put("meatq",cowsHerd.meatq);
+        jCowsHerd.put("meat",cowsHerd.meatquan);
+        obj.put("cowsHerd",jCowsHerd);
+
+        JSONObject jPigsHerd = new JSONObject();
+        jPigsHerd.put("female_count",pigsHerd.totalPigs);
+        jPigsHerd.put("breading_gap",pigsHerd.breedingGap);
+        jPigsHerd.put("truf",pigsHerd.trufSnout);
+        jPigsHerd.put("meatq",pigsHerd.meatq);
+        jPigsHerd.put("meat",pigsHerd.meatquan);
+        obj.put("pigsHerd",jPigsHerd);
+
         JSONArray keys = new JSONArray();
         {
             for (String charkey : allKeys.keySet()) {
@@ -592,6 +688,50 @@ public class NConfiguration {
                     new InputStreamReader( new FileInputStream( path ), "cp1251" ) );
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = ( JSONObject ) parser.parse ( reader );
+
+
+            JSONObject jGoatHerd = ( JSONObject ) jsonObject.get("goatsHerd");
+            if(jGoatHerd!=null) {
+                goatsHerd.totalGoats = Integer.valueOf(jGoatHerd.get("female_count").toString());
+                goatsHerd.breedingGap = Integer.valueOf(jGoatHerd.get("breading_gap").toString());
+                goatsHerd.milkq = Double.valueOf(jGoatHerd.get("mq").toString());
+                goatsHerd.milkquan = Double.valueOf(jGoatHerd.get("m").toString());
+                goatsHerd.woolq = Double.valueOf(jGoatHerd.get("wq").toString());
+                goatsHerd.woolquan = Double.valueOf(jGoatHerd.get("w").toString());
+                goatsHerd.meatq = Double.valueOf(jGoatHerd.get("meatq").toString());
+                goatsHerd.meatquan = Double.valueOf(jGoatHerd.get("meat").toString());
+            }
+
+            JSONObject jShepsHerd = ( JSONObject ) jsonObject.get("sheepsHerd");
+            if(jGoatHerd!=null) {
+                sheepsHerd.totalSheeps = Integer.valueOf(jShepsHerd.get("female_count").toString());
+                sheepsHerd.breedingGap = Integer.valueOf(jShepsHerd.get("breading_gap").toString());
+                sheepsHerd.milkq = Double.valueOf(jShepsHerd.get("mq").toString());
+                sheepsHerd.milkquan = Double.valueOf(jShepsHerd.get("m").toString());
+                sheepsHerd.woolq = Double.valueOf(jShepsHerd.get("wq").toString());
+                sheepsHerd.woolquan = Double.valueOf(jShepsHerd.get("w").toString());
+                sheepsHerd.meatq = Double.valueOf(jShepsHerd.get("meatq").toString());
+                sheepsHerd.meatquan = Double.valueOf(jShepsHerd.get("meat").toString());
+            }
+
+            JSONObject jCowsHerd = ( JSONObject ) jsonObject.get("cowsHerd");
+            if(jGoatHerd!=null) {
+                cowsHerd.totalCows = Integer.valueOf(jCowsHerd.get("female_count").toString());
+                cowsHerd.breedingGap = Integer.valueOf(jCowsHerd.get("breading_gap").toString());
+                cowsHerd.milkq = Double.valueOf(jCowsHerd.get("mq").toString());
+                cowsHerd.milkquan = Double.valueOf(jCowsHerd.get("m").toString());
+                cowsHerd.meatq = Double.valueOf(jCowsHerd.get("meatq").toString());
+                cowsHerd.meatquan = Double.valueOf(jCowsHerd.get("meat").toString());
+            }
+
+            JSONObject jPigsHerd = ( JSONObject ) jsonObject.get("pigsHerd");
+            if(jGoatHerd!=null) {
+                pigsHerd.totalPigs = Integer.valueOf(jPigsHerd.get("female_count").toString());
+                pigsHerd.breedingGap = Integer.valueOf(jPigsHerd.get("breading_gap").toString());
+                pigsHerd.trufSnout = Double.valueOf(jPigsHerd.get("truf").toString());
+                pigsHerd.meatq = Double.valueOf(jPigsHerd.get("meatq").toString());
+                pigsHerd.meatquan = Double.valueOf(jPigsHerd.get("meat").toString());
+            }
 
             JSONArray jingredients = ( JSONArray ) jsonObject.get ( "ingredients" );
             if(jingredients!=null) {

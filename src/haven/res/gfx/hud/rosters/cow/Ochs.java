@@ -6,6 +6,8 @@ package haven.res.gfx.hud.rosters.cow;
 import haven.*;
 import haven.res.gfx.hud.rosters.pig.PigRoster;
 import haven.res.ui.croster.*;
+import nurgling.NConfiguration;
+
 import java.util.*;
 
 @FromResource(name = "gfx/hud/rosters/cow", version = 72)
@@ -36,7 +38,7 @@ public class Ochs extends Entry {
 	drawcol(g, CowRoster.cols.get(i), 1, milkq, percent, i++);
 	drawcol(g, CowRoster.cols.get(i), 1, hideq, percent, i++);
 	drawcol(g, CowRoster.cols.get(i), 1, seedq, null, i++);
-	drawcol(g, CowRoster.cols.get(i), 1, rang, null, i++);
+	drawcol(g, CowRoster.cols.get(i), 1, rang(), null, i++);
 	super.draw(g);
     }
 
@@ -69,13 +71,13 @@ public class Ochs extends Entry {
     }
 
 	public double rang() {
+		NConfiguration.CowsHerd herd = NConfiguration.getInstance().cowsHerd;
 		double q1 = q;
 		if (bull) {
-			q1 = ((q + 10) > seedq) ? seedq - 10 : q;
+			q1 = ((q + herd.breedingGap) > seedq) ? seedq - herd.breedingGap : q;
 		}
-		return Math.round(1.5 * q1 * milkq / 100 + milk);
+		return Math.round(herd.milkq * q1 * milkq / 100 + herd.milkquan * milk + herd.meatq * q1 * meatq / 100 + herd.meatquan * meat);
 	}
-	double rang;
 }
 
 /* >wdg: CowRoster */

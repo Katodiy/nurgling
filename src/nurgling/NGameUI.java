@@ -41,7 +41,7 @@ public class NGameUI extends GameUI {
     }
 
     public boolean updated() {
-        return map!=null && map.glob!=null && map.glob.map!=null && !map.glob.map.isLoading();
+        return map!=null && map.glob!=null && map.glob.map!=null && !map.glob.map.isLoading() && map.player()!=null;
     }
 
     public class PaginaBeltSlot extends BeltSlot {

@@ -32,7 +32,7 @@ public class SheepRoster extends CattleRoster<Sheep> {
 	new Column<Sheep>(Resource.local().load("hud/rosters/hidequality", 1), Comparator.comparing((Sheep e) -> e.hideq).reversed()),
 
 	new Column<Sheep>(Resource.local().load("hud/rosters/breedingquality", 1), Comparator.comparing((Sheep e) -> e.seedq).reversed()),
-	new Column<Sheep>(Resource.local().load("hud/rosters/rang", 1), Comparator.comparing((Sheep e) -> e.rang).reversed())
+	new Column<Sheep>(Resource.local().load("hud/rosters/rang", 1), Comparator.comparing(Sheep::rang).reversed())
     );
     protected List<Column> cols() {return(cols);}
 
@@ -63,7 +63,6 @@ public class SheepRoster extends CattleRoster<Sheep> {
 	ret.woolq = (Integer)args[n++];
 	ret.hideq = (Integer)args[n++];
 	ret.seedq = (Integer)args[n++];
-	ret.rang = ret.rang();
 	return(ret);
     }
 

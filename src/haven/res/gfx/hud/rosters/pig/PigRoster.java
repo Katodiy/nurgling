@@ -31,7 +31,7 @@ public class PigRoster extends CattleRoster<Pig> {
 	new Column<Pig>(Resource.local().load("hud/rosters/milkquality", 1), Comparator.comparing((Pig e) -> e.milkq).reversed()),
 	new Column<Pig>(Resource.local().load("hud/rosters/hidequality", 1), Comparator.comparing((Pig e) -> e.hideq).reversed()),
 	new Column<Pig>(Resource.local().load("hud/rosters/breedingquality", 1), Comparator.comparing((Pig e) -> e.seedq).reversed()),
-	new Column<Pig>(Resource.local().load("hud/rosters/rang", 1), Comparator.comparing((Pig e) -> e.rang).reversed())
+	new Column<Pig>(Resource.local().load("hud/rosters/rang", 1), Comparator.comparing(Pig::rang).reversed())
     );
     protected List<Column> cols() {return(cols);}
 
@@ -61,7 +61,6 @@ public class PigRoster extends CattleRoster<Pig> {
 	ret.hideq = (Integer)args[n++];
 	ret.seedq = (Integer)args[n++];
 	ret.prc = (Integer)args[n++];
-	ret.rang = ret.rang();
 	return(ret);
     }
 

@@ -5,6 +5,8 @@ package haven.res.gfx.hud.rosters.pig;
 
 import haven.*;
 import haven.res.ui.croster.*;
+import nurgling.NConfiguration;
+
 import java.util.*;
 
 @FromResource(name = "gfx/hud/rosters/pig", version = 60)
@@ -37,7 +39,7 @@ public class Pig extends Entry {
 	drawcol(g, PigRoster.cols.get(i), 1, milkq, percent, i++);
 	drawcol(g, PigRoster.cols.get(i), 1, hideq, percent, i++);
 	drawcol(g, PigRoster.cols.get(i), 1, seedq, null, i++);
-	drawcol(g, PigRoster.cols.get(i), 1, rang, null, i++);
+	drawcol(g, PigRoster.cols.get(i), 1, rang(), null, i++);
 	super.draw(g);
     }
 
@@ -70,13 +72,13 @@ public class Pig extends Entry {
     }
 
 	public double rang() {
+		NConfiguration.PigsHerd herd = NConfiguration.getInstance().pigsHerd;
 		double q1 = q;
 		if (hog) {
-			q1 = ((q + 10) > seedq) ? seedq - 10 : q;
+			q1 = ((q + herd.breedingGap) > seedq) ? seedq - herd.breedingGap : q;
 		}
-		return Math.round(1.5 * q1 * meatq / 100 + meat);
+		return Math.round(herd.meatq * q1 * milkq / 100 + herd.meatquan * milk +  herd.trufSnout * prc);
 	}
-	double rang;
 }
 
 /* >wdg: PigRoster */

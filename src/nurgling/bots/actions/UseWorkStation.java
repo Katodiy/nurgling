@@ -17,11 +17,12 @@ public class UseWorkStation implements Action {
     @Override
     public Results run(NGameUI gui)
             throws InterruptedException {
-        Gob workstation;
-        if (markEx == -1)
-            workstation = Finder.findObject(names);
-        else
-            workstation = Finder.findObjectMask(names, markEx, 1000);
+        if(workstation == null) {
+            if (markEx == -1)
+                workstation = Finder.findObject(names);
+            else
+                workstation = Finder.findObjectMask(names, markEx, 1000);
+        }
         if (workstation != null) {
             PathFinder pf = new PathFinder(gui, workstation);
             pf.setHardMode ( hard );
@@ -74,6 +75,17 @@ public class UseWorkStation implements Action {
         this.action = action;
         this.withAction = true;
     }
+
+    public UseWorkStation(
+            Gob gob,
+            String cap,
+            String action
+    ) {
+        this.workstation = gob;
+        this.cap = cap;
+        this.action = action;
+        this.withAction = true;
+    }
     
     public UseWorkStation(
             NAlias names,
@@ -107,4 +119,6 @@ public class UseWorkStation implements Action {
     boolean withAction = false;
     long markEx = -1;
     boolean hard = false;
+
+    Gob workstation = null;
 }

@@ -6,6 +6,7 @@ import haven.res.gfx.hud.rosters.sheep.Sheep;
 import haven.res.ui.croster.CattleId;
 import nurgling.NAlias;
 import nurgling.NGameUI;
+import nurgling.NUtils;
 import nurgling.bots.actions.AnimalAction;
 import nurgling.bots.actions.AnimalMilk;
 import nurgling.bots.actions.AnimalWool;
@@ -27,8 +28,8 @@ public class Sheeps extends Bot {
             @Override
             public int compare(Gob o1, Gob o2) {
                 if (o1.getattr(CattleId.class) != null && o2.getattr(CattleId.class) != null) {
-                    Sheep p1 = (Sheep) ((CattleId) o1.getattr(CattleId.class)).entry();
-                    Sheep p2 = (Sheep) ((CattleId) o2.getattr(CattleId.class)).entry();
+                    Sheep p1 = (Sheep) (NUtils.getAnimalEntity(o1,Sheep.class));;
+                    Sheep p2 = (Sheep) (NUtils.getAnimalEntity(o2,Sheep.class));;
                     return -Double.compare(p1.rang(), p2.rang());
                 }
                 return 0;
@@ -38,14 +39,14 @@ public class Sheeps extends Bot {
         Predicate<Gob> wpred = new Predicate<Gob>() {
             @Override
             public boolean test(Gob gob) {
-                Sheep p1 = (Sheep) ((CattleId) gob.getattr(CattleId.class)).entry();
+                Sheep p1 = (Sheep) (NUtils.getAnimalEntity(gob,Sheep.class));;
                 return !p1.ram && !p1.dead;
             }
         };
         Predicate<Gob> mpred = new Predicate<Gob>() {
             @Override
             public boolean test(Gob gob) {
-                Sheep p1 = (Sheep) ((CattleId) gob.getattr(CattleId.class)).entry();
+                Sheep p1 = (Sheep) (NUtils.getAnimalEntity(gob,Sheep.class));;
                 return p1.ram && !p1.dead;
             }
         };
@@ -53,7 +54,7 @@ public class Sheeps extends Bot {
         Predicate<Gob> mlpred = new Predicate<Gob>() {
             @Override
             public boolean test(Gob gob) {
-                Sheep p1 = (Sheep) ((CattleId) gob.getattr(CattleId.class)).entry();
+                Sheep p1 = (Sheep) (NUtils.getAnimalEntity(gob,Sheep.class));;
                 return p1.ram && !p1.dead && !p1.lamb;
             }
         };
@@ -61,7 +62,7 @@ public class Sheeps extends Bot {
         Predicate<Gob> wlpred = new Predicate<Gob>() {
             @Override
             public boolean test(Gob gob) {
-                Sheep p1 = (Sheep) ((CattleId) gob.getattr(CattleId.class)).entry();
+                Sheep p1 = (Sheep) (NUtils.getAnimalEntity(gob,Sheep.class));;
                 return !p1.ram && !p1.dead && p1.lactate;
             }
         };

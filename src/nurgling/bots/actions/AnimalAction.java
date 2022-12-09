@@ -23,13 +23,7 @@ public class AnimalAction <C extends Entry> implements Action {
     @Override
     public Results run(NGameUI gui)
             throws InterruptedException {
-        if(NUtils.getGameUI().getWindow("Cattle Roster") == null) {
-            NUtils.command(new char[]{'a', 'c'});
-            NUtils.waitEvent(() -> NUtils.getGameUI().getWindow("Cattle Roster") != null, 500);
-        }
-        RosterWindow w = (RosterWindow) NUtils.getGameUI().getWindow("Cattle Roster");
-        NUtils.waitEvent(w::allLoaded, 1000);
-        w.show(cattleRoster);
+        RosterWindow w = NUtils.getRosterWindow(cattleRoster);
         ArrayList<Gob> gobs = Finder.findObjects(animal,current);
         ArrayList<Gob> targets = new ArrayList<>();
 

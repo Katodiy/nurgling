@@ -44,7 +44,8 @@ public class SeederSeed implements Action {
         }
 
         do {
-
+            if(gui.getInventory().getItems(in.items).size()<2)
+                break;
             NUtils.activateItem(gui.getInventory().getItem(in.items));
             long start_id = NUtils.getUI().getTickId();
             while ( NUtils.getUI().getTickId() - start_id < 20) {

@@ -1779,6 +1779,10 @@ public class OptWnd extends Window {
 				l.addWidget(new Smelter());
 				l.addWidget(new Tanning());
 				l.addWidget(new FarmerCarrrot());
+				l.addWidget(new Goats());
+				l.addWidget(new Sheeps());
+				l.addWidget(new Cows());
+				l.addWidget(new Pigs());
 
 				for(Widget w: settings)
 					w.hide();

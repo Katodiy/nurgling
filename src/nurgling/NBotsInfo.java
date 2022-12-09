@@ -206,8 +206,10 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
                     "bots/icons/sheeps" ) );
             layouts.get ( 5 ).add ( new NButton ( "Goats", new Goats ( gui ),
                     "bots/icons/goats" ) );
-            layouts.get ( 2 ).add ( new NButton ( "KFC", new KFC ( gui ),
+            layouts.get ( 5 ).add ( new NButton ( "KFC", new KFC ( gui ),
                     "bots/icons/kfc" ) );
+            layouts.get ( 5 ).add ( new NButton ( "Brander", new BrandedBot ( gui ),
+                    "bots/icons/brander" ) );
 //            layouts.put ( 5, new Layout ( this, Special.getPath () + "/icons/farming.png" ) );
 //            layouts.get ( 5 ).add ( new NButton ( "FarmerQ", new FarmerQ (  gui ),
 //                    Special.getPath () + "/icons/farmerq.png" ) );

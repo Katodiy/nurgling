@@ -4,9 +4,12 @@ package nurgling.bots;
 import haven.Gob;
 import haven.res.gfx.hud.rosters.cow.Ochs;
 import haven.res.gfx.hud.rosters.pig.Pig;
+import haven.res.gfx.hud.rosters.pig.PigRoster;
 import haven.res.ui.croster.CattleId;
+import haven.res.ui.croster.RosterWindow;
 import nurgling.NAlias;
 import nurgling.NGameUI;
+import nurgling.NUtils;
 import nurgling.bots.actions.AnimalAction;
 import nurgling.bots.actions.DryerAction;
 import nurgling.tools.AreasID;
@@ -29,8 +32,8 @@ public class Pigs extends Bot {
             @Override
             public int compare(Gob o1, Gob o2) {
                 if (o1.getattr(CattleId.class) != null && o2.getattr(CattleId.class) != null) {
-                    Pig p1 = (Pig) ((CattleId) o1.getattr(CattleId.class)).entry();
-                    Pig p2 = (Pig) ((CattleId) o2.getattr(CattleId.class)).entry();
+                    Pig p1 = (Pig) (NUtils.getAnimalEntity(o1,Pig.class));
+                    Pig p2 = (Pig) (NUtils.getAnimalEntity(o2,Pig.class));
                     return -Double.compare(p1.rang(), p2.rang());
                 }
                 return 0;
@@ -40,21 +43,21 @@ public class Pigs extends Bot {
         Predicate<Gob> wpred = new Predicate<Gob>() {
             @Override
             public boolean test(Gob gob) {
-                Pig p1 = (Pig) ((CattleId) gob.getattr(CattleId.class)).entry();
+                Pig p1 = (Pig) (NUtils.getAnimalEntity(gob,Pig.class));
                 return !p1.hog && !p1.piglet && !p1.dead;
             }
         };
         Predicate<Gob> mpred = new Predicate<Gob>() {
             @Override
             public boolean test(Gob gob) {
-                Pig p1 = (Pig) ((CattleId) gob.getattr(CattleId.class)).entry();
+                Pig p1 = (Pig)  (NUtils.getAnimalEntity(gob,Pig.class));
                 return p1.hog && !p1.piglet && !p1.dead;
             }
         };
         Predicate<Gob> wlpred = new Predicate<Gob>() {
             @Override
             public boolean test(Gob gob) {
-                Pig p1 = (Pig) ((CattleId) gob.getattr(CattleId.class)).entry();
+                Pig p1 = (Pig)  (NUtils.getAnimalEntity(gob,Pig.class));
                 return !p1.hog && !p1.dead && p1.lactate && !p1.piglet;
             }
         };
