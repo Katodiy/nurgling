@@ -5,6 +5,7 @@ import haven.Gob;
 import haven.res.gfx.hud.rosters.goat.Goat;
 import haven.res.ui.croster.CattleId;
 import nurgling.NAlias;
+import nurgling.NConfiguration;
 import nurgling.NGameUI;
 import nurgling.NUtils;
 import nurgling.bots.actions.AnimalAction;
@@ -68,8 +69,8 @@ public class Goats extends Bot {
         };
         runActions.add(new AnimalWool<Goat>(new NAlias("goat"), AreasID.goats,AreasID.wool,Goat.class,wlpred));
         runActions.add(new AnimalMilk<Goat>(new NAlias("goat"), AreasID.goats,AreasID.milk,Goat.class,wlpred));
-        runActions.add(new AnimalAction<Goat>(new NAlias("goat"), AreasID.goats, comparator, Goat.class, wpred, 4, wlpred));
-        runActions.add(new AnimalAction<Goat>(new NAlias("goat"), AreasID.goats, comparator, Goat.class, mpred, 1, mlpred));
+        runActions.add(new AnimalAction<Goat>(new NAlias("goat"), AreasID.goats, comparator, Goat.class, wpred, NConfiguration.getInstance().goatsHerd.totalGoats, wlpred,NConfiguration.getInstance().goatsHerd.adultGoats));
+        runActions.add(new AnimalAction<Goat>(new NAlias("goat"), AreasID.goats, comparator, Goat.class, mpred, 1, mlpred,1));
     }
     
     

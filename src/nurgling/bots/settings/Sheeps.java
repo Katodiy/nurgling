@@ -8,6 +8,7 @@ import nurgling.NConfiguration;
 
 public class Sheeps extends Settings {
     TextEntry totalsheeps;
+    TextEntry totalAdult;
     TextEntry breedingGap;
     TextEntry milkQuality;
     TextEntry milkQuantity;
@@ -38,6 +39,14 @@ public class Sheeps extends Settings {
             }
         }, third.pos("bl").adds(0, 5));
 
+        prev = first = add(new Label("Total with milk:"), first.pos("bl").adds(0, 15));
+        second = totalAdult = add(new TextEntry(50,""), second.pos("bl").adds(0, 9));
+        third= add(new Button(50,"Set"){
+            @Override
+            public void click() {
+                NConfiguration.getInstance().sheepsHerd.adultSheeps = Integer.parseInt(totalAdult.text());
+            }
+        }, third.pos("bl").adds(0, 5));
 
         prev = add(new Label("Quality constants:"), prev.pos("bl").adds(0, 25));
 
@@ -102,6 +111,7 @@ public class Sheeps extends Settings {
 
         if(meatQuantity!=null) {
             totalsheeps.settext(String.valueOf(NConfiguration.getInstance().sheepsHerd.totalSheeps));
+            totalAdult.settext(String.valueOf(NConfiguration.getInstance().sheepsHerd.adultSheeps));
             breedingGap.settext(String.valueOf(NConfiguration.getInstance().sheepsHerd.breedingGap));
             milkQuality.settext(String.valueOf(NConfiguration.getInstance().sheepsHerd.milkq));
             milkQuantity.settext(String.valueOf(NConfiguration.getInstance().sheepsHerd.milkquan));

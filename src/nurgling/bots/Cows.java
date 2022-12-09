@@ -6,6 +6,7 @@ import haven.res.gfx.hud.rosters.cow.Ochs;
 import haven.res.gfx.hud.rosters.pig.Pig;
 import haven.res.ui.croster.CattleId;
 import nurgling.NAlias;
+import nurgling.NConfiguration;
 import nurgling.NGameUI;
 import nurgling.NUtils;
 import nurgling.bots.actions.AnimalAction;
@@ -67,8 +68,8 @@ public class Cows extends Bot {
             }
         };
         runActions.add(new AnimalMilk<Ochs>(new NAlias("cattle"), AreasID.cows,AreasID.milk,Ochs.class,wlpred));
-        runActions.add(new AnimalAction<Ochs>(new NAlias("cattle"), AreasID.cows, comparator, Ochs.class, wpred, 4, wlpred));
-        runActions.add(new AnimalAction<Ochs>(new NAlias("cattle"), AreasID.cows, comparator, Ochs.class, mpred, 1, mlpred));
+        runActions.add(new AnimalAction<Ochs>(new NAlias("cattle"), AreasID.cows, comparator, Ochs.class, wpred, NConfiguration.getInstance().cowsHerd.totalCows, wlpred,NConfiguration.getInstance().cowsHerd.adultCows));
+        runActions.add(new AnimalAction<Ochs>(new NAlias("cattle"), AreasID.cows, comparator, Ochs.class, mpred, 1, mlpred,1));
     }
     
     

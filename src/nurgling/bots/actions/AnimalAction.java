@@ -51,20 +51,26 @@ public class AnimalAction <C extends Entry> implements Action {
                 }
             }
             if (forpred != null) {
-                boolean isFind = false;
+                int c = 0;
                 for (Gob gob : forlife) {
                     if (forpred.test(gob)) {
-                        isFind = true;
-                        break;
-                    }
-                }
-                if (!isFind) {
-                    for (Gob gob : forkill) {
-                        if (forpred.test(gob)) {
-                            forkill.remove(gob);
+                        c++;
+                        if (c >=flcount) {
                             break;
                         }
                     }
+                }
+                if (c<flcount) {
+                    ArrayList<Gob> forsave = new ArrayList<>();
+                    for (Gob gob : forkill) {
+                        if (forpred.test(gob)) {
+                            c++;
+                            forsave.add(gob);
+                            if(c >=flcount)
+                                break;
+                        }
+                    }
+                    forkill.removeAll(forsave);
                 }
             }
             for (Gob target : forkill) {
@@ -91,7 +97,7 @@ public class AnimalAction <C extends Entry> implements Action {
         this.pred = pred;
         this.count = count;
     }
-    public <C extends Entry> AnimalAction(NAlias animal, AreasID current, Comparator<Gob> wc, Class<C> c, Predicate<Gob> pred, int count, Predicate<Gob> forpred) {
+    public <C extends Entry> AnimalAction(NAlias animal, AreasID current, Comparator<Gob> wc, Class<C> c, Predicate<Gob> pred, int count, Predicate<Gob> forpred, int flcount) {
         this.animal = animal;
         this.current = current;
         sub = "sodalite";
@@ -100,6 +106,7 @@ public class AnimalAction <C extends Entry> implements Action {
         this.pred = pred;
         this.count = count;
         this.forpred = forpred;
+        this.flcount = flcount;
     }
 
 
@@ -112,4 +119,5 @@ public class AnimalAction <C extends Entry> implements Action {
     Predicate<Gob> pred = null;
     Predicate<Gob> forpred = null;
     int count = 0;
+    int flcount = 0;
 }

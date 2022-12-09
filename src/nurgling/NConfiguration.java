@@ -93,6 +93,7 @@ public class NConfiguration {
 
     public class GoatsHerd{
         public int totalGoats = 4;
+        public int adultGoats = 4;
 
         public double milkq = 1.5;
         public double milkquan = 1;
@@ -108,6 +109,8 @@ public class NConfiguration {
 
     public class SheepsHerd{
         public int totalSheeps = 4;
+
+        public int adultSheeps = 4;
 
         public double milkq = 1.5;
         public double milkquan = 1;
@@ -135,6 +138,7 @@ public class NConfiguration {
 
     public class CowsHerd{
         public int totalCows = 4;
+        public int adultCows = 4;
 
         public double milkq = 1.5;
         public double milkquan = 1;
@@ -450,6 +454,7 @@ public class NConfiguration {
 
         JSONObject jGoatHerd = new JSONObject();
         jGoatHerd.put("female_count",goatsHerd.totalGoats);
+        jGoatHerd.put("adult_count",goatsHerd.adultGoats);
         jGoatHerd.put("breading_gap",goatsHerd.breedingGap);
         jGoatHerd.put("mq",goatsHerd.milkq);
         jGoatHerd.put("m",goatsHerd.milkquan);
@@ -461,6 +466,7 @@ public class NConfiguration {
 
         JSONObject jShepsHerd = new JSONObject();
         jShepsHerd.put("female_count",sheepsHerd.totalSheeps);
+        jShepsHerd.put("adult_count",sheepsHerd.adultSheeps);
         jShepsHerd.put("breading_gap",sheepsHerd.breedingGap);
         jShepsHerd.put("mq",sheepsHerd.milkq);
         jShepsHerd.put("m",sheepsHerd.milkquan);
@@ -472,6 +478,7 @@ public class NConfiguration {
 
         JSONObject jCowsHerd = new JSONObject();
         jCowsHerd.put("female_count",cowsHerd.totalCows);
+        jCowsHerd.put("adult_count",cowsHerd.adultCows);
         jCowsHerd.put("breading_gap",cowsHerd.breedingGap);
         jCowsHerd.put("mq",cowsHerd.milkq);
         jCowsHerd.put("m",cowsHerd.milkquan);
@@ -693,6 +700,8 @@ public class NConfiguration {
             JSONObject jGoatHerd = ( JSONObject ) jsonObject.get("goatsHerd");
             if(jGoatHerd!=null) {
                 goatsHerd.totalGoats = Integer.valueOf(jGoatHerd.get("female_count").toString());
+                if(jGoatHerd.get("adult_count")!=null)
+                    goatsHerd.adultGoats = Integer.valueOf(jGoatHerd.get("adult_count").toString());
                 goatsHerd.breedingGap = Integer.valueOf(jGoatHerd.get("breading_gap").toString());
                 goatsHerd.milkq = Double.valueOf(jGoatHerd.get("mq").toString());
                 goatsHerd.milkquan = Double.valueOf(jGoatHerd.get("m").toString());
@@ -703,8 +712,10 @@ public class NConfiguration {
             }
 
             JSONObject jShepsHerd = ( JSONObject ) jsonObject.get("sheepsHerd");
-            if(jGoatHerd!=null) {
+            if(jShepsHerd!=null) {
                 sheepsHerd.totalSheeps = Integer.valueOf(jShepsHerd.get("female_count").toString());
+                if(jGoatHerd.get("adult_count")!=null)
+                    sheepsHerd.adultSheeps = Integer.valueOf(jShepsHerd.get("adult_count").toString());
                 sheepsHerd.breedingGap = Integer.valueOf(jShepsHerd.get("breading_gap").toString());
                 sheepsHerd.milkq = Double.valueOf(jShepsHerd.get("mq").toString());
                 sheepsHerd.milkquan = Double.valueOf(jShepsHerd.get("m").toString());
@@ -715,8 +726,10 @@ public class NConfiguration {
             }
 
             JSONObject jCowsHerd = ( JSONObject ) jsonObject.get("cowsHerd");
-            if(jGoatHerd!=null) {
+            if(jCowsHerd!=null) {
                 cowsHerd.totalCows = Integer.valueOf(jCowsHerd.get("female_count").toString());
+                if(jGoatHerd.get("adult_count")!=null)
+                    cowsHerd.adultCows = Integer.valueOf(jCowsHerd.get("adult_count").toString());
                 cowsHerd.breedingGap = Integer.valueOf(jCowsHerd.get("breading_gap").toString());
                 cowsHerd.milkq = Double.valueOf(jCowsHerd.get("mq").toString());
                 cowsHerd.milkquan = Double.valueOf(jCowsHerd.get("m").toString());

@@ -8,6 +8,7 @@ import haven.res.gfx.hud.rosters.pig.PigRoster;
 import haven.res.ui.croster.CattleId;
 import haven.res.ui.croster.RosterWindow;
 import nurgling.NAlias;
+import nurgling.NConfiguration;
 import nurgling.NGameUI;
 import nurgling.NUtils;
 import nurgling.bots.actions.AnimalAction;
@@ -61,7 +62,7 @@ public class Pigs extends Bot {
                 return !p1.hog && !p1.dead && p1.lactate && !p1.piglet;
             }
         };
-        runActions.add(new AnimalAction<Pig>(new NAlias("pig"), AreasID.pigs, comparator, Pig.class, wpred, 4,wlpred));
+        runActions.add(new AnimalAction<Pig>(new NAlias("pig"), AreasID.pigs, comparator, Pig.class, wpred, NConfiguration.getInstance().pigsHerd.totalPigs,wlpred, NConfiguration.getInstance().pigsHerd.totalPigs));
         runActions.add(new AnimalAction<Pig>(new NAlias("pig"), AreasID.pigs, comparator, Pig.class, mpred, 1));
 
     }

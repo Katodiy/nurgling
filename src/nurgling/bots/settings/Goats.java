@@ -12,6 +12,7 @@ import static haven.res.lib.itemtex.ItemTex.made_str;
 
 public class Goats extends Settings {
     TextEntry totalGoats;
+    TextEntry totalAdult;
     TextEntry breedingGap;
     TextEntry milkQuality;
     TextEntry milkQuantity;
@@ -39,6 +40,15 @@ public class Goats extends Settings {
             @Override
             public void click() {
                 NConfiguration.getInstance().goatsHerd.breedingGap = Integer.parseInt(breedingGap.text());
+            }
+        }, third.pos("bl").adds(0, 5));
+
+        prev = first = add(new Label("Total with milk:"), first.pos("bl").adds(0, 15));
+        second = totalAdult = add(new TextEntry(50,""), second.pos("bl").adds(0, 9));
+        third= add(new Button(50,"Set"){
+            @Override
+            public void click() {
+                NConfiguration.getInstance().goatsHerd.adultGoats = Integer.parseInt(totalAdult.text());
             }
         }, third.pos("bl").adds(0, 5));
 
@@ -106,6 +116,7 @@ public class Goats extends Settings {
 
         if(meatQuantity!=null) {
             totalGoats.settext(String.valueOf(NConfiguration.getInstance().goatsHerd.totalGoats));
+            totalAdult.settext(String.valueOf(NConfiguration.getInstance().goatsHerd.adultGoats));
             breedingGap.settext(String.valueOf(NConfiguration.getInstance().goatsHerd.breedingGap));
             milkQuality.settext(String.valueOf(NConfiguration.getInstance().goatsHerd.milkq));
             milkQuantity.settext(String.valueOf(NConfiguration.getInstance().goatsHerd.milkquan));
