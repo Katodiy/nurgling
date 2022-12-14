@@ -77,7 +77,7 @@ public class Pig extends Entry {
 		if (hog) {
 			q1 = ((q + herd.breedingGap) > seedq) ? seedq - herd.breedingGap : q;
 		}
-		return Math.round(herd.meatq * q1 * milkq / 100 + herd.meatquan * milk +  herd.trufSnout * prc);
+		return Math.round(herd.meatq * q1 * meatq / 100 + herd.meatquan * meat +  herd.trufSnout * prc);
 	}
 }
 
