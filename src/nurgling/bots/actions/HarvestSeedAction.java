@@ -13,33 +13,32 @@ import nurgling.tools.NArea;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class HarvestCarrotAction implements Action {
+public class HarvestSeedAction implements Action {
 
     
     @Override
     public Results run ( NGameUI gui )
             throws InterruptedException {
-        NArea input = Finder.findNearestMark ( AreasID.carrot );
+        NArea input = Finder.findNearestMark ( harvest_area );
 
-        ArrayList<Gob> plants = Finder.findObjectsInArea ( new NAlias ("carrot"), input );
+        ArrayList<Gob> plants = Finder.findObjectsInArea ( crop, input );
         Gob barrel = Finder.findObjectInArea ( new NAlias("barrel"),2000,input );
-        new OpenBarrelAndTransfer ( 10000,  new NAlias ("carrot"), harvest_area, barrel ).run ( gui );
+        new OpenBarrelAndTransfer ( 9000,  crop, harvest_area, barrel ).run ( gui );
         boolean isFull=false;
         /// Выкапываем урожай
-        while ( !Finder.findCropsInArea ( new NAlias ("carrot"), input, false ).isEmpty () ) {
-            Gob plant = Finder.findCropInArea ( new NAlias ("carrot"), 3000, input, false );
+        while ( !Finder.findCropsInArea ( crop, input, isMaxStage ).isEmpty () ) {
+            Gob plant = Finder.findCropInArea ( crop, 3000, input, isMaxStage );
             if ( plant != null ) {
                     if ( gui.getInventory ().getFreeSpace () < 2 ) {
                         if(!isFull) {
-                            if ( new OpenBarrelAndTransfer ( 5000, new NAlias ( new ArrayList<> (Arrays.asList (
-                                    "carrot" , "Carrot"))),
-                                    AreasID.carrot,barrel )
+                            if ( new OpenBarrelAndTransfer ( 9000, crop,
+                                    harvest_area,barrel )
                                     .run ( gui ).type == Results.Types.FULL ) {
                                 isFull = true;
                             }
                         }
-                        if ( !gui.getInventory ().getItems ( new NAlias ( "carrot" ) ).isEmpty () ) {
-                            new TransferToTrough ( new NAlias ( "carrot" ) ).run ( gui );
+                        if ( !gui.getInventory ().getItems ( crop ).isEmpty () ) {
+                            new TransferToTrough ( crop ).run ( gui );
                         }
                     }
                     if ( NUtils.getStamina() <= 0.3 ) {
@@ -53,22 +52,29 @@ public class HarvestCarrotAction implements Action {
                 }
             
         }
-        if ( !gui.getInventory ().getItems ( new NAlias ( "carrot" ) ).isEmpty () ) {
+        if ( !gui.getInventory ().getItems ( crop ).isEmpty () ) {
             if(!isFull) {
-                if ( new OpenBarrelAndTransfer ( 5000, new NAlias ( new ArrayList<> (Arrays.asList (
-                        "carrot" , "Carrot"))),
-                        AreasID.carrot,barrel )
+                if ( new OpenBarrelAndTransfer ( 9000, crop ,
+                        harvest_area,barrel )
                         .run ( gui ).type == Results.Types.FULL ) {
                 }
             }
             else
             {
-                new TransferToTrough(new NAlias("carrot")).run(gui);
+                new TransferToTrough(crop).run(gui);
             }
         }
         return new Results ( Results.Types.SUCCESS );
     }
-    
+
+    public HarvestSeedAction(NAlias crop, AreasID harvest_area, boolean isMaxStage) {
+        this.crop = crop;
+        this.harvest_area = harvest_area;
+        this.isMaxStage = isMaxStage;
+    }
+
     AreasID harvest_area;
     NAlias crop;
+
+    boolean isMaxStage = false;
 }

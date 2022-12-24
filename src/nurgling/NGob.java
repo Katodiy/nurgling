@@ -101,6 +101,7 @@ public class NGob {
         notmarked,
         pow,
         notified,
+        quest,
 
         minesupport,
         stockpile,
@@ -210,7 +211,7 @@ public class NGob {
                 }
             } else if (NUtils.checkName(name, "pow")) {
                 addTag(Tags.pow);
-            } else if (NUtils.checkName(name, "minebeam", "column", "towercap", "ladder", "minesupport")) {
+            } else if (NUtils.checkName(name, new NAlias(new ArrayList<String>(Arrays.asList("minebeam", "column", "towercap", "ladder", "minesupport")),new ArrayList<String>(Arrays.asList("wrack"))))) {
                 addTag(Tags.minesupport);
             } else if (NUtils.checkName(name, new NAlias(new ArrayList<>(Arrays.asList("plants")), new ArrayList<>(Arrays.asList("trellis"))))) {
                 addTag(Tags.plant);
@@ -395,7 +396,12 @@ public class NGob {
                         Gob gob = ((Gob) this);
                         gob.removeol(NNotifiedRing.class);
                         gob.findoraddol(new NNotifiedRing(gob, Color.GREEN, 20, 0.7f, noteImg));
-                    } else {
+                    } else if (isTag(Tags.quest)) {
+                        Gob gob = ((Gob) this);
+                        gob.removeol(NNotifiedRing.class);
+                        gob.findoraddol(new NNotifiedRing(gob, Color.CYAN, 30, 0.7f, noteImg));
+                    }
+                    else{
                         Gob gob = ((Gob) this);
                         gob.removeol(NNotifiedRing.class);
                     }
@@ -409,15 +415,17 @@ public class NGob {
                     if (isTag(Tags.iconsign)) {
                         if(NConfiguration.getInstance().showAreas) {
                             if ( NUtils.getGameUI().updated()) {
-                                for (String name : made_id.keySet()) {
-                                    if (made_id.get(name) == ((Gob) this).modelAttribute)
-                                        try {
-                                            NOCache.constructOverlay(AreasID.find(name));
-                                        } catch (IllegalArgumentException e) {
+                                synchronized (made_id) {
+                                    for (String name : made_id.keySet()) {
+                                        if (made_id.get(name) == ((Gob) this).modelAttribute)
+                                            try {
+                                                NOCache.constructOverlay(AreasID.find(name));
+                                            } catch (IllegalArgumentException e) {
 //                                    e.printStackTrace();
-                                        } catch (Resource.Loading | MCache.LoadingMap e) {
-                                            status = Status.undefined;
-                                        }
+                                            } catch (Resource.Loading | MCache.LoadingMap e) {
+                                                status = Status.undefined;
+                                            }
+                                    }
                                 }
                             } else {
                                 status = Status.undefined;

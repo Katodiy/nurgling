@@ -68,6 +68,9 @@ public class PileMaker {
                 itemForPile = gameUI.getInventory().getItem(pile_name, q);
             } else {
                 itemForPile = gameUI.getInventory().getItem(item_name, q);
+                if(itemForPile == null) {
+                    itemForPile = gameUI.getInventory().getItemsWithInfo(item_name, q, true).get(0);
+                }
             }
         }else{
             itemForPile = gameUI.vhand;

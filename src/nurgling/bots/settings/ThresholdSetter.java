@@ -16,7 +16,7 @@ public class ThresholdSetter extends Widget {
         add(new Button(50,"Set"){
             @Override
             public void click() {
-                AreasID.set(id,Integer.valueOf(entry.text()));
+                AreasID.set(id,Double.valueOf(entry.text()));
                 AreasID.write();
             }
         },prev.pos("ur").add(5,-2));

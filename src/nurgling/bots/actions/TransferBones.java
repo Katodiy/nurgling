@@ -23,7 +23,7 @@ public class TransferBones implements Action {
         NAlias bones = new NAlias ( new ArrayList<String> (
                 Arrays.asList ( "/bone", "antlers", "adderskeleton", "claw", "beartooth", "antlers-moose",
                         "antlers" + "-reddeer", "tusk" ) ),
-                new ArrayList<> ( Arrays.asList ( "saw", "finebonering", "borewormbeak" ) ) );
+                new ArrayList<> ( Arrays.asList ( "saw", "finebonering", "borewormbeak","glue" ) ) );
         
         ArrayList<WItem> ditems = gui.getInventory ().getItems ( bones, AreasID.getTh(AreasID.lqbone), false );
         /// Переносим предметы в инвентарь

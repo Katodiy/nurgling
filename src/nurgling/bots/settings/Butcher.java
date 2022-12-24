@@ -11,8 +11,10 @@ public class Butcher extends Settings {
         prev = add(new AreaIconSelecter(AreasID.raw_hides),prev.pos("bl").add(0,5));
         prev = add(new Label("Entrails:"),prev.pos("bl").add(0,5));
         prev = add(new AreaIconSelecter(AreasID.entr),prev.pos("bl").add(0,5));
+        prev = add(new ThresholdSetter(AreasID.entr),prev.pos("bl").add(0,5));
         prev = add(new Label("Intensities:"),prev.pos("bl").add(0,5));
         prev = add(new AreaIconSelecter(AreasID.inten),prev.pos("bl").add(0,5));
+        prev = add(new ThresholdSetter(AreasID.inten),prev.pos("bl").add(0,5));
         prev = add(new Label("Fat:"),prev.pos("bl").add(0,5));
         prev = add(new AreaIconSelecter(AreasID.fat),prev.pos("bl").add(0,5));
         prev = add(new Label("Any meat:"),prev.pos("bl").add(0,5));

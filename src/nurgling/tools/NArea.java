@@ -1,10 +1,9 @@
 package nurgling.tools;
 
-import haven.Coord;
-import haven.Coord2d;
-import haven.Gob;
-import haven.MCache;
+import haven.*;
+import nurgling.NAlias;
 import nurgling.NHitBox;
+import nurgling.NUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -21,6 +20,24 @@ public class NArea {
 
     public long countTiles(){
         return Math.round(((end.x-begin.x+MCache.tilesz.x)/MCache.tilesz.x)*((end.y-begin.y+MCache.tilesz.y)/MCache.tilesz.y));
+    }
+
+    public long countFarmTiles(){
+        Coord2d pos = new Coord2d ( begin.x, begin.y );
+        int count = 0;
+        while ( pos.x <= end.x ) {
+            while ( pos.y <= end.y ) {
+                Coord pltc = ( new Coord2d ( pos.x / 11, pos.y / 11 ) ).floor ();
+                Resource res_beg = NUtils.getGameUI().ui.sess.glob.map.tilesetr ( NUtils.getGameUI().ui.sess.glob.map.gettile ( pltc ) );
+                if ( NUtils.checkName ( res_beg.name, new NAlias( "field" ) ) ) {
+                    count+=1;
+                }
+                pos.y += MCache.tilesz.y;
+            }
+            pos.y = begin.y;
+            pos.x += MCache.tilesz.x;
+        }
+        return count;
     }
 
     public void show(){

@@ -61,10 +61,10 @@ public class SeederSeed implements Action {
             else
                 gui.map.wdgmsg("sel", area.end.round().div(MCache.tilesz2), area.begin.round().div(MCache.tilesz2), 1);
 
-            NUtils.waitEvent(() -> area.countTiles()== Finder.findObjectsInArea( in.items,area).size(), 20);
+            NUtils.waitEvent(() -> area.countFarmTiles()== Finder.findObjectsInArea( in.items,area).size(), 20);
 //            System.out.println(Finder.findObjectsInArea( in.items,checkArea).size());
         }
-        while (Finder.findObjectsInArea( in.items,area).size()!=area.countTiles());
+        while (Finder.findObjectsInArea( in.items,area).size()!=area.countFarmTiles());
         return true;
     }
 
@@ -99,7 +99,7 @@ public class SeederSeed implements Action {
 
         for (SeedArea hpos : harvestCoord) {
             hpos.installBox();
-            long size = hpos.countTiles();
+            long size = hpos.countFarmTiles();
 //            System.out.println(Finder.findObjectsInArea( in.items,hpos).size() +","+ String.valueOf(size));
             while (Finder.findObjectsInArea( in.items,hpos).size()<size) {
                 if(!seedCrop(gui, hpos))

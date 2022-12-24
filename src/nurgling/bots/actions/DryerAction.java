@@ -8,6 +8,7 @@ import nurgling.NAlias;
 import nurgling.NGameUI;
 import nurgling.NHitBox;
 import nurgling.NUtils;
+import nurgling.bots.tools.OutContainer;
 import nurgling.tools.AreasID;
 import nurgling.tools.Finder;
 
@@ -37,36 +38,16 @@ public class DryerAction implements Action {
 
         } else {
             int current_size;
-            ArrayList<Gob> outarray = Finder.findObjects(new NAlias("dframe"));
-            ArrayList<Pair<Gob, Boolean>> out = new ArrayList<>();
-            outarray.sort(new Comparator<Gob>() {
-                @Override
-                public int compare(
-                        Gob lhs,
-                        Gob rhs
-                ) {
-                    // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
-                    return (lhs.rc.y > rhs.rc.y) ? -1 : ((lhs.rc.y < rhs.rc.y) ? 1 : (lhs.rc.x > rhs.rc.x) ? -1 : (
-                            lhs.rc.x < rhs.rc.x) ? 1 : 0);
-                }
-            });
-
-            for (Gob gob : outarray) {
-                out.add(new Pair<Gob, Boolean>(gob, false));
-            }
+            ArrayList<OutContainer> outContainers = new ArrayList<>();
             do {
-                while (gui.getInventory().getNumberFreeCoord(new Coord(2, 2)) > 1) {
-//                    System.out.println((gui.getInventory().getNumberFreeCoord(new Coord(2, 2))));
-                    int freeSpace = gui.getInventory().getFreeSpace();
-                    if (new TakeItemsFromBarter(raw_hides,AreasID.raw_hides,false,gui.getInventory().getNumberFreeCoord(new Coord(2, 2))).run(gui).type != Results.Types.SUCCESS)
-                        break;
-                    NUtils.waitEvent(()->freeSpace!=gui.getInventory().getFreeSpace(),10);
+                if (gui.getInventory().getNumberFreeCoord(new Coord(2, 2)) > 1) {
+                    new TakeItemsFromBarter(raw_hides,AreasID.raw_hides,false,gui.getInventory().getNumberFreeCoord(new Coord(2, 2))).run(gui);
                 }
                 current_size = gui.getInventory().getFreeSpace();
-                new FillContainers(raw_hides, new NAlias("dframe"), new ArrayList<>()).run(gui);
+                new FillContainers(raw_hides, new NAlias("dframe"), outContainers).run(gui);
                 boolean isFull = true;
-                for (Pair<Gob,Boolean> gob : out) {
-                    if(!gob.b){
+                for (OutContainer gob : outContainers) {
+                    if(!gob.isFull){
                         isFull = false;
                         break;
                     }
@@ -75,6 +56,7 @@ public class DryerAction implements Action {
                     break;
             }
             while (current_size != gui.getInventory().getFreeSpace());
+            new TransferItemsToBarter(AreasID.raw_hides,raw_hides,false).run(gui);
         }
         new TransferToPile(AreasID.raw_hides, NHitBox.getByName("stockpile"), new NAlias("stockpile"), raw_hides).run(gui);
         return new Results(Results.Types.SUCCESS);

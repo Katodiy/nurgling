@@ -29,7 +29,7 @@ public class DigCellar extends Bot {
             throws InterruptedException {
         super.initAction ();
         int y = 0;
-        window.add ( new Button ( window.buttons_size, "Зона разрушения" ) {
+        window.add ( new Button ( window.buttons_size, "Area for chipping" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;

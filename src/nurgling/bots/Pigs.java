@@ -62,7 +62,7 @@ public class Pigs extends Bot {
                 return !p1.hog && !p1.dead && p1.lactate && !p1.piglet;
             }
         };
-        runActions.add(new AnimalAction<Pig>(new NAlias("pig"), AreasID.pigs, comparator, Pig.class, wpred, NConfiguration.getInstance().pigsHerd.totalPigs,wlpred, NConfiguration.getInstance().pigsHerd.totalPigs));
+        runActions.add(new AnimalAction<Pig>(new NAlias("pig"), AreasID.pigs, comparator, Pig.class, wpred, NConfiguration.getInstance().pigsHerd.totalPigs,wlpred, 1));
         runActions.add(new AnimalAction<Pig>(new NAlias("pig"), AreasID.pigs, comparator, Pig.class, mpred, 1));
 
     }

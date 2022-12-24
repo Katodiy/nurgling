@@ -173,7 +173,7 @@ public class Finder {
             for ( Gob gob : NUtils.getGameUI().ui.sess.glob.oc ) {
                 
                 if ( NUtils.isGobInArea ( gob, area ) ) {
-                    if ( NUtils.isIt ( gob, name ) ) {
+                    if ( NUtils.isIt ( gob, name ) &&  !NUtils.isIt ( gob, "item" )  ) {
                         
                         if ( ( maxStage && NUtils.isCropstgmaxval ( gob ) ) ||
                                 ( !maxStage && NUtils.isSpecialStageCrop( gob ) ) ) {
@@ -209,7 +209,7 @@ public class Finder {
             for ( Gob gob : NUtils.getGameUI().ui.sess.glob.oc ) {
     
                 if ( NUtils.isGobInArea ( gob, area ) && gob != NUtils.getGameUI().map.player () ) {
-                    if ( NUtils.isIt ( gob, name ) ) {
+                    if ( NUtils.isIt ( gob, name ) && !NUtils.isIt ( gob, "item" ) ) {
                         if ( ( maxStage && NUtils.isCropstgmaxval ( gob ) ) ||
                                 ( !maxStage && NUtils.isSpecialStageCrop( gob ) ) ) {
                             result.add ( gob );

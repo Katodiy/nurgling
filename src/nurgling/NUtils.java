@@ -594,7 +594,7 @@ public class NUtils {
     public static void takeFromEarth(Gob gob) throws InterruptedException {
             gameUI.map.wdgmsg("click", Coord.z, gob.rc.floor(posres), 3, 0, 1, (int) gob.id,
                     gob.rc.floor(posres), 0, -1);
-            waitEvent(()->getGob(gob.id)!=null,50);
+            waitEvent(()->getGob(gob.id)==null,500);
     }
 
     public static double getAmount(GItem item) {

@@ -198,6 +198,8 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
             layouts.put ( 5, new Layout ( this, "bots/icons/farming" ) );
             layouts.get ( 5 ).add ( new NButton ( "Carrot", new FarmerCarrot (  gui ),
                     "bots/icons/carrot" ) );
+            layouts.get ( 5 ).add ( new NButton ( "Flax", new FarmerFlax (  gui ),
+                    "bots/icons/flax" ) );
             layouts.get ( 5 ).add ( new NButton ( "Pigs", new Pigs ( gui ),
                     "bots/icons/pigs" ) );
             layouts.get ( 5 ).add ( new NButton ( "Ochs", new Cows ( gui ),
@@ -245,7 +247,7 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
             layouts.get ( 6 ).add ( new NButton ( "Crate", new BuildCrate( gui ), "bots/icons/crate" ) );
             layouts.get ( 6 ).add ( new NButton ( "SmokeShed", new BuildSShed( gui ), "bots/icons/smokedshed" ) );
             layouts.get ( 6 ).add ( new NButton ( "Destroyer", new Destroyer (  gui ), "bots/icons/destroyer" ) );
-            layouts.get ( 6 ).add ( new NButton ( "Cellar", new DigCellar (  gui ), "bots/icons/cellar" ) );
+            layouts.get ( 6 ).add ( new NButton ( "яCellar", new DigCellar (  gui ), "bots/icons/cellar" ) );
 
 
             layouts.put ( 5000, new Layout ( this, "bots/icons/tools" ) );

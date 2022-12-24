@@ -23,6 +23,10 @@ public class TakeItemsFromBarter implements Action {
             throws InterruptedException {
         new TakeFromContainers ( new NAlias( "chest" ), new NAlias ( new ArrayList<> ( Arrays.asList ( "branch" ) ) ),
                 count, id, "Chest" ).run ( gui );
+        if ( gob == null ) {
+            gob = Finder.findObjectInArea ( new NAlias ( "barter" ), 2000,
+                    Finder.findNearestMark ( id) );
+        }
         PathFinder pf = new PathFinder( gui, gob );
         pf.run ();
         

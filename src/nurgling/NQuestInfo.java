@@ -64,14 +64,13 @@ public class NQuestInfo extends Widget {
                 int oldId = NUtils.getGameUI().chrwdg.quest.questid();
                 for (CharWnd.Quest q : NUtils.getGameUI().chrwdg.cqst.quests) {
                     if (q.res!=null && !q.title().isEmpty()) {
-                        if( NUtils.getGameUI().chrwdg.quest!=null) {
+                        if (NUtils.getGameUI().chrwdg.quest != null) {
                             NUtils.getGameUI().chrwdg.wdgmsg("qsel", q.id);
-                            try{
-                                NUtils.waitEvent(() -> NUtils.getGameUI().chrwdg.quest!=null && NUtils.getGameUI().chrwdg.quest.questid() == q.id, 50);
-                            }catch (NullPointerException e){
+                            try {
+                                NUtils.waitEvent(() -> NUtils.getGameUI().chrwdg.quest != null && NUtils.getGameUI().chrwdg.quest.questid() == q.id, 50);
+                            } catch (NullPointerException e) {
                                 NUtils.getGameUI().chrwdg.quest.questid();
                             }
-
                         }
                     }
                 }
@@ -156,6 +155,7 @@ public class NQuestInfo extends Widget {
         return false;
     }
 
+
     public static void update(String title, CharWnd.Quest.Condition c) {
         if(title!=null && condData.get(title)!=null)
             for(CharWnd.Quest.Condition c1 :condData.get(title)){
@@ -173,6 +173,7 @@ public class NQuestInfo extends Widget {
             (th = new Thread(new Loader())).start();
         }
         if(update){
+            items.clear();
             if(!condData.isEmpty()){
                 updateQG();
                 Collection<BufferedImage> imgs = new LinkedList<BufferedImage>();
@@ -248,6 +249,9 @@ public class NQuestInfo extends Widget {
                     currentQG.add(name);
                     if(!treeData.containsKey(name))
                         treeData.put(name, new LinkedList<>());
+                }else{
+                    if(c.done == 0)
+                        checkTarget(c.desc);
                 }
             }
         }
@@ -305,6 +309,42 @@ public class NQuestInfo extends Widget {
             }
         }
         update = false;
+    }
+
+    public static Set<String> items = new HashSet<>();
+    void checkTarget(String info) {
+        if (info.contains("Defeat ") || info.contains("Pick ") || info.contains("Catch ")) {
+            String name = info.substring(info.indexOf(" a ") + 3);
+            if(name.isEmpty())
+                name = info.substring(info.indexOf(" an ") + 4);
+            if(!name.isEmpty()){
+                items.add((name.replaceAll("\\s+","")).replaceAll("'+",""));
+            }
+        }
+        if (info.contains("Raid a")) {
+            String name = info.substring(info.indexOf(" a ") + 3);
+            if(name.isEmpty())
+                name = info.substring(info.indexOf(" an ") + 4);
+            if(!name.isEmpty()){
+                if(name.contains("bird"))
+                    items.add("nest");
+                else
+                    items.add("anthill");
+            }
+        }
+    }
+
+    public static boolean isQuested(Gob gob, Tex tex){
+        String name = gob.getResName();
+        for(String item : items){
+            if(name.contains(item)){
+                gob.noteImg = tex;
+                gob.addTag(NGob.Tags.quest);
+                return true;
+            }
+        }
+        gob.removeTag(NGob.Tags.quest);
+        return false;
     }
 
     Set<String> currentQG = new HashSet<>();
