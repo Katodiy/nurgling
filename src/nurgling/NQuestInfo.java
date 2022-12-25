@@ -108,6 +108,21 @@ public class NQuestInfo extends Widget {
             if(!isFind && c.title!=null)
                 return true;
         }
+        for(String q : condData.keySet()){
+            boolean isFind = false;
+            for(CharWnd.Quest c: NUtils.getGameUI().chrwdg.cqst.quests){
+                if(c.title!=null && c.title.contains(q)) {
+                    isFind = true;
+                    break;
+                }
+            }
+            if(!isFind) {
+                condData.clear();
+                treeData.clear();
+                questData.clear();
+                return true;
+            }
+        }
         return false;
     }
     void check(){

@@ -67,6 +67,7 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
             layouts.get ( 0 ).add ( new NButton ( "Fruits Collection", new FruitCollector ( gui ), "bots/icons/fruit" ) );
             layouts.get ( 0 ).add ( new NButton ( "Chipper", new Chipper ( gui ), "bots/icons/chip" ) );
             layouts.get ( 0 ).add ( new NButton ( "Clay Coollector", new ClayCollector ( gui ), "bots/icons/clay" ) );
+            layouts.get ( 0 ).add ( new NButton ( "Sand Coollector", new SandCollector ( gui ), "bots/icons/sand" ) );
             layouts.get ( 0 ).add ( new NButton ( "Fishing", new Fisher ( gui ), "bots/icons/fishing" ) );
             layouts.get ( 0 ).add ( new NButton ( "Plow", new Plower ( gui ), "bots/icons/plow" ) );
             layouts.get ( 0 ).add ( new NButton ( "Cattail", new CattailPicker ( gui ),"bots/icons/cattail" ) );
@@ -247,7 +248,7 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
             layouts.get ( 6 ).add ( new NButton ( "Crate", new BuildCrate( gui ), "bots/icons/crate" ) );
             layouts.get ( 6 ).add ( new NButton ( "SmokeShed", new BuildSShed( gui ), "bots/icons/smokedshed" ) );
             layouts.get ( 6 ).add ( new NButton ( "Destroyer", new Destroyer (  gui ), "bots/icons/destroyer" ) );
-            layouts.get ( 6 ).add ( new NButton ( "яCellar", new DigCellar (  gui ), "bots/icons/cellar" ) );
+            layouts.get ( 6 ).add ( new NButton ( "Cellar", new DigCellar (  gui ), "bots/icons/cellar" ) );
 
 
             layouts.put ( 5000, new Layout ( this, "bots/icons/tools" ) );
@@ -284,6 +285,12 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
                     "bots/icons/tanfluid" ) );
             layouts.get ( 5000 ).add ( new NButton ( "TransferLog", new TransferLogs (  gui ),
                     "bots/icons/log" ) );
+            layouts.get ( 5000 ).add ( new NButton ( "JugWaterIn", new JugWaterIn (  gui ),
+                    "bots/icons/glassjugin" ) );
+            layouts.get ( 5000 ).add ( new NButton ( "JugWaterOut", new JugWaterOut (  gui ),
+                    "bots/icons/glassjugout" ) );
+            layouts.get ( 5000 ).add ( new NButton ( "CartOut", new CartOut (  gui ),
+                    "bots/icons/cartout" ) );
 //            layouts.get ( 5000 ).add ( new NButton ( "BattleBot", new BattleBot ( gui ),
 //                    Special.getPath () + "/icons/battle.png" ) );
 //            layouts.get ( 5000 ).add ( new NButton ( "BattleBot2", new BattleAction2 ( gui ),

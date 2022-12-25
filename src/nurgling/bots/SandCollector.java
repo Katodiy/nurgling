@@ -11,15 +11,15 @@ import nurgling.tools.NArea;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
-public class ClayCollector extends Bot {
+public class SandCollector extends Bot {
 
-    
-    public ClayCollector(NGameUI gameUI ) {
+
+    public SandCollector(NGameUI gameUI ) {
         super ( gameUI );
-        win_title = "Clay Digger";
+        win_title = "Sand Digger";
         win_sz.y = 100;
         
-        runActions.add ( new ResourceDigging( clay_area, pile_area , new NAlias("clay")) );
+        runActions.add ( new ResourceDigging(sand_area, pile_area, new NAlias("sand") ) );
     }
     
     
@@ -27,14 +27,14 @@ public class ClayCollector extends Bot {
     public void initAction ()
             throws InterruptedException { super.initAction();
         int y = 0;
-        window.add ( new Button ( window.buttons_size, "Clay area" ) {
+        window.add ( new Button ( window.buttons_size, "Sand area" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
-                    new Thread ( new AreaSelecter( gameUI, _start, m_selection_start, clay_area ),
-                            "Clay Area Selecter" ).start ();
+                    new Thread ( new AreaSelecter( gameUI, _start, m_selection_start, sand_area),
+                            "Sand Area Selecter" ).start ();
                 }
             }
         }, new Coord ( 0, y ) );
@@ -65,7 +65,7 @@ public class ClayCollector extends Bot {
     
     private AtomicBoolean _start = new AtomicBoolean ( false );
     private AtomicBoolean _zone = new AtomicBoolean ( false );
-    private NArea clay_area = new NArea ();
+    private NArea sand_area = new NArea ();
     private NArea pile_area = new NArea();
     private AtomicBoolean m_selection_start = new AtomicBoolean ( false );
 }

@@ -66,6 +66,7 @@ public class NGob {
         sheep,
         wool,
         transport,
+        vehicle,
         pushed,
         pushable,
         area,
@@ -202,7 +203,19 @@ public class NGob {
             }
             else if (NUtils.checkName(name, "pow")) {
                     addTag(Tags.pow, Tags.marked);
-            } else if (NUtils.checkName(name, "items")) {
+            }
+            else if (NUtils.checkName(name, "vehicle")) {
+
+                if (NUtils.checkName(name, "rowboat", "dugout")) {
+                    addTag(Tags.vehicle, Tags.transport, Tags.liftable);
+                } else {
+                    addTag(Tags.marked);
+                    if (NUtils.checkName(name, "snekkja", "knarr")) {
+                        addTag(Tags.transport);
+                    }
+                }
+            }
+            else if (NUtils.checkName(name, "items")) {
                 addTag(Tags.item);
                 if (NUtils.checkName(name, "gem")) {
                     addTag(Tags.gem);
@@ -262,8 +275,6 @@ public class NGob {
                 } else if (NUtils.checkName(name, "cheeserack")) {
                     addTag(Tags.container, Tags.cheeserack);
                     status = Status.undefined;
-                } else if (NUtils.checkName(name, "rowboat", "dugout")) {
-                    addTag(Tags.transport);
                 } else if (NUtils.checkName(name, "log", "dreca")) {
                     addTag(Tags.resource);
                 } else if (NUtils.checkName(name, "barrel")) {
@@ -328,9 +339,7 @@ public class NGob {
                 if (cmp != null) {
                     checkPoses(cmp.nposes);
                 }
-            } else if (NUtils.checkName(name, "snekkja", "knarr")) {
-                addTag(Tags.transport);
-            } else if (NUtils.checkName(name, "barterhand")) {
+            }else if (NUtils.checkName(name, "barterhand")) {
                 addTag(Tags.barterhand, Tags.area);
             } else if (NUtils.checkName(name, "brazier")) {
                 addTag(Tags.brazier, Tags.area);
@@ -345,7 +354,7 @@ public class NGob {
                 addTag(Tags.gate);
                 addTag(Tags.marked);
             }
-            if(!isTag(Tags.item) &&!isTag(Tags.plant) &&!isTag(Tags.cellar) && !(isTag(Tags.pow) && (getModelAttribute()&17)==17)){
+            if(!isTag(Tags.item) &&!isTag(Tags.plant) &&!isTag(Tags.cellar) && !(isTag(Tags.pow) && (getModelAttribute()&17)==17) && !NUtils.checkName(name, "cavemoth")){
                 hitBox = NHitBox.hitboxes.get(name);
                 if(hitBox == null){
                     hitBox = NHitBox.getByName(name);

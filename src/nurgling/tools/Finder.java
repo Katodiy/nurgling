@@ -1232,5 +1232,19 @@ public class Finder {
         }
         throw new NoFreeSpace();
     }
-    
+
+    public static Gob findLifted() {
+        double distance = 10000;
+        Gob result = null;
+        synchronized ( NUtils.getGameUI().ui.sess.glob.oc ) {
+            for ( Gob gob : NUtils.getGameUI().ui.sess.glob.oc ) {
+                    if ( gob.getattr(Following.class)!=null ) {
+                        Following f = gob.getattr(Following.class);
+                        if(f.tgt==NUtils.getGameUI().map.player ().id)
+                                result = gob;
+                        }
+                    }
+        }
+        return result;
+    }
 }

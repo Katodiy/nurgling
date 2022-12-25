@@ -69,10 +69,10 @@ public class NomadCollector implements Action {
             if(!leashedAnimal) {
                 pf.setWithAlarm(true);
             }else{
-                if(NUtils.getGob(leashed.id).rc.dist(gui.map.player().rc)>=66) {
+                if(NUtils.getGob(leashed.id).rc.dist(gui.map.player().rc)>=77) {
                     WItem rope = gui.getInventory().getItem(new NAlias("rope"), Leashed.class);
 //                    new SelectFlowerAction(rope, "Pull", SelectFlowerAction.Types.Inventory).run(gui);
-                    NUtils.waitEvent(() -> NUtils.getGob(leashed.id).rc.dist(gui.map.player().rc) < 55, 1000);
+                    NUtils.waitEvent(() -> NUtils.getGob(leashed.id).rc.dist(gui.map.player().rc) < 77, 1000);
                 }
             }
             try {

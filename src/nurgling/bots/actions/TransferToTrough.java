@@ -54,7 +54,7 @@ public class TransferToTrough implements Action {
                             counter++;
                             Thread.sleep ( 50 );
                         }
-                        new PlaceLifted ( AreasID.swill, NHitBox.getByName ( "trough" ),new NAlias ("trough") ).run ( gui );
+                        new PlaceLifted ( AreasID.swill, gob.getHitBox(),new NAlias ("trough") ).run ( gui );
                     }
                 }
                 while ( !gui.hand.isEmpty () );

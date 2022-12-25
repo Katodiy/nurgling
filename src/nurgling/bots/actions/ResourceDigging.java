@@ -12,17 +12,22 @@ import java.util.Arrays;
 
 import static haven.OCache.posres;
 
-public class ClayDigging implements Action {
+public class ResourceDigging implements Action {
     public static ArrayList<String> shovel_tools = new ArrayList<String> ( Arrays.asList ( "shovel-m", "shovel-w" ) );
     @Override
     public Results run ( NGameUI gui )
             throws InterruptedException {
         new Equip ( new NAlias( shovel_tools, new ArrayList<String> () ) ).run(gui);
 
-        ArrayList<Coord2d> tiles = Finder.findTilesInArea ( new NAlias (new ArrayList<String>(Arrays.asList ( "water",
-                "dirt")),new ArrayList<String>()), tree );
-        new TransferToPile ( piles, NHitBox.get (  ), new NAlias ( "stockpile-clay" ),
-                new NAlias ("clay") ).run(gui);
+        ArrayList<Coord2d> tiles = null;
+        if(NUtils.checkName("clay", resource)) {
+            tiles = Finder.findTilesInArea(new NAlias(new ArrayList<String>(Arrays.asList("water",
+                    "dirt")), new ArrayList<String>()), area);
+        }
+        if(NUtils.checkName("sand", resource)) {
+            tiles = Finder.findTilesInArea(new NAlias(new ArrayList<String>(Arrays.asList("beach")), new ArrayList<String>()), area);
+        }
+        transferToPile(gui);
         for ( Coord2d tile : tiles ) {
             Coord2d pos = new Coord2d ( tile.x + 5.5, tile.y + 5.5 );
             boolean cont = true;
@@ -46,27 +51,40 @@ public class ClayDigging implements Action {
                     new Drink ( 0.9, false ).run ( gui );
                 }
                 if ( gui.getInventory ().getFreeSpace () <= 2 ) {
-                    new TransferToPile ( piles, NHitBox.get ( ), new NAlias ( "stockpile-clay" ),
-                            new NAlias ( "clay" ) ).run ( gui );
+                    transferToPile(gui);
                 }else{
                     cont = false;
                 }
             }
         }
-        new TransferToPile ( piles, NHitBox.get (  ), new NAlias ( "stockpile-clay" ),
-                new NAlias ("clay") ).run(gui);
+        transferToPile(gui);
         return new Results ( Results.Types.SUCCESS );
     }
-    
-    
-    public ClayDigging(
-            NArea tree,
-            NArea piles
-    ) {
-        this.tree = tree;
-        this.piles = piles;
+
+    private void transferToPile(NGameUI gui) throws InterruptedException {
+        if(NUtils.checkName("clay", resource)) {
+            new TransferToPile(piles, NHitBox.get(), new NAlias("stockpile-clay"),
+                    resource).run(gui);
+        }
+        if(NUtils.checkName("sand", resource)) {
+            new TransferToPile(piles, NHitBox.get2(), new NAlias("stockpile-sand"),
+                    resource).run(gui);
+        }
     }
     
-    NArea tree;
+    
+    public ResourceDigging(
+            NArea area,
+            NArea piles,
+            NAlias resource
+    ) {
+        this.area = area;
+        this.piles = piles;
+        this.resource = resource;
+    }
+    
+    NArea area;
     NArea piles;
+
+    NAlias resource;
 }

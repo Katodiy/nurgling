@@ -14,7 +14,7 @@ public class TanningFluidMake implements Action {
     public Results run ( NGameUI gui )
             throws InterruptedException {
         Gob gob = Finder.findObjectWithCoontent(new NAlias("barrel"), new NAlias("water"), 3000);
-        new PathFinder( gui, gob ).run ();
+       // new PathFinder( gui, gob ).run ();
         if(gui.getInventory ().getItems ( new NAlias("bark")).size()<10) {
             return new Results(Results.Types.NO_ITEMS);
         }

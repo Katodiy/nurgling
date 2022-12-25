@@ -86,12 +86,22 @@ public class MineAction implements Action {
                                 if(new Drink ( 0.9, false ).run ( gui ).type== Results.Types.Drink_FAIL)
                                     return new Results(Results.Types.Drink_FAIL);
                             }
-                            NUtils.command ( new char[]{ 'a', 'm' } );
-                            gui.map.wdgmsg ( "sel", tile_pos, tile_pos, 0 );
-                            NUtils.waitEvent(()->NUtils.getProg()>=0,50);
-                            NUtils.waitEvent(()->NUtils.getProg()<0 || NUtils.getStamina()<0.3,20000);
-                            if(NUtils.getFightView().getCurrentGob() != null){
-                                return new Results(Results.Types.FIGHT);
+                            while(res_beg == gui.ui.sess.glob.map.tilesetr ( gui.ui.sess.glob.map.gettile ( tile_pos ) )) {
+                                if ( NUtils.getStamina() < 0.5 ) {
+                                    if(new Drink ( 0.9, false ).run ( gui ).type== Results.Types.Drink_FAIL)
+                                        return new Results(Results.Types.Drink_FAIL);
+                                }
+                                NUtils.command(new char[]{'a', 'm'});
+                                gui.map.wdgmsg("sel", tile_pos, tile_pos, 0);
+                                NUtils.waitEvent(() -> NUtils.getProg() >= 0, 50);
+                                NUtils.waitEvent(() -> NUtils.isPose(gui.map.player(),new NAlias("idle")) || NUtils.getStamina() < 0.3, 20000);
+                                if(NUtils.getFightView().getCurrentGob() != null){
+                                    return new Results(Results.Types.FIGHT);
+                                }
+                                if(NUtils.getStamina() > 0.4){
+                                    Resource finalRes_beg = res_beg;
+                                    NUtils.waitEvent(() -> (finalRes_beg != gui.ui.sess.glob.map.tilesetr ( gui.ui.sess.glob.map.gettile ( tile_pos ) )), 50,10);
+                                }
                             }
                             gui.map.wdgmsg ( "click", Coord.z, gui.map.player ().rc.floor ( posres ), 3, 0 );
                             Thread.sleep ( 100 );

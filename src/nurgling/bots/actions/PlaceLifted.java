@@ -46,8 +46,7 @@ public class PlaceLifted implements Action {
             //double shift_y = hitBox.end.y - hitBox.begin.y;
             NUtils.place ( coord );
             NUtils.waitEvent(()->!NUtils.isPose(gui.map.player(),new NAlias("banzai")),200);
-            NArea checkArea = new NArea(coord,2.75);
-            if ( Finder.isGobInArea ( checkArea, item )) {
+            if ( !NUtils.isPose(gui.map.player(),new NAlias("banzai"))) {
                 return new Results ( Results.Types.SUCCESS );
             }
         }
@@ -60,7 +59,7 @@ public class PlaceLifted implements Action {
     public PlaceLifted(NArea output_area, NHitBox hitBox, Gob gob) {
         plObj = gob;
         this.area = output_area;
-        this.hitBox = hitBox;
+        this.hitBox = new NHitBox(hitBox);
     }
 
     public PlaceLifted (

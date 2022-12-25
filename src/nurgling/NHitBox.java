@@ -13,6 +13,7 @@ public class NHitBox extends NArea {
     }
 
     public static NHitBox _default = new NHitBox ( new Coord2d( -5.5, -5.5 ), new Coord2d ( 5.5, 5.5 ) );;
+    public static NHitBox _default2 = new NHitBox ( new Coord2d( -8.25, -8.25 ), new Coord2d ( 8.25, 8.25 ) );;
     public static NHitBox _dummy = new NHitBox ( new Coord2d( -1, -1 ), new Coord2d ( 1, 1 ) );;
     public Coord2d rotBeg;
     
@@ -58,6 +59,11 @@ public class NHitBox extends NArea {
     public static NHitBox get (
     ) {
         return new NHitBox(_default);
+    }
+
+    public static NHitBox get2 (
+    ) {
+        return new NHitBox(_default2);
     }
 
 

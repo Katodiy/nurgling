@@ -15,6 +15,7 @@ public class TruffleCollect implements Action {
     @Override
     public Results run ( NGameUI gui )
             throws InterruptedException {
+        Thread.sleep(5000);
         NUtils.transferToInventory();
         if(new LeashAnimal(new NAlias("pig")).run(gui).type== Results.Types.FAIL)
             return new Results ( Results.Types.NO_PIG );
