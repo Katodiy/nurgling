@@ -1,0 +1,6 @@
+#name
+Truffle snout
+#req
+truffle
+#text
+This is a pig truffle hunting bot. This is an automatic bot that should be run by the scheduler. You need to specify the area for unloading truffles. You will need a pig, a leash and a rope in inventory. WARNING: You need to create a nomad file using any of the provided bots.

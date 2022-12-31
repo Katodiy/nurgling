@@ -219,13 +219,13 @@ public class NHitBox extends NArea {
 //        else if ( name.contains ( "ptrellis" ) ) {
 //            return new NHitBox ( new Coord2d ( -4, -5.5 ), new Coord2d ( 4, 5.5 ) );
 //        }
-//        else if ( name.contains ( "trellis" ) ) {
-//            return new NHitBox ( new Coord2d ( -1.375, -5.5 ), new Coord2d ( 1.375, 5.5 ) );
-//        }
+        if ( name.contains ( "trellis" ) ) {
+            return new NHitBox ( new Coord2d ( -1.375, -5.5 ), new Coord2d ( 1.375, 5.5 ) );
+        }
 //        else if ( name.contains ( "hwall" ) ) {
 //            return new NHitBox ( new Coord2d ( -0.02, -5.5 ), new Coord2d ( 0.02, 5.5 ) );
 //        }
-        if ( name.contains ( "log" ) || name.contains ( "oldtrunk" ) ) {
+        else if ( name.contains ( "log" ) || name.contains ( "oldtrunk" ) ) {
             return new NHitBox ( new Coord2d ( -11, -2.75 ), new Coord2d ( 11, 2.75 ) );
         }
         else if ( name.contains ( "ptrellis" ) ) {

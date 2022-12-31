@@ -6,6 +6,10 @@ import haven.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Collection;
+import java.util.LinkedList;
+
+import static haven.ItemInfo.catimgs;
 
 public class NSButton extends SIWidget {
     public static final BufferedImage bl = Resource.loadsimg("gfx/hud/buttons/tbtn/left");
@@ -108,6 +112,19 @@ public class NSButton extends SIWidget {
         this(w,h,largep(w));
         this.res = load;
         this.cont = Loading.waitfor(res).flayer(Resource.imgc).scaled();
+       try {
+           if (Loading.waitfor(res).flayer(Resource.ntooltip) != null) {
+               Collection<BufferedImage> imgs = new LinkedList<BufferedImage>();
+               Resource.NTooltip nttip = Loading.waitfor(res).flayer(Resource.ntooltip);
+               imgs.add(Text.render(nttip.name).img);
+               if(!nttip.req.isEmpty())
+                   imgs.add(RichText.render(String.format("Needed AreasID: $col[255,0,0]{%s}", nttip.req), 300).img);
+               imgs.add(RichText.render('\n' + nttip.t,300).img);
+               tooltip = new TexI(catimgs(0, imgs.toArray(new BufferedImage[0])));
+           }
+       }catch (Resource.NoSuchLayerException e){
+
+       }
     }
     
     public NSButton action(Runnable action) {

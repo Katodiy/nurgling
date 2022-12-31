@@ -1,0 +1,6 @@
+#name
+Pigs herd
+#req
+pigs, kritter
+#text
+This bot herds a herd of pigs. The bot is improves the quality of the animals, keeping the population of the herd. Specify the district The area of corpses (kritter) should be accessible. The bot has special rank settings in the client parameters, according to which it will kill extra animals.

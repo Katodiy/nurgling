@@ -54,7 +54,7 @@ public class BuildCupboard extends Bot {
             }
         }, new Coord ( 0, y ) );
         y += 25;
-        window.add ( new Button ( window.buttons_size, "Boards or logs" ) {
+        window.add ( new Button ( window.buttons_size, "Boards/logs" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;

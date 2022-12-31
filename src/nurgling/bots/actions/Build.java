@@ -32,8 +32,13 @@ public class Build implements Action {
         while ( true ) {
             Gob buildedObj = Finder.findObjectInArea ( new NAlias ( "consobj" ), 1000, workArea );
             if ( buildedObj == null ) {
-                hitbox = NHitBox.get ( name );
-                phantom = NHitBox.get ( name );
+                if(!NUtils.checkName("trellis",name)) {
+                    hitbox = NHitBox.get(name);
+                    phantom = NHitBox.get(name);
+                }else{
+                    hitbox = NHitBox.getByName(name);
+                    phantom = NHitBox.get();
+                }
                 if ( NUtils.checkName ( "gfx/terobjs/chest", new NAlias( name ) ) ) {
                     phantom = NHitBox.get ();
                     if ( ( workArea.end.x - workArea.begin.x ) > ( workArea.end.y - workArea.begin.y ) ) {

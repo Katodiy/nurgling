@@ -1,0 +1,6 @@
+#name
+Butcher
+#req
+kritter, raw_hides, inten, entr, lqbone, raw_meat
+#text
+This bot is a butching kritter in area. Raw hides, intestines (inten), entrails(entr) and bones(lqbone) can be piled or bartered. The meat will be dumped into the raw_meat area. If you want to put certain meats in certain containers or barter, use the ingredient system. The same applies to bones. In addition, you can set the thresholds for the bones, intestines and entrails that you plan to throw out in the bot settings (in the client settings menu). There you can also specify the threshold for high quality bones. ATTENTION: All these settings are global and will apply to bots that contain butchering procedures inside

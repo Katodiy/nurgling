@@ -6,7 +6,7 @@ import haven.render.*;
 import static haven.MCache.tilesz;
 
 /* >spr: Consobj */
-@FromResource(name = "gfx/terobjs/consobj", version = 32)
+@haven.FromResource(name = "gfx/terobjs/consobj", version = 33)
 public class Consobj extends Sprite implements Sprite.CUpd {
     public static Resource signres = null;
     public static Resource poleres = null;
@@ -30,15 +30,15 @@ public class Consobj extends Sprite implements Sprite.CUpd {
     public Consobj(Owner owner, Resource res, Message sdt) {
 	super(owner, res);
 	if(signres == null){
-		signres= Resource.remote().loadwait("ngfx/terobjs/sign", 6);
+		signres = Resource.remote().loadwait("gfx/terobjs/sign", 6);
 	}
     if(poleres == null){
-        poleres = Resource.remote().loadwait("ngfx/terobjs/arch/conspole", 2);
+        poleres = Resource.remote().loadwait("gfx/terobjs/arch/conspole", 2);
     }
 	this.map = owner.context(Glob.class).map;
 	if(bmat == null)
 	{
-		Resource cor = Resource.remote().loadwait("ngfx/terobjs/consobj");
+		Resource cor = Resource.remote().loadwait("gfx/terobjs/consobj");
 		for(Resource.Layer layer: cor.layers) {
 			if(layer instanceof Material.Res){
 				bmat = ((Material.Res)layer).get();

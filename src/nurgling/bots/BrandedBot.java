@@ -4,6 +4,7 @@ package nurgling.bots;
 import haven.*;
 import haven.res.gfx.hud.rosters.cow.Ochs;
 import haven.res.gfx.hud.rosters.goat.Goat;
+import haven.res.gfx.hud.rosters.horse.Horse;
 import haven.res.gfx.hud.rosters.pig.Pig;
 import haven.res.gfx.hud.rosters.sheep.Sheep;
 import nurgling.NAlias;
@@ -39,6 +40,7 @@ public class BrandedBot extends Bot {
         animals.add(AreasID.goats.toString());
         animals.add(AreasID.sheeps.toString());
         animals.add(AreasID.cows.toString());
+        animals.add(AreasID.horses.toString());
         window.add(new Dropbox<String>(100, 5, 16) {
             @Override
             protected String listitem(int i) {
@@ -81,6 +83,17 @@ public class BrandedBot extends Bot {
                         };
                         area.animal = new NAlias("pig");
                         area.cattleRoster = Pig.class;
+                        break;
+                    case "horses":
+                        area.pred = new Predicate<Gob>() {
+                            @Override
+                            public boolean test(Gob gob) {
+                                Horse p1 = (Horse) (NUtils.getAnimalEntity(gob, Horse.class));
+                                return !p1.dead && !p1.owned;
+                            }
+                        };
+                        area.animal = new NAlias("horse");
+                        area.cattleRoster = Horse.class;
                         break;
                     case "sheeps":
                         area.pred = new Predicate<Gob>() {

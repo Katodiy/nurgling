@@ -12,6 +12,9 @@ public class OpenBarrelAndTransfer implements Action {
     @Override
     public Results run ( NGameUI gui )
             throws InterruptedException {
+                if(barrel==null){
+                    return new Results(Results.Types.NO_BARREL);
+                }
                 new PathFinder( gui, barrel ).run ();
                 if ( new OpenTargetContainer ( barrel, "Barrel" ).run ( gui ).type != Results.Types.SUCCESS ) {
                     return new Results ( Results.Types.OPEN_FAIL );

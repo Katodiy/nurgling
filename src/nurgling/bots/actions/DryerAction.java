@@ -41,7 +41,7 @@ public class DryerAction implements Action {
             ArrayList<OutContainer> outContainers = new ArrayList<>();
             do {
                 if (gui.getInventory().getNumberFreeCoord(new Coord(2, 2)) > 1) {
-                    new TakeItemsFromBarter(raw_hides,AreasID.raw_hides,false,gui.getInventory().getNumberFreeCoord(new Coord(2, 2))).run(gui);
+                    new TakeItemsFromBarter(raw_hides,AreasID.raw_hides,false,gui.getInventory().getNumberFreeCoord(new Coord(2, 2))-1).run(gui);
                 }
                 current_size = gui.getInventory().getFreeSpace();
                 new FillContainers(raw_hides, new NAlias("dframe"), outContainers).run(gui);

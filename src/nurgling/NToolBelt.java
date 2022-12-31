@@ -117,7 +117,8 @@ public class NToolBelt extends NDraggableWidget implements DTarget, DropTarget {
 	    String res = usercfg.get(slot(i));
 	    if(res != null) {
 			NBotsInfo.NButton p = NUtils.getGameUI().botsInfo.find(res);
-			custom[i] = NUtils.getGameUI().new NButtonBeltSlot(i, p);
+			if(p!=null)
+				custom[i] = NUtils.getGameUI().new NButtonBeltSlot(i, p);
 	    }
 	}
     }

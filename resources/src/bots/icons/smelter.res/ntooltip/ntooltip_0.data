@@ -1,0 +1,6 @@
+#name
+Smelter
+#req
+coal or block - as fuel, candelabrum or branch for ignitions, ore, bar, barrels (optional for quicksilver)
+#text
+This is an ore smelting bot. This is an automatic bot that can be run by the scheduler. You need to specify the area with ore, fuel (coal or blocks - depending on the type of smelter found), as well as the area where bars are stored. Can work with the Ingredients system. You will also need a way to ignite smelter (candelabrum or branches). Optionally, you can specify a area with a barrel for storing mercury (in this case, you need an empty bucket in your hands). You can also specify the parameters for saving the slag (in the client settings)

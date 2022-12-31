@@ -1,0 +1,6 @@
+#name
+Collector lp
+#req
+
+#text
+Bot of the initial stage of the game. Collects seeds and berries from bushes and trees, chips stones and enters information into a file. WARNING: after creating a character, restart the game, otherwise the file name will not be able to be associated with your character

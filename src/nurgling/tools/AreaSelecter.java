@@ -27,7 +27,7 @@ public class AreaSelecter implements Runnable {
     public void run () {
         gameUI.getMap ().isAreaSelectorEnable = true;
         try {
-            gameUI.msg ( "Выберите зону" );
+            gameUI.msg ( "Please, select area" );
             while ( gameUI.getMap ().isAreaSelectorEnable ) {
                 
                 Thread.sleep ( 100 );

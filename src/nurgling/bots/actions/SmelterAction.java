@@ -37,7 +37,18 @@ public class SmelterAction implements Action {
             }, 50 ).run ( gui );
 
             /// We pick up the ingots and transfer them to the chests
+            Results.Types res;
+            do {
+                res = new TakeMaxFromContainers (
+                        new NAlias( new ArrayList<> ( Arrays.asList ( "bar", "nugget", "pebble-gold" ) ),
+                                new ArrayList<> ( Arrays.asList ( "cinna" ) ) ),
+                        new NAlias ( "smelter" ) , new ArrayList<>() ).run (
+                        gui ).type;
+                new TransferBars ().run ( gui );
+            }
+            while ( res != Results.Types.FAIL );
             new TransferBars ().run ( gui );
+
             /// We throw out slag
             if ( Finder.findNearestMark ( AreasID.slag ) == null ) {
                 new ClearContainers ( smelter_name, isPrim?"Furnace":"Ore Smelter", new NAlias ( "slag" ) ).run ( gui );

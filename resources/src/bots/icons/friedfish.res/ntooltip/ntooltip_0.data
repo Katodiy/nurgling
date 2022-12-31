@@ -1,0 +1,6 @@
+#name
+Fry fish
+#req
+candelabrum or branch(for ignitions), block - as fuel
+#text
+This bot will roast fish on a fire using skewers. Select area with raw fish. The bot will hang the fish on roasting spits and spin one of them in its spare time. Ready fish is transported directly to the table (bot for early game)

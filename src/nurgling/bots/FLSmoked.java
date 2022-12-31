@@ -28,7 +28,7 @@ public class FLSmoked extends Bot {
             throws InterruptedException {
         super.initAction ();
         int y = 0;
-        window.add ( new Button ( window.buttons_size, "Брёвна" ) {
+        window.add ( new Button ( window.buttons_size, "Logs" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;
@@ -40,7 +40,7 @@ public class FLSmoked extends Bot {
             }
         }, new Coord ( 0, y ) );
         y += 25;
-        window.add ( new Button ( window.buttons_size, "Коптильни" ) {
+        window.add ( new Button ( window.buttons_size, "Smoke sheds" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;

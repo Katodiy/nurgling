@@ -107,6 +107,14 @@ public class NConfiguration {
         public int breedingGap = 10;
     }
 
+    public class HorsesHerd{
+        public int totalMares = 4;
+
+        public double endurance = 1.5;
+        public double metabolism = 1;
+
+    }
+
     public class SheepsHerd{
         public int totalSheeps = 4;
 
@@ -150,6 +158,7 @@ public class NConfiguration {
     }
 
     public GoatsHerd goatsHerd = new GoatsHerd();
+    public HorsesHerd horsesHerd = new HorsesHerd();
     public SheepsHerd sheepsHerd = new SheepsHerd();
     public PigsHerd pigsHerd = new PigsHerd();
     public CowsHerd cowsHerd = new CowsHerd();
@@ -268,6 +277,7 @@ public class NConfiguration {
         iconsettings.put("mm/truffle",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/truffle"),true,true,false,false));
         iconsettings.put("mm/claim",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/claim"),true,true,false,false));
         iconsettings.put("mm/gem",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/gem"),true,true,false,false));
+        iconsettings.put("mm/stalagoomba",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/stalagoomba"),true,true,false,false));
         iconsettings.put("mm/cauldron",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/cauldron"),true,true,false,false));
         iconsettings.put("mm/cart",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/cart"),true,true,false,false));
         iconsettings.put("mm/clay-cave",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/clay-cave"),true,true,false,false));
@@ -493,6 +503,13 @@ public class NConfiguration {
         jPigsHerd.put("meatq",pigsHerd.meatq);
         jPigsHerd.put("meat",pigsHerd.meatquan);
         obj.put("pigsHerd",jPigsHerd);
+
+        JSONObject jhorsesHerd = new JSONObject();
+        jhorsesHerd.put("female_count",horsesHerd.totalMares);
+        jhorsesHerd.put("endurance",horsesHerd.endurance);
+        jhorsesHerd.put("meta",horsesHerd.metabolism);
+        obj.put("horsesHerd",jhorsesHerd);
+
 
         JSONArray keys = new JSONArray();
         {
@@ -744,6 +761,13 @@ public class NConfiguration {
                 pigsHerd.trufSnout = Double.valueOf(jPigsHerd.get("truf").toString());
                 pigsHerd.meatq = Double.valueOf(jPigsHerd.get("meatq").toString());
                 pigsHerd.meatquan = Double.valueOf(jPigsHerd.get("meat").toString());
+            }
+
+            JSONObject jHorsesHerd = ( JSONObject ) jsonObject.get("horsesHerd");
+            if(jHorsesHerd!=null) {
+                horsesHerd.totalMares = Integer.valueOf(jHorsesHerd.get("female_count").toString());
+                horsesHerd.metabolism = Double.valueOf(jHorsesHerd.get("meta").toString());
+                horsesHerd.endurance = Double.valueOf(jHorsesHerd.get("endurance").toString());
             }
 
             JSONArray jingredients = ( JSONArray ) jsonObject.get ( "ingredients" );

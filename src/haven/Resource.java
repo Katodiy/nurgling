@@ -56,7 +56,8 @@ public class Resource implements Serializable {
     public static Class<AButton> action = AButton.class;
     public static Class<Audio> audio = Audio.class;
     public static Class<Tooltip> tooltip = Tooltip.class;
-    
+    public static Class<NTooltip> ntooltip = NTooltip.class;
+
     public Collection<Layer> layers = new LinkedList<Layer>();
     public final String name;
     public int ver;
@@ -1149,6 +1150,22 @@ public class Resource implements Serializable {
                 
 	public void init() {}
     }
+
+	@LayerName("ntooltip")
+	public class NTooltip extends Layer {
+		public final String t;
+		public final String req;
+		public final String name;
+
+		public NTooltip(Message buf)
+		{
+			name = buf.string();
+			req = buf.string();
+			t = buf.string();
+		}
+
+		public void init() {}
+	}
 
     @LayerName("neg")
     public class Neg extends Layer {

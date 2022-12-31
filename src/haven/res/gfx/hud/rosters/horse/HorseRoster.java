@@ -4,13 +4,14 @@
 package haven.res.gfx.hud.rosters.horse;
 
 import haven.*;
+import haven.res.gfx.hud.rosters.pig.Pig;
 import haven.res.ui.croster.*;
 import java.util.*;
 
 @FromResource(name = "gfx/hud/rosters/horse", version = 60)
 public class HorseRoster extends CattleRoster<Horse> {
     public static List<Column> cols = initcols(
-	new Column<Entry>("Name", Comparator.comparing((Entry e) -> e.name), 200),
+	new Column<Entry>("Name", Comparator.comparing((Entry e) -> e.name), 170),
 
 	new Column<Horse>(Resource.local().load("hud/rosters/sex", 2),      Comparator.comparing((Horse e) -> e.stallion).reversed(), 20).runon(),
 	new Column<Horse>(Resource.local().load("hud/rosters/growth", 2),   Comparator.comparing((Horse e) -> e.foal).reversed(), 20).runon(),
@@ -32,7 +33,8 @@ public class HorseRoster extends CattleRoster<Horse> {
 	new Column<Horse>(Resource.local().load("hud/rosters/milkquality", 1), Comparator.comparing((Horse e) -> e.milkq).reversed()),
 	new Column<Horse>(Resource.local().load("hud/rosters/hidequality", 1), Comparator.comparing((Horse e) -> e.hideq).reversed()),
 
-	new Column<Horse>(Resource.local().load("hud/rosters/breedingquality", 1), Comparator.comparing((Horse e) -> e.seedq).reversed())
+	new Column<Horse>(Resource.local().load("hud/rosters/breedingquality", 1), Comparator.comparing((Horse e) -> e.seedq).reversed()),
+	new Column<Horse>(Resource.local().load("hud/rosters/rang", 1), Comparator.comparing(Horse::rang).reversed())
     );
     protected List<Column> cols() {return(cols);}
 

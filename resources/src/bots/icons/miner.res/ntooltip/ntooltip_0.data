@@ -1,0 +1,6 @@
+#name
+Miner bot
+#req
+
+#text
+Improved miner bot. Moves with a pathfinder, does not dig under columns whose HP is below 25%. Chips boulders

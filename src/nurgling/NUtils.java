@@ -759,6 +759,8 @@ public class NUtils {
         Resource.loadimg("mm/cauldron");
         iconMap.put("gfx/terobjs/anvil","mm/anvil");
         Resource.loadimg("mm/anvil");
+        iconMap.put("gfx/kritter/stalagoomba/stalagoomba","mm/stalagoomba");
+        Resource.loadimg("mm/stalagoomba");
         iconMap.put("gfx/terobjs/claim","mm/claim");
         Resource.loadimg("mm/claim");
         iconMap.put("gfx/terobjs/items/gems/gemstone","mm/gem");
@@ -1442,7 +1444,7 @@ public class NUtils {
                         /// Берем один предмет
                         sp.wdgmsg("xfer");
                         /// Ожидаем изменения свободного места в пайле
-                        NUtils.waitEvent(()->(freeSpace != nis.getFreeSpace()),20,25);
+                        NUtils.waitEvent(()->(freeSpace != nis.getFreeSpace()),50,25);
 
                         if (freeSpace == nis.getFreeSpace()) {
                             return false;

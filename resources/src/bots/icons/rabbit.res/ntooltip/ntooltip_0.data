@@ -1,0 +1,6 @@
+#name
+Ropes maker
+#req
+rabbit, bunny, inten, entr, lqbone, raw_meat
+#text
+This bot is for rabbits hutch. The bot needs two areas of rabbits hutch: the main one (rabbit) and the incubators (bunny). Bunny rabbits live in incubators. When they grow up, the bot transfers the rabbit to the main area, replacing the best of the rabbits, which is worse than the new rabbit. Then bot butchers the remaining rabbit. Butchering is similar to butchering large animals. The bot transfers all bunny from the main area to the incubators. The recommended ratio of rabbits hutch in the main area and incubators is 1:2

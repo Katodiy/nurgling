@@ -359,7 +359,7 @@ public class ChickenMaster implements Action {
         }
 
         /// Собираем циплят и переносим
-        new TransferFromContainerToContainer ( 20, new NAlias ( new ArrayList<> ( Arrays.asList ( "chick" ) ),
+        new TransferFromContainerToContainer ( 40, new NAlias ( new ArrayList<> ( Arrays.asList ( "chick" ) ),
                 new ArrayList<> ( Arrays.asList ( "egg" ) ) ), AreasID.hens, AreasID.chicken ).run ( gui );
 
         /// Выясняем пороговое качество для яиц

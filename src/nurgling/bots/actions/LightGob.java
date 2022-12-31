@@ -4,13 +4,10 @@ import haven.Gob;
 import nurgling.NAlias;
 import nurgling.NGameUI;
 import nurgling.NHitBox;
-import nurgling.NUtils;
 import nurgling.tools.AreasID;
 import nurgling.tools.Finder;
-import nurgling.tools.NArea;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class LightGob implements Action {
     public LightGob (
@@ -96,7 +93,7 @@ public class LightGob implements Action {
                 }
             }
             if ( candelabrum != null ) {
-                new PlaceLifted ( AreasID.candelabrun, NHitBox.getByName ( "barrel" ), new NAlias ( "candelabrum" ) )
+                new PlaceLifted ( AreasID.candelabrum, NHitBox.getByName ( "barrel" ), new NAlias ( "candelabrum" ) )
                         .run ( gui );
             }
         }

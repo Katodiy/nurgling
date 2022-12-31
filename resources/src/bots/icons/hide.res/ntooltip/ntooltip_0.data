@@ -1,0 +1,6 @@
+#name
+Dryer hides
+#req
+raw_hides, lqhides, hqhides(optional)
+#text
+This bot hangs and collects hides and scales from drying frames. Select an area with raw hides piles, or barter with raw hides and an area for lqhides(low quality hides). Bot work cycle: first, the bot checks and collects hides and scales and transfers it to piles. You can use Ingredient system fro specialise place of special hides types. Then he takes the raw hides and scales from raw_hides area and hangs them on drying frames.

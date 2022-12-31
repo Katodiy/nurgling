@@ -61,6 +61,7 @@ public class BranderAction implements Action {
                 new SelectFlowerAction(gob, "Memorize", SelectFlowerAction.Types.Gob).run(gui);
                 NUtils.waitEvent(() -> gob.getattr(CattleId.class) != null, 5000);
                 NUtils.waitEvent(() -> w.roster(area.cattleRoster).entries.get(gob.getattr(CattleId.class).id) != null, 5000);
+                NUtils.waitEvent(() -> w.roster(area.cattleRoster).entries.get(gob.getattr(CattleId.class).id).getClass() == area.cattleRoster, 5000);
             }
             if (gob.getattr(CattleId.class) != null) {
                 if (area.pred.test(gob)) {

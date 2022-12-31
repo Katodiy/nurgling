@@ -15,7 +15,7 @@ public class Smelter extends Settings {
         prev = add(new Label("Blocks:"),prev.pos("bl").add(0,5));
         prev = add(new AreaIconSelecter(AreasID.block),prev.pos("bl").add(0,5));
         prev = add(new Label("Candelabrum:"),prev.pos("bl").add(0,5));
-        prev = add(new AreaIconSelecter(AreasID.candelabrun),prev.pos("bl").add(0,5));
+        prev = add(new AreaIconSelecter(AreasID.candelabrum),prev.pos("bl").add(0,5));
         prev = add(new Label("Bars:"),prev.pos("bl").add(0,5));
         prev = add(new AreaIconSelecter(AreasID.bar),prev.pos("bl").add(0,5));
         prev = add(new Label("Barrel for Quicksilver:"),prev.pos("bl").add(0,5));

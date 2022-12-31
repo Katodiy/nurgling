@@ -17,10 +17,10 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
-public class BuildBeackon extends Bot {
+public class BuildBeacon extends Bot {
     
     
-    public BuildBeackon ( NGameUI gameUI ) {
+    public BuildBeacon(NGameUI gameUI ) {
         super ( gameUI );
         win_title = "BuildBecon";
         win_sz.y = 170;
@@ -53,7 +53,7 @@ public class BuildBeackon extends Bot {
             throws InterruptedException {
         super.initAction ();
         int y = 0;
-        window.add ( new Button ( window.buttons_size, "Зона строительства" ) {
+        window.add ( new Button ( window.buttons_size, "Building area" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;
@@ -65,7 +65,7 @@ public class BuildBeackon extends Bot {
             }
         }, new Coord ( 0, y ) );
         y += 25;
-        window.add ( new Button ( window.buttons_size, "Доски" ) {
+        window.add ( new Button ( window.buttons_size, "Boards or logs" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;
@@ -77,7 +77,7 @@ public class BuildBeackon extends Bot {
             }
         }, new Coord ( 0, y ) );
         y += 25;
-        window.add ( new Button ( window.buttons_size, "Блоки" ) {
+        window.add ( new Button ( window.buttons_size, "Blocks or logs" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;
@@ -89,7 +89,7 @@ public class BuildBeackon extends Bot {
             }
         }, new Coord ( 0, y ) );
         y += 25;
-        window.add ( new Button ( window.buttons_size, "Глина" ) {
+        window.add ( new Button ( window.buttons_size, "Clay" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;
@@ -101,7 +101,7 @@ public class BuildBeackon extends Bot {
             }
         }, new Coord ( 0, y ) );
         y += 25;
-        window.add ( new Button ( window.buttons_size, "Камень" ) {
+        window.add ( new Button ( window.buttons_size, "Stone" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;

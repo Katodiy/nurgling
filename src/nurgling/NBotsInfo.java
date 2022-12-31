@@ -1,14 +1,10 @@
 package nurgling;
 
 import haven.*;
-import haven.render.sl.InstancedUniform;
 import nurgling.bots.*;
-import nurgling.bots.actions.TruffleCollect;
 import nurgling.bots.build.*;
 
 
-import javax.imageio.ImageIO;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,7 +64,7 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
             layouts.get ( 0 ).add ( new NButton ( "Chipper", new Chipper ( gui ), "bots/icons/chip" ) );
             layouts.get ( 0 ).add ( new NButton ( "Clay Coollector", new ClayCollector ( gui ), "bots/icons/clay" ) );
             layouts.get ( 0 ).add ( new NButton ( "Sand Coollector", new SandCollector ( gui ), "bots/icons/sand" ) );
-            layouts.get ( 0 ).add ( new NButton ( "Fishing", new Fisher ( gui ), "bots/icons/fishing" ) );
+            //layouts.get ( 0 ).add ( new NButton ( "Fishing", new Fisher ( gui ), "bots/icons/fishing" ) );
             layouts.get ( 0 ).add ( new NButton ( "Plow", new Plower ( gui ), "bots/icons/plow" ) );
             layouts.get ( 0 ).add ( new NButton ( "Cattail", new CattailPicker ( gui ),"bots/icons/cattail" ) );
             layouts.get ( 0 ).add ( new NButton ( "Butcher", new Butcher ( gui ),
@@ -98,16 +94,14 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
                     "bots/icons/branchash" ) );
             layouts.get ( 2 ).add ( new NButton ( "Tanning", new Tanning ( gui ),
                     "bots/icons/tanning" ) );
-
+            layouts.get ( 2 ).add ( new NButton ( "Branch", new BranchMaker (  gui ),"bots/icons/branch" ) );
 
 
 //            layouts.get ( 2 ).add ( new NButton ( "GardenPot", new Gardener ( gui ),
 //                    Special.getPath () + "/icons/gardenpot.png" ) );
 //            layouts.get ( 2 ).add ( new NButton ( "UGardenPot", new GardenPotMaker ( gui ),
 //                    Special.getPath () + "/icons/ugardenpot.png" ) );
-//
-//            layouts.get ( 2 ).add ( new NButton ( "RabbitM", new RabbitMaster ( gui ),
-//                    Special.getPath () + "/icons/rabbit.png" ) );
+
 //            layouts.get ( 2 ).add ( new NButton ( "Silk Maker", new SilkMaker ( gui ),
 //                    Special.getPath () + "/icons/silk.png" ) );
 //            layouts.get ( 2 ).add ( new NButton ( "Ash", new BoneAsh ( gui ),
@@ -127,7 +121,6 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
 //
 //
             layouts.put ( 3, new Layout ( this, "bots/icons/craft" ) );
-            layouts.get ( 3 ).add ( new NButton ( "Branch", new BranchMaker (  gui ),"bots/icons/branch" ) );
             layouts.get ( 3 ).add ( new NButton ( "Craft Rope", new CreaterRope (  gui ),
                     "bots/icons/rope" ) );
             layouts.get ( 3 ).add ( new NButton ( "Craft Cloth", new CreaterCloth (  gui ),
@@ -182,9 +175,9 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
 //            layouts.get ( 3 ).add ( new NButton ( "CandleMaker", new CandleMaker (  gui ),
 //                    Special.getPath () + "/icons/candle.png" ) );
 //
-            layouts.put ( 4, new Layout ( this, "bots/icons/cooking" ) );
-            layouts.get ( 4 ).add ( new NButton ( "Cabbage", new CabbageMaker (  gui ),
-                    "bots/icons/cabbagemaker" ) );
+            //layouts.put ( 4, new Layout ( this, "bots/icons/cooking" ) );
+            //layouts.get ( 4 ).add ( new NButton ( "Cabbage", new CabbageMaker (  gui ),
+            //        "bots/icons/cabbagemaker" ) );
 
 //            layouts.get ( 4 ).add ( new NButton ( "SausagesMaker", new SausageMaker (  gui ),
 //                    Special.getPath () + "/icons/sausages.png" ) );
@@ -213,6 +206,10 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
                     "bots/icons/kfc" ) );
             layouts.get ( 5 ).add ( new NButton ( "Brander", new BrandedBot ( gui ),
                     "bots/icons/brander" ) );
+            layouts.get ( 5 ).add ( new NButton ( "RabbitM", new RabbitMaster ( gui ),
+                    "bots/icons/rabbit" ) );
+            layouts.get ( 5 ).add ( new NButton ( "Horses", new Horses ( gui ),
+                    "bots/icons/horses" ) );
 //            layouts.put ( 5, new Layout ( this, Special.getPath () + "/icons/farming.png" ) );
 //            layouts.get ( 5 ).add ( new NButton ( "FarmerQ", new FarmerQ (  gui ),
 //                    Special.getPath () + "/icons/farmerq.png" ) );
@@ -226,8 +223,6 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
 //                    Special.getPath () + "/icons/wheat.png" ) );
 //            layouts.get ( 5 ).add ( new NButton ( "Poppy", new FarmerPoppy (  gui ),
 //                    Special.getPath () + "/icons/poppy.png" ) );
-//            layouts.get ( 5 ).add ( new NButton ( "Flax", new FarmerFlax (  gui ),
-//                    Special.getPath () + "/icons/flax.png" ) );
 //            layouts.get ( 5 ).add ( new NButton ( "Turnip", new FarmerTurneps (  gui ),
 //                    Special.getPath () + "/icons/turnip.png" ) );
 //            layouts.get ( 5 ).add ( new NButton ( "PepperH", new PepperHarvester (  gui ),
@@ -240,11 +235,11 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
             layouts.get ( 6 ).add ( new NButton ( "MCabinet", new BuildMCabinet( gui ), "bots/icons/mcabinet" ) );
             layouts.get ( 6 ).add ( new NButton ( "Barrel", new BuildBarrels( gui ), "bots/icons/barrel" ) );
             layouts.get ( 6 ).add ( new NButton ( "CheeseR", new BuildCheaseRack( gui ), "bots/icons/cheeser" ) );
-            layouts.get ( 6 ).add ( new NButton ( "TunningT", new BuildTTube( gui ), "bots/icons/tanning" ) );
+            layouts.get ( 6 ).add ( new NButton ( "TunningT", new BuildTTube( gui ), "bots/icons/tanningb" ) );
             layouts.get ( 6 ).add ( new NButton ( "WChest", new BuildWChest( gui ), "bots/icons/chest" ) );
             layouts.get ( 6 ).add ( new NButton ( "DSign", new BuildSign( gui ), "bots/icons/dsign" ) );
-            layouts.get ( 6 ).add ( new NButton ( "BuildBeackon", new BuildBeackon( gui ), "bots/icons/beacon" ) );
-            layouts.get ( 6 ).add ( new NButton ( "Tarkilns", new BuildTarkilns( gui ), "bots/icons/tarkiln" ) );
+            layouts.get ( 6 ).add ( new NButton ( "BuildBeackon", new BuildBeacon( gui ), "bots/icons/beacon" ) );
+            layouts.get ( 6 ).add ( new NButton ( "Tarkilns", new BuildTarkilns( gui ), "bots/icons/tarkilnb" ) );
             layouts.get ( 6 ).add ( new NButton ( "Crate", new BuildCrate( gui ), "bots/icons/crate" ) );
             layouts.get ( 6 ).add ( new NButton ( "SmokeShed", new BuildSShed( gui ), "bots/icons/smokedshed" ) );
             layouts.get ( 6 ).add ( new NButton ( "Destroyer", new Destroyer (  gui ), "bots/icons/destroyer" ) );
@@ -252,8 +247,7 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
 
 
             layouts.put ( 5000, new Layout ( this, "bots/icons/tools" ) );
-            layouts.get ( 5000 ).add ( new NButton ( "TestBot", new TestBot ( gui ),
-                    "bots/icons/testbot") );
+            layouts.get ( 5000 ).add ( new NButton ( "TestBot", new TestBot ( gui ), "bots/icons/testbot") );
             layouts.get ( 5000 ).add ( new NButton ( "Timer",null,"bots/icons/timer"){
                 @Override
                 public void click() {
@@ -261,8 +255,8 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
                 }
             }  );
             layouts.get ( 5000 ).add ( new NButton ( "LPExplorer", new LFExplorer (  gui ),"bots/icons/lpexplorer" ) );
-            layouts.get ( 5000 ).add ( new NButton ( "Calibration", new Calibration ( gui ),
-                    "bots/icons/calibr" ) );
+            //layouts.get ( 5000 ).add ( new NButton ( "Calibration", new Calibration ( gui ),
+            //        "bots/icons/calibr" ) );
             layouts.get ( 5000 ).add ( new NButton ( "NomadCalibr", new NomadCalibrator ( gui ),
                     "bots/icons/nomad" ) );
             layouts.get ( 5000 ).add ( new NButton ( "NomadCalibr2", new NomadCalibrator2 ( gui ),
@@ -273,12 +267,12 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
                     "bots/icons/soildest" ) );
             layouts.get ( 5000 ).add ( new NButton ( "Backer", new Backer (  gui ),
                     "bots/icons/backerprep" ) );
-            layouts.get ( 5000 ).add ( new NButton ( "Cabbager", new Cabbager (  gui ),
-                    "bots/icons/cabbager" ) );
+            //layouts.get ( 5000 ).add ( new NButton ( "Cabbager", new Cabbager (  gui ),
+            //        "bots/icons/cabbager" ) );
             layouts.get ( 5000 ).add ( new NButton ( "FLSmoked", new FLSmoked (  gui ),
                     "bots/icons/flsmoked" ) );
-            layouts.get ( 5000 ).add ( new NButton ( "BattleBot", new BattleBot ( gui ),
-                    "bots/icons/battle" ) );
+            //layouts.get ( 5000 ).add ( new NButton ( "BattleBot", new BattleBot ( gui ),
+            //        "bots/icons/battle" ) );
             layouts.get ( 5000 ).add ( new NButton ( "ShieldSword", new EquipWaepon (  gui ),
                     "bots/icons/shieldsword" ) );
             layouts.get ( 5000 ).add ( new NButton ( "TanningFluid", new TanningFluid (  gui ),
@@ -291,6 +285,10 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
                     "bots/icons/glassjugout" ) );
             layouts.get ( 5000 ).add ( new NButton ( "CartOut", new CartOut (  gui ),
                     "bots/icons/cartout" ) );
+            layouts.get ( 5000 ).add ( new NButton ( "SortAndTransferMeat", new SortAndTransferMeat (  gui ),
+                    "bots/icons/transfersortmeat" ) );
+            layouts.get ( 5000 ).add ( new NButton ( "SortAndTransferBars", new SortAndTransferBars (  gui ),
+                    "bots/icons/transfersortbars" ) );
 //            layouts.get ( 5000 ).add ( new NButton ( "BattleBot", new BattleBot ( gui ),
 //                    Special.getPath () + "/icons/battle.png" ) );
 //            layouts.get ( 5000 ).add ( new NButton ( "BattleBot2", new BattleAction2 ( gui ),
@@ -305,8 +303,7 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
 //                    Special.getPath () + "/icons/bone.png" ) );
 //            layouts.get ( 5000 ).add ( new NButton ( "Sort and Transfer Trash", new SortAndTransferTrash ( gui ),
 //                    Special.getPath () + "/icons/trash.png" ) );
-//            layouts.get ( 5000 ).add ( new NButton ( "Sort and Transfer Meat", new SortAndTransferMeat ( gui ),
-//                    Special.getPath () + "/icons/meat.png" ) );
+
 //            layouts.get ( 5000 ).add ( new NButton ( "Backer", new Backer (  gui ),
 //                    Special.getPath () + "/icons/backerprep.png" ) );
 

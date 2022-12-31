@@ -1,0 +1,6 @@
+#name
+Dryer fishes
+#req
+raw_fish, dry_fish
+#text
+This bot hangs and collects fish from drying frames. Select an area with raw fish piles and an area with dry fish containers. Bot work cycle: first, the bot checks and collects dried fish, transfers it to containers. Then he takes the raw fish from the piles and hangs them on drying frames.

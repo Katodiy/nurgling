@@ -4,7 +4,10 @@
 package haven.res.gfx.hud.rosters.horse;
 
 import haven.*;
+import haven.res.gfx.hud.rosters.pig.PigRoster;
 import haven.res.ui.croster.*;
+import nurgling.NConfiguration;
+
 import java.util.*;
 
 @FromResource(name = "gfx/hud/rosters/horse", version = 60)
@@ -39,6 +42,7 @@ public class Horse extends Entry {
 	drawcol(g, HorseRoster.cols.get(i), 1, milkq, percent, i++);
 	drawcol(g, HorseRoster.cols.get(i), 1, hideq, percent, i++);
 	drawcol(g, HorseRoster.cols.get(i), 1, seedq, null, i++);
+	drawcol(g, HorseRoster.cols.get(i), 1, rang(), null, i++);
 	super.draw(g);
     }
 
@@ -69,6 +73,10 @@ public class Horse extends Entry {
 	}
 	return(super.mousedown(c, button));
     }
+	public double rang() {
+		NConfiguration.HorsesHerd herd = NConfiguration.getInstance().horsesHerd;
+		return Math.round(Math.min(stam,32)/(32.)*(mb*herd.metabolism + end*herd.endurance));
+	}
 }
 
 /* >wdg: HorseRoster */

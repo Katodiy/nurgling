@@ -24,7 +24,8 @@ public class RosterWindow extends Window {
     public List<TypeButton> buttons = new ArrayList<>();
 
     RosterWindow() {
-	super(Coord.z, "Cattle Roster", true);
+		super(Coord.z, "Cattle Roster", true);
+		sz.x+=20;
     }
 
     public void show(CattleRoster rost) {

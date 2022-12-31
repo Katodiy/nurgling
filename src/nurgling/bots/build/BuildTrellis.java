@@ -46,7 +46,7 @@ public class BuildTrellis extends Bot {
             throws InterruptedException {
         super.initAction ();
         int y = 0;
-        window.add ( new Button ( window.buttons_size, "Зона строительства" ) {
+        window.add ( new Button ( window.buttons_size, "Building area" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;
@@ -58,7 +58,7 @@ public class BuildTrellis extends Bot {
             }
         }, new Coord ( 0, y ) );
         y += 25;
-        window.add ( new Button ( window.buttons_size, "Блоки" ) {
+        window.add ( new Button ( window.buttons_size, "Logs/blocks" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;
@@ -70,7 +70,7 @@ public class BuildTrellis extends Bot {
             }
         }, new Coord ( 0, y ) );
         y += 25;
-        window.add ( new Button ( window.buttons_size, "Нитки" ) {
+        window.add ( new Button ( window.buttons_size, "Strings" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;

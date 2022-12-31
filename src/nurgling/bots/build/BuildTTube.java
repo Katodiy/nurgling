@@ -45,7 +45,7 @@ public class BuildTTube extends Bot {
             throws InterruptedException {
         super.initAction ();
         int y = 0;
-        window.add ( new Button ( window.buttons_size, "Зона строительства" ) {
+        window.add ( new Button ( window.buttons_size, "Building area" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;
@@ -57,7 +57,7 @@ public class BuildTTube extends Bot {
             }
         }, new Coord ( 0, y ) );
         y += 25;
-        window.add ( new Button ( window.buttons_size, "Доски" ) {
+        window.add ( new Button ( window.buttons_size, "Boards/logs" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;
@@ -69,7 +69,7 @@ public class BuildTTube extends Bot {
             }
         }, new Coord ( 0, y ) );
         y += 25;
-        window.add ( new Button ( window.buttons_size, "Блоки" ) {
+        window.add ( new Button ( window.buttons_size, "Blocks/logs" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;

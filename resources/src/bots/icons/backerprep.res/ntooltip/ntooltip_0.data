@@ -1,0 +1,6 @@
+#name
+Backer
+#req
+unbacked, backed, branch
+#text
+This is an automatic bot that bakes bread. Specify a area with containers containing dough(unbacked). Specify the area where to put the finished bread(backed). Indicate the area with branch. Provide access to the ignition system

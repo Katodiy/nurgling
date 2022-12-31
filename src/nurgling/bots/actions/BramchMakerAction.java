@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class BramchMakerAction implements Action {
-    public static ArrayList<String> lumber_tools = new ArrayList<String> ( Arrays.asList ( "stoneaxe" ) );
+    public static ArrayList<String> lumber_tools = new ArrayList<String> ( Arrays.asList ( "stoneaxe", "axe" ) );
 
     @Override
     public Results run(NGameUI gui) throws InterruptedException {

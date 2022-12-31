@@ -1,0 +1,6 @@
+#name
+Goats herd
+#req
+goats, milk(inside goats), wool(inside goats), kritter
+#text
+This bot is herding a herd of cows. The bot is engaged in milking, shear wool and improves the quality of animals, keeping the population of the herd. Specify the area with goats. INSIDE this area, enter the milk sub-area and wool sub-area. The milk sub-district must contain a barrel and a milk tank. The area of corpses (kritter) should be accessible. The bot has special rank settings in the client parameters, according to which it will kill extra animals.

@@ -50,7 +50,7 @@ public class BuildFrames extends Bot {
             throws InterruptedException {
         super.initAction ();
         int y = 0;
-        window.add ( new Button ( window.buttons_size, "Зона строительства" ) {
+        window.add ( new Button ( window.buttons_size, "Building area" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;
@@ -62,7 +62,7 @@ public class BuildFrames extends Bot {
             }
         }, new Coord ( 0, y ) );
         y += 25;
-        window.add ( new Button ( window.buttons_size, "Ветки" ) {
+        window.add ( new Button ( window.buttons_size, "Boughs" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;
@@ -74,7 +74,7 @@ public class BuildFrames extends Bot {
             }
         }, new Coord ( 0, y ) );
         y += 25;
-        window.add ( new Button ( window.buttons_size, "Нитки" ) {
+        window.add ( new Button ( window.buttons_size, "Strings" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;
@@ -86,7 +86,7 @@ public class BuildFrames extends Bot {
             }
         }, new Coord ( 0, y ) );
         y += 25;
-        window.add ( new Button ( window.buttons_size, "Палочки" ) {
+        window.add ( new Button ( window.buttons_size, "Branches" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;

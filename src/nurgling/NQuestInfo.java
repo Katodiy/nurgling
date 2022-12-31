@@ -207,26 +207,28 @@ public class NQuestInfo extends Widget {
                                     ended += 1;
                             }
                         }
-                        if(treeData.get(tree).size()>0) {
-                            if (questData.get(tree) != null && questData.get(tree).size() > 0) {
-                                imgs.add(fnd1.render(tree + String.format("($col[128,255,128]{%d}|$col[255,128,128]{%d})", ended, questData.get(tree).size() - ended), UI.scale(200)).img);
-                            } else {
-                                if(isNQvisible && treeDataHaveUncompleted(tree))
-                                    imgs.add(fnd1_nq.render(tree, UI.scale(200)).img);
-                            }
-                        }
-                        maxW = Math.max(tree.length(), maxW);
-                        maxH+=1;
-                        for(TreeCondition cond: treeData.get(tree)){
-                            if(isNQvisible || (questData.get(tree) != null && questData.get(tree).size() > 0)) {
-                                if (cond.cond.done != 1) {
-                                    if (!cond.cond.desc.contains(tree))
-                                        imgs.add(gfnd2_under.render(cond.cond.desc).img);
-                                    else
-                                        imgs.add(gfnd2.render(cond.cond.desc).img);
+                        if(treeData.get(tree)!=null) {
+                            if (treeData.get(tree).size() > 0) {
+                                if (questData.get(tree) != null && questData.get(tree).size() > 0) {
+                                    imgs.add(fnd1.render(tree + String.format("($col[128,255,128]{%d}|$col[255,128,128]{%d})", ended, questData.get(tree).size() - ended), UI.scale(200)).img);
+                                } else {
+                                    if (isNQvisible && treeDataHaveUncompleted(tree))
+                                        imgs.add(fnd1_nq.render(tree, UI.scale(200)).img);
                                 }
-                                maxW = Math.max(cond.cond.desc.length(), maxW);
-                                maxH += 1;
+                            }
+                            maxW = Math.max(tree.length(), maxW);
+                            maxH += 1;
+                            for (TreeCondition cond : treeData.get(tree)) {
+                                if (isNQvisible || (questData.get(tree) != null && questData.get(tree).size() > 0)) {
+                                    if (cond.cond.done != 1) {
+                                        if (!cond.cond.desc.contains(tree))
+                                            imgs.add(gfnd2_under.render(cond.cond.desc).img);
+                                        else
+                                            imgs.add(gfnd2.render(cond.cond.desc).img);
+                                    }
+                                    maxW = Math.max(cond.cond.desc.length(), maxW);
+                                    maxH += 1;
+                                }
                             }
                         }
                 }

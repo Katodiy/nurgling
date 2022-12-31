@@ -44,7 +44,7 @@ public class BuildTarkilns extends Bot {
             throws InterruptedException {
         super.initAction ();
         int y = 0;
-        window.add ( new Button ( window.buttons_size, "Зона строительства" ) {
+        window.add ( new Button ( window.buttons_size, "Building area" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;
@@ -56,7 +56,7 @@ public class BuildTarkilns extends Bot {
             }
         }, new Coord ( 0, y ) );
         y += 25;
-        window.add ( new Button ( window.buttons_size, "Глина" ) {
+        window.add ( new Button ( window.buttons_size, "Clay or clay area" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;
@@ -68,7 +68,7 @@ public class BuildTarkilns extends Bot {
             }
         }, new Coord ( 0, y ) );
         y += 25;
-        window.add ( new Button ( window.buttons_size, "Камень" ) {
+        window.add ( new Button ( window.buttons_size, "Stone piles or boulders" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;
