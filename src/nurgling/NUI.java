@@ -13,7 +13,9 @@ public class NUI extends UI {
     long tickId = 0;
     public NUI(Context uictx, Coord sz, Runner fun) {
         super(uictx, sz, fun);
-        Thread writeConfigHook = new Thread(() -> {NConfiguration.getInstance().write();});
+        Thread writeConfigHook = new Thread(() -> {
+            NFoodWriter.instance.write();
+            NConfiguration.getInstance().write();});
         Runtime.getRuntime().addShutdownHook(writeConfigHook);
         NUtils.setUI(this);
     }

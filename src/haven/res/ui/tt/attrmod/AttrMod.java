@@ -25,8 +25,10 @@ public class AttrMod extends ItemInfo.Tip {
 	super(owner);
 	this.mods = mods;
 		if(owner instanceof Spec) {
-			if(((Spec) owner).ctx instanceof GItem && ((GItem)((Spec) owner).ctx).parent instanceof Equipory) {
-				((NEquipory)((GItem)((Spec) owner).ctx).parent).updBuffs = true;
+			if(((GItem)((Spec) owner).ctx).parent instanceof NEquipory) {
+				if (((Spec) owner).ctx instanceof GItem && ((GItem) ((Spec) owner).ctx).parent instanceof Equipory) {
+					((NEquipory) ((GItem) ((Spec) owner).ctx).parent).updBuffs = true;
+				}
 			}
 		}
     }

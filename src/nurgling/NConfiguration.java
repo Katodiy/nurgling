@@ -59,6 +59,7 @@ public class NConfiguration {
 
     public ArrayList<String> fishCandidates = new ArrayList<>();
     public boolean isInfo = true;
+    public boolean collectFoodInfo = false;
 
     public static String getCharKey()
     {
@@ -628,6 +629,7 @@ public class NConfiguration {
         obj.put("isGrid",isGrid);
         obj.put("isEye",isEyed);
         obj.put("enablePfBoundingBoxes",enablePfBoundingBoxes);
+        obj.put("enableCollectFoodInfo",collectFoodInfo);
         obj.put("isPaths",isPaths);
         JSONArray pathCandidates = new JSONArray ();
         for(NPathVisualizer.PathCategory cat: pathCategories){
@@ -893,6 +895,9 @@ public class NConfiguration {
             }
             if ( jsonObject.get ( "enablePfBoundingBoxes" ) != null ) {
                 enablePfBoundingBoxes = (boolean)jsonObject.get ( "enablePfBoundingBoxes" );
+            }
+            if ( jsonObject.get ( "enableCollectFoodInfo" ) != null ) {
+                collectFoodInfo = (boolean)jsonObject.get ( "enableCollectFoodInfo" );
             }
             if ( jsonObject.get ( "horseSpeed" ) != null ) {
                 horseSpeed = ( int ) (long) jsonObject.get ( "horseSpeed" );

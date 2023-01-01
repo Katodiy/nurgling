@@ -16,6 +16,7 @@ import nurgling.tools.AreasID;
 
 import java.util.*;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.ConcurrentHashMap;
 
 @FromResource(name = "lib/itemtex", version = 2)
 public class ItemTex {
@@ -61,7 +62,7 @@ public class ItemTex {
 
     public static final Map<MessageBuf, BufferedImage> made = new CacheMap<>();
     public static final Map<String, MessageBuf> made_str = new CacheMap<>();
-    public static final Map<String, Long> made_id = new CacheMap<>();
+    public static final Map<String, Long> made_id = new ConcurrentHashMap<>();
     public static BufferedImage create(OwnerContext owner, Message osdt) {
 		MessageBuf copy = new MessageBuf(osdt.bytes());
 		synchronized (made) {
