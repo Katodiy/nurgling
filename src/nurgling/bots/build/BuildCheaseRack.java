@@ -36,7 +36,7 @@ public class BuildCheaseRack extends Bot {
                 .add ( new Ingredient ( new NAlias ( new ArrayList<String> ( Arrays.asList ( "block" ) ) ), block_area,
                         4 ) );
         ///Добавление цикла в действия бота
-        runActions.add ( new Build( build_area, "cheeserack", command ) );
+        runActions.add ( new Build( build_area, "gfx/terobjs/cheeserack", command ) );
     }
     
     

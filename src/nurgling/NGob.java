@@ -224,7 +224,7 @@ public class NGob {
                 }
             } else if (NUtils.checkName(name, "pow")) {
                 addTag(Tags.pow);
-            } else if (NUtils.checkName(name, new NAlias(new ArrayList<String>(Arrays.asList("minebeam", "column", "towercap", "ladder", "minesupport")),new ArrayList<String>(Arrays.asList("wrack"))))) {
+            } else if (NUtils.checkName(name, new NAlias(new ArrayList<String>(Arrays.asList("minebeam", "column", "towercap", "ladder", "minesupport")),new ArrayList<String>(Arrays.asList("wrack", "log"))))) {
                 addTag(Tags.minesupport);
             } else if (NUtils.checkName(name, new NAlias(new ArrayList<>(Arrays.asList("plants")), new ArrayList<>(Arrays.asList("trellis"))))) {
                 addTag(Tags.plant);
@@ -355,10 +355,7 @@ public class NGob {
                 addTag(Tags.marked);
             }
             if(!isTag(Tags.item) &&!isTag(Tags.plant) &&!isTag(Tags.cellar) && !(isTag(Tags.pow) && (getModelAttribute()&17)==17) && !NUtils.checkName(name, "cavemoth")){
-                hitBox = NHitBox.hitboxes.get(name);
-                if(hitBox == null){
-                    hitBox = NHitBox.getByName(name);
-                }
+                hitBox = NHitBox.get(name);
             }
         }
     }

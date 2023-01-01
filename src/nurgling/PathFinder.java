@@ -209,25 +209,6 @@ public class PathFinder {
             }
         }
 
-        void addCandidates(Vertex vert) {
-/*            for (Pair<Integer, Double> neighbor : vert.contacts) {
-                Vertex cand = vertex.get(neighbor.a);
-//                if (!cand.isVisited) {
-                    boolean isFind = false;
-                    for (Vertex cur_cand : candidates) {
-                        if (cur_cand == cand) {
-                            isFind = true;
-                            break;
-                        }
-                    }
-                    if (!isFind && cand.length>vert.length && cand.length!=10000)
-                        candidates.add(cand);
-//                }
-            }*/
-            candidates.sort(comparator);
-            candidates.remove(vert);
-        }
-
         private void check(Vertex vert) {
             vert.isVisited = true;
             for (Pair<Integer, Double> neighbor : vert.contacts) {
@@ -756,11 +737,11 @@ public class PathFinder {
                             }
                             Thread.sleep(20);
                         }
-                        if (gui.map.player().rc.dist(vert.coord) > 10 && NUtils.isPose(gui.map.player(), new NAlias("idle"))) {
+                        if (gui.map.player().rc.dist(vert.coord) > 5 && NUtils.isPose(gui.map.player(), new NAlias("idle"))) {
                             reset_count+=1;
                             gui.map.wdgmsg("click", Coord.z, vert.coord.floor(posres), 1, 0);
                         }else{
-                            if(gui.map.player().rc.dist(vert.coord) < 10)
+                            if(gui.map.player().rc.dist(vert.coord) < 1.375 || (gui.map.player().rc.dist(vert.coord) < 2.75 && NUtils.isPose(gui.map.player(), new NAlias("idle"))))
                                 break;
                         }
                     }while (reset_count<4);

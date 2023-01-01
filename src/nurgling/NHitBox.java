@@ -45,7 +45,7 @@ public class NHitBox extends NArea {
         if((res= hitboxes.get(name)) ==null)
             return getByName(name);
         else
-            return res;
+            return new NHitBox(res);
     }
 
     public static NHitBox getDummy (
@@ -98,7 +98,7 @@ public class NHitBox extends NArea {
     }
 
 
-    public static HashMap<String, NHitBox> hitboxes = new HashMap<>();
+    private static HashMap<String, NHitBox> hitboxes = new HashMap<>();
 
     public static void init() {
         hitboxes.put("gfx/terobjs/stockpile-branch", new NHitBox(new Coord2d(-3.4375, -3.4375), new Coord2d(3.4375, 3.4375)));
@@ -133,6 +133,7 @@ public class NHitBox extends NArea {
         hitboxes.put("gfx/terobjs/stockpile-leaf", new NHitBox(new Coord2d(-8.25, -8.25), new Coord2d(8.25, 8.25)));
         hitboxes.put("gfx/terobjs/ttub", new NHitBox(new Coord2d(-5.5, -5.5), new Coord2d(5.5, 5.5)));
         hitboxes.put("gfx/terobjs/cupboard", new NHitBox(new Coord2d(-5.5, -5.5), new Coord2d(5.5, 5.5)));
+        hitboxes.put("gfx/terobjs/cheeserack", new NHitBox(new Coord2d(-4.125, -4.125), new Coord2d(4.125, 4.125)));
         hitboxes.put("gfx/terobjs/vehicle/cart", new NHitBox(new Coord2d(-8.25, -6.875), new Coord2d(8.25, 6.875)));
         hitboxes.put("gfx/terobjs/steelcrucible", new NHitBox(new Coord2d(-4.75, -5.5), new Coord2d(4.75, 5.5)));
         hitboxes.put("gfx/terobjs/crucible", new NHitBox(new Coord2d(-2.75, -2.75), new Coord2d(2.75, 2.75)));

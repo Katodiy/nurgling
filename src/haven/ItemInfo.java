@@ -408,7 +408,7 @@ public abstract class ItemInfo {
 					inf = new NCuriosity((Curiosity)inf);
 				}
 			}catch(Exception e){
-//				e.printStackTrace();
+				e.printStackTrace();
 			}
 			if (inf != null)
 				ret.add(inf);
@@ -418,7 +418,7 @@ public abstract class ItemInfo {
 				throw(new ClassCastException("Unexpected object type " + o.getClass() + " in item info array."));
 			}
 		}catch (RuntimeException e){
-//			e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 	if(owner instanceof GItem)
