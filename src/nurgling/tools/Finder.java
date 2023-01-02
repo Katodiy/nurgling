@@ -512,7 +512,33 @@ public class Finder {
         }
         return result;
     }
-    
+
+    public static Gob findObject (
+            Coord2d coord,
+            NAlias name
+    ) {
+        /// Расстояние до объекта с "запасом"
+        double length = 50000;
+        Gob result = null;
+        synchronized ( NUtils.getGameUI().ui.sess.glob.oc ) {
+            for ( Gob gob : NUtils.getGameUI().ui.sess.glob.oc ) {
+                if ( gob != NUtils.getGameUI().map.player () ) {
+                        if ( gob.getres () != null ) {
+                            if (NUtils.isIt(gob, name)) {
+                                /// Сравнивается расстояние между игроком и объектом
+                                double dist = coord.dist(gob.rc);
+                                /// Если расстояние минимально то оно и объект запоминаются
+                                if (dist < length) {
+                                    length = dist;
+                                    result = gob;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        return result;
+    }
     
     public static Gob findNearestObject (
     ) {

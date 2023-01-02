@@ -2,8 +2,6 @@ package nurgling;
 
 import haven.*;
 import haven.Composite;
-import haven.res.gfx.fx.fishline.FishLine;
-import haven.res.lib.itemtex.ItemTex;
 import haven.res.lib.tree.TreeScale;
 import nurgling.tools.AreasID;
 import nurgling.tools.Finder;
@@ -12,7 +10,6 @@ import java.awt.*;
 import java.util.*;
 
 import static haven.res.lib.itemtex.ItemTex.made_id;
-import static haven.res.lib.itemtex.ItemTex.made_str;
 
 public class NGob {
     public Tex noteImg = null;
@@ -27,6 +24,11 @@ public class NGob {
             hitBox.correct(gob.rc, gob.a);
         }
         return hitBox;
+    }
+
+    String name = "";
+    public void setName(String name) {
+        this.name = name;
     }
 
     public enum Tags {
@@ -113,7 +115,8 @@ public class NGob {
         consobj,
         growth,
         trellis,
-        gate, cellar, iconsign;
+        gate, cellar, iconsign, quester,
+        bumling;
     }
 
     public final HashSet<Tags> tags = new HashSet<>();
@@ -190,6 +193,8 @@ public class NGob {
 
             if(NUtils.checkName(name, "tree")){
                 addTag(Tags.tree);
+            }else if(NUtils.checkName(name, "bumling")) {
+                addTag(Tags.bumling);
             }
             if(NUtils.checkName(name, "cellar")){
                 addTag(Tags.cellar);
@@ -224,7 +229,7 @@ public class NGob {
                 }
             } else if (NUtils.checkName(name, "pow")) {
                 addTag(Tags.pow);
-            } else if (NUtils.checkName(name, new NAlias(new ArrayList<String>(Arrays.asList("minebeam", "column", "towercap", "ladder", "minesupport")),new ArrayList<String>(Arrays.asList("wrack", "log"))))) {
+            } else if (NUtils.checkName(name, new NAlias(new ArrayList<String>(Arrays.asList("minebeam", "column", "towercap", "ladder", "minesupport")),new ArrayList<String>(Arrays.asList("stump", "wrack", "log"))))) {
                 addTag(Tags.minesupport);
             } else if (NUtils.checkName(name, new NAlias(new ArrayList<>(Arrays.asList("plants")), new ArrayList<>(Arrays.asList("trellis"))))) {
                 addTag(Tags.plant);
@@ -398,6 +403,20 @@ public class NGob {
                             gob.addol(new NGobHiteBoxSpr(NBoundingBox.getBoundingBox(gob)));
                         }
                     }
+                    if(isTag(Tags.tree) || isTag(Tags.bumling) || isTag(Tags.quester)){
+                        for(NQuestInfo.Quester quester : NQuestInfo.questers){
+                            if(!quester.isFound) {
+                                Gob gob = ((Gob) this);
+                                if (Math.abs(gob.rc.x -quester.coord2d.x)< 10 && Math.abs(gob.rc.y -quester.coord2d.y)< 10) {
+                                    if(Finder.findObject(quester.coord2d,new NAlias("tree","bumling")) == gob) {
+                                        addTag(Tags.quester);
+                                        gob.addol(new NQuesterRing(gob, Color.ORANGE, 20, 0.7f, quester));
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     if (isTag(Tags.notified)) {
                         Gob gob = ((Gob) this);
                         gob.removeol(NNotifiedRing.class);
@@ -411,6 +430,7 @@ public class NGob {
                         Gob gob = ((Gob) this);
                         gob.removeol(NNotifiedRing.class);
                     }
+
                     if (isTag(Tags.highlighted)) {
                         Gob gob = ((Gob) this);
                         if(gob.findol(NHighlightRing.class)==null) {

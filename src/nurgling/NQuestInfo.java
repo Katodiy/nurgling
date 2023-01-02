@@ -15,6 +15,19 @@ import static haven.ItemInfo.catimgs;
 
 public class NQuestInfo extends Widget {
 
+    public static class Quester{
+        String name;
+        Coord2d coord2d;
+        public boolean isFound = false;
+
+        public Quester(String name, Coord2d tmp) {
+            this.name = name;
+            this.coord2d = tmp;
+        }
+    }
+
+    public static Set<Quester> questers = new HashSet<>();
+
     Text.Furnace gfnd2 = new PUtils.BlurFurn(new Text.Foundry(Text.sans, 14, Color.white).aa(true), 2, 1, Color.BLACK);
     Text.Furnace gfnd2_under = new PUtils.BlurFurn(new Text.Foundry(Text.sans, 14, Color.orange).aa(true), 2, 1, Color.BLACK);
     public static final RichText.Foundry fnd1 = new RichText.Foundry(new ChatUI.ChatParser(TextAttribute.FONT, Text.dfont.deriveFont(UI.scale(18f)), TextAttribute.FOREGROUND, Color.YELLOW));
@@ -331,10 +344,24 @@ public class NQuestInfo extends Widget {
     public static Set<String> items = new HashSet<>();
     void checkTarget(String info) {
         if (info.contains("Defeat ") || info.contains("Pick ") || info.contains("Catch ")) {
-            String name = info.substring(info.indexOf(" a ") + 3);
-            if(name.isEmpty())
-                name = info.substring(info.indexOf(" an ") + 4);
+            String name;
+            int ind = info.indexOf(" a ");
+            if(ind!=-1)
+                name = info.substring(info.indexOf(" a ") + 3);
+            else {
+                ind = info.indexOf(" an ");
+                if(ind!=-1)
+                    name = info.substring(info.indexOf(" an ") + 4);
+                else
+                    name = info.substring(info.indexOf(" ") + 1);
+            }
             if(!name.isEmpty()){
+                if(name.contains("blueberr"))
+                    name = "blueberr";
+                else if(name.contains("lingon"))
+                    name = "lingon";
+                else if(name.contains("morel"))
+                    name = "lorchel";
                 items.add((name.replaceAll("\\s+","")).replaceAll("'+",""));
             }
         }
@@ -353,14 +380,16 @@ public class NQuestInfo extends Widget {
 
     public static boolean isQuested(Gob gob, Tex tex){
         String name = gob.getResName();
-        for(String item : items){
-            if(name.contains(item)){
-                gob.noteImg = tex;
-                gob.addTag(NGob.Tags.quest);
-                return true;
+        if(name!=null) {
+            for (String item : items) {
+                if (NUtils.checkName(name, new NAlias(new ArrayList<>(Arrays.asList(item)), new ArrayList<>(Arrays.asList("crabapp"))))) {
+                    gob.noteImg = tex;
+                    gob.addTag(NGob.Tags.quest);
+                    return true;
+                }
             }
+            gob.removeTag(NGob.Tags.quest);
         }
-        gob.removeTag(NGob.Tags.quest);
         return false;
     }
 

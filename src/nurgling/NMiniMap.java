@@ -3,6 +3,7 @@ package nurgling;
 import haven.*;
 import nurgling.minimap.NPMarker;
 import nurgling.minimap.NSMarker;
+import nurgling.tools.Finder;
 
 import java.awt.*;
 import java.util.List;
@@ -152,6 +153,17 @@ public class NMiniMap extends MiniMap {
 
         public NDisplayMarker(MapFile.Marker marker) {
             super(marker);
+            MiniMap.Location loc = NUtils.getGameUI().mapfile.view.sessloc;
+            if(NUtils.getGameUI().mapfile.playerSegmentId() == marker.seg &&marker instanceof NSMarker && NUtils.checkName(((NSMarker)marker).res.name,"small/bush", "small/bumling")) {
+                {
+                    Coord2d tmp = marker.tc.sub(loc.tc).mul(tilesz).add(6, 6);
+                    NQuestInfo.questers.add(new NQuestInfo.Quester(marker.name(),tmp));
+                    Gob gob = Finder.findObject(tmp,new NAlias("tree","bumling"));
+                    if(gob!=null){
+                        gob.addTag(NGob.Tags.quester);
+                    }
+                }
+            }
             checkTip(marker.nm);
         }
 
