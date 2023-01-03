@@ -737,7 +737,7 @@ public class PathFinder {
                             }
                             Thread.sleep(20);
                         }
-                        if (gui.map.player().rc.dist(vert.coord) > 5 && NUtils.isPose(gui.map.player(), new NAlias("idle"))) {
+                        if (gui.map.player().rc.dist(vert.coord) > 2.75 && NUtils.isPose(gui.map.player(), new NAlias("idle"))) {
                             reset_count+=1;
                             gui.map.wdgmsg("click", Coord.z, vert.coord.floor(posres), 1, 0);
                         }else{

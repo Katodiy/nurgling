@@ -362,6 +362,8 @@ public class NQuestInfo extends Widget {
                     name = "lingon";
                 else if(name.contains("morel"))
                     name = "lorchel";
+                else if(name.contains("yellof"))
+                    name = "yellof";
                 items.add((name.replaceAll("\\s+","")).replaceAll("'+",""));
             }
         }

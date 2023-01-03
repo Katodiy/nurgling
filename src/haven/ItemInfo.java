@@ -194,7 +194,8 @@ public abstract class ItemInfo {
 	public Name(Owner owner, String str) {
 				this(owner, Text.render(str));
 		if(str.contains("kg of")){
-			((NGItem)owner).quantity = Double.parseDouble(str.substring(0,str.indexOf("kg")));
+			if(owner instanceof GItem)
+				((NGItem)owner).quantity = Double.parseDouble(str.substring(0,str.indexOf("kg")));
 		}
 	}
 
