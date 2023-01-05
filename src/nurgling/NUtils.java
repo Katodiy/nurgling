@@ -990,10 +990,36 @@ public class NUtils {
                 break;
             } catch (Loading ignored) {
             }
+        }
+        return null;
+    }
+
+    public static ItemInfo.Contents getContent(
+            List<ItemInfo> iteminfo
+    )  {
+        while (true) {
             try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                for (ItemInfo info : iteminfo) {
+                    if (info instanceof ItemInfo.Contents) {
+                        return (ItemInfo.Contents) info;
+                    }
+                }
+                break;
+            } catch (Loading ignored) {
+            }
+        }
+        return null;
+    }
+
+    public static String getContentName(List<ItemInfo> item)
+            throws InterruptedException {
+        ItemInfo.Contents content = getContent(item);
+
+        if (content != null) {
+            for (ItemInfo info : content.sub) {
+                if (info instanceof ItemInfo.Name) {
+                    return ((ItemInfo.Name) info).str.text;
+                }
             }
         }
         return null;
@@ -1509,6 +1535,11 @@ public class NUtils {
             result.fullMark = 1024;
             result.cap = "Oven";
             result.name = new NAlias("oven");
+        } else if (Finder.findObjectsInArea(new NAlias("cheeserack"), area).size() > 0 ||
+                (target != null && isIt(target, new NAlias("cheeserack")))) {
+            result.fullMark = 1024;
+            result.cap = "Rack";
+            result.name = new NAlias("cheeserack");
         } else if (Finder.findObjectsInArea(new NAlias("cupboard"), area).size() > 0 ||
                 (target != null && isIt(target, new NAlias("cupboard")))) {
             result.fullMark = 16;

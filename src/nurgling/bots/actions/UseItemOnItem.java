@@ -3,6 +3,7 @@ package nurgling.bots.actions;
 import haven.WItem;
 import nurgling.NAlias;
 import nurgling.NGameUI;
+import nurgling.NUtils;
 
 public class UseItemOnItem implements Action {
 
@@ -11,11 +12,7 @@ public class UseItemOnItem implements Action {
             throws InterruptedException {
         new TakeToHand ( src_item ).run ( gui );
         target_item.item.wdgmsg ( "itemact",0 );
-        int counter = 0;
-        while ( gui.vhand!=null && counter < 20){
-            Thread.sleep ( 50 );
-            counter++;
-        }
+        NUtils.waitEvent(()->gui.vhand==null,50);
         return new Results ( Results.Types.SUCCESS );
     }
     

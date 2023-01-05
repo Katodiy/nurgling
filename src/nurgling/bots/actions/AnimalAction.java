@@ -32,6 +32,8 @@ public class AnimalAction <C extends Entry> implements Action {
                 new PathFinder(gui, gob, PathFinder.Type.dyn).run();
                 new SelectFlowerAction(gob, "Memorize", SelectFlowerAction.Types.Gob).run(gui);
                 NUtils.waitEvent(() -> gob.getattr(CattleId.class) != null, 5000);
+                NUtils.waitEvent(() -> w.roster(cattleRoster).entries.get(gob.getattr(CattleId.class).id) != null, 5000);
+                NUtils.waitEvent(() -> w.roster(cattleRoster).entries.get(gob.getattr(CattleId.class).id).getClass() == cattleRoster, 5000);
             }
             if (gob.getattr(CattleId.class) != null) {
                 if (pred.test(gob)) {

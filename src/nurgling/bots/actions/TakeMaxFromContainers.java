@@ -2,10 +2,7 @@ package nurgling.bots.actions;
 
 import haven.WItem;
 
-import nurgling.NAlias;
-import nurgling.NGameUI;
-import nurgling.NUtils;
-import nurgling.PathFinder;
+import nurgling.*;
 import nurgling.bots.tools.InContainer;
 import nurgling.tools.AreasID;
 import nurgling.tools.Finder;
@@ -55,6 +52,11 @@ public class TakeMaxFromContainers implements Action {
         }
 
         for ( InContainer in : inContainers ) {
+            if(in.gob.isTag(NGob.Tags.free))
+            {
+                in.isFree = true;
+                continue;
+            }
             if (NUtils.getGob(in.gob.id) != null && !in.isFree) {
                 if (gui.getInventory().getFreeSpace() == 0) {
                     return new Results(Results.Types.SUCCESS);

@@ -1,7 +1,6 @@
 package nurgling.bots;
 
 import nurgling.NGameUI;
-import nurgling.bots.actions.BattleAction;
 import nurgling.bots.actions.ReagrAction;
 
 public class BattleBot extends Bot {

@@ -90,46 +90,16 @@ public class TakeItemsFromBarter implements Action {
                                 sb.bbtn.click ();
                                 int finalI = i + 1;
                                 NUtils.waitEvent (
-                                        () -> gui.getInventory ().getItemsWithInfo ( items ).size () >= ( finalI ),
+                                        () -> gui.getInventory ().getItems ( items ).size () >= ( finalI ),
                                         60 );
                             }
                         }
                     }
                 }
-                //                        sb.
-                //                        if ( sb.price != null ) {
-                //                            NAlias alias = new NAlias ( ( String ) sb.price.res.res.get ().name );
-                //                            try {
-                //                                String name = ( String ) sb.price.spr ().getClass ().getField ( "name" )
-                //                                                                 .get ( sb.price.spr () );
-                //                                alias.keys.add ( name );
-                //                                if ( Special.checkName ( name, new NAlias ( "Raw Beef" ) ) ) {
-                //                                    alias.keys.add ( "Raw Wild Beef" );
-                //                                }
-                //                                else if ( Special.checkName ( name, new NAlias ( "Raw Pork" ) ) ) {
-                //                                    alias.keys.add ( "Raw Wild Pork" );
-                //                                }
-                //                                else if ( Special.checkName ( name, new NAlias ( "Raw Mutton" ) ) ) {
-                //                                    alias.keys.add ( "Raw Wild Mutton" );
-                //                                }
-                //                            }
-                //                            catch ( NoSuchFieldException | IllegalAccessException ignore ) {
-                //                            }
-                //                            if ( Special.checkName ( "gfx/invobjs/bone", alias  ) && Special.checkName ("/bone",
-                //                                    items)) {
-                //                                alias = items;
-                //                            }
-                //                                            while ( ( isInfo && gui.getInventory ().getItemsWithInfo ( alias, q, true ).size () > 0 ) ||
-                //                                    ( !isInfo && gui.getInventory ().getItems ( alias, q, true ).size () > 0 ) ) {
-                //                                sb.bbtn.click ();
-                //                                Thread.sleep ( 50 );
-                //                            }
-                //                        }
             }
         }
     
-        if ( ( isInfo && gui.getInventory ().getItemsWithInfo ( items ).size () >= count ) ||
-                ( !isInfo && gui.getInventory ().getItems ( items ).size () >= count ) ) {
+        if (  gui.getInventory ().getItems ( items ).size () >= count  ) {
             return new Results ( Results.Types.SUCCESS );
         }
         else {

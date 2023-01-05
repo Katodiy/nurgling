@@ -24,8 +24,7 @@ public class BattleAction implements Action {
             NFightView fightView = NUtils.getFightView ();
             Gob gob;
             if ( fightView != null && ( gob = fightView.getCurrentGob () ) != null ) {
-
-                if(!   NUtils.isIdleCurs()) {
+                if(!NUtils.isIdleCurs()) {
                     gui.map.wdgmsg("click", Coord.z, gui.map.player().rc.floor(posres), 3, 0);
                     NUtils.waitEvent(()->!NUtils.isIdleCurs(), 50);
                 }

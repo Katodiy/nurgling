@@ -155,8 +155,7 @@ public class TransferFromContainerToContainer implements Action {
         }
         
         
-        if ( !gui.getInventory ().getItems ( items ).isEmpty () ||
-                !gui.getInventory ().getItemsWithInfo ( items ).isEmpty () ) {
+        if ( !gui.getInventory ().getItems ( items ).isEmpty () ) {
             if ( !NUtils.checkName ( "stockpile", oname ) ) {
                 for ( Status ogob : sgobs ) {
                     if ( ( NUtils.isIt ( ogob.gob, new NAlias ( "dframe","table-" ) ) || ((  ogob.gob.getModelAttribute() & full ) == 0 && ogob.status ))) {

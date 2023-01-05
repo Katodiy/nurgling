@@ -31,8 +31,6 @@ public class TakeFromContainer implements Action {
             else {
                 /// Находим все необходимые предметы в контейнере
                 ArrayList<WItem> items = gui.getInventory ( cap ).getItems ( names );
-                if(items.isEmpty ())
-                    items = gui.getInventory ( cap ).getItemsWithInfo ( names );
                 /// Переносим предметы в инвентарь
                 
                 for ( WItem item : items ) {

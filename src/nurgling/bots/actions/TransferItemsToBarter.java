@@ -12,17 +12,18 @@ import nurgling.PathFinder;
 import nurgling.bots.tools.Warhouse;
 import nurgling.tools.AreasID;
 import nurgling.tools.Finder;
+import nurgling.tools.NArea;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class TransferItemsToBarter implements Action {
+
     @Override
     public Results run ( NGameUI gui )
             throws InterruptedException {
         if ( gob != null ) {
-            if ( ( isInfo && gui.getInventory ().getItemsWithInfo ( items, q, true ).size () > 0 ) ||
-                    ( !isInfo && gui.getInventory ().getItems ( items, q, true ).size () > 0 ) ) {
+            if ( gui.getInventory ().getItems ( items, q, true ).size () > 0  ) {
                 PathFinder pf = new PathFinder( gui, gob );
                 pf.run ();
                 
@@ -88,18 +89,21 @@ public class TransferItemsToBarter implements Action {
                                     }
                                 }
                                 if ( isFind ) {
-                                    int size = gui.getInventory ().getItems ( alias, q, true ).size ();
-                                    while ( ( isInfo &&
-                                            gui.getInventory ().getItemsWithInfo ( alias, q, true ).size () > 0 ) ||
-                                            ( !isInfo &&
-                                                    gui.getInventory ().getItems ( alias, q, true ).size () > 0 ) ) {
+                                    int size = gui.getInventory ().getItems ( items, q, true ).size ();
+                                    while ( gui.getInventory ().getItems ( items, q, true ).size () > 0 ) {
                                         sb.bbtn.click ();
                                         Thread.sleep ( 50 );
                                         if ( sb.res == null ) {
                                             if ( paving == null ) {
-                                                new TransferItemsToContainers ( id, new NAlias (
-                                                        new ArrayList<> ( Arrays.asList ( "Branch", "branch" ) ) ),
-                                                        true ).run ( gui );
+                                                if(area == null){
+                                                    new TransferItemsToContainers ( id, new NAlias (
+                                                            new ArrayList<> ( Arrays.asList ( "Branch", "branch" ) ) ),
+                                                            true ).run ( gui );
+                                                }else {
+                                                    new TransferItemsToContainers ( area, new NAlias (
+                                                            new ArrayList<> ( Arrays.asList ( "Branch", "branch" ) ) ),
+                                                            true ).run ( gui );
+                                                }
                                             }
                                             else {
                                                 new TransferItemsToContainers ( Finder.findNearestMark ( id, paving ),
@@ -107,7 +111,13 @@ public class TransferItemsToBarter implements Action {
                                                                 Arrays.asList ( "Branch", "branch" ) ) ), true ).run (
                                                         gui );
                                             }
-                                            new TransferItemsToBarter ( gob, items, id, isInfo, q, paving ).run ( gui );
+                                            if(area == null) {
+                                                new TransferItemsToBarter(gob, items, id, isInfo, q, paving).run(gui);
+                                            }
+                                            else
+                                            {
+                                                new TransferItemsToBarter(gob, items, area, isInfo, q, paving).run(gui);
+                                            }
                                         }
                                     }
                                 }
@@ -117,8 +127,13 @@ public class TransferItemsToBarter implements Action {
                 }
                 Thread.sleep ( 300 );
                 if ( paving == null ) {
-                    new TransferItemsToContainers ( id,
-                            new NAlias ( new ArrayList<> ( Arrays.asList ( "Branch", "branch" ) ) ), true ).run ( gui );
+                    if(area == null) {
+                        new TransferItemsToContainers(id,
+                                new NAlias(new ArrayList<>(Arrays.asList("Branch", "branch"))), true).run(gui);
+                    }else {
+                        new TransferItemsToContainers(area,
+                                new NAlias(new ArrayList<>(Arrays.asList("Branch", "branch"))), true).run(gui);
+                    }
                 }
                 else {
                     new TransferItemsToContainers ( Finder.findNearestMark ( id, paving ),
@@ -168,6 +183,18 @@ public class TransferItemsToBarter implements Action {
     }
 
     public TransferItemsToBarter(
+            NArea area,
+            NAlias items,
+            boolean isInfo
+    ) {
+        this.gob = Finder.findObjectInArea ( new NAlias ( "barterstand" ), 3000,
+                area);
+        this.items = items;
+        this.area = area;
+        this.isInfo = isInfo;
+    }
+
+    public TransferItemsToBarter(
             AreasID id,
             NAlias items,
             boolean isInfo,
@@ -206,7 +233,16 @@ public class TransferItemsToBarter implements Action {
         this.isInfo = isInfo;
         this.paving = paving;
     }
-    
+
+    public TransferItemsToBarter(Gob gob, NAlias items, NArea area, boolean isInfo, double q, String paving) {
+        this.gob = gob;
+        this.items = items;
+        this.area = area;
+        this.isInfo = isInfo;
+        this.paving = paving;
+    }
+
+
     public TransferItemsToBarter(
             Gob gob,
             NAlias items,
@@ -241,6 +277,7 @@ public class TransferItemsToBarter implements Action {
     String paving = null;
     Gob gob;
     AreasID id;
+    NArea area = null;
     NAlias items;
     boolean isInfo;
     double q = -1;

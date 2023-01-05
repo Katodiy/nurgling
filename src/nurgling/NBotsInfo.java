@@ -245,6 +245,25 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
             layouts.get ( 6 ).add ( new NButton ( "Destroyer", new Destroyer (  gui ), "bots/icons/destroyer" ) );
             layouts.get ( 6 ).add ( new NButton ( "Cellar", new DigCellar (  gui ), "bots/icons/cellar" ) );
 
+            layouts.put ( 7, new Layout ( this, "bots/icons/cheese" ) );
+            layouts.get ( 7 ).add ( new NButton ( "Shedule", new CheesedShedule (  gui ),
+                    "bots/icons/shedule" ) );
+            layouts.get ( 7 ).add ( new NButton ( "CowsCurd", new CurdCows (  gui ),
+                    "bots/icons/cowscurd" ) );
+            layouts.get ( 7 ).add ( new NButton ( "CowsCurd", new CurdGoats (  gui ),
+                    "bots/icons/goatscurd" ) );
+            layouts.get ( 7 ).add ( new NButton ( "SheepsCurd", new CurdSheeps (  gui ),
+                    "bots/icons/sheepscurd" ) );
+            layouts.get ( 7 ).add ( new NButton ( "TransferTray", new TransferCheeseTray (  gui ),
+                    "bots/icons/transfertray" ) );
+            layouts.get ( 7 ).add ( new NButton ( "TransferIns", new TransferCheeseInside (  gui ),
+                    "bots/icons/transfercheese_ins" ) );
+            layouts.get ( 7 ).add ( new NButton ( "TransferOut", new TransferCheeseOutside (  gui ),
+                    "bots/icons/transfercheese_out" ) );
+            layouts.get ( 7 ).add ( new NButton ( "TransferMine", new TransferCheeseMine (  gui ),
+                    "bots/icons/transfercheese_mine" ) );
+            layouts.get ( 7 ).add ( new NButton ( "TransferCellar", new TransferCheeseCellar (  gui ),
+                    "bots/icons/transfercheese_cel" ) );
 
             layouts.put ( 5000, new Layout ( this, "bots/icons/tools" ) );
             layouts.get ( 5000 ).add ( new NButton ( "TestBot", new TestBot ( gui ), "bots/icons/testbot") );

@@ -33,29 +33,21 @@ public class Equip implements Action{
             wbelt.item.wdgmsg ( "iact", wbelt.sz, 0 );
             NUtils.waitEvent ( ()->gui.getWindow ( "elt" )!=null,300 );
 
-            int count = 0;
-            while(count < 5) {
-                NInventory belt = gui.getInventory ( "elt" );
-                if ( belt == null ) {
-                    return new Results ( Results.Types.NO_ITEMS );
-                }
-                item = belt.getItem ( name );
-                if(item!=null) {
-                    NUtils.getGameUI().setfocus(NUtils.getGameUI().getInventory());
-                    item.item.wdgmsg("transfer", Coord.z, 1);
-                    /// Дожидаемся окончания экипировки
-                    NUtils.waitEvent(() -> gui.getInventory().getItem(name) != null, 50);
-                    NUtils.getGameUI().getInventory().lostfocus();
-                    if (gui.getInventory().getItem(name) != null) {
-                        break;
-                    }
-                    count++;
-                }else {
-                    break;
-                }
+            NInventory belt = gui.getInventory ( "elt" );
+            if ( belt == null ) {
+                return new Results ( Results.Types.NO_BELT );
+            }
+            item = belt.getItem ( name );
+            if(item!=null) {
+                NUtils.getGameUI().setfocus(NUtils.getGameUI().getInventory());
+                item.item.wdgmsg("transfer", Coord.z, 1);
+                /// Дожидаемся окончания экипировки
+                NUtils.waitEvent(() -> gui.getInventory().getItem(name) != null, 50);
+                NUtils.getGameUI().getInventory().lostfocus();
+
             }
             gui.getWindow ( "elt" ).cbtn.wdgmsg ( "activate" );
-            NUtils.waitEvent(() -> gui.getWindow("elt") == null, 300);
+            NUtils.waitEvent(() -> gui.getWindow("elt") == null, 30000);
             if(Finder.findDressedItem ( name ) != null)
                 return new Results(Results.Types.SUCCESS);
         }

@@ -251,7 +251,7 @@ public class NGob {
             else if (NUtils.checkName(name, "stockpile")){
                 addTag(Tags.stockpile, Tags.marked);
             }
-            else if (NUtils.checkName(name, new NAlias(new ArrayList<>(Arrays.asList("cheeserack", "bumlings", "cupboard", "demijohn","table", "dugout", "candelabrum", "gardenpot", "barrel", "chest", "crate", "log", "trough", "casket", "meatgri", "cauldron", "beehive", "dreca", "barrow", "rowboat", "potterswheel", "churn", "metalcabinet", "iconsign", "plow", "ttub")), new ArrayList<>(Arrays.asList("wild", "tree"))))) {
+            else if (NUtils.checkName(name, new NAlias(new ArrayList<>(Arrays.asList("cheeserack","curdingtub", "bumlings", "cupboard", "demijohn","table", "dugout", "candelabrum", "gardenpot", "barrel", "chest", "crate", "log", "trough", "casket", "meatgri", "cauldron", "beehive", "dreca", "barrow", "rowboat", "potterswheel", "churn", "metalcabinet", "iconsign", "plow", "ttub")), new ArrayList<>(Arrays.asList("wild", "tree"))))) {
                 addTag(Tags.liftable);
                 if (NUtils.checkName(name, "iconsign"))
                     addTag(Tags.iconsign);

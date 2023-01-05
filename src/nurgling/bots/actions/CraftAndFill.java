@@ -76,9 +76,7 @@ public class CraftAndFill implements Action {
                                 return new Results ( Results.Types.NO_FREE_SPACE );
                             }
                             Thread.sleep ( 500 );
-                            int current = ( data.isInfo ) ? gui.getInventory ().getItemsWithInfo ( data.item )
-                                                               .size () : gui.getInventory ().getItems ( data.item )
-                                                                             .size ();
+                            int current =  gui.getInventory ().getItems ( data.item ).size ();
                             needed = data.count - current;
 //                            System.out.println ( "neded" + data.item.keys.get ( 0 ) + needed );
                             if ( needed <= 0 ) {
@@ -98,7 +96,7 @@ public class CraftAndFill implements Action {
                     if ( needed > 0 ) {
                         for ( Ingredient datarev : command.ingredients ) {
                             NUtils.ContainerProp irevcontainer = NUtils.getContainerType ( datarev.area_out);
-                            if ( !gui.getInventory ().getItemsWithInfo ( datarev.item ).isEmpty () ) {
+                            if ( !gui.getInventory ().getItems ( datarev.item ).isEmpty () ) {
                                 if ( !irevcontainer.cap.contains ( "Stockpile" ) ) {
                                     new TransferItemsToContainers ( fullMark, datarev.area_out, irevcontainer.name,
                                             irevcontainer.cap, datarev.item ).run ( gui );

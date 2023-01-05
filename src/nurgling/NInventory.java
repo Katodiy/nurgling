@@ -213,11 +213,7 @@ public class NInventory extends Inventory {
     public ArrayList<WItem> getItems(
             final NAlias names
     ) throws InterruptedException {
-        ArrayList<WItem> items = getItems(names,-1);
-        if(items.isEmpty()){
-            items = getItemsWithInfo(names,-1,true);
-        }
-        return items;
+        return getItems(names,-1);
     }
     public ArrayList<WItem> getItems(
             final NAlias names,
@@ -228,7 +224,7 @@ public class NInventory extends Inventory {
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
                 /// Для каждого найденго в компонентах предмета осуществляется проверка на его соответствие ключу
-                if (NUtils.isIt((WItem) widget, names)) {
+                if (NUtils.isIt((WItem) widget, names) || (NUtils.isItInfo((WItem) widget, names))){
                     if(NUtils.getWItemQuality(((WItem)widget))>=q){
                         result.add((WItem) widget);
                     }
@@ -249,7 +245,8 @@ public class NInventory extends Inventory {
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
                 /// Для каждого найденго в компонентах предмета осуществляется проверка на его соответствие ключу
-                if (NUtils.isIt((WItem) widget, names)) {
+                if (NUtils.isIt((WItem) widget, names) || (NUtils.isItInfo((WItem) widget, names)))
+                   {
                     if (isMore) {
                         if (NUtils.getWItemQuality((WItem) widget) >= q) {
                             result.add((WItem) widget);
@@ -276,53 +273,6 @@ public class NInventory extends Inventory {
                     Thread.sleep(10);
                 }
                 result.add((WItem) widget);
-            }
-        }
-        return result;
-    }
-
-    public ArrayList<WItem> getItemsWithInfo(
-            final NAlias names
-    )
-            throws InterruptedException {
-        ArrayList<WItem> result = new ArrayList<>();
-        /// Рзбираются компоненты инвентаря
-        for (Widget widget = child; widget != null; widget = widget.next) {
-            if (widget instanceof WItem) {
-                while (((WItem) widget).item.spr == null) {
-                    Thread.sleep(10);
-                }
-                /// Для каждого найденго в компонентах предмета осуществляется проверка на его соответствие ключу
-                if (NUtils.isItInfo((WItem) widget, names)) {
-                    result.add((WItem) widget);
-                }
-            }
-        }
-        return result;
-    }
-
-    public ArrayList<WItem> getItemsWithInfo(
-            final NAlias names,
-            double q,
-            boolean isMore
-    )
-            throws InterruptedException {
-        ArrayList<WItem> result = new ArrayList<>();
-        /// Рзбираются компоненты инвентаря
-        for (Widget widget = child; widget != null; widget = widget.next) {
-            if (widget instanceof WItem) {
-                /// Для каждого найденго в компонентах предмета осуществляется проверка на его соответствие ключу
-                if (NUtils.isItInfo((WItem) widget, names)) {
-                    if (isMore) {
-                        if (NUtils.getWItemQuality((WItem) widget) >= q) {
-                            result.add((WItem) widget);
-                        }
-                    } else {
-                        if (NUtils.getWItemQuality((WItem) widget) <= q) {
-                            result.add((WItem) widget);
-                        }
-                    }
-                }
             }
         }
         return result;

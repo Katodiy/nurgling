@@ -10,6 +10,7 @@ import nurgling.tools.Finder;
 import nurgling.tools.NArea;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class FriedFishAction implements Action {
@@ -17,6 +18,7 @@ public class FriedFishAction implements Action {
         this.raw_fish = raw_fish;
     }
 
+    public static NAlias fish = new NAlias(new ArrayList<>(Arrays.asList("fish")), new ArrayList<>(Arrays.asList("wood", "Wood")));
     @Override
     public Results run ( NGameUI gui )
             throws InterruptedException {
@@ -57,8 +59,8 @@ public class FriedFishAction implements Action {
                         /// Собираем готовое
                         new PathFinder(gui, gob).run();
                         new SelectFlowerAction(gob, "Carve", SelectFlowerAction.Types.Roastspit).run(gui);
-                        NUtils.waitEvent(() -> NUtils.getProg() >= 0, 50);
-                        NUtils.waitEvent(() -> NUtils.getProg() < 0, 10000);
+                        NUtils.waitEvent(() -> NUtils.isPose(gui.map.player(),new NAlias("carving")), 100);
+                        NUtils.waitEvent(() -> !NUtils.isPose(gui.map.player(),new NAlias("carving")), 10000);
                     }
                 }
             }
@@ -68,16 +70,16 @@ public class FriedFishAction implements Action {
                 Gob.Overlay ol = (gob.findol(Roastspit.class));
                 String content = ((Roastspit) ol.spr).getContent();
                 if (content == null) {
-                    if (gui.getInventory().getItems(new NAlias("fish")).isEmpty()) {
-                        new TakeFromPile(new NAlias("fish"), gui.getInventory().getFreeSpace(), new NAlias("fish"), raw_fish).run(gui);
+                    if (gui.getInventory().getItems(fish).isEmpty()) {
+                        new TakeFromPile(fish, gui.getInventory().getFreeSpace(), fish, raw_fish).run(gui);
                     }
-                    new TakeToHand(new NAlias("fish")).run(gui);
+                    new TakeToHand(fish).run(gui);
                     new PathFinder(gui, gob).run();
                     NUtils.activateRoastspit(ol);
                     NUtils.waitEvent(() -> NUtils.getGameUI().hand.isEmpty(), 100);
                 }
             }
-            new TransferToPile(raw_fish, NHitBox.get(), new NAlias("fish"), new NAlias("fish")).run(gui);
+            new TransferToPile(raw_fish, NHitBox.get(), fish, fish).run(gui);
             double current = 0;
             for (Gob gob : pows) {
                 Gob.Overlay ol = (gob.findol(Roastspit.class));

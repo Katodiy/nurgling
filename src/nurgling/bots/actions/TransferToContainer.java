@@ -21,9 +21,6 @@ public class TransferToContainer implements Action {
             /// Находим все необходимые предметы в инвентаре
             ArrayList<WItem> items;
             items = gui.getInventory ().getItems ( names, q );
-            if ( items.isEmpty () ) {
-                items = gui.getInventory ().getItemsWithInfo ( names , q , true);
-            }
             if(aFreeSpace==-1) {
                 /// Переносим предметы в контейнер
                 for ( WItem item : items ) {
