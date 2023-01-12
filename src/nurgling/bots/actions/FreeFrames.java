@@ -4,6 +4,7 @@ import haven.Gob;
 import haven.Resource;
 import nurgling.NAlias;
 import nurgling.NGameUI;
+import nurgling.NUtils;
 import nurgling.PathFinder;
 import nurgling.tools.Finder;
 
@@ -41,7 +42,9 @@ public class FreeFrames implements Action {
                 Results res;
                 do {
                     new PathFinder( gui, gob ).run ();
+                    NUtils.waitEvent(()->gui.getWindow ( "Frame" )==null,300);
                     new OpenTargetContainer ( gob, "Frame" ).run ( gui );
+                    NUtils.waitEvent(()->gui.getInventory( "Frame" )!=null && (!gob.ols.isEmpty() && gui.getInventory("Frame").getFreeSpace()<4),300);
                     res = new TakeMaxFromContainer ( "Frame", items ).run ( gui );
                     if ( res.type == Results.Types.FULL ) {
                         new TransferHides ().run ( gui );

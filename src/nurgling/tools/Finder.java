@@ -888,21 +888,24 @@ public class Finder {
             double distance,
             AreasID id
     ) {
+
         Gob result = null;
         if (AreasID.get(id) != null && ItemTex.made_id.get(AreasID.get(id))!=null) {
             synchronized (NUtils.getGameUI().ui.sess.glob.oc) {
                 for (Gob gob : NUtils.getGameUI().ui.sess.glob.oc) {
                     if (NUtils.isIt(gob, name)) {
                         if (gob.getModelAttribute() == ItemTex.made_id.get(AreasID.get(id))) {
-                            /// Сравнивается расстояние между игроком и объектом
-                            double dist = NUtils.getGameUI().map.player().rc.dist(gob.rc);
-                            /// Если расстояние минимально то оно и объект запоминаются
-                            if (dist < distance) {
-                                Coord pltc = (new Coord2d((gob.rc.x) / 11, (gob.rc.y) / 11)).floor();
-                                Resource res_beg = NUtils.getGameUI().ui.sess.glob.map.tilesetr(
-                                        NUtils.getGameUI().ui.sess.glob.map.gettile(pltc));
-                                distance = dist;
-                                result = gob;
+                            if(NUtils.getGameUI().map.player()!=null) {
+                                /// Сравнивается расстояние между игроком и объектом
+                                double dist = NUtils.getGameUI().map.player().rc.dist(gob.rc);
+                                /// Если расстояние минимально то оно и объект запоминаются
+                                if (dist < distance) {
+                                    Coord pltc = (new Coord2d((gob.rc.x) / 11, (gob.rc.y) / 11)).floor();
+                                    Resource res_beg = NUtils.getGameUI().ui.sess.glob.map.tilesetr(
+                                            NUtils.getGameUI().ui.sess.glob.map.gettile(pltc));
+                                    distance = dist;
+                                    result = gob;
+                                }
                             }
                         }
                     }

@@ -151,6 +151,7 @@ public class NHitBox extends NArea {
         hitboxes.put("gfx/terobjs/minehole", new NHitBox(  new Coord2d ( -12.375, -12.375 ), new Coord2d ( 12.375, 12.375 ) ));
         hitboxes.put("gfx/terobjs/trees/stonepine", new NHitBox(  new Coord2d ( -8.25, -8.25 ), new Coord2d ( 8.25, 8.25 )));
         hitboxes.put("gfx/terobjs/trees/blackpine", new NHitBox(  new Coord2d ( -8.25, -8.25 ), new Coord2d ( 8.25, 8.25 )));
+        hitboxes.put("gfx/terobjs/trees/blackpinestump", new NHitBox(  new Coord2d ( -8.25, -8.25 ), new Coord2d ( 8.25, 8.25 )));
         hitboxes.put("gfx/terobjs/trees/carobtree", new NHitBox(  new Coord2d ( -8.25, -8.25 ), new Coord2d ( 8.25, 8.25 )));
         hitboxes.put("gfx/terobjs/trees/strawberrytree", new NHitBox(  new Coord2d ( -8.25, -8.25 ), new Coord2d ( 8.25, 8.25 )));
         hitboxes.put("gfx/terobjs/trees/alder", new NHitBox(  new Coord2d ( -8.25, -8.25 ), new Coord2d ( 8.25, 8.25 )));

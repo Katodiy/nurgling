@@ -123,8 +123,10 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
             layouts.put ( 3, new Layout ( this, "bots/icons/craft" ) );
             layouts.get ( 3 ).add ( new NButton ( "Craft Rope", new CreaterRope (  gui ),
                     "bots/icons/rope" ) );
-            layouts.get ( 3 ).add ( new NButton ( "Craft Cloth", new CreaterCloth (  gui ),
+            layouts.get ( 3 ).add ( new NButton ( "Craft Cloth", new CreaterCloth ( gui ),
                     "bots/icons/cloth" ) );
+            layouts.get ( 3 ).add ( new NButton ( "Craft Tarsticks", new TarSticker ( gui ),
+                    "bots/icons/tarsticks" ) );
 //            layouts.get ( 3 ).add ( new NButton ( "Bone Glue", new nurgler.bots.crafting.BoneGlue (  gui ),
 //                    Special.getPath () + "/icons/boneglue.png" ) );
 //            layouts.get ( 3 ).add ( new NButton ( "Harden Leather", new HardenLeatherMaker (  gui ),
@@ -308,27 +310,18 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
                     "bots/icons/transfersortmeat" ) );
             layouts.get ( 5000 ).add ( new NButton ( "SortAndTransferBars", new SortAndTransferBars (  gui ),
                     "bots/icons/transfersortbars" ) );
+            layouts.get ( 5000 ).add ( new NButton ( "DigSnow", new SnowCleaner ( gui ),
+                    "bots/icons/clearsnow"  ) );
 //            layouts.get ( 5000 ).add ( new NButton ( "BattleBot", new BattleBot ( gui ),
 //                    Special.getPath () + "/icons/battle.png" ) );
 //            layouts.get ( 5000 ).add ( new NButton ( "BattleBot2", new BattleAction2 ( gui ),
 //                    Special.getPath () + "/icons/battle.png" ) );
 //            layouts.get ( 5000 ).add ( new NButton ( "BattleMinion", new BattleMinionBot ( gui ),
 //                    Special.getPath () + "/icons/minion.png" ) );
-//            layouts.get ( 5000 ).add ( new NButton ( "DigSnow", new SnowCleaner ( gui ),
-//                    Special.getPath () + "/icons/snow.png" ) );
-//            layouts.get ( 5000 ).add ( new NButton ( "Sort and Transfer Hides", new SortAndTransferHides ( gui ),
-//                    Special.getPath () + "/icons/hide.png" ) );
-//            layouts.get ( 5000 ).add ( new NButton ( "Sort and Transfer Bones", new SortAndTransferBones ( gui ),
-//                    Special.getPath () + "/icons/bone.png" ) );
+
 //            layouts.get ( 5000 ).add ( new NButton ( "Sort and Transfer Trash", new SortAndTransferTrash ( gui ),
 //                    Special.getPath () + "/icons/trash.png" ) );
 
-//            layouts.get ( 5000 ).add ( new NButton ( "Backer", new Backer (  gui ),
-//                    Special.getPath () + "/icons/backerprep.png" ) );
-
-
-//            layouts.get ( 5000 ).add ( new NButton ( "Extender", new ExtenderRoads (  gui ),
-//                    Special.getPath () + "/icons/road.png" ) );
 //            layouts.get ( 5000 ).add ( new NButton ( "NomadFinderBot", new NomadFinderBot (  gui ),
 //                    Special.getPath () + "/icons/orca.png" ) );
             

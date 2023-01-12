@@ -40,13 +40,20 @@ public class CurdTubeAction implements Action {
                     new OpenTargetContainer(gob, "Curding Tub").run(gui);
                     if(gui.getInventory("Curding Tub")!=null && gui.getInventory("Curding Tub").getItems(new NAlias("curd")).size()<4)
                         return new Results(Results.Types.NO_FUEL);
-                    res = new TakeFromContainer("Curding Tub", new NAlias("curd"), 4).run(gui);
+
+                    res = new TakeFromContainer("Curding Tub", new NAlias("curd"), 4- gui.getInventory().getItems(new NAlias("curd")).size()).run(gui);
                     WItem cheese_tray = NUtils.getGameUI().getInventory().getItem(new NAlias("cheesetray"));
-                    for (int i = 0; i < 4; i ++)
-                        new UseItemOnItem(new NAlias("curd"),cheese_tray).run(gui);
+                    if(gui.getInventory().getItems(new NAlias("invobjs/curd-")).size()<4)
+                        return new Results(Results.Types.NO_FUEL);
+                    int finalcount = gui.getInventory().getItems(new NAlias("invobjs/curd-")).size()-4;
+                    while (gui.getInventory().getItems(new NAlias("invobjs/curd-")).size()!=finalcount)
+                        new UseItemOnItem(new NAlias("invobjs/curd-"),cheese_tray).run(gui);
+                    if(gui.getInventory("Curding Tub").getItems(new NAlias("invobjs/curd-")).size()<4)
+                        break;
                     res = new TransferItemsToBarter(Finder.findSubArea(main, AreasID.curd_out), new NAlias("cheesetray"), false).run(gui);
                 }
                 while (res.type == Results.Types.SUCCESS && (gob.getModelAttribute() & 2) != 0);
+                res = new TransferItemsToBarter(Finder.findSubArea(main, AreasID.curd_out), new NAlias("cheesetray"), false).run(gui);
             }
         }
         return new Results(Results.Types.SUCCESS);

@@ -697,6 +697,7 @@ public class Widget {
 	    }
 	} else if(msg == "pack") {
 	    pack();
+		isPacked = true;
 	} else if(msg == "z") {
 	    z((Integer)args[0]);
 	} else if(msg == "show") {
@@ -1546,4 +1547,9 @@ public class Widget {
 
 	public abstract void ntick(double a);
     }
+
+	public boolean isPacked = false;
+	public boolean packed() {
+		return isPacked;
+	}
 }

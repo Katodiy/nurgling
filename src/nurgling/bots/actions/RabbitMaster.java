@@ -76,6 +76,7 @@ public class RabbitMaster implements Action {
             if ( new OpenTargetContainer ( gob, "Rabbit Hutch" ).run ( gui ).type != Results.Types.SUCCESS ) {
                 return new Results ( Results.Types.OPEN_FAIL );
             }
+            NUtils.waitEvent(()-> gui.getInventory ( "Rabbit Hutch" ).getItem ( new NAlias ( "rabbit-buck" ) )!=null,50);
             WItem buck = gui.getInventory ( "Rabbit Hutch" ).getItem ( new NAlias ( "rabbit-buck" ) );
             RabbitCoop curRabbitHutch = new RabbitCoop ( gob, NUtils.getWItemQuality ( buck ) );
             
@@ -97,7 +98,6 @@ public class RabbitMaster implements Action {
             if ( new OpenTargetContainer ( bunnie, "Rabbit Hutch" ).run ( gui ).type != Results.Types.SUCCESS ) {
                 return new Results ( Results.Types.OPEN_FAIL );
             }
-            NUtils.waitEvent ( () -> gui.getInventory ( "Rabbit Hutch" )!=null, delay );
             /// Получаем инфо по зайчихам
             ArrayList<WItem> curdoes = gui.getInventory ( "Rabbit Hutch" ).getItems ( new NAlias ( "rabbit-doe" ) );
             for ( WItem hen : curdoes ) {

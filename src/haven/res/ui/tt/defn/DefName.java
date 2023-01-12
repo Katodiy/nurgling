@@ -15,8 +15,7 @@ public class DefName implements ItemInfo.InfoFactory {
 	    return(null);
 	Resource res = ((ItemInfo.ResOwner)owner).resource();
 	Resource.Tooltip tt = res.layer(Resource.tooltip);
-	if(tt == null)
-	    throw(new RuntimeException("Item resource " + res + " is missing default tooltip"));
-	return(new ItemInfo.Name(owner, tt.t));
+		 //throw(new RuntimeException("Item resource " + res + " is missing default tooltip"));
+	return(new ItemInfo.Name(owner, (tt == null)?"":tt.t));
     }
 }

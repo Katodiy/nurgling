@@ -611,6 +611,19 @@ public class NUtils {
         return 1;
     }
 
+    public static void digSnow(Coord2d pos)
+            throws InterruptedException {
+            if (!gameUI.hand.isEmpty()) {
+                drop(gameUI.vhand);
+            }
+            NUtils.command(new char[]{'q', 'a', 'd'});
+            Coord pltc = new Coord2d(pos.x / 11, pos.y / 11).floor();
+            Coord2d pCoord = new Coord2d((pltc).x * tilesz.x, (pltc).y * tilesz.y);
+            gameUI.map.wdgmsg("click", Coord.z, pCoord.floor(posres), 1, 0);
+            NUtils.waitEvent (() -> !gameUI.ui.sess.glob.map.tilesetr(gameUI.ui.sess.glob.map.gettile(pltc)).name
+                    .contains("snow") ,500);
+    }
+
 
     static class AutoBot implements Runnable{
 

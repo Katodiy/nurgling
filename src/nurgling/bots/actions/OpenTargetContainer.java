@@ -2,7 +2,9 @@ package nurgling.bots.actions;
 
 import haven.Coord;
 import haven.Gob;
+import haven.Widget;
 import haven.Window;
+import haven.res.ui.barterbox.Shopbox;
 import nurgling.NGameUI;
 import nurgling.NUtils;
 
@@ -40,11 +42,31 @@ public class OpenTargetContainer implements Action {
             }
             else {
                 /// Задержка на подгрузку данных
-                Thread.sleep ( 300 );
+                NUtils.waitEvent(wnd::packed, 1000);
+
+                if(gui.isBarter()){
+                    NUtils.waitEvent(this::waitBarterLoading, 1000);
+                }
+
                 return new Results ( Results.Types.SUCCESS );
             }
         }
         return new Results ( Results.Types.FAIL );
+    }
+
+    boolean waitBarterLoading(){
+        Window spwnd = NUtils.getGameUI().getWindow ( "Barter Stand" );
+        if ( spwnd != null ) {
+            for (Widget sp = spwnd.lchild; sp != null; sp = sp.prev) {
+                if (sp instanceof Shopbox) {
+                    Shopbox sb = (Shopbox) sp;
+                    if (sb.price != null) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
     
     public OpenTargetContainer(

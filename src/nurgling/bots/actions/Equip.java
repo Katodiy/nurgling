@@ -31,7 +31,7 @@ public class Equip implements Action{
         WItem wbelt = Finder.findDressedItem ( new NAlias ("belt") );
         if(wbelt!=null) {
             wbelt.item.wdgmsg ( "iact", wbelt.sz, 0 );
-            NUtils.waitEvent ( ()->gui.getWindow ( "elt" )!=null,300 );
+            NUtils.waitEvent ( ()->gui.getWindow ( "elt" )!=null && gui.getWindow ( "elt" ).packed(),300 );
 
             NInventory belt = gui.getInventory ( "elt" );
             if ( belt == null ) {
@@ -69,7 +69,7 @@ public class Equip implements Action{
         if(Finder.findDressedItem ( name ) != null)
             return new Results(Results.Types.SUCCESS);
         else
-            return new Results(Results.Types.FAIL);
+            return new Results(Results.Types.NO_ITEMS);
     }
 
     NAlias name;

@@ -71,13 +71,13 @@ public class TransferToPile implements Action {
                     PileMaker maker = new PileMaker(gui, area, hitBox, name);
                     maker.setItemName(items);
                     try {
-                        maker.create();
+                        target = maker.create();
                     } catch (NoFreeSpace noFreeSpace) {
                         return new Results(Results.Types.NO_FREE_SPACE);
                     }
                 }
 
-                if (new OpenTargetContainer(Finder.findObject(name), "Stockpile").run(gui).type != Results.Types.SUCCESS) {
+                if (new OpenTargetContainer(target, "Stockpile").run(gui).type != Results.Types.SUCCESS) {
                     return new Results(Results.Types.OPEN_FAIL);
                 }
                 NUtils.transferAlltoStockPile(items, q);

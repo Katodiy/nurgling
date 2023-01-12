@@ -14,8 +14,9 @@ import java.util.Arrays;
 
 
 public class FriedFishAction implements Action {
-    public FriedFishAction(NArea raw_fish) {
+    public FriedFishAction(NArea raw_fish, NArea out_area) {
         this.raw_fish = raw_fish;
+        this.out_area = out_area;
     }
 
     public static NAlias fish = new NAlias(new ArrayList<>(Arrays.asList("fish")), new ArrayList<>(Arrays.asList("wood", "Wood")));
@@ -52,7 +53,7 @@ public class FriedFishAction implements Action {
                 Gob.Overlay ol = (gob.findol(Roastspit.class));
                 String content = ((Roastspit) ol.spr).getContent();
                 if (gui.getInventory().getFreeSpace() < 4) {
-                    new FillContainers(new NAlias("Spitroast"), new NAlias("table"), new ArrayList<>()).run(gui);
+                    new FillContainers(new NAlias("Spitroast"), out_area, new ArrayList<>()).run(gui);
                 }
                 if (content != null) {
                     if (!NUtils.checkName(((Roastspit) ol.spr).getContent(), new NAlias("raw"))) {
@@ -64,7 +65,7 @@ public class FriedFishAction implements Action {
                     }
                 }
             }
-            new FillContainers(new NAlias("Spitroast"), new NAlias("table"), new ArrayList<>()).run(gui);
+            new FillContainers(new NAlias("Spitroast"), out_area, new ArrayList<>()).run(gui);
 
             for (Gob gob : pows) {
                 Gob.Overlay ol = (gob.findol(Roastspit.class));
@@ -105,4 +106,5 @@ public class FriedFishAction implements Action {
 
 
     NArea raw_fish;
+    NArea out_area;
 }

@@ -14,7 +14,7 @@ import java.util.Arrays;
 public class TransferRawHides implements Action {
     
     public static NAlias raw_hides = new NAlias ( new ArrayList<String> ( Arrays.asList ( "blood", "raw" ) ),
-            new ArrayList<String> ( Arrays.asList ( "stern", "straw" ) ) );
+            new ArrayList<String> ( Arrays.asList ( "stern", "straw", "Straw" ) ) );
     
     @Override
     public Results run ( NGameUI gui )

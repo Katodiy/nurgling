@@ -83,7 +83,7 @@ public class Window extends Widget implements DTarget {
     private Coord doff;
     public boolean decohide = false;
 
-    @RName("wnd")
+	@RName("wnd")
     public static class $_ implements Factory {
 	public Widget create(UI ui, Object[] args) {
 	    Coord sz = UI.scale((Coord)args[0]);
@@ -237,7 +237,10 @@ public class Window extends Widget implements DTarget {
     }
 
     public void uimsg(String msg, Object... args) {
-	if(msg == "dt") {
+	if(msg == "pack") {
+		pack();
+		isPacked = true;
+	}else if(msg == "dt") {
 	    dt = (Integer)args[0] != 0;
 	} else if(msg == "cap") {
 	    String cap = (String)args[0];

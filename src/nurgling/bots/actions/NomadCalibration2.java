@@ -12,13 +12,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static nurgling.bots.actions.NomadCalibration.anchors;
+
 public class NomadCalibration2 implements Action {
     @Override
     public Results run ( NGameUI gui )
             throws InterruptedException {
-        Gob start_gob = Finder.findObjectInArea(new NAlias(new ArrayList<>(Arrays.asList("milestone-stone-m", "milestone-wood", "pow"))), 3000, area);
+        Gob start_gob = Finder.findObjectInArea(anchors, 3000, area);
         if (start_gob != null) {
-            Coord2d start_coord = Finder.findObjectInArea(new NAlias(new ArrayList<>(Arrays.asList("milestone-stone-m", "milestone-wood", "pow"))), 3000, area).rc;
+            Coord2d start_coord = Finder.findObjectInArea(anchors, 3000, area).rc;
             start.x = start_coord.x;
             start.y = start_coord.y;
             while (worked.get()) {

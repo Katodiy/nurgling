@@ -13,7 +13,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class CreateBranch implements Action {
-    public static ArrayList<String> lumber_tools = new ArrayList<String> ( Arrays.asList ( "stoneaxe" ) );
+    public static ArrayList<String> lumber_tools = new ArrayList<String> (
+            Arrays.asList ( "stoneaxe", "axe-m", "woodsmansaxe"  ) );
     @Override
     public Results run ( NGameUI gui )
             throws InterruptedException {
@@ -22,10 +23,11 @@ public class CreateBranch implements Action {
         }else{
             if(!Finder.findObjectsInArea(new NAlias("log"),area).isEmpty()){
                 new Equip(new NAlias(lumber_tools)).run(gui);
-                if ( new WorkWithLog ( 1, new NAlias ( "log" ), true, area ).run ( gui ).type !=
-                        Results.Types.SUCCESS ) {
-                    return new Results ( Results.Types.NO_ITEMS );
-                }
+                if(gui.getInventory ().getItem ( new NAlias ( "block" ) ) == null)
+                    if ( new WorkWithLog ( 1, new NAlias ( "log" ), true, area ).run ( gui ).type !=
+                            Results.Types.SUCCESS ) {
+                        return new Results ( Results.Types.NO_ITEMS );
+                    }
             }
         }
         WItem block = gui.getInventory ().getItem ( new NAlias ( "block" ) );

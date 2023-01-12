@@ -45,14 +45,16 @@ public class TransferCheeseAction implements Action {
                                 return new Results(Results.Types.FULL);
                             }
                         }
-                        spwnd.destroy();
-                        NUtils.waitEvent(() -> gui.getWindow("Rack") == null, 50);
+
                     }
+                    spwnd.destroy();
+                    NUtils.waitEvent(() -> gui.getWindow("Rack") == null, 50);
                 }
             }
         }
         new FillContainers(new NAlias("cheesetray"), AreasID.cheese_out, outContainers).run(gui);
         new FillContainers(new NAlias("cheesetray"), new NAlias ( "cheeserack" ), new ArrayList<>(), new TakeMaxFromContainers(new NAlias("cheesetray"),AreasID.cheese_in, new ArrayList<>()) ).run(gui);
+        new FillContainers(new NAlias("cheesetray"), AreasID.cheese_in, new ArrayList<>() ).run(gui);
         return new Results(Results.Types.SUCCESS);
     }
 

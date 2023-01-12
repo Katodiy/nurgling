@@ -86,6 +86,35 @@ public class NEquipory extends Equipory {
         }
     }
 
+    //public static class BeltChecker implements Runnable{
+        //
+                //    public BeltChecker(NWItem belt) {
+            //        this.belt = belt;
+            //    }
+        //
+                //    public static void toogle(){
+            //        binv.parent.show(!binv.parent.visible);
+            //        if(binv.parent.visible) {binv.parent.raise();}
+            //    }
+        //
+                //    NWItem belt;
+        //
+                //    public static NInventory binv = null;
+        //    @Override
+                //    public void run() {
+            //        belt.item.wdgmsg ( "iact", belt.sz, 0 );
+            //        try {
+                //            NUtils.waitEvent ( ()->NUtils.getGameUI().getWindow ( "elt" )!=null ,300 );
+                //        } catch (InterruptedException e) {
+                //            throw new RuntimeException(e);
+                //        }
+            //
+            //        binv = NUtils.getGameUI().getInventory ( "elt" );
+            //        if(binv!=null)
+            //            toogle();
+            //    }
+        //}
+    //
     public WItem getFreeSlot ( NAlias name ) {
         if ( quickslots[6] != null && NUtils.isIt ( quickslots[6].item, name ) ) {
             return quickslots[6];

@@ -3,10 +3,7 @@ package nurgling.bots.actions;
 import haven.Gob;
 
 import haven.WItem;
-import nurgling.NAlias;
-import nurgling.NGameUI;
-import nurgling.NHitBox;
-import nurgling.NUtils;
+import nurgling.*;
 import nurgling.bots.tools.AItem;
 import nurgling.bots.tools.Ingredient;
 import nurgling.tools.AreasID;
@@ -27,7 +24,7 @@ public class TransferHides implements Action {
         for(WItem item : items){
             AItem ingredient = Ingredient.get(item);
             NAlias name = new NAlias(NUtils.getInfo(item));
-            if(ingredient!=null) {
+            if((ingredient != null) && (NConfiguration.getInstance().ingrTh.get(name.keys.get(0))==null || ((NWItem) item).quality() > NConfiguration.getInstance().ingrTh.get(name.keys.get(0)))) {
                 new TransferItemsToBarter(ingredient.barter_out, name, true).run(gui);
                 new FillContainers(name, ingredient.area_out, new ArrayList<>()).run(gui);
             }

@@ -80,7 +80,7 @@ public class CheesedShedule extends Bot {
 
             LinkedList<CheeseBranch.Cheese> midnight_blue = new LinkedList<>();
             midnight_blue.add(new CheeseBranch.Cheese(CheeseBranch.Place.start, "Cow's Curd"));
-            midnight_blue.add(new CheeseBranch.Cheese(CheeseBranch.Place.cellar, "Cellar Chedar"));
+            midnight_blue.add(new CheeseBranch.Cheese(CheeseBranch.Place.cellar, "Cellar Cheddar"));
             midnight_blue.add(new CheeseBranch.Cheese(CheeseBranch.Place.inside, "Brodgar Blue Cheese"));
             midnight_blue.add(new CheeseBranch.Cheese(CheeseBranch.Place.mine, "Jorbonzola"));
             midnight_blue.add(new CheeseBranch.Cheese(CheeseBranch.Place.cellar, "Midnight Blue Cheese"));
@@ -88,15 +88,15 @@ public class CheesedShedule extends Bot {
 
             LinkedList<CheeseBranch.Cheese> cave_chedar = new LinkedList<>();
             cave_chedar.add(new CheeseBranch.Cheese(CheeseBranch.Place.start, "Cow's Curd"));
-            cave_chedar.add(new CheeseBranch.Cheese(CheeseBranch.Place.cellar, "Cellar Chedar"));
-            cave_chedar.add(new CheeseBranch.Cheese(CheeseBranch.Place.mine, "Cave Chedar"));
+            cave_chedar.add(new CheeseBranch.Cheese(CheeseBranch.Place.cellar, "Cellar Cheddar"));
+            cave_chedar.add(new CheeseBranch.Cheese(CheeseBranch.Place.mine, "Cave Cheddar"));
             branches.add(new CheeseBranch(cave_chedar));
 
             LinkedList<CheeseBranch.Cheese> sunlight = new LinkedList<>();
             sunlight.add(new CheeseBranch.Cheese(CheeseBranch.Place.start, "Cow's Curd"));
             sunlight.add(new CheeseBranch.Cheese(CheeseBranch.Place.mine, "Mothzarella"));
             sunlight.add(new CheeseBranch.Cheese(CheeseBranch.Place.cellar, "Harmesan Cheese"));
-            sunlight.add(new CheeseBranch.Cheese(CheeseBranch.Place.outside, "Sunlight"));
+            sunlight.add(new CheeseBranch.Cheese(CheeseBranch.Place.outside, "Sunlit Stilton"));
             branches.add(new CheeseBranch(sunlight));
 
             LinkedList<CheeseBranch.Cheese> halloumi = new LinkedList<>();

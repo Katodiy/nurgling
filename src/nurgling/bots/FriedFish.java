@@ -18,7 +18,7 @@ public class FriedFish extends Bot {
         win_title = "FriedFish";
         win_sz.y = 100;
         
-        runActions.add (new FriedFishAction(fish_area));
+        runActions.add (new FriedFishAction(fish_area, out_area));
     }
     
     
@@ -37,8 +37,19 @@ public class FriedFish extends Bot {
                 }
             }
         }, new Coord( 0, y ) );
-
-        while ( !_start.get () ) {
+        y+=30;
+        window.add ( new Button( window.buttons_size, "Results" ) {
+            @Override
+            public void click () {
+                gameUI.getMap ().isAreaSelectorEnable = true;
+                if ( !m_selection_start.get () ) {
+                    m_selection_start.set ( true );
+                    new Thread ( new AreaSelecter( gameUI, _out, m_selection_start, out_area),
+                            "Cont Area Selecter" ).start ();
+                }
+            }
+        }, new Coord( 0, y ) );
+        while ( !_start.get () ||  !_out.get ()  ) {
             Thread.sleep ( 100 );
         }
     }
@@ -46,12 +57,15 @@ public class FriedFish extends Bot {
     @Override
     public void endAction () {
         _start.set ( false );
+        _out.set ( false );
         m_selection_start.set ( false );
         super.endAction ();
     }
 
     private AtomicBoolean _start = new AtomicBoolean ( false );
+    private AtomicBoolean _out = new AtomicBoolean ( false );
     private NArea fish_area = new NArea ();
+    private NArea out_area = new NArea ();
     private AtomicBoolean m_selection_start = new AtomicBoolean ( false );
 
 }
