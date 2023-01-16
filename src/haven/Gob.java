@@ -118,8 +118,6 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 		return;
 	    }
 	    remove0();
-	    if(gob.ols.remove(this))
-			gob.checkol(this, false);
 	}
 
 	public void remove() {
@@ -352,13 +350,6 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 	this.id = id;
 	if(id < 0)
 	    virtual = true;
-	else
-		updwait(this::installTags, waiting -> {});
-
-    }
-
-	public void installTags(){
-		installTags(getres());
 	}
 
     public Gob(Glob glob, Coord2d c) {
@@ -441,7 +432,6 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 	ol.init();
 	ol.add0();
 	if(ols.add(ol)) {
-		checkol(ol, true);
 		updateOverlays(this);
 	}
     }
@@ -532,7 +522,6 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 
     private void setattr(Class<? extends GAttrib> ac, GAttrib a) {
 	GAttrib prev = attr.remove(ac);
-	checkattr(this, ac, a, prev);
 	if(prev != null) {
 	    if((prev instanceof RenderTree.Node) && (prev.slots != null))
 		RUtils.multirem(new ArrayList<>(prev.slots));

@@ -1601,7 +1601,7 @@ public class NUtils {
         } else if (Finder.findObjectsInArea(new NAlias("smelter"), area).size() > 0 ||
                 (target != null && isIt(target, new NAlias("smelter")))) {
             result.fullMark = 8192;
-            result.cap = "Ore Smelter";
+            result.cap = "Smelter";
             result.name = new NAlias("smelter");
         } else if (Finder.findObjectsInArea(new NAlias("fineryforge"), area).size() > 0 ||
                 (target != null && isIt(target, new NAlias("fineryforge")))) {

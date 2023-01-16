@@ -160,7 +160,7 @@ public class NMapView extends MapView {
                                 ttip.put("bounds", boon_str.toString());
                             }
                             ttip.put("status", gob.status.toString());
-                            if (gob.isTag(NGob.Tags.marked)) {
+                            if (NGob.getModelAttribute(gob)!=-1) {
                                 ttip.put("marker", String.valueOf(NGob.getModelAttribute(gob)));
                             }
 

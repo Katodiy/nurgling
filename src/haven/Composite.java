@@ -92,7 +92,6 @@ public class Composite extends Drawable implements EquipTarget {
 	if(nmod != null) {
 	    try {
 		comp.chmod(nmod);
-		NGob.updateMods(this.gob, comp.mod);
 		nmod = null;
 	    } catch(Loading l) {
 	    }
@@ -109,17 +108,14 @@ public class Composite extends Drawable implements EquipTarget {
     public void ctick(double dt) {
 	if(nposes != null) {
 	    try {
-		gob.checkPoses(nposes);
 		Composited.Poses np = comp.new Poses(loadposes(nposes, comp.skel, nposesold));
 		np.set(nposesold?0:ipollen);
 		oldposes = nposes;
-		NGob.updatePoses(gob,nposes);
 		nposes = null;
 		updequ();
 	    } catch(Loading e) {}
 	} else if(tposes != null) {
 	    try {
-		gob.checkPoses(tposes);
 		final Composited.Poses cp = comp.poses;
 		Composited.Poses np = comp.new Poses(loadposes(tposes, comp.skel, tpmode)) {
 			protected void done() {
@@ -129,7 +125,6 @@ public class Composite extends Drawable implements EquipTarget {
 		    };
 		np.limit = tptime;
 		np.set(ipollen);
-		NGob.updatePoses(gob, tposes);
 		tposes = null;
 		retainequ = true;
 	    } catch(Loading e) {}
@@ -137,14 +132,6 @@ public class Composite extends Drawable implements EquipTarget {
 	    updequ();
 	}
 	comp.tick(dt);
-	if(gob.isTag(NGob.Tags.kritter))
-	{
-		if(gob.oldModSize!=comp.mod.size())
-		{
-			gob.oldModSize=comp.mod.size();
-			gob.checkMode();
-		}
-	}
     }
 
     public void gtick(Render g) {
@@ -168,7 +155,6 @@ public class Composite extends Drawable implements EquipTarget {
 	    tposes = null;
 	nposes = poses;
 	nposesold = !interp;
-	gob.checkPoses(nposes);
     }
     
     @Deprecated
@@ -207,7 +193,6 @@ public class Composite extends Drawable implements EquipTarget {
 	    Composite cmp = (dr instanceof Composite)?(Composite)dr:null;
 	    if((cmp == null) || !cmp.base.equals(base)) {
 		cmp = new Composite(g, base);
-		g.checkPoses(cmp.nposes);
 		g.setattr(cmp);
 	    }
 	}
@@ -259,7 +244,6 @@ public class Composite extends Drawable implements EquipTarget {
 		cmp.pseq = pseq;
 		if(poses != null) {
 			cmp.chposes(poses, interp);
-			g.checkPoses(poses);
 		}
 		if(tposes != null)
 		    cmp.tposes(tposes, WrapMode.ONCE, ttime);
@@ -270,7 +254,7 @@ public class Composite extends Drawable implements EquipTarget {
     @OCache.DeltaType(OCache.OD_CMPMOD)
     public static class $cmpmod implements OCache.Delta {
 	public void apply(Gob g, Message msg) {
-	    List<MD> mod = new LinkedList<MD>();
+	    List<Composited.MD> mod = new LinkedList<Composited.MD>();
 	    int mseq = 0;
 	    while(true) {
 		int modid = msg.uint16();
@@ -289,7 +273,7 @@ public class Composite extends Drawable implements EquipTarget {
 		    }
 		    tex.add(new ResData(OCache.Delta.getres(g, resid), sdt));
 		}
-		MD md = new MD(modr, tex);
+		Composited.MD md = new Composited.MD(modr, tex);
 		md.id = mseq++;
 		mod.add(md);
 	    }
@@ -303,7 +287,7 @@ public class Composite extends Drawable implements EquipTarget {
     @OCache.DeltaType(OCache.OD_CMPEQU)
     public static class $cmpequ implements OCache.Delta {
 	public void apply(Gob g, Message msg) {
-	    List<ED> equ = new LinkedList<ED>();
+	    List<Composited.ED> equ = new LinkedList<Composited.ED>();
 	    int eseq = 0;
 	    while(true) {
 		int h = msg.uint8();
@@ -327,7 +311,7 @@ public class Composite extends Drawable implements EquipTarget {
 		} else {
 		    off = Coord3f.o;
 		}
-		ED ed = new ED(et, at, new ResData(res, sdt), off);
+		Composited.ED ed = new Composited.ED(et, at, new ResData(res, sdt), off);
 		ed.id = eseq++;
 		equ.add(ed);
 	    }

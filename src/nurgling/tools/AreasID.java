@@ -42,7 +42,7 @@ public enum AreasID {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(
-                    new InputStreamReader( new FileInputStream( "./calibr.json" ), "cp1251" ) );
+                    new InputStreamReader( new FileInputStream("calibr.json"), "cp1251" ) );
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = ( JSONObject ) parser.parse ( reader );
             JSONArray widgetsPos = ( JSONArray ) jsonObject.get ( "data" );
@@ -76,7 +76,7 @@ public enum AreasID {
             is.add(is_obj);
         }
         obj.put("data",is);
-        try ( FileWriter file = new FileWriter ( "./calibr.json" ) ) {
+        try ( FileWriter file = new FileWriter ("calibr.json") ) {
             file.write ( obj.toJSONString () );
         }
         catch ( IOException e ) {
