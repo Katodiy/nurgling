@@ -227,7 +227,7 @@ public abstract class Light implements RenderTree.Node {
     }
     
     @Resource.LayerName("light")
-    public static class Res extends Resource.Layer {
+    public static class Res extends Resource.Layer implements Resource.IDLayer<Integer> {
 	public final int id;
 	public final Color amb, dif, spc;
 	public boolean hatt, hexp;
@@ -318,7 +318,7 @@ public abstract class Light implements RenderTree.Node {
 	    }
 	}
 	
-	public void init() {
-	}
+	public void init() {}
+	public Integer layerid() {return(id);}
     }
 }
