@@ -1,6 +1,8 @@
 package nurgling.bots.settings;
 
+import haven.CheckBox;
 import haven.Label;
+import nurgling.NConfiguration;
 import nurgling.tools.AreasID;
 
 public class Smelter extends Settings {
@@ -20,6 +22,16 @@ public class Smelter extends Settings {
         prev = add(new AreaIconSelecter(AreasID.bar),prev.pos("bl").add(0,5));
         prev = add(new Label("Barrel for Quicksilver:"),prev.pos("bl").add(0,5));
         prev = add(new AreaIconSelecter(AreasID.barrels),prev.pos("bl").add(0,5));
+        prev = add(new CheckBox("Miner credo:") {
+            {
+                a = NConfiguration.getInstance().isMinerCredo;
+            }
+
+            public void set(boolean val) {
+                NConfiguration.getInstance().isMinerCredo = val;
+                a = val;
+            }
+        }, prev.pos("bl").adds(0, 5));
         pack();
     }
 }

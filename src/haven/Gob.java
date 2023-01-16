@@ -440,8 +440,10 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 	}
 	ol.init();
 	ol.add0();
-	if(ols.add(ol))
-		checkol( ol, true);
+	if(ols.add(ol)) {
+		checkol(ol, true);
+		updateOverlays(this);
+	}
     }
     public void addol(Overlay ol) {
 	addol(ol, true);
@@ -682,7 +684,11 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 	synchronized(this) {
 	    updateseq++;
 	    if(updwait != null)
-		updwait.wnotify();
+		{
+			updwait.wnotify();
+		}
+		NGob.updateRes(this);
+//		this.slots
 	}
     }
 

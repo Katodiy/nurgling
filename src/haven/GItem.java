@@ -39,7 +39,7 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
     public MessageBuf sdt;
     public int meter = 0;
     public int num = -1;
-    public GSprite spr;
+    public GSprite spr = null;
     public ItemInfo.Raw rawinfo;
     protected List<ItemInfo> info = Collections.emptyList();
 
@@ -180,8 +180,8 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
     }
 
     public GSprite sprite() {
-//		if(spr == null)
-//			throw(new Loading("Still waiting for sprite to be constructed"));
+	if(spr == null)
+		throw(new Loading("Still waiting for sprite to be constructed"));
 	return(spr);
     }
 

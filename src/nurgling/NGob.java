@@ -67,7 +67,7 @@ public class NGob {
         pig,
         goat,
         sheep,
-        stoat,
+        winter_stoat,
         wool,
         transport,
         vehicle,
@@ -337,7 +337,7 @@ public class NGob {
                 else if (NUtils.checkName(name, "mammoth"))
                     addTag(Tags.mammoth);
                 else if (NUtils.checkName(name, "stoat"))
-                    addTag(Tags.stoat);
+                    addTag(Tags.winter_stoat);
                 if (NUtils.checkName(name, new NAlias(new ArrayList<>(Arrays.asList("pig", "horse", "goat", "cattle", "sheep")), new ArrayList<>(Collections.singletonList("wild"))))) {
                     if (NUtils.checkName(name, "horse")) {
                         addTag(Tags.horse);
@@ -705,8 +705,8 @@ public class NGob {
                         } else if (isTag(Tags.wolf)) {
                             Audio.play(Resource.local().loadwait("alarm/wolf"));
                         } else if (isTag(Tags.mammoth)) {
-                            Audio.play(Resource.local().loadwait("alarm/mammoth"));
-                        } else if (isTag(Tags.stoat)) {
+      //                      Audio.play(Resource.local().loadwait("alarm/mammoth"));
+                        } else if (isTag(Tags.winter_stoat)) {
                             for (GAttrib a : gob.attr.values())
                                 if (a instanceof Composite) {
                                     Composited comp = ((Composite) a).comp;
@@ -786,7 +786,7 @@ public class NGob {
                                         if (!unk.tags.contains(Tags.pow) && !unk.tags.contains(Tags.knocked)) {
                                             if (NConfiguration.getInstance().players.get("white").arrow) {
                                                 gob.addol(new Gob.Overlay(gob, new NDirArrow(gob, Color.WHITE, 25, unk, null, NConfiguration.getInstance().players.get("white")), i));
-                                                Audio.play(Resource.local().loadwait("alarm/white"));
+                                                //Audio.play(Resource.local().loadwait("alarm/white"));
                                             }
                                             if (NConfiguration.getInstance().players.get("white").ring) {
                                                 unk.findoraddol(new NTargetRing(unk, Color.WHITE, 10, 0.9f));
@@ -1228,5 +1228,54 @@ public class NGob {
                     return true;
         }
         return false;
+    }
+    public static void updateMods(Gob gob, Collection<Composited.Model> mods){
+        if(gob.isReady )
+        {
+
+        }
+    }
+
+    public static void updateLays(Gob gob){
+        if(gob.isReady )
+        {
+            Composite comp = gob.getattr(Composite.class);
+            if(comp!=null){
+                for (Composited.Model mod: comp.comp.mod){
+                    if(mod!=null) {
+                        for (Composited.Model.Layer lay : mod.lay)
+                            if (NUtils.checkName(lay.mat.toString(), new NAlias(new ArrayList<>(Arrays.asList("winter")))))
+                                gob.addTag(Tags.winter_stoat);
+                    }
+                }
+            }
+        }
+    }
+    public static void updatePoses(Gob gob, Collection<ResData> tposes){
+        if(gob.isReady )
+        {
+
+        }
+    }
+
+    public static void updateOverlays(Gob gob){
+        if(gob.isReady )
+        {
+
+        }
+    }
+
+    protected boolean isReady = false;
+    public static void updateRes(Gob gob){
+        if (gob.getres() != null ) {
+            gob.isReady = true;
+            updateOverlays(gob);
+            Composite comp = gob.getattr(Composite.class);
+            if(comp!=null) {
+                updatePoses(gob, comp.oldposes);
+                updateMods(gob,comp.comp.mod);
+                updateLays(gob);
+            }
+        }
     }
 }

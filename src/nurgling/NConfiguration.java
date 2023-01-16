@@ -21,6 +21,7 @@ public class NConfiguration {
     public static final Text.Foundry fnd = new Text.Foundry(Text.sans, 14);
     public boolean isVerified = false;
     public boolean isSubscribed = false;
+    public boolean isMinerCredo = false;
     public HashMap<String, Color> colors = new HashMap<>();
     private static final NConfiguration instance = new NConfiguration();
     public boolean disabledCheck = false;
@@ -554,6 +555,7 @@ public class NConfiguration {
             }
         }
         obj.put("ingredients" ,ingredients);
+        obj.put("isMinerCredo" ,isMinerCredo);
 
         JSONArray users = new JSONArray ();
         for ( NLoginData user : logins ) {
@@ -906,6 +908,9 @@ public class NConfiguration {
             if(jsonObject.get("red_players")!=null){
                 JSONObject red = (JSONObject)jsonObject.get("red_players");
                 players.put("red", new ArrowProp((boolean) red.get("arrow"),(boolean) red.get("ring"),(boolean) red.get("mark"),(boolean) red.get("mark_target")));
+            }
+            if(jsonObject.get("isMinerCredo")!=null){
+                isMinerCredo = (boolean) jsonObject.get("isMinerCredo");
             }
             if(jsonObject.get("white_players")!=null){
                 JSONObject white = (JSONObject)jsonObject.get("white_players");

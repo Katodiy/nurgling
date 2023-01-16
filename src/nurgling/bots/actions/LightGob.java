@@ -36,7 +36,6 @@ public class LightGob implements Action {
     ) {
         this.name = name;
         this.flame_flag = flame_flag;
-        findSingle = true;
     }
     
     @Override
@@ -111,6 +110,6 @@ public class LightGob implements Action {
     NAlias name;
     AreasID id;
     int flame_flag;
-    boolean findSingle;
+    boolean findSingle = false;
     Gob tgob = null;
 }

@@ -3,6 +3,7 @@ package nurgling.bots.actions;
 import haven.Gob;
 import nurgling.NAlias;
 import nurgling.NGameUI;
+import nurgling.NHitBox;
 import nurgling.NUtils;
 import nurgling.tools.AreasID;
 import nurgling.tools.Finder;
@@ -29,11 +30,11 @@ public class SmelterAction implements Action {
                         if(NUtils.isIt(gob,"primsmelter")){
                             isPrim = true;
                         }
-                        if ( ( gob.getModelAttribute() & 2 ) != 0 ) {
-                            return true;
+                        if ( ( gob.getModelAttribute() & 2 ) == 0 ) {
+                            return false;
                         }
                 }
-                return false;
+                return true;
             }, 50 ).run ( gui );
 
             /// We pick up the ingots and transfer them to the chests
@@ -51,15 +52,15 @@ public class SmelterAction implements Action {
 
             /// We throw out slag
             if ( Finder.findNearestMark ( AreasID.slag ) == null ) {
-                new ClearContainers ( smelter_name, isPrim?"Furnace":"Ore Smelter", new NAlias ( "slag" ) ).run ( gui );
+                new ClearContainers ( smelter_name, isPrim?"Furnace":"Smelter", new NAlias ( "slag" ) ).run ( gui );
             }
             else {
                 new TransferToPileFromContainer ( smelter_name, new NAlias ( "stockpile-stone" ), new NAlias ( "slag" ),
-                        AreasID.slag, isPrim?"Furnace":"Ore Smelter" ).run ( gui );
+                        AreasID.slag, isPrim?"Furnace":"Smelter" ).run ( gui );
             }
             //Filling Smelters with Stockpiles
-            new TransferFromContainerToContainer ( new NAlias ( "stockpile-ore" ), smelter_name, ores, AreasID.ore,
-                    "Stockpile", isPrim?"Furnace":"Ore Smelter", 1024 ).run ( gui );
+            new FillContainers(ores, new NAlias("smelter"), new ArrayList<>(), new TakeMaxFromContainers(ores,AreasID.ore,new ArrayList<>())).run(gui);
+            new TransferToPile(AreasID.ore, NHitBox.getByName("stockpile"), new NAlias("stockpile"), ores).run(gui);
 
             //Fill the smelter with fuel from the piles
             new FillFuelSmelter ( smelter_name ).run ( gui );

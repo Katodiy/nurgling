@@ -84,7 +84,7 @@ public class FillContainers implements Action
                 if (current != 0 && current == gui.getInventory().getItems(items).size()) {
                     return new Results(Results.Types.NO_ITEMS);
                 }
-                if (takeMaxFromContainers != null) {
+                if (takeMaxFromContainers != null && !OutContainer.allFull(outContainers)) {
                     takeMaxFromContainers.run(gui);
                     if (gui.getInventory().getItems(items).size() == 0) {
                         return new Results(Results.Types.NO_ITEMS);

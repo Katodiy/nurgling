@@ -75,10 +75,10 @@ public class TransferToPile implements Action {
                     } catch (NoFreeSpace noFreeSpace) {
                         return new Results(Results.Types.NO_FREE_SPACE);
                     }
-                }
-
-                if (new OpenTargetContainer(target, "Stockpile").run(gui).type != Results.Types.SUCCESS) {
-                    return new Results(Results.Types.OPEN_FAIL);
+                }else {
+                    if (new OpenTargetContainer(target, "Stockpile").run(gui).type != Results.Types.SUCCESS) {
+                        return new Results(Results.Types.OPEN_FAIL);
+                    }
                 }
                 NUtils.transferAlltoStockPile(items, q);
                 if (!gui.getInventory().getItems(items, q).isEmpty()) {

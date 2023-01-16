@@ -92,6 +92,7 @@ public class Composite extends Drawable implements EquipTarget {
 	if(nmod != null) {
 	    try {
 		comp.chmod(nmod);
+		NGob.updateMods(this.gob, comp.mod);
 		nmod = null;
 	    } catch(Loading l) {
 	    }
@@ -112,6 +113,7 @@ public class Composite extends Drawable implements EquipTarget {
 		Composited.Poses np = comp.new Poses(loadposes(nposes, comp.skel, nposesold));
 		np.set(nposesold?0:ipollen);
 		oldposes = nposes;
+		NGob.updatePoses(gob,nposes);
 		nposes = null;
 		updequ();
 	    } catch(Loading e) {}
@@ -127,6 +129,7 @@ public class Composite extends Drawable implements EquipTarget {
 		    };
 		np.limit = tptime;
 		np.set(ipollen);
+		NGob.updatePoses(gob, tposes);
 		tposes = null;
 		retainequ = true;
 	    } catch(Loading e) {}

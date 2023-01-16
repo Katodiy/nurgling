@@ -31,6 +31,7 @@ import java.util.function.*;
 import haven.render.*;
 import haven.Skeleton.Pose;
 import haven.Skeleton.PoseMod;
+import nurgling.NGob;
 
 public class Composited implements RenderTree.Node, EquipTarget {
     public final Skeleton skel;

@@ -9,6 +9,7 @@ import nurgling.PathFinder;
 import nurgling.tools.AreasID;
 import nurgling.tools.Finder;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -29,27 +30,27 @@ public class FillFuelFromPiles implements Action {
         for ( Gob gob : out ) {
             if(marker==-1 || (gob.getModelAttribute()&marker) ==0) {
                 int need = size;
-                do {
+                if(cap!=null && (cap.contains("Smelter")) ){
+                    if((gob.getModelAttribute()&2)==0) {
+                        new PathFinder(gui, gob).run();
+                        new OpenTargetContainer(gob, cap).run(gui);
+                        need -= (30 * NUtils.getFuelLvl(cap, new Color(255, 128, 0)));
+                    }else {
+                        need = 0;
+                    }
+                }
+                if(need>0) {
+                    need = need - gui.getInventory().getItems(items).size();
                     if (inPile == null) {
                         return new Results(Results.Types.NO_FUEL);
                     }
-                    new PathFinder(gui, inPile).run();
-                    new OpenTargetContainer(inPile, "Stockpile").run(gui);
-
-                    while (need > 0 && Finder.findObject(inPile.id) != null) {
-                        NUtils.takeItemFromPile();
-                        need = size - gui.getInventory().getItems(items).size();
+                    new TakeFromPile(iname,need,items,input).run(gui);
+                    new PathFinder(gui, gob).run();
+                    while (!gui.getInventory().getItems(items).isEmpty()) {
+                        new TakeToHand(items).run(gui);
+                        NUtils.activateItem(gob);
+                        NUtils.waitEvent(() -> gui.hand.isEmpty(), 200);
                     }
-                    if (Finder.findObject(inPile.id) == null) {
-                        inPile = Finder.findObjectInArea(iname, 1000, Finder.findNearestMark(input));
-                    }
-                }
-                while (need > 0);
-                new PathFinder(gui, gob).run();
-                while (!gui.getInventory().getItems(items).isEmpty()) {
-                    new TakeToHand(items).run(gui);
-                    NUtils.activateItem(gob);
-                    NUtils.waitEvent(()->gui.hand.isEmpty(),200);
                 }
             }
         }
@@ -69,6 +70,23 @@ public class FillFuelFromPiles implements Action {
         this.items = items;
         this.output = output;
         this.input = input;
+    }
+
+    public FillFuelFromPiles(
+            int size,
+            NAlias iname,
+            NAlias oname,
+            NAlias items,
+            AreasID input,
+            String cap
+    ) {
+        this.size = size;
+        this.iname = iname;
+        this.oname = oname;
+        this.items = items;
+        this.output = null;
+        this.input = input;
+        this.cap = cap;
     }
 
     public FillFuelFromPiles(
@@ -109,7 +127,7 @@ public class FillFuelFromPiles implements Action {
     NAlias items;
     AreasID output;
     AreasID input;
-    String cap;
+    String cap = null;
     long marker = -1;
 
     ArrayList<Gob> out = new ArrayList<> ();

@@ -96,9 +96,7 @@ public class PileMaker {
             Thread.sleep ( 300 );
         }
         gameUI.map.wdgmsg ( "place", target_coord.floor ( posres ), 0, 1, 0 );
-        while ( !Finder.isGobInArea ( NHitBox.getDummy(target_coord) ) ) {
-            Thread.sleep ( 100 );
-        }
+        NUtils.waitEvent(()->((NGameUI)gameUI).getWindow("Stockpile")!=null,50);
 
         return Finder.findObject ( pile_name );
     }

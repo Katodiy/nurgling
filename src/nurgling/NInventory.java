@@ -264,14 +264,11 @@ public class NInventory extends Inventory {
 
     public ArrayList<WItem> getItems(
     )
-            throws InterruptedException {
+    {
         ArrayList<WItem> result = new ArrayList<>();
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
-                while (((WItem) widget).item.spr == null) {
-                    Thread.sleep(10);
-                }
                 result.add((WItem) widget);
             }
         }

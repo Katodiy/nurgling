@@ -100,6 +100,7 @@ public class TransferTrayAction implements Action {
             for (Widget sp1 = spwnd.lchild; sp1 != null; sp1 = sp1.prev) {
                 if (sp1 instanceof Shopbox) {
                     Shopbox sb1 = (Shopbox) sp1;
+                    NUtils.waitEvent(()->sb1.price != null && sb1.spr != null, 10);
                     if (sb1.price != null && sb1.spr != null && NUtils.isIt(sb1.res, new NAlias("cheesetray"))) {
                         while (sb1.spr != null && NUtils.getContentName(sb1.info()) != null && status.name.contains(NUtils.getContentName(sb1.info())) && transfered < num) {
                             int count = gui.getInventory().getItems(new NAlias("cheesetray")).size();

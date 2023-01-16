@@ -624,6 +624,21 @@ public class NUtils {
                     .contains("snow") ,500);
     }
 
+    public static double getFuelLvl(String cap,Color c) {
+        Window inv;
+        if ((inv = getGameUI().getWindow(cap)) != null) {
+            for (Widget w = inv.lchild; w != null; w = w.prev) {
+                if (w instanceof VMeter) {
+                    for (LayerMeter.Meter meter : ((VMeter) w).meters) {
+                        if (meter.c.getRed() == c.getRed() && meter.c.getBlue() == c.getBlue() && meter.c.getGreen() == c.getGreen())
+                            return meter.a;
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+
 
     static class AutoBot implements Runnable{
 
@@ -1585,7 +1600,7 @@ public class NUtils {
             result.name = new NAlias("primsmelter");
         } else if (Finder.findObjectsInArea(new NAlias("smelter"), area).size() > 0 ||
                 (target != null && isIt(target, new NAlias("smelter")))) {
-            result.fullMark = 1024;
+            result.fullMark = 8192;
             result.cap = "Ore Smelter";
             result.name = new NAlias("smelter");
         } else if (Finder.findObjectsInArea(new NAlias("fineryforge"), area).size() > 0 ||

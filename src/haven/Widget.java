@@ -28,6 +28,7 @@ package haven;
 
 import nurgling.NAlias;
 import nurgling.NConfiguration;
+import nurgling.NInventory;
 import nurgling.NUtils;
 import rx.functions.Action1;
 import rx.functions.Action2;
@@ -1550,6 +1551,13 @@ public class Widget {
 
 	public boolean isPacked = false;
 	public boolean packed() {
+		if(this instanceof NInventory){
+			for(WItem item :((NInventory)this).getItems()){
+				if(item.item.spr==null){
+					return false;
+				}
+			}
+		}
 		return isPacked;
 	}
 }
