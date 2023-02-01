@@ -121,6 +121,8 @@ public class NHitBox extends NArea {
         hitboxes.put("gfx/terobjs/htable", new NHitBox(new Coord2d(-5.5, -8.25), new Coord2d(5.5, 8.25)));
         hitboxes.put("gfx/kritter/cattle/calf", new NHitBox(new Coord2d(-9.625, -5.5), new Coord2d(9.625, 5.5)));
         hitboxes.put("gfx/kritter/horse/foal", new NHitBox(new Coord2d(-8.25, -5.5), new Coord2d(8.25, 5.5)));
+        hitboxes.put("gfx/kritter/horse/stallion", new NHitBox(new Coord2d(-11, -5.5), new Coord2d(11, 5.5)));
+        hitboxes.put("gfx/kritter/horse/mare", new NHitBox(new Coord2d(-11, -5.5), new Coord2d(11, 5.5)));
         hitboxes.put("gfx/kritter/pig/piglet", new NHitBox(new Coord2d(-8.25, -5.5), new Coord2d(8.25, 5.5)));
         hitboxes.put("gfx/kritter/pig/sow", new NHitBox(new Coord2d(-8.25, -5.5), new Coord2d(8.25, 5.5)));
         hitboxes.put("gfx/kritter/pig/hog", new NHitBox(new Coord2d(-8.25, -5.5), new Coord2d(8.25, 5.5)));
@@ -186,8 +188,8 @@ public class NHitBox extends NArea {
         hitboxes.put("gfx/kritter/wolf", new NHitBox(new Coord2d ( -11, -5.5 ), new Coord2d ( 11, 5.5 ) ));
         hitboxes.put("gfx/terobjs/barterstand", new NHitBox(new Coord2d ( -8.25, -11 ), new Coord2d ( 8.25, 11 ) ));
         hitboxes.put("gfx/kritter/moose", new NHitBox( new Coord2d ( -13.75, -8.25 ), new Coord2d ( 13.75, 8.25 ) ));
-        hitboxes.put("gfx/kritter/walrus", new NHitBox( new Coord2d ( -13.75, -8.25 ), new Coord2d ( 13.75, 8.25 ) ));
-        hitboxes.put("gfx/kritter/bear", new NHitBox( new Coord2d ( -13.75, -8.25 ), new Coord2d ( 13.75, 8.25 ) ));
+        hitboxes.put("gfx/kritter/walrus/walrus", new NHitBox( new Coord2d ( -13.75, -8.25 ), new Coord2d ( 13.75, 8.25 ) ));
+        hitboxes.put("gfx/kritter/bear/bear", new NHitBox( new Coord2d ( -13.75, -8.25 ), new Coord2d ( 13.75, 8.25 ) ));
         hitboxes.put("gfx/kritter/cattle/cattle", new NHitBox( new Coord2d ( -13.75, -8.25 ), new Coord2d ( 13.75, 8.25 ) ));
         hitboxes.put("gfx/kritter/caveangler", new NHitBox( new Coord2d ( -13.75, -8.25 ), new Coord2d ( 13.75, 8.25 ) ));
         hitboxes.put("gfx/kritter/beaverking", new NHitBox( new Coord2d ( -13.75, -8.25 ), new Coord2d ( 13.75, 8.25 ) ));

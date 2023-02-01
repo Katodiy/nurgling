@@ -801,12 +801,6 @@ public class MCache implements MapSource {
 	}
     }
 
-	public boolean isLoading(){
-		synchronized (grids) {
-				return (cached == null);
-		}
-	}
-
     public Grid getgridt(Coord tc) {
 	return(getgrid(tc.div(cmaps)));
     }

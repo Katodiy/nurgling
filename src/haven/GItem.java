@@ -201,4 +201,13 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 	    meter = (int)((Number)args[0]).doubleValue();
 	}
     }
+
+	public <C extends ItemInfo> C getinfo(Class<C> c) {
+		for(ItemInfo inf : info){
+			if(inf.getClass() == c)
+				return (C)inf;
+		}
+		return null;
+	}
+
 }

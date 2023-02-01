@@ -639,6 +639,10 @@ public class NUtils {
         return 0;
     }
 
+    public static boolean isLifted(Gob gob) {
+        return (gob.getattr(Following.class)!=null && gob.getattr(Following.class).tgt==gameUI.map.player().id);
+    }
+
 
     static class AutoBot implements Runnable{
 
@@ -660,6 +664,9 @@ public class NUtils {
                     break;
                 case "Truffle":
                     new Thread(new Truffle(gameUI)).start();
+                    break;
+                case "GobFinder":
+                    new Thread(new NomadFinderBot(gameUI)).start();
                     break;
                 case "Candleberry":
                     new Thread(new Candleberry(gameUI)).start();
@@ -1162,7 +1169,7 @@ public class NUtils {
 
     public static boolean alarmOrcalot() {
         return !Finder.findObjectsInArea(
-                new NAlias(new ArrayList<String>(Arrays.asList("/orca", "/spermwhale"))),
+                new NAlias(new ArrayList<>(Arrays.asList("/orca", "/spermwhale", "/greyseal")),new ArrayList<>(Arrays.asList("beef", "skeleton"))),
                 new NArea(gameUI.map.player().rc, 3999)).isEmpty();
     }
 

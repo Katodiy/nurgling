@@ -11,7 +11,7 @@ import java.awt.*;
 public class NQuesterRing extends NTargetRing implements PView.Render2D {
 	Tex img;
 
-	NQuestInfo.Quester quester;
+	final NQuestInfo.Quester quester;
 	public NQuesterRing(Owner owner, Color color, float range, float alpha, NQuestInfo.Quester quester) {
 		super(owner, color, range, alpha);
 		this.img = RichText.renderstroked(quester.name,Color.white).tex();
@@ -21,8 +21,8 @@ public class NQuesterRing extends NTargetRing implements PView.Render2D {
 
 	@Override
 	public void removed(RenderTree.Slot slot) {
-		super.removed(slot);
 		quester.isFound = false;
+		super.removed(slot);
 	}
 
 	@Override

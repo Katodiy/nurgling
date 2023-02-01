@@ -49,7 +49,7 @@ public class ClickData {
     }
 
     public Object[] clickargs() {
-	return(ci.clickargs(this));
+		return (ci != null ? ci.clickargs(this) : new Object[0]);
     }
 
     public String toString() {

@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class NomadCalibration implements Action {
-    public static NAlias anchors = new NAlias(new ArrayList<>(Arrays.asList("milestone-stone-m", "milestone-wood", "pow", "knarrdock")));
+    public static NAlias anchors = new NAlias(new ArrayList<>(Arrays.asList("milestone-stone-m", "milestone-wood", "pow")));
     @Override
     public Results run ( NGameUI gui )
             throws InterruptedException {

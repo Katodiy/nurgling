@@ -347,6 +347,7 @@ public class NConfiguration {
                 KeyBinding.get ("cm12",KeyMatch.forcode(KeyEvent.VK_EQUALS,KeyMatch.C))
         };
 
+        colors.put("no_color",new Color(0,0,0,0));
         colors.put("free",Color.green);
         colors.put("ready",Color.red);
         colors.put("inwork",new Color(0,0,0,0));
@@ -418,46 +419,11 @@ public class NConfiguration {
     }
 
     public void install() {
-        if (NUtils.getGameUI() != null && NUtils.getGameUI().map != null && NUtils.getGameUI().map.player() != null) {
-            synchronized (NUtils.getGameUI().getMap()) {
-                synchronized (NUtils.getGameUI().ui.sess.glob.oc) {
-                    for (Gob gob : NUtils.getGameUI().ui.sess.glob.oc) {
-                        ArrayList<Gob.Overlay> forRemove = new ArrayList<>();
-                        for(Gob.Overlay ol: gob.ols){
-                            if(ol.spr instanceof NSprite){
-                                if(!(ol.spr instanceof NCropMarker && showCropStage))
-                                    forRemove.add(ol);
-                            }
-                        }
-                        synchronized (gob.ols) {
-                            for (Gob.Overlay ol : forRemove) {
-                                ol.remove();
-                            }
-                        }
-                        gob.status = NGob.Status.ready_for_update;
-                    }
-                }
+        synchronized (NUtils.getGameUI().ui.sess.glob.oc) {
+            for (Gob gob : NUtils.getGameUI().ui.sess.glob.oc) {
+                gob.status = NGob.Status.ready_for_update;
             }
         }
-        /// TODO
-//        Light.isEnable = NConfiguration.getInstance().nightVision;
-//        if( NUtils.getGameUI()!=null && NUtils.getGameUI().map!=null && NUtils.getGameUI().map.player()!=null) {
-//            synchronized (NUtils.getGameUI().getMap()) {
-//                synchronized (NUtils.getGameUI().ui.sess.glob.oc) {
-//                    for (Gob gob : NUtils.getGameUI().ui.sess.glob.oc) {
-//                        if (gob instanceof NGob) {
-//                            NGob unit = (NGob) gob;
-//                            unit.deleteRings();
-//                            unit.deleteCropStage();
-//                            unit.deleteRingsMarks();
-//                            unit.setAnimalRad();
-//                            unit.setRing();
-//                            unit.setCropStage();
-//                        }
-//                    }
-//                }
-//            }
-//        }
     }
 
     public void write () {

@@ -312,6 +312,8 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
                     "bots/icons/transfersortbars" ) );
             layouts.get ( 5000 ).add ( new NButton ( "DigSnow", new SnowCleaner ( gui ),
                     "bots/icons/clearsnow"  ) );
+            layouts.get ( 5000 ).add ( new NButton ( "Orca", new NomadFinderBot ( gui ),
+                    "bots/icons/gobfinder"  ) );
 //            layouts.get ( 5000 ).add ( new NButton ( "BattleBot", new BattleBot ( gui ),
 //                    Special.getPath () + "/icons/battle.png" ) );
 //            layouts.get ( 5000 ).add ( new NButton ( "BattleBot2", new BattleAction2 ( gui ),

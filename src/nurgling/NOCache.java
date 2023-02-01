@@ -12,42 +12,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class NOCache extends OCache {
 
-
-    public final HashMap<Long, HashSet<NGob.Tags>> bounds = new HashMap<>();
     public final NPathVisualizer paths = new NPathVisualizer();
-    public static void addBoon(Long id, NGob.Tags tag){
-        synchronized (((NOCache)NUtils.getGameUI().ui.sess.glob.oc).bounds){
-            if(!((NOCache)NUtils.getGameUI().ui.sess.glob.oc).bounds.containsKey(id)) {
-                ((NOCache)NUtils.getGameUI().ui.sess.glob.oc).bounds.put(id, new HashSet<>());
-            }
-            ((NOCache)NUtils.getGameUI().ui.sess.glob.oc).bounds.get(id).add(tag);
-        }
-    }
 
-    public static boolean isBoon(Long id, NGob.Tags tag){
-        synchronized (((NOCache)NUtils.getGameUI().ui.sess.glob.oc).bounds){
-            if(((NOCache)NUtils.getGameUI().ui.sess.glob.oc).bounds.containsKey(id)) {
-                return ((NOCache)NUtils.getGameUI().ui.sess.glob.oc).bounds.get(id).contains(tag);
-            }
-        }
-        return false;
-    }
-
-    public static void removeBoon(Long id, NGob.Tags tag){
-        synchronized (((NOCache)NUtils.getGameUI().ui.sess.glob.oc).bounds) {
-            if (((NOCache) NUtils.getGameUI().ui.sess.glob.oc).bounds.get(id) != null) {
-                ((NOCache) NUtils.getGameUI().ui.sess.glob.oc).bounds.get(id).remove(tag);
-                if (((NOCache) NUtils.getGameUI().ui.sess.glob.oc).bounds.get(id).isEmpty())
-                    ((NOCache) NUtils.getGameUI().ui.sess.glob.oc).bounds.remove(id);
-            }
-        }
-    }
-
-    public static HashSet<NGob.Tags> getBounds(Long id){
-        synchronized (((NOCache)NUtils.getGameUI().ui.sess.glob.oc).bounds) {
-            return ((NOCache)NUtils.getGameUI().ui.sess.glob.oc).bounds.get(id);
-        }
-    }
 
     public NOCache(Glob glob) {
         super(glob);

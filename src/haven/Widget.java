@@ -1553,7 +1553,7 @@ public class Widget {
 	public boolean packed() {
 		if(this instanceof NInventory){
 			for(WItem item :((NInventory)this).getItems()){
-				if(item.item.spr==null || item.item.info==null){
+				if(item.item.spr==null || item.item.info==null || item.item.getinfo(ItemInfo.Name.class)==null){
 					return false;
 				}
 			}

@@ -3,38 +3,34 @@ package nurgling;
 import haven.*;
 import haven.Composite;
 import haven.res.lib.tree.TreeScale;
-import nurgling.tools.AreasID;
 import nurgling.tools.Finder;
 
 import java.awt.*;
 import java.util.*;
-
-import static haven.res.lib.itemtex.ItemTex.made_id;
+import java.util.List;
 
 public class NGob {
     public Tex noteImg = null;
 
     public int oldModSize = -1;
 
-    private NHitBox hitBox = null;
+    protected NHitBox hitBox = null;
 
     public NHitBox getHitBox() {
-        Gob gob = (Gob)this;
-        if(hitBox!=null) {
+        Gob gob = (Gob) this;
+        if (hitBox != null) {
             hitBox.correct(gob.rc, gob.a);
         }
         return hitBox;
     }
 
     String name = "";
+
     public void setName(String name) {
         this.name = name;
     }
 
     public enum Tags {
-        boy,
-        girl,
-        child,
         angryhorse,
         greyseal,
         borka,
@@ -42,44 +38,25 @@ public class NGob {
         notplayer,
         knocked,
         mounted,
-        worked,
-        lifted,
-        /// type
-        house,
         container,
-        liftable,
         dframe,
-        cupboard,
-        wchest,
-        bchest,
-        mcabinet,
-        crate,
-        marked,
-
         ttub,
-
-        resource,
-        station,
         htable,
+        station,
         kritter,
         horse,
         cow,
         pig,
         goat,
         sheep,
-        winter_stoat,
         wool,
         transport,
         vehicle,
-        pushed,
-        pushable,
         area,
         ready,
         inwork,
         free,
         warning,
-        incubatorc,
-        incubatorr,
         no_silo,
         no_water,
         no_soil,
@@ -90,7 +67,7 @@ public class NGob {
         demijohn,
         cheeserack,
         barrel,
-        beeskelp,
+        beeskep,
         wax,
         trough,
         plant,
@@ -107,24 +84,30 @@ public class NGob {
         pow,
         notified,
         quest,
-
         minesupport,
-        stockpile,
-        fishing,
         table,
         tree,
         bush,
         consobj,
         growth,
         trellis,
-        gate, cellar, iconsign, quester,
-        bumling, bear, wolf, wild, mammoth;
+        gate,
+        cellar,
+        iconsign,
+        quester,
+        bumling,
+        bear,
+        wolf,
+        wild,
+        mammoth,
+        stoat,
+        rabbithutch, chickencoop, stalagoomba, winter_stoat
     }
 
     public final HashSet<Tags> tags = new HashSet<>();
     public final ArrayList<NProperties> properties = new ArrayList<>();
 
-    NProperties.Container getContainer() {
+    protected NProperties.Container getContainer() {
         if (!properties.isEmpty()) {
             for (NProperties prop : properties) {
                 if (prop instanceof NProperties.Container) {
@@ -162,7 +145,8 @@ public class NGob {
     }
 
     protected void addTag(Tags tag) {
-        tags.add(tag);
+        if (tags.add(tag))
+            status = Status.ready_for_update;
     }
 
     public void addTag(Tags... tags) {
@@ -179,197 +163,6 @@ public class NGob {
         for (Tags tag : tags)
             removeTag(tag);
     }
-
-//    protected void installTags(Resource res) {
-//        if (res != null ) {
-//            String name = res.name;
-//
-//            if(NUtils.checkName(name, "tree")){
-//                addTag(Tags.tree);
-//            }else if(NUtils.checkName(name, "bumling")) {
-//                addTag(Tags.bumling);
-//            }
-//            if(NUtils.checkName(name, "cellar")){
-//                addTag(Tags.cellar);
-//            }
-//            if (NUtils.checkName(name, "borka")) {
-//                addTag(Tags.borka);
-//                status = Status.undefined;
-//            }
-//            else if(NUtils.checkName(name, "bushes")){
-//                addTag(Tags.bush);
-//            }
-//            else if (NUtils.checkName(name, "pow")) {
-//                    addTag(Tags.pow, Tags.marked);
-//            }
-//            else if (NUtils.checkName(name, "vehicle")) {
-//
-//                if (NUtils.checkName(name, "rowboat", "dugout")) {
-//                    addTag(Tags.vehicle, Tags.transport, Tags.liftable);
-//                } else {
-//                    addTag(Tags.marked);
-//                    if (NUtils.checkName(name, "snekkja", "knarr")) {
-//                        addTag(Tags.transport);
-//                    }
-//                }
-//            }
-//            else if (NUtils.checkName(name, "items")) {
-//                addTag(Tags.item);
-//                if (NUtils.checkName(name, "gem")) {
-//                    addTag(Tags.gem);
-//                } else if (NUtils.checkName(name, "truffle")) {
-//                    addTag(Tags.truffle);
-//                }
-//            } else if (NUtils.checkName(name, "pow")) {
-//                addTag(Tags.pow);
-//            } else if (NUtils.checkName(name, new NAlias(new ArrayList<String>(Arrays.asList("minebeam", "column", "towercap", "ladder", "minesupport")),new ArrayList<String>(Arrays.asList("stump", "wrack", "log"))))) {
-//                addTag(Tags.minesupport);
-//            } else if (NUtils.checkName(name, new NAlias(new ArrayList<>(Arrays.asList("plants")), new ArrayList<>(Arrays.asList("trellis"))))) {
-//                addTag(Tags.plant);
-//                addTag(Tags.marked);
-//                int cropstgmaxval = 0;
-//                for (FastMesh.MeshRes layer : res.layers(FastMesh.MeshRes.class)) {
-//                    int stg = layer.id / 10;
-//                    if (stg > cropstgmaxval) {
-//                        cropstgmaxval = stg;
-//                    }
-//                }
-//                if(NUtils.checkName(name, "turnip"))
-//                    properties.add(new NProperties.Crop(1, cropstgmaxval));
-//                else if(NUtils.checkName(name, "carrot"))
-//                    properties.add(new NProperties.Crop(3, cropstgmaxval));
-//                else
-//                    properties.add(new NProperties.Crop(-1, cropstgmaxval));
-//            }
-//            else if (NUtils.checkName(name, "stockpile")){
-//                addTag(Tags.stockpile, Tags.marked);
-//            }
-//            else if (NUtils.checkName(name, new NAlias(new ArrayList<>(Arrays.asList("cheeserack","curdingtub", "bumlings", "cupboard", "demijohn","table", "dugout", "candelabrum", "gardenpot", "barrel", "chest", "crate", "log", "trough", "casket", "meatgri", "cauldron", "beehive", "dreca", "barrow", "rowboat", "potterswheel", "churn", "metalcabinet", "iconsign", "plow", "ttub")), new ArrayList<>(Arrays.asList("wild", "tree"))))) {
-//                addTag(Tags.liftable);
-//                if (NUtils.checkName(name, "iconsign"))
-//                    addTag(Tags.iconsign);
-//                if (NUtils.checkName(name, "table","cupboard", "chest", "crate", "metalcabinet", "boiler", "casket", "ttub")) {
-//                    addTag(Tags.container);
-//                    addTag(Tags.marked);
-//                    if (NUtils.checkName(name, "cauldron"))
-//                        addTag(Tags.station);
-//                    else if (NUtils.checkName(name, "ttub"))
-//                        addTag(Tags.ttub);
-//                    else if (NUtils.checkName(name, "cupboard", "chest", "crate", "metalcabinet", "casket")) {
-//                        addTag(Tags.properties);
-//                        if (NUtils.checkName(name, "cupboard"))
-//                            properties.add(new NProperties.Container("Cupboard", 3, 16));
-//                        else if (NUtils.checkName(name, "largechest"))
-//                            properties.add(new NProperties.Container("Large Chest", 3, 16));
-//                        else if (NUtils.checkName(name, "chest"))
-//                            properties.add(new NProperties.Container("Chest", 3, 28));
-//                        else if (NUtils.checkName(name, "metalcabinet"))
-//                            properties.add(new NProperties.Container("Metal Cabinet", 3, 64));
-//                        else if (NUtils.checkName(name, "crate"))
-//                            properties.add(new NProperties.Container("Crate", 0, 16));
-//                        else if (NUtils.checkName(name, "casket"))
-//                            properties.add(new NProperties.Container("Stone Casket", 3, 16));
-//                    }
-//                } else if (NUtils.checkName(name, "cheeserack")) {
-//                    addTag(Tags.container, Tags.cheeserack);
-//                    status = Status.undefined;
-//                } else if (NUtils.checkName(name, "log", "dreca")) {
-//                    addTag(Tags.resource);
-//                } else if (NUtils.checkName(name, "barrel")) {
-//                    addTag(Tags.barrel);
-//                    status = Status.undefined;
-//                } else if (NUtils.checkName(name, "potterswheel", "churn", "meatgri")) {
-//                    addTag(Tags.station);
-//                } else {
-//                    addTag(Tags.marked);
-//                    if (NUtils.checkName("demijohn")) {
-//                        addTag(Tags.demijohn);
-//                    } else if (NUtils.checkName(name, "gardenpot")) {
-//                        addTag(Tags.gardenpot);
-//                        status = Status.undefined;
-//                    } else if (NUtils.checkName(name, "beehive", "trough")) {
-//                        addTag(Tags.area);
-//                        if (NUtils.checkName(name, "trough")) {
-//                            addTag(Tags.trough);
-//                        } else if (NUtils.checkName(name, "beehive")) {
-//                            addTag(Tags.beeskelp);
-//                        }
-//                    } else if (NUtils.checkName(name, "barrow", "plow")) {
-//                        addTag(Tags.pushable);
-//                    }
-//                }
-//                if (((Gob) this).getattr(Following.class) != null)
-//                    status = Status.undefined;
-//            } else if (NUtils.checkName(name, "dframe", "oven", "smelter", "htable", "kiln", "smokeshed", "chickencoop", "rabbithutch")) {
-//                addTag(Tags.container);
-//                if (NUtils.checkName(name, "dframe")) {
-//                    addTag(Tags.dframe);
-//                    status = Status.undefined;
-//                } else if (NUtils.checkName(name, "htable"))
-//                    addTag(Tags.htable);
-//                else {
-//                    addTag(Tags.marked);
-//                    if (NUtils.checkName(name, "chickencoop")) {
-//                        addTag(Tags.incubatorc);
-//                    } else if (NUtils.checkName(name, "rabbithutch")) {
-//                        addTag(Tags.incubatorr);
-//                    } else {
-//                        addTag(Tags.station);
-//                    }
-//                }
-//            } else if (NUtils.checkName(name, new NAlias(new ArrayList<>(Arrays.asList("kritter")), new ArrayList<>(Arrays.asList("beef"))))) {
-//                addTag(Tags.kritter);
-//                if (NUtils.checkName(name, "greyseal"))
-//                    addTag(Tags.greyseal);
-//                else if (NUtils.checkName(name, "bear"))
-//                    addTag(Tags.bear);
-//                else if (NUtils.checkName(name, "wolf"))
-//                    addTag(Tags.wolf);
-//                else if (NUtils.checkName(name, "mammoth"))
-//                    addTag(Tags.mammoth);
-//                else if (NUtils.checkName(name, "stoat"))
-//                    addTag(Tags.winter_stoat);
-//                if (NUtils.checkName(name, new NAlias(new ArrayList<>(Arrays.asList("pig", "horse", "goat", "cattle", "sheep")), new ArrayList<>(Collections.singletonList("wild"))))) {
-//                    if (NUtils.checkName(name, "horse")) {
-//                        addTag(Tags.horse);
-//                        addTag(Tags.transport);
-//                        if(NUtils.checkName(name, "horse/horse")){
-//                            addTag(Tags.wild);
-//                        }
-//                    } else if (NUtils.checkName(name, "pig"))
-//                        addTag(Tags.pig);
-//                    else if (NUtils.checkName(name, "cattle"))
-//                        addTag(Tags.cow);
-//                    else if (NUtils.checkName(name, "goat"))
-//                        addTag(Tags.goat);
-//                    else if (NUtils.checkName(name, "sheep"))
-//                        addTag(Tags.sheep);
-//                }
-//                Gob gob = ((Gob) this);
-//                Composite cmp = gob.getattr(Composite.class);
-//                if (cmp != null) {
-//                    checkPoses(cmp.nposes);
-//                }
-//            }else if (NUtils.checkName(name, "barterhand")) {
-//                addTag(Tags.barterhand, Tags.area);
-//            } else if (NUtils.checkName(name, "brazier")) {
-//                addTag(Tags.brazier, Tags.area);
-//            }
-//            else if (NUtils.checkName(name, "consobj")) {
-//                addTag(Tags.consobj);
-//            }
-//            else if (NUtils.checkName(name, "trellis")) {
-//                addTag(Tags.trellis);
-//            }
-//            else if (NUtils.checkName(name, "gate")) {
-//                addTag(Tags.gate);
-//                addTag(Tags.marked);
-//            }
-//            if(!isTag(Tags.item) &&!isTag(Tags.plant) &&!isTag(Tags.cellar) && !(isTag(Tags.pow) && (getModelAttribute()&17)==17) && !NUtils.checkName(name, "cavemoth")){
-//                hitBox = NHitBox.get(name);
-//            }
-//        }
-//    }
 
     public boolean isTag(Tags... tags_candidates) {
         for (Tags tag : tags_candidates) {
@@ -391,65 +184,10 @@ public class NGob {
             ob.disposeAction();
         }
     };
-    protected void updateCustom() {
 
-    }
 //    protected void updateCustom() {
-//        if (status != Status.updated) {
-//            if (((Gob) this).getattr(GobIcon.class) == null) {
-//                GobIcon icon = NUtils.getIcon(this);
-//                if (icon != null) {
-//                    icon.img();
-//                    ((Gob) this).setattr(icon);
-//                }
-//            }
+
 //            switch (status) {
-//                case ready_for_update: {
-//                    if (NConfiguration.getInstance().enablePfBoundingBoxes) {
-//                        Gob gob = ((Gob) this);
-//                        if (gob.getHitBox() != null && gob.findol(NGobHiteBoxSpr.class) == null) {
-//                            gob.addol(new NGobHiteBoxSpr(NBoundingBox.getBoundingBox(gob)));
-//                        }
-//                    }
-//                    if (isTag(Tags.tree) || isTag(Tags.bumling) || isTag(Tags.quester)) {
-//                        for (NQuestInfo.Quester quester : NQuestInfo.questers) {
-//                            if (!quester.isFound) {
-//                                Gob gob = ((Gob) this);
-//                                if (Math.abs(gob.rc.x - quester.coord2d.x) < 10 && Math.abs(gob.rc.y - quester.coord2d.y) < 10) {
-//                                    if (Finder.findObject(quester.coord2d, new NAlias("tree", "bumling")) == gob) {
-//                                        addTag(Tags.quester);
-//                                        gob.addol(new NQuesterRing(gob, Color.ORANGE, 20, 0.7f, quester));
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//
-//                    if (isTag(Tags.notified)) {
-//                        Gob gob = ((Gob) this);
-//                        gob.removeol(NNotifiedRing.class);
-//                        gob.findoraddol(new NNotifiedRing(gob, Color.GREEN, 20, 0.7f, noteImg));
-//                    } else if (isTag(Tags.quest) && !isTag(Tags.knocked)) {
-//                        Gob gob = ((Gob) this);
-//                        if ((isTag(Tags.horse) || isTag(Tags.sheep) || isTag(Tags.cow)) && !isTag(Tags.wild)) {
-//                            removeTag(Tags.quest);
-//                        } else {
-//                            gob.removeol(NNotifiedRing.class);
-//                            Audio.play(Resource.local().loadwait("alarm/quest"));
-//                            gob.findoraddol(new NNotifiedRing(gob, Color.CYAN, 30, 0.7f, noteImg));
-//                        }
-//                    } else {
-//                        Gob gob = ((Gob) this);
-//                        gob.removeol(NNotifiedRing.class);
-//                    }
-//
-//                    if (isTag(Tags.highlighted)) {
-//                        Gob gob = ((Gob) this);
-//                        if (gob.findol(NHighlightRing.class) == null) {
-//                            gob.findoraddol(new NHighlightRing(gob));
-//                            gob.setattr(new NGobHighlight(gob));
-//                        }
-//                    }
 //                    if (isTag(Tags.iconsign)) {
 //                        if (NConfiguration.getInstance().showAreas) {
 //                            if (NUtils.getGameUI() != null && NUtils.getGameUI().updated()) {
@@ -471,137 +209,7 @@ public class NGob {
 //                            }
 //                        }
 //                    }
-//                    if (isTag(Tags.plant) && NConfiguration.getInstance().showCropStage) {
-//                        Gob gob = ((Gob) this);
-//                        NProperties.Crop crop = getCrop();
-//                        if (modelAttribute != crop.currentStage || gob.findol(NCropMarker.class) == null) {
-//                            if (gob.findol(NCropMarker.class) != null) {
-//                                gob.removeol(NCropMarker.class);
-//                                return;
-//                            }
-//                            if (modelAttribute == crop.maxstage) {
-//                                if (crop.maxstage == 0) {
-//                                    gob.findoraddol(new Gob.Overlay(gob, new NCropMarker(gob, Color.GRAY)));
-//                                } else {
-//                                    gob.findoraddol(new Gob.Overlay(gob, new NCropMarker(gob, Color.GREEN)));
-//                                }
-//                            } else if (modelAttribute == 0) {
-//                                gob.findoraddol(new Gob.Overlay(gob, new NCropMarker(gob, Color.RED)));
-//                            } else {
-//                                if (crop.maxstage > 1 && crop.maxstage < 7) {
-//                                    if (gob.modelAttribute == crop.specstage) {
-//                                        gob.findoraddol(new Gob.Overlay(gob, new NCropMarker(gob, Color.BLUE)));
-//                                    } else {
-//                                        gob.findoraddol(new Gob.Overlay(gob, new NCropMarker(gob, modelAttribute, crop.maxstage)));
-//                                    }
-//                                }
-//                            }
-//                        }
-//                        crop.currentStage = modelAttribute;
-//                    } else if (isTag(Tags.item)) {
-//                        Gob gob = ((Gob) this);
-//                        if (isTag(Tags.gem)) {
-//                            gob.findoraddol(new NTexMarker(gob, 5, Tags.gem));
-//                        } else if (isTag(Tags.truffle)) {
-//                            gob.findoraddol(new NTexMarker(gob, 10, Tags.truffle));
-//                        }
-//                    } else if (isTag(Tags.barrel)) {
-//                        Gob gob = ((Gob) this);
-//                        if (isTag(Tags.free)) {
-//                            gob.setattr(new NGobColor(gob, NConfiguration.getInstance().colors.get("free")));
-//                        } else {
-//                            gob.delattr(NGobColor.class);
-//                        }
-//                    } else if (isTag(Tags.pushable, Tags.marked)) {
-//                        if ((modelAttribute & 1) != 0)
-//                            addTag(Tags.pushed);
-//                        else
-//                            removeTag(Tags.pushed);
-//                    } else if (isTag(Tags.tree, Tags.growth) || isTag(Tags.bush, Tags.growth)) {
-//                        Gob gob = ((Gob) this);
-//                        double scale = 0;
-//                        TreeScale ts = ((Gob) this).getattr(TreeScale.class);
-//                        if (isTag(Tags.tree)) {
-//                            scale = Math.round(100 * (ts.scale - 0.1) / 0.9);
-//                        } else if (isTag(Tags.bush)) {
-//                            scale = Math.round(100 * (ts.scale - 0.3) / 0.7);
-//                        }
-//                        gob.findoraddol(new Gob.Overlay(gob, new NObjectLabel(gob, String.format("%.0f %%", (float) scale), Color.WHITE)));
-//                    } else if (isTag(Tags.ttub)) {
-//                        if ((modelAttribute & 1) != 0 || modelAttribute == 0) {
-//                            addTag(Tags.warning);
-//                        } else {
-//                            removeTag(Tags.warning);
-//                        }
-//                        if ((modelAttribute & 8) != 0) {
-//                            addTag(Tags.ready);
-//                            removeTag(Tags.inwork, Tags.free);
-//                        } else if ((modelAttribute & 4) != 0) {
-//                            addTag(Tags.inwork);
-//                            removeTag(Tags.free, Tags.ready);
-//                        } else if ((modelAttribute & 2) != 0) {
-//                            addTag(Tags.free);
-//                            removeTag(Tags.inwork, Tags.ready);
-//                        } else {
-//                            removeTag(Tags.inwork, Tags.free, Tags.ready);
-//                        }
-//                    }
-//                    if (isTag(Tags.dframe) || isTag(Tags.ttub)) {
-//                        Gob gob = ((Gob) this);
-//                        if (isTag(Tags.ready))
-//                            gob.setattr(new NGobColor(gob, NConfiguration.getInstance().colors.get("ready")));
-//                        else if (isTag(Tags.warning)) {
-//                            gob.addTag(Tags.tanning);
-//                            gob.setattr(new NGobColor(gob, NConfiguration.getInstance().colors.get("warning")));
-//                            gob.findoraddol(new NTexMarker(gob, Tags.tanning));
-//                        } else {
-//                            gob.removeTag(Tags.tanning);
-//                            gob.removeol(NTexMarker.class);
-//                            if (isTag(Tags.free))
-//                                gob.setattr(new NGobColor(gob, NConfiguration.getInstance().colors.get("free")));
-//                            else if (isTag(Tags.inwork))
-//                                gob.setattr(new NGobColor(gob, NConfiguration.getInstance().colors.get("inwork")));
-//                        }
-//                    } else if (isTag(Tags.incubatorc) || isTag(Tags.incubatorr)) {
-//                        if (isTag(Tags.incubatorc)) {
-//                            if ((modelAttribute & 1) == 0) {
-//                                addTag(Tags.no_water);
-//                            } else {
-//                                removeTag(Tags.no_water);
-//                            }
-//                            if ((modelAttribute & 2) == 0) {
-//                                addTag(Tags.no_silo);
-//                            } else {
-//                                removeTag(Tags.no_silo);
-//                            }
-//                        } else {
-//                            if ((modelAttribute & 4) == 0) {
-//                                addTag(Tags.no_water);
-//                            } else {
-//                                removeTag(Tags.no_water);
-//                            }
-//                            if ((modelAttribute & 16) == 0) {
-//                                addTag(Tags.no_silo);
-//                            } else {
-//                                removeTag(Tags.no_silo);
-//                            }
-//                        }
-//                        Gob gob = ((Gob) this);
-//                        if (isTag(Tags.no_water) || isTag(Tags.no_silo)) {
-//                            gob.removeol(NTexMarker.class);
-//                            if (isTag(Tags.no_water) && isTag(Tags.no_silo))
-//                                gob.findoraddol(new NTexMarker(gob, Tags.no_water, Tags.no_silo));
-//                            else if (isTag(Tags.no_water)) {
-//                                gob.findoraddol(new NTexMarker(gob, Tags.no_water));
-//                            } else {
-//                                gob.findoraddol(new NTexMarker(gob, Tags.no_silo));
-//                            }
-//                            gob.setattr(new NGobColor(gob, NConfiguration.getInstance().colors.get("warning")));
-//                        } else {
-//                            gob.removeol(NTexMarker.class);
-//                            gob.delattr(NGobColor.class);
-//                        }
-//                    } else if (isTag(Tags.gardenpot)) {
+//                   else if (isTag(Tags.gardenpot)) {
 //                        if ((modelAttribute & 1) == 0) {
 //                            addTag(Tags.no_water);
 //                        } else if ((modelAttribute & 2) == 0) {
@@ -622,75 +230,13 @@ public class NGob {
 //                            gob.setattr(new NGobColor(gob, NConfiguration.getInstance().colors.get("ready")));
 //                        }
 //                    }
-//                    if (isTag(Tags.container, Tags.properties)) {
-//                        NProperties.Container cont = getContainer();
-//                        if (cont != null) {
-//                            if ((modelAttribute & ~cont.free) == 0) {
-//                                addTag(Tags.free);
-//                                removeTag(Tags.not_full, Tags.full);
-//                            } else if ((modelAttribute & cont.full) == cont.full) {
-//                                addTag(Tags.full);
-//                                removeTag(Tags.not_full, Tags.free);
-//                            } else {
-//                                addTag(Tags.not_full);
-//                                removeTag(Tags.free, Tags.full);
-//                            }
-//                            Gob gob = ((Gob) this);
-//                            if (isTag(Tags.full))
-//                                gob.setattr(new NGobColor(gob, NConfiguration.getInstance().colors.get("full")));
-//                            else if (isTag(Tags.not_full)) {
-//                                gob.setattr(new NGobColor(gob, NConfiguration.getInstance().colors.get("not_full")));
-//                            } else {
-//                                gob.delattr(NGobColor.class);
-//                            }
-//                        }
-//                    } else if (isTag(Tags.demijohn)) {
-//                        if ((modelAttribute & 1) == 0) {
-//                            addTag(Tags.free);
-//                        } else {
-//                            removeTag(Tags.free);
-//                        }
-//                        Gob gob = ((Gob) this);
-//                        if (isTag(Tags.free)) {
-//                            gob.setattr(new NGobColor(gob, NConfiguration.getInstance().colors.get("free")));
-//                        } else {
-//                            gob.delattr(NGobColor.class);
-//                        }
-//                    } else if (isTag(Tags.minesupport)) {
-//                        Gob gob = ((Gob) this);
-//                        if (NConfiguration.getInstance().rings.get("minesup").isEnable && gob.findol(NAreaRad.class) == null) {
-//                            if (NUtils.checkName(gob.getResName(), new NAlias(new ArrayList<>(Arrays.asList("natural"))))) {
-//                                gob.findoraddol(new Gob.Overlay(gob,
-//                                        new NAreaRad(gob, 93.5f, new Color(255, 0, 0, 128), new Color(0, 192, 192, 255))));
-//                            } else if (NUtils.checkName(gob.getResName(), new NAlias(new ArrayList<>(Arrays.asList("ladder", "minesupport", "towercap"))))) {
-//                                gob.findoraddol(new Gob.Overlay(gob,
-//                                        new NAreaRad(gob, 100, new Color(255, 0, 0, 128), new Color(0, 192, 192, 255))));
-//                            } else if (NUtils.checkName(gob.getResName(), new NAlias("minebeam"))) {
-//                                gob.findoraddol(new Gob.Overlay(gob,
-//                                        new NAreaRad(gob, 150, new Color(255, 0, 0, 128), new Color(0, 192, 192, 255))));
-//                            } else if (NUtils.checkName(gob.getResName(), new NAlias("column"))) {
-//                                gob.findoraddol(new Gob.Overlay(gob,
-//                                        new NAreaRad(gob, 125, new Color(255, 0, 0, 128), new Color(0, 192, 192, 255))));
-//                            }
-//                        }
-//                    }
 //                    if (isTag(Tags.knocked)) {
 //                        Gob gob = ((Gob) this);
 //                        gob.removeol(NAreaRad.class);
 //                        gob.removeol(NDmgOverlay.class);
 //                        gob.removeol(NTargetRing.class);
 ////                        gob.removeTag(Tags.notmarked);
-//                    } else if (isTag(Tags.kritter)) {
-//                        Gob gob = ((Gob) this);
-//                        for (String ring : NConfiguration.getInstance().rings.keySet()) {
-//                            if (gob.getResName().contains(ring)) {
-//                                NConfiguration.Ring ringprop = NConfiguration.getInstance().rings.get(ring);
-//                                if (ringprop.isEnable && gob.findol(NAreaRad.class) == null) {
-//                                    gob.findoraddol(new Gob.Overlay(gob,
-//                                            new NAreaRad(gob, (float) ringprop.size, new Color(255, 0, 0, 128), new Color(0, 192, 192, 255))));
-//                                }
-//                            }
-//                        }
+//                    } else
 //                        if (isTag(Tags.greyseal)) {
 //                            Audio.play(Resource.local().loadwait("alarm/greyseal"));
 //                        } else if (isTag(Tags.bear)) {
@@ -708,176 +254,15 @@ public class NGob {
 //                                    }
 //                                }
 //                        }
-//                    } else if (isTag(Tags.trough)) {
-//                        if ((modelAttribute & 2) == 0) {
-//                            addTag(Tags.warning);
-//                        } else {
-//                            removeTag(Tags.warning);
-//                        }
-//                        Gob gob = ((Gob) this);
-//                        if (isTag(Tags.warning)) {
-//                            gob.setattr(new NGobColor(gob, NConfiguration.getInstance().colors.get("warning")));
-//                            gob.addTag(Tags.no_silo);
-//                            gob.findoraddol(new NTexMarker(gob, Tags.no_silo));
-//                        } else {
-//                            gob.removeTag(Tags.no_silo);
-//                            gob.delattr(NGobColor.class);
-//                            gob.removeol(NTexMarker.class);
-//                        }
-//                        if (NConfiguration.getInstance().rings.get("trough").isEnable) {
-//                            gob.findoraddol(new Gob.Overlay((Gob) this,
-//                                    new NAreaRad(gob, (float) NConfiguration.getInstance().rings.get("trough").size, new Color(192, 192, 0, 128), new Color(0, 164, 192, 255))));
-//                        } else {
-//                            gob.removeol(NAreaRad.class);
-//                        }
-//                    } else if (isTag(Tags.beeskelp)) {
-//                        if ((modelAttribute & 4) != 0) {
-//                            addTag(Tags.wax);
-//                        } else {
-//                            removeTag(Tags.wax);
-//                        }
-//                        Gob gob = ((Gob) this);
-//                        if (isTag(Tags.wax)) {
-//                            gob.findoraddol(new NTexMarker(gob, Tags.wax));
-//                        } else {
-//                            gob.removeol(NTexMarker.class);
-//                        }
-//                        if (NConfiguration.getInstance().rings.get("beeskep").isEnable) {
-//                            gob.findoraddol(new Gob.Overlay((Gob) this,
-//                                    new NAreaRad(gob, (float) NConfiguration.getInstance().rings.get("beeskep").size, new Color(0, 163, 192, 128), new Color(0, 192, 0, 255))));
-//                        } else {
-//                            gob.removeol(NAreaRad.class);
-//                        }
-//                    } else if (isTag(Tags.cheeserack)) {
-//                        Gob gob = ((Gob) this);
-//                        if (isTag(Tags.full)) {
-//                            gob.setattr(new NGobColor(gob, NConfiguration.getInstance().colors.get("full")));
-//                        } else if (isTag(Tags.not_full)) {
-//                            gob.setattr(new NGobColor(gob, NConfiguration.getInstance().colors.get("not_full")));
-//                        } else {
-//                            gob.delattr(NGobColor.class);
-//                        }
 //                    }
-//                    if (isTag(Tags.angryhorse)) {
-//                        Gob gob = ((Gob) this);
-//                        if (gob.findol(NTexMarker.class) == null) {
-//                            gob.addol(new Gob.Overlay(gob, new NTexMarker(gob, 20, Tags.angryhorse)));
-//                        }
 //                    }
-//                    if (isTag(Tags.wool)) {
-//                        Gob gob = ((Gob) this);
-//                        if (gob.findol(NTexMarker.class) == null) {
-//                            gob.addol(new Gob.Overlay(gob, new NTexMarker(gob, 10, Tags.wool)));
-//                        }
 //                    }
-//                    if (isTag(Tags.notmarked)) {
-//                        Gob gob = ((Gob) NOCache.getgob(Tags.player));
-//                        if (gob != null) {
-//                            for (Gob unk : NOCache.getObjects(Tags.unknown, Tags.notmarked)) {
-//                                for (int i = 1500; i < 1600; i++)
-//                                    if (gob.findol(i) == null) {
-//                                        if (!unk.tags.contains(Tags.pow) && !unk.tags.contains(Tags.knocked)) {
-//                                            if (NConfiguration.getInstance().players.get("white").arrow) {
-//                                                gob.addol(new Gob.Overlay(gob, new NDirArrow(gob, Color.WHITE, 25, unk, null, NConfiguration.getInstance().players.get("white")), i));
-//                                                //Audio.play(Resource.local().loadwait("alarm/white"));
-//                                            }
-//                                            if (NConfiguration.getInstance().players.get("white").ring) {
-//                                                unk.findoraddol(new NTargetRing(unk, Color.WHITE, 10, 0.9f));
-//                                            }
-//                                        }
-//                                        unk.removeTag(Tags.notmarked);
-//                                        break;
-//                                    }
-//                            }
-//                            for (Gob foe : NOCache.getObjects(Tags.foe, Tags.notmarked)) {
-//                                for (int i = 1500; i < 1600; i++)
-//                                    if (gob.findol(i) == null) {
-//                                        if (!foe.tags.contains(Tags.pow) && !foe.tags.contains(Tags.knocked)) {
-//                                            if (NConfiguration.getInstance().players.get("red").arrow) {
-//                                                gob.addol(new Gob.Overlay(gob, new NDirArrow(gob, Color.RED, 30, foe, NConfiguration.getInstance().players.get("red").mark ? new TexI(Resource.loadsimg("icon/devil")) : null, NConfiguration.getInstance().players.get("red")), i));
-//                                            }
-//                                            if (NConfiguration.getInstance().players.get("red").ring) {
-//                                                foe.findoraddol(new NMarkedRing(foe, Color.RED, 10, 0.9f, NConfiguration.getInstance().players.get("red").mark_target ? new TexI(Resource.loadsimg("icon/devil")) : null));
-//                                            }
-//                                        }
-//                                        foe.removeTag(Tags.notmarked);
-//                                        break;
-//                                    }
-//                            }
-//                        } else {
-//                            return;
-//                        }
-//                    } else if (isTag(Tags.barterhand)) {
-//                        Gob gob = ((Gob) this);
-//                        if (NConfiguration.getInstance().rings.get("barterhand").isEnable) {
-//                            gob.findoraddol(new Gob.Overlay((Gob) this,
-//                                    new NAreaRad(gob, (float) NConfiguration.getInstance().rings.get("barterhand").size, new Color(163, 0, 192, 128), new Color(0, 0, 192, 255))));
-//                        } else {
-//                            gob.removeol(NAreaRad.class);
-//                        }
-//                    } else if (isTag(Tags.brazier)) {
-//                        Gob gob = ((Gob) this);
-//                        if (NConfiguration.getInstance().rings.get("brazier").isEnable) {
-//                            gob.findoraddol(new Gob.Overlay((Gob) this,
-//                                    new NAreaRad(gob, (float) NConfiguration.getInstance().rings.get("brazier").size, new Color(192, 111, 55, 128), new Color(123, 23, 76, 255))));
-//                        } else {
-//                            gob.removeol(NAreaRad.class);
-//                        }
-//                    }
-//                    status = Status.updated;
-//                    break;
-//                }
-//                case undefined: {
-//                    if (NUtils.getGameUI() != null && NUtils.getGameUI().map != null) {
-//                        if (isTag(Tags.borka)) {
-//                            if (NUtils.getGameUI().map.player() != null) {
-//                                ArrayList<Gob> borkas = NOCache.getObjects(Tags.borka);
-//                                for (Gob borka : borkas) {
-//                                    if (borka.id == NUtils.getGameUI().map.player().id) {
+
 //
-//                                        Following following;
-//                                        if ((following = borka.getattr(Following.class)) != null) {
-//                                            if (following.tgt() != null) {
-//                                                borka.removeTag(Tags.borka);
-//                                                borka.addTag(Tags.player);
-//                                                if (NUtils.getGameUI().drives != -1) {
-//                                                    installFollowing(borka, following);
-//                                                } else {
-//                                                    installFollowing(borka, following);
-//                                                    if (NUtils.isIt(NUtils.getGob(NUtils.getGameUI().drives), "horse"))
-//                                                        NUtils.setSpeed(NConfiguration.getInstance().horseSpeed);
-//                                                }
-//                                            }
-//                                        } else {
-//                                            borka.removeTag(Tags.borka);
-//                                            borka.addTag(Tags.player);
-//                                        }
-//                                    } else {
-//                                        borka.removeTag(Tags.borka);
-//                                        borka.addTag(Tags.notplayer);
-//                                        Following following;
-//                                        if ((following = borka.getattr(Following.class)) != null)
-//                                            installFollowing(borka, following);
-//                                        if (KinInfo.getGroup(borka) == 0 || (KinInfo.getGroup(borka) == -1 && borka.getattr(NGobHealth.class) == null)) {
-//                                            borka.addTag(Tags.unknown, Tags.notmarked);
-//                                        } else if (KinInfo.getGroup(borka) == 2) {
-//                                            borka.addTag(Tags.foe, Tags.notmarked);
-//                                        }
-//                                    }
-//                                }
-//                            } else {
+//
+//                case undefined: {
+//                    i else {
 //                                return;
-//                            }
-//                        } else if (isTag(Tags.dframe)) {
-//                            if (((Gob) this).ols.isEmpty() || (((Gob) this).ols.size() == 1 && ((Gob) this).findol(NObjectLabel.class) != null))
-//                                addTag(Tags.free);
-//                            else {
-//                                for (Gob.Overlay ol : ((Gob) this).ols) {
-//                                    if (!NUtils.isIt(ol, "-blood", "-fishraw", "-windweed") || NUtils.isIt(ol, "-windweed-dry"))
-//                                        addTag(Tags.ready);
-//                                    else
-//                                        addTag(Tags.inwork);
-//                                }
 //                            }
 //                        } else if (isTag(Tags.gardenpot)) {
 //                            if (((Gob) this).ols.isEmpty() || (((Gob) this).ols.size() == 1 && ((Gob) this).findol(NObjectLabel.class) != null)) {
@@ -891,132 +276,59 @@ public class NGob {
 //                                removeTag(Tags.free, Tags.inwork);
 //                            }
 //
-//                        } else if (isTag(Tags.cheeserack)) {
-//                            if (((Gob) this).ols.isEmpty() || (((Gob) this).ols.size() == 1 && ((Gob) this).findol(NObjectLabel.class) != null)) {
-//                                addTag(Tags.free);
-//                                removeTag(Tags.not_full, Tags.full);
-//                            } else if (((Gob) this).ols.size() < 3) {
-//                                addTag(Tags.not_full);
-//                                removeTag(Tags.free, Tags.full);
-//                            } else {
-//                                addTag(Tags.full);
-//                                removeTag(Tags.free, Tags.not_full);
-//                            }
-//                        } else if (isTag(Tags.barrel)) {
-//                            if (((Gob) this).ols.isEmpty() || (((Gob) this).ols.size() == 1 && ((Gob) this).findol(NObjectLabel.class) != null))
-//                                addTag(Tags.free);
-//                            else
-//                                removeTag(Tags.free);
-//                        } else if (isTag(Tags.liftable)) {
-//                            if (((Gob) this).getattr(Following.class) != null)
-//                                ((Gob) this).tags.add(Tags.lifted);
-//                            ///NOCache.addBoon(((Following) a).tgt,Tags.lifted);
 //                        }
+
 //                        status = Status.ready_for_update;
 //                    }
 //                }
 //            }
-//            if (!oldtags.isEmpty()) {
-//                for (Tags tag : oldtags) {
-//                    if (tag == Tags.highlighted) {
-//                        ((Gob) this).delattr(NGobHighlight.class);
-//                        ((Gob) this).removeol(NHighlightRing.class);
-//                    }
-//                    if (tag == Tags.wool) {
-//                        ((Gob) this).removeol(NTexMarker.class);
-//                    }
-//                }
-//                oldtags.clear();
-//            }
+
 //        }
 //    }
 
-    //public void checkPoses(Collection<ResData> poses) {
-    //    if (poses != null)
-    //        for (ResData res : poses) {
-    //            if (NUtils.isIt(res, "dead", "knock", "rigormortis", "drowned")) {
-    //                addTag(Tags.knocked);
-    //                ((Gob) this).removeol(NAreaRad.class);
-    //                ((Gob) this).removeol(NTargetRing.class);
-    //                ((Gob) this).removeol(NMarkedRing.class);
-    //            }
-    //        }
-    //}
 
+    protected void checkattr(Gob gob, Class<? extends GAttrib> ac, GAttrib a, GAttrib prev) {
+        if (prev instanceof Following) {
+            if (tags.remove(Tags.mounted)) {
+                if (tags.contains(Tags.player)) {
+                    tags.remove(Tags.angryhorse);
+                    Gob drived;
+                    if ((drived = NUtils.getGob(NUtils.getGameUI().drives)) != null)
+                        if (drived.tags.contains(Tags.horse))
+                            NUtils.setSpeed(NConfiguration.getInstance().playerSpeed);
+                    NUtils.getGameUI().drives = -1;
+                }
+            }
+        }
+        if (a instanceof Following) {
+            if (!tags.contains(Tags.borka) && (tags.contains(Tags.player) || tags.contains(Tags.notplayer))) {
+                installFollowing(gob, (Following) a);
+                if (tags.contains(Tags.player)) {
+                    Gob drived;
+                    if ((drived = NUtils.getGob(NUtils.getGameUI().drives)) != null)
+                        if (drived.tags.contains(Tags.horse))
+                            NUtils.setSpeed(NConfiguration.getInstance().horseSpeed);
+                }
+            }
+        }
 
-//    protected void checkattr(Gob gob, Class<? extends GAttrib> ac, GAttrib a, GAttrib prev) {
-//        if (a instanceof ResDrawable) {
-//            checkMark(gob);
-//        }
-//        ///TODO: ?????? а надо ли
-//        //if (ac == Drawable.class) {
-//        //    if (a != prev) {
-//        //        status = Status.ready_for_update;
-//        //    }
-//        //}
-//        if (prev instanceof Following) {
-//            Following follow = (Following) prev;
-//
-//            if (status != Status.disposed) {
-//                if (tags.remove(Tags.mounted)) {
-//                    NOCache.removeBoon(follow.tgt, Tags.mounted);
-//                    if (tags.contains(Tags.player)) {
-//                        tags.remove(Tags.angryhorse);
-//                        gob.removeol(NTexMarker.class);
-//                        Gob drived;
-//                        if ((drived = NUtils.getGob(NUtils.getGameUI().drives)) != null)
-//                            if (drived.tags.contains(Tags.horse))
-//                                NUtils.setSpeed(NConfiguration.getInstance().playerSpeed);
-//                        NUtils.getGameUI().drives = -1;
-//                    } else {
-//                        NOCache.removeBoon(follow.tgt, Tags.mounted);
-//                    }
-//                } else if (tags.remove(Tags.lifted)) {
-//                    NOCache.removeBoon(follow.tgt, Tags.lifted);
-//                }
-//            }
-//        }
-//        if (a instanceof Following) {
-//            if (!tags.contains(Tags.borka) && (tags.contains(Tags.player) || tags.contains(Tags.notplayer))) {
-//                installFollowing(gob, (Following) a);
-//                if (tags.contains(Tags.player)) {
-//                    Gob drived;
-//                    if ((drived = NUtils.getGob(NUtils.getGameUI().drives)) != null)
-//                        if (drived.tags.contains(Tags.horse))
-//                            NUtils.setSpeed(NConfiguration.getInstance().horseSpeed);
-//                }
-//            } else if (tags.contains(Tags.liftable) || NUtils.isPose(NUtils.getGob(((Following) a).tgt), new NAlias("banzai"))) {
-//                gob.tags.add(Tags.lifted);
-//                NOCache.addBoon(((Following) a).tgt, Tags.lifted);
-//            } else {
-//                status = Status.undefined;
-//            }
-//        }
-//        if(prev instanceof TreeScale){
-//            gob.removeol(NObjectLabel.class);
-//        }
-//        if(a instanceof TreeScale) {
-//            addTag(Tags.growth);
-//            status = Status.undefined;
-//        }
-//        if(a instanceof GobHealth)
-//        {
-//            status = Status.undefined;
-//        }
-//
-//        if (ac == Moving.class) {
-//            updateMovingInfo(a, prev);
-//        }
-//    }
+        if (prev instanceof TreeScale) {
+            removeTag(Tags.growth);
+        }
+        if (a instanceof TreeScale) {
+            addTag(Tags.growth);
+        }
+
+        if (ac == Moving.class) {
+            updateMovingInfo(a, prev);
+        }
+    }
 
     protected void updateMovingInfo(GAttrib a, GAttrib prev) {
         boolean me = isTag(Tags.player);
         if (NUtils.getGameUI() != null && NUtils.getGameUI().map != null) {
             if (prev instanceof Moving) {
                 ((NOCache) NUtils.getGameUI().map.glob.oc).paths.removePath((Moving) prev);
-//                if(me){
-//                    NUtils.getGameUI().pathQueue.clear();
-//                }
             }
             if (a instanceof LinMove || a instanceof Homing) {
                 ((NOCache) NUtils.getGameUI().map.glob.oc).paths.addPath((Moving) a);
@@ -1026,73 +338,28 @@ public class NGob {
         }
     }
 
-//    void installFollowing(Gob gob, Following follow) {
-//        if(follow.tgt()!=null) {
-//            if (follow.tgt().isTag(Tags.transport)) {
-//                if(gob.isTag(Tags.player)||(NUtils.getGameUI().map!= null && gob.id == NUtils.getGameUI().map.player().id)) {
-//                    NUtils.getGameUI().drives = follow.tgt;
-//                }
-//                gob.tags.add(Tags.mounted);
-//                NOCache.addBoon(follow.tgt, Tags.mounted);
-//            } else if (follow.tgt().isTag(Tags.station)) {
-//                gob.tags.add(Tags.worked);
-//                NOCache.addBoon(follow.tgt, Tags.worked);
-//            }
-//        }
-//    }
+    protected void installFollowing(Gob gob, Following follow) {
+        if (follow.tgt() != null) {
+            if (follow.tgt().isTag(Tags.transport)) {
+                if (gob.isTag(Tags.player) || (NUtils.getGameUI().map != null && gob.id == NUtils.getGameUI().map.player().id)) {
+                    NUtils.getGameUI().drives = follow.tgt;
+                }
+                gob.tags.add(Tags.mounted);
+            }
+        }
+    }
 
-//    protected void checkol(Gob.Overlay ol, boolean isAdd) {
-//        if(!(ol.spr instanceof  NObjectLabel)) {
-//            if (isTag(Tags.dframe)) {
-//                if (isAdd) {
-//                    removeTag(Tags.free);
-//                    if (!NUtils.isIt(ol.res, "-blood", "-windweed", "-fishraw")) {
-//                        addTag(Tags.ready);
-//                        removeTag(Tags.inwork);
-//                    } else {
-//                        removeTag(Tags.ready);
-//                        addTag(Tags.inwork);
-//                    }
-//                } else {
-//                    removeTag(Tags.ready);
-//                    removeTag(Tags.inwork);
-//                    addTag(Tags.free);
-//                }
-//            } else if (isTag(Tags.cheeserack)) {
-//                status = Status.undefined;
-//            }
-//            if (isTag(Tags.barrel)) {
-//                if (isAdd)
-//                    removeTag(Tags.free);
-//                else
-//                    addTag(Tags.free);
-//            }
-//        }
-////        if(ol.spr instanceof FishLine){
-////            if (isAdd) {
-////                addTag(Tags.fishing);
-////            }else {
-////                removeTag(Tags.fishing);
-////            }
-////        }
-//    }
-
-//    public static void checkMark(Gob gob) {
-//        if (gob.isTag(Tags.marked)) {
-//            long attribute = gob.setDrawAttribute(gob);
-//            if (attribute != gob.modelAttribute) {
-//                gob.modelAttribute = attribute;
-//                gob.status = Status.ready_for_update;
-//            }
-//        }
-//    }
 
     public static long setDrawAttribute(Gob gob) {
         ResDrawable rd = gob.getattr(ResDrawable.class);
         if (rd == null) {
-            return 0;
+            return -1;
         }
-        return calcMarker(rd.sdt);
+        long res = calcMarker(rd.sdt);
+        if (res != gob.modelAttribute)
+            gob.status = Status.ready_for_update;
+        updateCustom(gob);
+        return res;
     }
 
     public static long getModelAttribute(Gob gob) {
@@ -1113,6 +380,7 @@ public class NGob {
         }
         return sdt.rbuf[0];
     }
+
     public static Gob from(Clickable ci) {
         if (ci instanceof Gob.GobClick) {
             return ((Gob.GobClick) ci).gob;
@@ -1125,16 +393,18 @@ public class NGob {
 
     protected void disposeAction() {
         status = Status.disposed;
-        Map<Class<? extends GAttrib>, GAttrib> attr = ((Gob) this).attr;
-        for (GAttrib a : attr.values()) {
-            if (a instanceof Moving) {
-                updateMovingInfo(null, a);
+        synchronized (((Gob) this).attr) {
+            Map<Class<? extends GAttrib>, GAttrib> attr = ((Gob) this).attr;
+            for (GAttrib a : attr.values()) {
+                if (a instanceof Moving) {
+                    updateMovingInfo(null, a);
+                }
             }
         }
     }
 
     public static void updateMarked() {
-        if(NUtils.getGameUI()!=null) {
+        if (NUtils.getGameUI() != null) {
             Gob player;
             if ((player = NOCache.getgob(Tags.player)) != null) {
                 player.removeolIf(n -> n.spr instanceof NDirArrow);
@@ -1150,83 +420,63 @@ public class NGob {
         }
     }
 
-    public NProperties getProperties(Class<? extends NProperties> prop ){
-        for(NProperties item: properties){
-            if(item.getClass() == prop)
-                return(item);
+    public NProperties getProperties(Class<? extends NProperties> prop) {
+        for (NProperties item : properties) {
+            if (item.getClass() == prop)
+                return (item);
         }
         return null;
     }
 
-    public void checkMode() {
-        if(isTag(Tags.kritter)){
-            if(isTag(Tags.sheep)||isTag(Tags.goat)){
-                Gob gob = (Gob)this;
-                for(GAttrib a : gob.attr.values())
-                    if(a instanceof Composite){
-                        Composited comp = ((Composite) a).comp;
-                        if(findMode(comp.mod, new NAlias(new ArrayList<>(Arrays.asList("fleece")),new ArrayList<>(Arrays.asList("mouflon")))))
-                        {
-                            addTag(Tags.wool);
-                        }else{
-                            removeTag(Tags.wool);
-                        }
-                    }
+
+    private static boolean findMode(List<Composited.MD> mods, NAlias name) {
+        if (mods != null)
+            for (Composited.MD mod : mods) {
+                for (ResData tex : mod.tex)
+                    if (NUtils.isIt(tex.res, name))
+                        return true;
             }
-            Gob gob = (Gob)this;
-            if(isTag(Tags.sheep)){
-                for(GAttrib a : gob.attr.values())
-                    if(a instanceof Composite){
-                        Composited comp = ((Composite) a).comp;
-                        if(findMode(comp.mod, new NAlias("fleece")) && findMode(comp.mod, new NAlias("mouflon")))
-                        {
-                            addTag(Tags.wild);
-                        }
-                    }
-            }else if (isTag(Tags.cow)){
-                for(GAttrib a : gob.attr.values())
-                    if(a instanceof Composite){
-                        Composited comp = ((Composite) a).comp;
-                        if(findMode(comp.mod, new NAlias("aurochs-fleece")))
-                        {
-                            addTag(Tags.wild);
-                        }
-                    }
-            }
-        }
+        return false;
     }
 
-    private static boolean findMode(Collection<Composited.Model> mods, NAlias name){
-        for (Composited.Model mod: mods){
-            if(mod.m instanceof FastMesh.ResourceMesh)
-                if(NUtils.checkName(((FastMesh.ResourceMesh)mod.m).res.name,name))
+    private static boolean findModeLay(Collection<Composited.Model> mods, NAlias name) {
+        for (Composited.Model mod : mods) {
+            for (Composited.Model.Layer lay : mod.lay)
+                if (NUtils.checkName(lay.mat.toString(), name))
                     return true;
         }
         return false;
     }
 
-    private static boolean findModeLay(Collection<Composited.Model> mods, NAlias name){
-        for (Composited.Model mod: mods){
-            for(Composited.Model.Layer lay : mod.lay)
-                if(NUtils.checkName(lay.mat.toString(),name))
-                    return true;
+    public static void updateMods(Gob gob, List<Composited.MD> mods) {
+        if (gob.isReady) {
+            if (gob.isTag(Tags.kritter)) {
+                if (gob.isTag(Tags.sheep) || gob.isTag(Tags.goat)) {
+                    if (findMode(mods, new NAlias(new ArrayList<>(Collections.singletonList("fleece")), new ArrayList<>(Collections.singletonList("mouflon"))))) {
+                        gob.addTag(Tags.wool);
+                    } else {
+                        gob.removeTag(Tags.wool);
+                    }
+                    if (gob.isTag(Tags.sheep)) {
+                        if (findMode(mods, new NAlias("fleece")) && findMode(mods, new NAlias("mouflon"))) {
+                            gob.addTag(Tags.wild);
+                        }
+                    } else if (gob.isTag(Tags.cow)) {
+                        if (findMode(mods, new NAlias("aurochs-fleece"))) {
+                            gob.addTag(Tags.wild);
+                        }
+                    }
+                }
+            }
         }
-        return false;
-    }
-    public static void updateMods(Gob gob, Collection<Composited.Model> mods){
-        if(gob.isReady )
-        {
-
-        }
     }
 
-    public static void updateLays(Gob gob){
-        if(gob.isReady )
-        {
+    public static void updateLays(Gob gob) {
+        if (gob.isReady) {
             Composite comp = gob.getattr(Composite.class);
-            if(comp!=null){
-                for (Composited.Model mod: comp.comp.mod){
-                    if(mod!=null) {
+            if (comp != null) {
+                for (Composited.Model mod : comp.comp.mod) {
+                    if (mod != null) {
                         for (Composited.Model.Layer lay : mod.lay)
                             if (NUtils.checkName(lay.mat.toString(), new NAlias(new ArrayList<>(Arrays.asList("winter")))))
                                 gob.addTag(Tags.winter_stoat);
@@ -1235,35 +485,351 @@ public class NGob {
             }
         }
     }
-    public static void updatePoses(Gob gob, Collection<ResData> tposes){
-        if(gob.isReady )
-        {
 
+    public static void updatePoses(Gob gob, Collection<ResData> tposes) {
+        if (gob.isReady) {
+            if (gob.isTag(Tags.kritter)) {
+                if (tposes != null) {
+                    for (ResData pose : tposes)
+                        if (NUtils.isIt(pose, "dead", "knock", "rigormortis", "drowned")) {
+                            gob.addTag(Tags.knocked);
+                        }
+                }
+            }
         }
     }
 
-    public static void updateOverlays(Gob gob){
-        if(gob.isReady )
-        {
+    public static void updateOverlays(Gob gob) {
+        if (gob.isReady) {
 
         }
     }
 
     protected boolean isReady = false;
-    public static void updateRes(Gob gob){
-        if (gob.getres() != null ) {
+
+    public static void updateRes(Gob gob) {
+        if (gob.getres() != null) {
             gob.isReady = true;
+            String name = gob.getResName();
+            if (NUtils.checkName(name, new NAlias(new ArrayList<>(Arrays.asList("tree")), new ArrayList<>(Arrays.asList("log"))))) {
+                gob.addTag(Tags.tree);
+            } else if (NUtils.checkName(name, "bumling")) {
+                gob.addTag(Tags.bumling);
+            } else if (NUtils.checkName(name, "bushes")) {
+                gob.addTag(Tags.bush);
+            } else if (NUtils.checkName(name, new NAlias(new ArrayList<>(Arrays.asList("kritter")),new ArrayList<>(Arrays.asList("beef", "skeleton"))))) {
+                gob.addTag(Tags.kritter);
+                if (NUtils.checkName(name, "greyseal"))
+                    gob.addTag(Tags.greyseal);
+                else if (NUtils.checkName(name, "bear"))
+                    gob.addTag(Tags.bear);
+                else if (NUtils.checkName(name, "stalagoomba"))
+                    gob.addTag(Tags.stalagoomba);
+                else if (NUtils.checkName(name, "wolf"))
+                    gob.addTag(Tags.wolf);
+                else if (NUtils.checkName(name, "mammoth"))
+                    gob.addTag(Tags.mammoth);
+                else if (NUtils.checkName(name, "stoat"))
+                    gob.addTag(Tags.stoat);
+                if (NUtils.checkName(name, "horse")) {
+                    gob.addTag(Tags.horse);
+                    if (!NUtils.checkName(name, "foal"))
+                        gob.addTag(Tags.transport);
+                    if (NUtils.checkName(name, "horse/horse")) {
+                        gob.addTag(Tags.wild);
+                    }
+                } else if (NUtils.checkName(name, "pig"))
+                    gob.addTag(Tags.pig);
+                else if (NUtils.checkName(name, "cattle"))
+                    gob.addTag(Tags.cow);
+                else if (NUtils.checkName(name, "goat")) {
+                    gob.addTag(Tags.goat);
+                    if (NUtils.checkName(name, "wild")) {
+                        gob.addTag(Tags.wild);
+                    }
+                } else if (NUtils.checkName(name, "sheep"))
+                    gob.addTag(Tags.sheep);
+            } else if (NUtils.checkName(name, "borka")) {
+                gob.addTag(Tags.borka);
+            } else if (NUtils.checkName(name, "items")) {
+                gob.addTag(Tags.item);
+                if (NUtils.checkName(name, "gem")) {
+                    gob.addTag(Tags.gem);
+                } else if (NUtils.checkName(name, "truffle")) {
+                    gob.addTag(Tags.truffle);
+                }
+            } else if (NUtils.checkName(name, new NAlias(new ArrayList<>(Arrays.asList("plants")), new ArrayList<>(Arrays.asList("trellis"))))) {
+                gob.addTag(Tags.plant);
+                int cropstgmaxval = 0;
+                for (FastMesh.MeshRes layer : gob.getres().layers(FastMesh.MeshRes.class)) {
+                    int stg = layer.id / 10;
+                    if (stg > cropstgmaxval) {
+                        cropstgmaxval = stg;
+                    }
+                }
+                if (NUtils.checkName(name, "turnip"))
+                    gob.properties.add(new NProperties.Crop(1, cropstgmaxval));
+                else if (NUtils.checkName(name, "carrot"))
+                    gob.properties.add(new NProperties.Crop(3, cropstgmaxval));
+                else if (NUtils.checkName(name, "hemp"))
+                    gob.properties.add(new NProperties.Crop(cropstgmaxval - 1, cropstgmaxval));
+                else
+                    gob.properties.add(new NProperties.Crop(-1, cropstgmaxval));
+            } else if (NUtils.checkName(name, "vehicle")) {
+                gob.addTag(Tags.vehicle);
+                if (NUtils.checkName(name, "rowboat", "dugout", "snekkja", "knarr")) {
+                    gob.addTag(Tags.transport);
+                }
+            } else if (NUtils.checkName(name, "beehive", "trough", "barterhand")) {
+                gob.addTag(Tags.area);
+                if (NUtils.checkName(name, "trough")) {
+                    gob.addTag(Tags.trough);
+                } else if (NUtils.checkName(name, "beehive")) {
+                    gob.addTag(Tags.beeskep);
+                } else if (NUtils.checkName(name, "barterhand")) {
+                    gob.addTag(Tags.barterhand);
+                }
+            } else if (NUtils.checkName(name, "cellar")) {
+                gob.addTag(Tags.cellar);
+            } else if (NUtils.checkName(name, "gate")) {
+                gob.addTag(Tags.gate);
+            } else if (NUtils.checkName(name, "pow")) {
+                gob.addTag(Tags.pow);
+            } else if (NUtils.checkName(name, "gardenpot")) {
+                gob.addTag(Tags.gardenpot);
+            } else if (NUtils.checkName(name, "iconsign")) {
+                gob.addTag(Tags.iconsign);
+            }
+            if (NUtils.checkName(name, "table", "cupboard", "chest", "crate", "metalcabinet", "boiler", "casket", "ttub", "dframe", "cheeserack")) {
+                gob.addTag(Tags.container);
+                if (NUtils.checkName(name, "dframe"))
+                    gob.addTag(Tags.dframe);
+                else if (NUtils.checkName(name, "ttub"))
+                    gob.addTag(Tags.ttub);
+                else if (NUtils.checkName(name, "cheeserack"))
+                    gob.addTag(Tags.cheeserack);
+                else if (NUtils.checkName(name, "curdingtub", "cupboard", "chest", "crate", "metalcabinet", "casket")) {
+                    gob.addTag(Tags.properties);
+                    if (NUtils.checkName(name, "cupboard"))
+                        gob.properties.add(new NProperties.Container("Cupboard", 3, 16));
+                    else if (NUtils.checkName(name, "largechest"))
+                        gob.properties.add(new NProperties.Container("Large Chest", 3, 16));
+                    else if (NUtils.checkName(name, "chest"))
+                        gob.properties.add(new NProperties.Container("Chest", 3, 28));
+                    else if (NUtils.checkName(name, "metalcabinet"))
+                        gob.properties.add(new NProperties.Container("Metal Cabinet", 3, 64));
+                    else if (NUtils.checkName(name, "crate"))
+                        gob.properties.add(new NProperties.Container("Crate", 0, 16));
+                    else if (NUtils.checkName(name, "casket"))
+                        gob.properties.add(new NProperties.Container("Stone Casket", 3, 16));
+                }
+            } else if (NUtils.checkName(name, "barrel")) {
+                gob.addTag(Tags.barrel);
+            } else if (NUtils.checkName(name, "chickencoop")) {
+                gob.addTag(Tags.chickencoop);
+            } else if (NUtils.checkName(name, "rabbithutch")) {
+                gob.addTag(Tags.rabbithutch);
+            }
+
+
+            /// Special section
+            if (NUtils.checkName(name, new NAlias(new ArrayList<String>(Arrays.asList("minebeam", "column", "towercap", "ladder", "minesupport")), new ArrayList<String>(Arrays.asList("stump", "wrack", "log"))))) {
+                gob.addTag(Tags.minesupport);
+            }
+
+            if (!gob.isTag(Tags.item) && !gob.isTag(Tags.plant) && !gob.isTag(Tags.cellar) && !(gob.isTag(Tags.pow) && (gob.getModelAttribute() & 17) == 17) && !(gob.isTag(Tags.kritter) && NUtils.checkName(name, "cavemoth"))) {
+                gob.hitBox = NHitBox.get(name);
+            }
+
             updateOverlays(gob);
             Composite comp = gob.getattr(Composite.class);
-            if(comp!=null) {
+            if (comp != null) {
                 updatePoses(gob, comp.oldposes);
-                updateMods(gob,comp.comp.mod);
+                updateMods(gob, comp.oldnmod);
                 updateLays(gob);
-            }
-            else
-            {
+            } else {
                 gob.modelAttribute = setDrawAttribute(gob);
             }
         }
     }
+
+    protected static void updateCustom(Gob gob) {
+        if (gob.status != Status.updated)
+            if (gob.getattr(GobIcon.class) == null) {
+                GobIcon icon = NUtils.getIcon(gob);
+                if (icon != null) {
+                    icon.img();
+                    gob.setattr(icon);
+                }
+            }
+
+
+        if (gob.status == Status.ready_for_update) {
+            if (NUtils.getGameUI() != null && NUtils.getGameUI().map != null) {
+                if (gob.isTag(Tags.borka)) {
+                    if (NUtils.getGameUI().map.player() != null) {
+                        if (gob.id == NUtils.getGameUI().map.player().id) {
+
+                            Following following;
+                            if ((following = gob.getattr(Following.class)) != null) {
+                                if (following.tgt() != null) {
+                                    gob.removeTag(Tags.borka);
+                                    gob.addTag(Tags.player);
+                                    if (NUtils.getGameUI().drives != -1) {
+                                        gob.installFollowing(gob, following);
+                                    } else {
+                                        gob.installFollowing(gob, following);
+                                        if (NUtils.isIt(NUtils.getGob(NUtils.getGameUI().drives), "horse"))
+                                            NUtils.setSpeed(NConfiguration.getInstance().horseSpeed);
+                                    }
+                                }
+                            } else {
+                                gob.removeTag(Tags.borka);
+                                gob.addTag(Tags.player);
+                            }
+                            gob.addcustomol(new NPlayerArrow(gob, 10));
+                        } else {
+                            gob.removeTag(Tags.borka);
+                            gob.addTag(Tags.notplayer);
+                        }
+                    }
+                }
+                if (gob.isTag(Tags.notplayer)) {
+                    if (!gob.isTag(Tags.knocked)) {
+                        gob.addcustomol(new NPlayerMarker(gob, 10));
+                    }
+                }
+            }else if(gob.isTag(Tags.borka)) {
+                return;
+            }
+
+            if (NConfiguration.getInstance().enablePfBoundingBoxes) {
+                if (gob.getHitBox() != null && gob.findol(NGobHiteBoxSpr.class) == null) {
+                    gob.addcustomol(new NGobHiteBoxSpr(NBoundingBox.getBoundingBox(gob)));
+                }
+            }
+            if (gob.status == Status.ready_for_update) {
+                if (gob.isTag(Tags.tree) || gob.isTag(Tags.bumling) || gob.isTag(Tags.quester)) {
+                    for (NQuestInfo.Quester quester : NQuestInfo.questers.values()) {
+                        if (!quester.isFound) {
+                            if (Math.abs(gob.rc.x - quester.coord2d.x) < 10 && Math.abs(gob.rc.y - quester.coord2d.y) < 10) {
+                                if (Finder.findObject(quester.coord2d, new NAlias("tree", "bumling")) == gob) {
+                                    gob.addTag(Tags.quester);
+                                    gob.addcustomol(new NQuesterRing(gob, Color.ORANGE, 20, 0.7f, quester));
+                                }
+                            }
+                        }
+                    }
+                }
+                if (gob.isTag(Tags.highlighted)) {
+                    gob.addcustomol(new NHighlightRing(gob));
+                    gob.addcustomattr(new NGobHighlight(gob));
+
+                } else if (gob.isTag(Tags.quest) && !gob.isTag(Tags.knocked)) {
+                    NAlarmManager.play(Tags.quest);
+                    gob.addcustomol(new NNotifiedRing(gob, Color.CYAN, 30, 0.7f, gob.noteImg));
+                } else if (gob.isTag(Tags.notified)) {
+                    gob.addcustomol(new NNotifiedRing(gob, Color.GREEN, 20, 0.7f, gob.noteImg));
+                }
+                if (gob.isTag(Tags.plant)) {
+                    NProperties.Crop crop = gob.getCrop();
+                    crop.currentStage = gob.modelAttribute;
+                    gob.addcustomol(new NCropMarker(gob, crop));
+                } else if (gob.isTag(Tags.item)) {
+                    if (gob.isTag(Tags.gem)) {
+                        gob.addcustomol(new NTexMarker(gob, 5, Tags.gem));
+                    } else if (gob.isTag(Tags.truffle)) {
+                        gob.addcustomol(new NTexMarker(gob, 10, Tags.truffle));
+                    }
+                } else if (gob.isTag(Tags.container, Tags.properties)) {
+                    NProperties.Container cont = gob.getContainer();
+                    if (cont != null) {
+                        gob.addcustomattr(new NContainerColor(gob, cont));
+                    }
+                } else if (gob.isTag(Tags.barrel)) {
+                    gob.addcustomattr(new NBarrelColor(gob));
+                } else if (gob.isTag(Tags.minesupport)) {
+                    if (NConfiguration.getInstance().rings.get("minesup").isEnable && gob.findol(NAreaRad.class) == null) {
+                        if (NUtils.checkName(gob.getResName(), new NAlias(new ArrayList<>(Arrays.asList("natural"))))) {
+                            gob.addcustomol(new NAreaRange(gob, "minesup", 93.5f, new Color(128, 128, 128, 128), new Color(0, 192, 192, 255)));
+                        } else if (NUtils.checkName(gob.getResName(), new NAlias(new ArrayList<>(Arrays.asList("ladder", "minesupport", "towercap"))))) {
+                            if(gob.isTag(Tags.growth))
+                            {
+                                TreeScale ts = gob.getattr(TreeScale.class);
+                                int scale = (int) Math.round(100 * (ts.scale - 0.1) / 0.9);
+                                gob.addcustomol(new NAreaRange(gob, "minesup", scale, new Color(128, 128, 128, 128), new Color(0, 192, 192, 255)));
+                            }
+                            else
+                            {
+                                gob.addcustomol(new NAreaRange(gob, "minesup", 100, new Color(128, 128, 128, 128), new Color(0, 192, 192, 255)));
+                            }
+                        } else if (NUtils.checkName(gob.getResName(), new NAlias("minebeam"))) {
+                            gob.addcustomol(new NAreaRange(gob, "minesup", 150, new Color(128, 128, 128, 128), new Color(0, 192, 192, 255)));
+                        } else if (NUtils.checkName(gob.getResName(), new NAlias("column"))) {
+                            gob.addcustomol(new NAreaRange(gob, "minesup", 125, new Color(128, 128, 128, 128), new Color(0, 192, 192, 255)));
+                        }
+                    }
+                } else if (gob.isTag(Tags.dframe)) {
+                    gob.addcustomattr(new NDframeColor(gob));
+                } else if (gob.isTag(Tags.ttub)) {
+                    gob.addcustomattr(new NTubColor(gob));
+                } else if (gob.isTag(Tags.chickencoop) || gob.isTag(Tags.rabbithutch)) {
+                    gob.addcustomattr(new NIncubatorColor(gob));
+                } else if (gob.isTag(Tags.cheeserack)) {
+                    gob.addcustomattr(new NCheeseColor(gob));
+                } else if (gob.isTag(Tags.barterhand)) {
+                    gob.addcustomol(new NAreaRange(gob, "barterhand", (float) NConfiguration.getInstance().rings.get("barterhand").size, new Color(163, 0, 192, 128), new Color(0, 0, 192, 255)));
+                } else if (gob.isTag(Tags.trough)) {
+                    gob.addcustomol(new NAreaRange(gob, "trough", (float) NConfiguration.getInstance().rings.get("trough").size, new Color(192, 192, 0, 128), new Color(0, 164, 192, 255)));
+                    gob.addcustomattr(new NTroughColor(gob));
+                } else if (gob.isTag(Tags.beeskep)) {
+                    gob.addcustomol(new NAreaRange(gob, "beeskep", (float) NConfiguration.getInstance().rings.get("beeskep").size, new Color(0, 163, 192, 128), new Color(0, 192, 0, 255)));
+                    gob.addcustomol(new NBeeMarker(gob));
+                } else if (gob.isTag(Tags.kritter)) {
+                    if (gob.isTag(Tags.sheep) || gob.isTag(Tags.goat))
+                        gob.addcustomol(new NWoolMarker(gob, 12));
+
+                    if(!gob.isTag(Tags.knocked) && gob.getattr(Composite.class)!=null) {
+                        for (String ring : NConfiguration.getInstance().rings.keySet()) {
+                            if (gob.getResName().contains(ring)) {
+                                NConfiguration.Ring ringprop = NConfiguration.getInstance().rings.get(ring);
+                                gob.addcustomol(new NKritterRange(gob, ringprop, new Color(192, 0, 0, 128), new Color(0, 164, 192, 255)));
+                            }
+                        }
+                        if(gob.isTag(Tags.bear))
+                            NAlarmManager.play(Tags.bear);
+                        else if(gob.isTag(Tags.greyseal))
+                            NAlarmManager.play(Tags.greyseal);
+                        else if(gob.isTag(Tags.wolf))
+                            NAlarmManager.play(Tags.wolf);
+                        else if(gob.isTag(Tags.stalagoomba))
+                            NAlarmManager.play(Tags.stalagoomba);
+                        else if(gob.isTag(Tags.winter_stoat))
+                            NAlarmManager.play(Tags.winter_stoat);
+                        else if(gob.isTag(Tags.mammoth))
+                            NAlarmManager.play(Tags.mammoth);
+                    }
+
+                } else if (gob.isTag(Tags.angryhorse)) {
+                    gob.addcustomol(new NTexMarker(gob, 20, Tags.angryhorse));
+                }
+            }
+
+            if (gob.isTag(Tags.growth)) {
+                double scale = 0;
+                TreeScale ts = gob.getattr(TreeScale.class);
+                if (gob.isTag(Tags.tree)) {
+                    scale = Math.round(100 * (ts.scale - 0.1) / 0.9);
+                } else if (gob.isTag(Tags.bush)) {
+                    scale = Math.round(100 * (ts.scale - 0.3) / 0.7);
+                }
+                gob.addcustomol(new NObjectLabel(gob, String.format("%.0f %%", (float) scale), Color.WHITE));
+            }
+            gob.status = Status.updated;
+        }
+
+
+    }
+
 }
+

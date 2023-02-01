@@ -26,7 +26,7 @@ public class NQuestInfo extends Widget {
         }
     }
 
-    public static Set<Quester> questers = new HashSet<>();
+    public static HashMap<String, Quester> questers = new HashMap<>();
 
     Text.Furnace gfnd2 = new PUtils.BlurFurn(new Text.Foundry(Text.sans, 14, Color.white).aa(true), 2, 1, Color.BLACK);
     Text.Furnace gfnd2_under = new PUtils.BlurFurn(new Text.Foundry(Text.sans, 14, Color.orange).aa(true), 2, 1, Color.BLACK);
@@ -366,10 +366,14 @@ public class NQuestInfo extends Widget {
                     name = "yellowf";
                 else if(name.contains("a hen"))
                     name = "chicken/chicken";
+                else if(name.contains("a cock"))
+                    name = "chicken/roast";
                 else if(name.contains("mouflon"))
                     name = "sheep";
                 else if(name.contains("auroch"))
                     name = "cattle";
+                else if(name.contains("chantrell"))
+                    name = "chantrell";
                 else if(name.contains("horse"))
                     name = "horse/horse";
                 items.add((name.replaceAll("\\s+","")).replaceAll("'+",""));

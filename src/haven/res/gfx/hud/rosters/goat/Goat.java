@@ -75,9 +75,7 @@ public class Goat extends Entry {
 	public double rang() {
 		NConfiguration.GoatsHerd herd = NConfiguration.getInstance().goatsHerd;
 		double q1 = q;
-		if (billy) {
-			q1 = ((q + herd.breedingGap) > seedq) ? seedq - herd.breedingGap : q;
-		}
+		q1 = ((q + herd.breedingGap) > seedq) ? seedq - herd.breedingGap : q;
 		return Math.round(herd.milkq * q1 * milkq / 100 + herd.milkquan * milk + herd.meatq * q1 * meatq / 100 + herd.meatquan * meat + herd.woolq * q1 * woolq / 100 + herd.woolquan * wool);
 	}
 	double rang;

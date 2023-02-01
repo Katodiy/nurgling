@@ -161,7 +161,7 @@ public class CheesedShedule extends Bot {
             formaela.add(new CheeseBranch.Cheese(CheeseBranch.Place.start, "Goat's Curd"));
             formaela.add(new CheeseBranch.Cheese(CheeseBranch.Place.mine, "Chabichou"));
             formaela.add(new CheeseBranch.Cheese(CheeseBranch.Place.inside, "Chabis"));
-            formaela.add(new CheeseBranch.Cheese(CheeseBranch.Place.inside, "Formaela"));
+            formaela.add(new CheeseBranch.Cheese(CheeseBranch.Place.cellar, "Formaela"));
             branches.add(new CheeseBranch(formaela));
 
             LinkedList<CheeseBranch.Cheese> majorero = new LinkedList<>();

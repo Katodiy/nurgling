@@ -2,7 +2,6 @@ package nurgling.bots.actions;
 
 import haven.Gob;
 import haven.WItem;
-import haven.res.gfx.terobjs.roastspit.Roastspit;
 import haven.res.ui.croster.CattleId;
 import haven.res.ui.croster.Entry;
 import haven.res.ui.croster.RosterWindow;
@@ -11,8 +10,6 @@ import nurgling.tools.AreasID;
 import nurgling.tools.Finder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.function.Predicate;
 
 public class BranderAction implements Action {

@@ -509,8 +509,8 @@ public class MiniMap extends Widget {
 	    dtext = Area.sized(next.ul.mul(zmaps), next.sz().mul(zmaps));
 	}
 	dloc = loc;
-	boolean isUpdated = false;
-	while(!isUpdated) {
+//	boolean isUpdated = false;
+//	while(!isUpdated) {
 		if (file.lock.readLock().tryLock()) {
 			try {
 				for (Coord c : dgext) {
@@ -519,16 +519,10 @@ public class MiniMap extends Widget {
 				}
 			} finally {
 				file.lock.readLock().unlock();
-				isUpdated = true;
-			}
-		}else{
-			try {
-				Thread.sleep(5);
-			} catch (InterruptedException e) {
-				throw new RuntimeException(e);
+//				isUpdated = true;
 			}
 		}
-	}
+//	}
 	for(DisplayIcon icon : icons)
 	    icon.dispupdate();
     }

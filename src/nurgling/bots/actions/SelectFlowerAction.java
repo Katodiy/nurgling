@@ -3,7 +3,7 @@ package nurgling.bots.actions;
 import haven.Coord;
 import haven.Gob;
 import haven.WItem;
-import haven.res.gfx.terobjs.roastspit.Roastspit;
+import haven.res.gfx.terobjs.items.gridiron.Roastspit;
 import nurgling.*;
 import nurgling.tools.Finder;
 

@@ -73,9 +73,7 @@ public class Ochs extends Entry {
 	public double rang() {
 		NConfiguration.CowsHerd herd = NConfiguration.getInstance().cowsHerd;
 		double q1 = q;
-		if (bull) {
-			q1 = ((q + herd.breedingGap) > seedq) ? seedq - herd.breedingGap : q;
-		}
+		q1 = ((q + herd.breedingGap) > seedq) ? seedq - herd.breedingGap : q;
 		return Math.round(herd.milkq * q1 * milkq / 100 + herd.milkquan * milk + herd.meatq * q1 * meatq / 100 + herd.meatquan * meat);
 	}
 }

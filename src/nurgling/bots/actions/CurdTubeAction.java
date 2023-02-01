@@ -43,6 +43,7 @@ public class CurdTubeAction implements Action {
 
                     res = new TakeFromContainer("Curding Tub", new NAlias("curd"), 4- gui.getInventory().getItems(new NAlias("curd")).size()).run(gui);
                     WItem cheese_tray = NUtils.getGameUI().getInventory().getItem(new NAlias("cheesetray"));
+                    NUtils.waitEvent(()->gui.getInventory().getItems(new NAlias("invobjs/curd-")).size()>=4,10);
                     if(gui.getInventory().getItems(new NAlias("invobjs/curd-")).size()<4)
                         return new Results(Results.Types.NO_FUEL);
                     int finalcount = gui.getInventory().getItems(new NAlias("invobjs/curd-")).size()-4;

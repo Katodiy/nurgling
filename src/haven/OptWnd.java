@@ -1010,16 +1010,6 @@ public class OptWnd extends Window {
 						a = val;
 					}
 				}, prev.pos("bl").adds(0, 5));
-				prev = add(new CheckBox("Brazier:") {
-					{
-						a = NConfiguration.getInstance().rings.get("brazier").isEnable;
-					}
-
-					public void set(boolean val) {
-						NConfiguration.getInstance().rings.get("brazier").isEnable = val;
-						a = val;
-					}
-				}, prev.pos("bl").adds(0, 5));
 				prev = add(new CheckBox("Trough:") {
 					{
 						a = NConfiguration.getInstance().rings.get("trough").isEnable;
@@ -1746,6 +1736,19 @@ public class OptWnd extends Window {
 			LinkedList<Widget> settings = new LinkedList<>();
 
 			public BotSettings() {
+
+				prev = add(new Label("Village chat name"));
+				TextEntry name = new TextEntry(110,"");
+				if(NConfiguration.getInstance().village!=null) {
+					name.settext(NConfiguration.getInstance().village);
+				}
+				prev = add(name, prev.pos("bl").add(0,5));
+				prev = add(new Button(50,"Set"){
+					@Override
+					public void click() {
+						NConfiguration.getInstance().village = name.text();
+					}
+				}, prev.pos("bl").add(0,5));
 				prev = add(new Dropbox<String>(100, 5, 16) {
 					@Override
 					protected String listitem(int i) {
@@ -1774,7 +1777,7 @@ public class OptWnd extends Window {
 								((NOptWnd)parent.parent).needUpdate = true;
 							}
 					}
-				});
+				}, prev.pos("bl").add(0,5));
 
 
 				Operationable l = (w)->{

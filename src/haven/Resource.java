@@ -1497,7 +1497,7 @@ public class Resource implements Serializable {
 			{
 				ret = getParent().loadClass("haven.res.ui.tt." + name.toLowerCase() + "." + name);
 			}
-			else if(NUtils.checkName(name,"Roastspit") && !NUtils.checkName(name,"haven.res.gfx.terobjs"))
+			else if(NUtils.checkName(name,"haven.res.gfx.terobjs.items.gridiron.Roastspit") && !NUtils.checkName(name,"haven.res.gfx.terobjs"))
 			{
 				ret = getParent().loadClass("haven.res.gfx.terobjs." + name.toLowerCase() + "." + name);
 			}

@@ -148,17 +148,6 @@ public class NMapView extends MapView {
                                     }
                                 }
                             }
-                            HashSet<NGob.Tags> bounds;
-                            if ((bounds = NOCache.getBounds(gob.id)) != null) {
-                                StringBuilder boon_str = new StringBuilder();
-                                Iterator<NGob.Tags> bound = bounds.iterator();
-                                while (bound.hasNext()) {
-                                    boon_str.append(bound.next().toString());
-                                    if (bound.hasNext())
-                                        boon_str.append(", ");
-                                }
-                                ttip.put("bounds", boon_str.toString());
-                            }
                             ttip.put("status", gob.status.toString());
                             if (NGob.getModelAttribute(gob)!=-1) {
                                 ttip.put("marker", String.valueOf(NGob.getModelAttribute(gob)));

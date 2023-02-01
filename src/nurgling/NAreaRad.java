@@ -10,6 +10,7 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
 public class NAreaRad extends NSprite {
+
 	Pipe.Op smat = new BaseColor(new Color(192, 0, 0, 128));
 	Pipe.Op emat = Pipe.Op.compose(new BaseColor(new Color(255, 224, 96)), new States.LineWidth(4));
 	final VertexBuf.VertexData posa;
@@ -42,8 +43,8 @@ public class NAreaRad extends NSprite {
 
 	public NAreaRad(Owner owner,  float r, Color smatc, Color ematc) {
 		this(owner, r);
-		this.smat = new BaseColor(smatc);
-		this.emat = Pipe.Op.compose(new BaseColor(ematc), new States.LineWidth(4));;
+		this.smat = Pipe.Op.compose(new BaseColor(smatc),Clickable.No);
+		this.emat = Pipe.Op.compose(new BaseColor(ematc), new States.LineWidth(4),Clickable.No);
 	}
 
 	private FillBuffer sidx(Indices dst, Environment env) {

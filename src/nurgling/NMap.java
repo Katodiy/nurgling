@@ -72,12 +72,7 @@ public class NMap {
 
         synchronized ( gui.ui.sess.glob.oc ) {
             for (Gob gob : gui.ui.sess.glob.oc) {
-                if (horseMode) {
-                    if (NOCache.getBounds(gob.id).contains(NGob.Tags.mounted) || NOCache.getBounds(gob.id).contains(NGob.Tags.lifted))
-                        continue;
-                }
-                if (gob != null && gob != gui.map.player() && gob.id != id && !gob.isTag(NGob.Tags.lifted)) {
-
+                if (gob != null && gob != gui.map.player() && gob.id != id && !NUtils.isLifted(gob)) {
                     NHitBox checkedHitBox = NHitBox.get(gob, trellis);
                     if (checkedHitBox != null) {
                         checkGob(checkedHitBox, gob);

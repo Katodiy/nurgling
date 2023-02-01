@@ -22,4 +22,11 @@ public class NNotifiedRing extends NTargetRing implements PView.Render2D {
 			g.aimage(img, sc, 0.5, 0.5);
 		}
 	}
+
+	@Override
+	public boolean tick(double dt) {
+		if(!(((Gob)owner).isTag(NGob.Tags.notified) || ((Gob)owner).isTag(NGob.Tags.quest)))
+			return true;
+		return super.tick(dt);
+	}
 }

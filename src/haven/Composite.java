@@ -33,6 +33,7 @@ import haven.render.*;
 import haven.Skeleton.Pose;
 import haven.Skeleton.PoseMod;
 import nurgling.NGob;
+import nurgling.NUtils;
 
 import static haven.Composited.ED;
 import static haven.Composited.MD;
@@ -43,6 +44,7 @@ public class Composite extends Drawable implements EquipTarget {
     public final Composited comp;
     public int pseq;
     public List<MD> nmod;
+    public List<MD> oldnmod;
     public List<ED> nequ;
     public Collection<ResData> nposes = null;
     public Collection<ResData> oldposes = null;
@@ -111,6 +113,7 @@ public class Composite extends Drawable implements EquipTarget {
 		Composited.Poses np = comp.new Poses(loadposes(nposes, comp.skel, nposesold));
 		np.set(nposesold?0:ipollen);
 		oldposes = nposes;
+		NGob.updatePoses(gob,oldposes);
 		nposes = null;
 		updequ();
 	    } catch(Loading e) {}
@@ -175,6 +178,7 @@ public class Composite extends Drawable implements EquipTarget {
 
     public void chmod(List<MD> mod) {
 	nmod = mod;
+	oldnmod = nmod;
     }
 
     public void chequ(List<ED> equ) {

@@ -69,7 +69,7 @@ public class OpenTargetContainer implements Action {
         return false;
     }
     
-    public OpenTargetContainer(
+    public  OpenTargetContainer(
             Gob gob,
             String cap
     ) {

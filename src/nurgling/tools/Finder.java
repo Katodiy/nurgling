@@ -407,11 +407,8 @@ public class Finder {
         synchronized ( NUtils.getGameUI().getMap () ) {
             synchronized ( NUtils.getGameUI().ui.sess.glob.oc ) {
                 for ( Gob gob : NUtils.getGameUI().ui.sess.glob.oc ) {
-                    if ( gob != null && gob != NUtils.getGameUI().map.player () && !gob.isTag(NGob.Tags.lifted) ) {
+                    if ( gob != null && gob != NUtils.getGameUI().map.player () && !NUtils.isLifted(gob) ) {
                         if ( gob.getres () != null ) {
-                            if ( NUtils.isIt ( gob, new NAlias ( "dframe" ) ) ) {
-                                int a = 1;
-                            }
                             if ( !NUtils.isIt ( gob, ignored ) ) {
                                 NHitBox gobHitBox = NHitBox.get ( gob, false );
                                 

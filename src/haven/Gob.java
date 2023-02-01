@@ -27,10 +27,13 @@
 package haven;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.*;
 import haven.render.*;
 import nurgling.*;
+import nurgling.bots.actions.NGAttrib;
 
 public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, EquipTarget, Skeleton.HasPose {
     public Coord2d rc;
@@ -40,15 +43,15 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
     public long id;
     public boolean removed = false;
     public final Glob glob;
-    public Map<Class<? extends GAttrib>, GAttrib> attr = new HashMap<Class<? extends GAttrib>, GAttrib>();
-    public final Collection<Overlay> ols = new ArrayList<>();
+    public Map<Class<? extends GAttrib>, GAttrib> attr = new ConcurrentHashMap<>();
+    public final Collection<Overlay> ols = new ArrayList<Overlay>();
     public final Collection<RenderTree.Slot> slots = new ArrayList<>(1);
     public int updateseq = 0;
     private final Collection<SetupMod> setupmods = new ArrayList<>();
     private final LinkedList<Runnable> deferred = new LinkedList<>();
     private Loader.Future<?> deferral = null;
 
-	public static class Overlay implements RenderTree.Node {
+    public static class Overlay implements RenderTree.Node {
 	public final int id;
 	public final Gob gob;
 	public final Indir<Resource> res;
@@ -59,7 +62,7 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 	private boolean added = false;
 
 	public Overlay(Gob gob, int id, Indir<Resource> res, Message sdt) {
-		    this.gob = gob;
+	    this.gob = gob;
 	    this.id = id;
 	    this.res = res;
 	    this.sdt = new MessageBuf(sdt);
@@ -118,6 +121,7 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 		return;
 	    }
 	    remove0();
+	    gob.ols.remove(this);
 	}
 
 	public void remove() {
@@ -350,15 +354,27 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 	this.id = id;
 	if(id < 0)
 	    virtual = true;
-	}
+    }
 
     public Gob(Glob glob, Coord2d c) {
 	this(glob, c, -1);
     }
 
     public void ctick(double dt) {
-	for(GAttrib a : attr.values())
-	    a.ctick(dt);
+		synchronized (this) {
+			for (Class<? extends GAttrib> a : attr.keySet()) {
+				GAttrib v = attr.get(a);
+				if (v instanceof NGAttrib) {
+					if (((NGAttrib) v).tick(dt))
+						delattr(a);
+				}
+
+			}
+		}
+	for (GAttrib a : attr.values())
+		a.ctick(dt);
+
+
 	for(Iterator<Overlay> i = ols.iterator(); i.hasNext();) {
 	    Overlay ol = i.next();
 	    if(ol.slots == null) {
@@ -376,7 +392,7 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 	updstate();
 	if(virtual && ols.isEmpty() && (getattr(Drawable.class) == null))
 	    glob.oc.remove(this);
-	updateCustom();
+	updateCustom(this);
     }
 
     public void gtick(Render g) {
@@ -432,7 +448,7 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 	ol.init();
 	ol.add0();
 	if(ols.add(ol)) {
-		updateOverlays(this);
+//		updateOverlays(this);
 	}
     }
     public void addol(Overlay ol) {
@@ -445,7 +461,7 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 				addol(ol, true);
 			}
 	}
-	public void findoraddol(Sprite ol) {
+	public void addcustomol(Sprite ol) {
 		findoraddol(new Overlay(this, ol));
 	}
     public void addol(Sprite ol) {
@@ -522,6 +538,7 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 
     private void setattr(Class<? extends GAttrib> ac, GAttrib a) {
 	GAttrib prev = attr.remove(ac);
+	checkattr(this, ac, a, prev);
 	if(prev != null) {
 	    if((prev instanceof RenderTree.Node) && (prev.slots != null))
 		RUtils.multirem(new ArrayList<>(prev.slots));
@@ -554,6 +571,15 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 	setattr(attrclass(a.getClass()), a);
     }
 
+	public void addcustomattr(NGAttrib a) {
+		for(GAttrib ex : attr.values()){
+			if(ex.getClass() == a.getClass())
+				return;
+		}
+		setattr(attrclass(a.getClass()), a);
+		a.update();
+	}
+
     public void delattr(Class<? extends GAttrib> c) {
 	setattr(attrclass(c), null);
     }
@@ -579,9 +605,9 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 	public Object[] clickargs(ClickData cd) {
 	    Object[] ret = {0, (int)gob.id, gob.rc.floor(OCache.posres), 0, -1};
 	    for(Object node : cd.array()) {
-		if(node instanceof Overlay) {
+		if(node instanceof Gob.Overlay) {
 		    ret[0] = 1;
-		    ret[3] = ((Overlay)node).id;
+		    ret[3] = ((Gob.Overlay)node).id;
 		}
 		if(node instanceof FastMesh.ResourceMesh)
 		    ret[4] = ((FastMesh.ResourceMesh)node).id;
@@ -673,11 +699,8 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 	synchronized(this) {
 	    updateseq++;
 	    if(updwait != null)
-		{
-			updwait.wnotify();
-		}
+		updwait.wnotify();
 		NGob.updateRes(this);
-//		this.slots
 	}
     }
 
@@ -703,10 +726,10 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 	    this.updseq = gob.updateseq;
 	}
 
-	public void waitfor(Runnable callback, Consumer<Waiting> reg) {
+	public void waitfor(Runnable callback, Consumer<Waitable.Waiting> reg) {
 	    synchronized(gob) {
 		if(gob.updateseq != this.updseq) {
-		    reg.accept(Waiting.dummy);
+		    reg.accept(Waitable.Waiting.dummy);
 		    callback.run();
 		} else {
 		    gob.updwait(callback, reg);
@@ -803,7 +826,7 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 		    throw(new Loading(bl) {
 			    public String getMessage() {return(bl.getMessage());}
 
-			    public void waitfor(Runnable callback, Consumer<Waiting> reg) {
+			    public void waitfor(Runnable callback, Consumer<Waitable.Waiting> reg) {
 				Waitable.or(callback, reg, bl, Gob.this::updwait);
 			    }
 			});

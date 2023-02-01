@@ -32,6 +32,8 @@ public class NDirArrow extends NSprite implements RenderTree.Node, PView.Render2
 
 	NConfiguration.ArrowProp prop;
 
+	boolean forDelete = false;
+
 	public NDirArrow(Owner owner, Color color, float r, Gob target, Tex marker, NConfiguration.ArrowProp prop) {
 		super(owner, null);
 		this.prop = prop;
@@ -94,12 +96,15 @@ public class NDirArrow extends NSprite implements RenderTree.Node, PView.Render2
 
 	@Override
 	public boolean tick(double dt) {
+		if(forDelete)
+			return true;
 		target = NUtils.getGob(id);
 		if (target != null && !target.isTag(NGob.Tags.knocked)) {
 			return super.tick(dt);
 		} else {
 			return true;
 		}
+
 	}
 
 	public void gtick(Render g) {

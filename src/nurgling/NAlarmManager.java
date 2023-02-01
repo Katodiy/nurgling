@@ -1,56 +1,46 @@
 package nurgling;
 
 import haven.Audio;
+import haven.HashedMap;
 import haven.Resource;
+import sun.awt.Mutex;
 
 import java.util.HashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class NAlarmManager {
-    
-    private static HashMap<String, Alarm> alarms = new HashMap<> ();
-    
-    public static void init () {
-        load ();
+    static NGob.Tags last;
+    static long startTick = 0;
+    static final long duration = 1000;
+    static private final ReentrantLock mutex = new ReentrantLock();
+
+    private static HashMap<NGob.Tags, String> alarms = new HashMap<NGob.Tags, String>();
+
+    private static void init(){
+        alarms.put(NGob.Tags.bear,"alarm/bear");
+        alarms.put(NGob.Tags.wolf,"alarm/wolf");
+        alarms.put(NGob.Tags.greyseal,"alarm/greyseal");
+        alarms.put(NGob.Tags.mammoth,"alarm/mammoth");
+        alarms.put(NGob.Tags.quest,"alarm/quest");
+        alarms.put(NGob.Tags.foe,"alarm/white");
+        alarms.put(NGob.Tags.unknown,"alarm/white");
+        alarms.put(NGob.Tags.winter_stoat,"alarm/stoat");
+        alarms.put(NGob.Tags.stalagoomba,"alarm/stalagoomba");
+
     }
-    
-    public static boolean play (
-            String resname
+
+    public static void play (
+            NGob.Tags tag
     ) {
-        for(String key : alarms.keySet ()){
-            if(resname.contains ( key )){
-                alarms.get(key).play ();
-                return true;
-            }
+        mutex.lock();
+        if (last != tag || NUtils.getTickId() - startTick > duration) {
+            if(alarms.isEmpty())
+                init();
+            Audio.play(Audio.fromres(Resource.local().loadwait(alarms.get(tag))));
+            last = tag;
+            startTick = NUtils.getTickId();
         }
-            return false;
-    }
-
-    public static void load () {
-        //alarms.clear ();
-        //alarms.put ( "bear", new Alarm ( path + "bear.wav", 5, false ) );
-        //alarms.put ( "boar", new Alarm ( path + "boar.wav", 5, false ) );
-        //alarms.put ( "lynx", new Alarm ( path + "lynx.wav", 5, false ) );
-        //alarms.put ( "caveangler", new Alarm ( path + "lynx.wav", 5, false ) );
-        //alarms.put ( "troll", new Alarm ( path + "troll.wav", 5, false ) );
-        //alarms.put ( "mammoth", new Alarm ( path + "mammoth.wav", 5, false ) );
-        //alarms.put ( "wolf", new Alarm ( path + "wolf.wav", 5, false ) );
-        //alarms.put ( "eagle", new Alarm ( path + "eagle.wav", 5, false ) );
-    }
-    
-    public static class Alarm {
-        public Resource res;
-        public int volume;
-
-        public Alarm (
-                Resource res,
-                int volume
-        ) {
-            this.res = res;
-            this.volume = volume;
-        }
-        
-        public void play () {
-            Audio.play(res);
-        }
+        mutex.unlock();
     }
 }

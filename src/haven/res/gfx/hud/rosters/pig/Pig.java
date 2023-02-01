@@ -74,9 +74,7 @@ public class Pig extends Entry {
 	public double rang() {
 		NConfiguration.PigsHerd herd = NConfiguration.getInstance().pigsHerd;
 		double q1 = q;
-		if (hog) {
-			q1 = ((q + herd.breedingGap) > seedq) ? seedq - herd.breedingGap : q;
-		}
+		q1 = ((q + herd.breedingGap) > seedq) ? seedq - herd.breedingGap : q;
 		return Math.round(herd.meatq * q1 * meatq / 100 + herd.meatquan * meat +  herd.trufSnout * prc);
 	}
 }
