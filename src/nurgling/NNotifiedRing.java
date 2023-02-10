@@ -25,7 +25,7 @@ public class NNotifiedRing extends NTargetRing implements PView.Render2D {
 
 	@Override
 	public boolean tick(double dt) {
-		if(!(((Gob)owner).isTag(NGob.Tags.notified) || ((Gob)owner).isTag(NGob.Tags.quest)))
+		if(!(((Gob)owner).isTag(NGob.Tags.notified) || ((Gob)owner).isTag(NGob.Tags.quest)) /*&& !((Gob)owner).getResName().contains("woodensign")*/)
 			return true;
 		return super.tick(dt);
 	}

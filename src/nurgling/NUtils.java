@@ -1062,9 +1062,7 @@ public class NUtils {
 
     public static double getWItemQuality(WItem item)
             throws InterruptedException {
-        while (item.item.spr == null) {
-            Thread.sleep(20);
-        }
+        NUtils.waitEvent (()->item.item.spr != null, 20,20);
         for (ItemInfo info : item.item.info()) {
             if (info instanceof QBuff) {
                 return ((QBuff) info).q;
@@ -1168,9 +1166,14 @@ public class NUtils {
     }
 
     public static boolean alarmOrcalot() {
-        return !Finder.findObjectsInArea(
+        ArrayList<Gob> gobs = Finder.findObjectsInArea(
                 new NAlias(new ArrayList<>(Arrays.asList("/orca", "/spermwhale", "/greyseal")),new ArrayList<>(Arrays.asList("beef", "skeleton"))),
-                new NArea(gameUI.map.player().rc, 3999)).isEmpty();
+                new NArea(gameUI.map.player().rc, 3999));
+        for(Gob gob: gobs) {
+            if (!gob.isTag(NGob.Tags.knocked))
+                return true;
+        }
+        return false;
     }
 
     public static void logOut() {

@@ -44,7 +44,19 @@ public class NomadFinder implements Action {
              } catch (FileNotFoundException e) {
                  e.printStackTrace();
              }
-
+        Gob ship = Finder.findObject(new NAlias(new ArrayList<>(Arrays.asList("/knarr", "/snekkja" )), new ArrayList<>(Arrays.asList("beef", "skeleton"))));
+         if(((GobHealth)ship.getattr(GobHealth.class)).hp <=0.25) {
+             while (true) {
+                 for (ChatUI.Selector.DarkChannel chan : gui.chat.chat.chansel.chls) {
+                     if (chan.chan.name().equals(NConfiguration.getInstance().village)) {
+                         gui.chat.chat.select(chan.chan);
+                         gui.chat.chat.sel.wdgmsg("msg", "Please fix my ship!");
+                         return new Results(Results.Types.NO_WORKSTATION);
+                     }
+                 }
+                 Thread.sleep(2000);
+             }
+         }
         Coord2d shift = (mark_area!=null)?Finder.findObjectInArea(anchors, 3000, mark_area).rc:Finder.findObject(anchors).rc;
         for (Coord2d coord : marks) {
             Coord2d pos = coord.add(shift);
@@ -58,17 +70,25 @@ public class NomadFinder implements Action {
                     gui.map.wdgmsg("click", Coord.z, pos.floor(posres), 1, 0);
                 if (NUtils.alarmOrcalot()) {
                     Gob target = Finder.findObject(new NAlias(new ArrayList<>(Arrays.asList("/orca", "/spermwhale", "/greyseal")), new ArrayList<>(Arrays.asList("beef", "skeleton"))));
-                    for (ChatUI.Selector.DarkChannel chan : gui.chat.chat.chansel.chls) {
-                        if (chan.chan.name().equals(NConfiguration.getInstance().village)) {
-                            gui.chat.chat.select(chan.chan);
-                            gui.chat.chat.sel.wdgmsg("msg", "I found : " + target.getres().name + "\040" + "!");
+                    if(target!=null) {
+                        String name = target.getResName();;
+                        Long id = target.id;
+                        for (ChatUI.Selector.DarkChannel chan : gui.chat.chat.chansel.chls) {
+                            if (chan.chan.name().equals(NConfiguration.getInstance().village)) {
+                                gui.chat.chat.select(chan.chan);
+                                gui.chat.chat.sel.wdgmsg("msg", "I found : " + name + "\040" + "!");
+                            }
                         }
-                    }
-                    if(Finder.findObject(new NAlias(new ArrayList<>(Arrays.asList("/orca", "/spermwhale", "/greyseal")), new ArrayList<>(Arrays.asList("beef", "skeleton"))))!=null) {
-                        while (NUtils.getGob(target.id) != null) {
-                            gui.map.wdgmsg("click", Coord.z, NUtils.getGob(target.id).rc.floor(posres), 1, 0);
+                        if (Finder.findObject(new NAlias(new ArrayList<>(Arrays.asList("/greyseal")), new ArrayList<>(Arrays.asList("beef", "skeleton")))) != null) {
+                            while (NUtils.getGob(id) != null) {
+                                Gob targ = NUtils.getGob(target.id);
+                                if(targ!=null) {
+                                    gui.map.wdgmsg("click", Coord.z, targ.rc.floor(posres), 1, 0);
+                                    Thread.sleep(1000);
+                                }
+                            }
+                            Thread.sleep(1000);
                         }
-                        Thread.sleep(1000);
                     }
 
                     return new Results(Results.Types.FULL);

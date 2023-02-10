@@ -64,7 +64,7 @@ public class Sheeps extends Bot {
             @Override
             public boolean test(Gob gob) {
                 Sheep p1 = (Sheep) (NUtils.getAnimalEntity(gob,Sheep.class));;
-                return !p1.ram && !p1.dead && p1.lactate;
+                return !p1.ram && !p1.dead && !p1.lamb;
             }
         };
         runActions.add(new AnimalWool<Sheep>(new NAlias("sheep"), AreasID.sheeps,AreasID.wool,Sheep.class,wlpred));

@@ -22,7 +22,7 @@ public class CraftCloth implements Action {
         target = new NAlias( new ArrayList<> ( Arrays.asList ( "flax", "hemp") ) );
 
 
-        new TakeFromContainers ( new NAlias ( "stockpile" ), target, 5, in_area, "Stockpile" ).run ( gui );
+        new TakeFromContainers ( new NAlias ( "stockpile" ), target, (NUtils.getGameUI().getInventory().getFreeSpace()/5)*5, in_area, "Stockpile" ).run ( gui );
 
         if(NUtils.getStamina()<0.5){
             new Drink(0.9,false).run(gui);

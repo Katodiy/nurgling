@@ -32,7 +32,8 @@ public class TarStickAction implements Action {
 
         while ((!Finder.findObjectsInArea(new NAlias("log"), tree_area).isEmpty() || !Finder.findObjectsInArea(new NAlias("block"), tree_area).isEmpty()) && findTarBarrel()) {
             /// Создаем палку
-            new CreateBranch(tree_area).run(gui);
+            if(new CreateBranch(tree_area).run(gui).type == Results.Types.NO_FUEL)
+                return new Results(Results.Types.NO_FUEL);
             /// Находим подходящую бочку
             new OpenBarrelWithContent(2.5, new NAlias(new ArrayList<>(Arrays.asList("tar", "Tar"))),
                     barrel_area).run(gui);

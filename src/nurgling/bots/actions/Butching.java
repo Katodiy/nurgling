@@ -62,7 +62,7 @@ public class Butching implements Action {
                 /// Собираем мясо
                 new CollectFromGob("Butcher", gob, new NAlias("butch")).run(gui);
             } else {
-                new CollectFromGob("Cut", gob, new NAlias("butch")).run(gui);
+                new CollectFromGob("Cut", gob, new NAlias("bushpi")).run(gui);
             }
             new TransferMeat().run(gui);
 

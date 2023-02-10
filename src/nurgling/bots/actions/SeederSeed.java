@@ -37,10 +37,10 @@ public class SeederSeed implements Action {
         }
         boolean isReverse = false;
         if(gui.map.player().rc.dist(area.begin)<gui.map.player().rc.dist(area.end))
-            new PathFinder(gui, area.begin).run();
+            new PathFinder(gui, area.findFarmTile(area.begin)).run();
         else {
             isReverse = true;
-            new PathFinder(gui, area.end).run();
+            new PathFinder(gui, area.findFarmTile(area.end)).run();
         }
 
         do {
@@ -101,7 +101,7 @@ public class SeederSeed implements Action {
             hpos.installBox();
             long size = hpos.countFarmTiles();
 //            System.out.println(Finder.findObjectsInArea( in.items,hpos).size() +","+ String.valueOf(size));
-            while (Finder.findObjectsInArea( in.items,hpos).size()<size) {
+            while (Finder.findObjectsInArea( in.items,hpos).size()<size && area.countFarmTiles()>0) {
                 if(!seedCrop(gui, hpos))
                     return new Results(Results.Types.NO_ITEMS);
                 if (NUtils.getStamina() <= 0.3) {

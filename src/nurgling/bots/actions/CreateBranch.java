@@ -18,7 +18,7 @@ public class CreateBranch implements Action {
     @Override
     public Results run ( NGameUI gui )
             throws InterruptedException {
-        if(!Finder.findObjectsInArea(new NAlias("stockpile-block"),area).isEmpty()) {
+        if(!Finder.findObjectsInArea(new NAlias("stockpile-wblock"),area).isEmpty()) {
             new TakeFromPile(new NAlias("block"), 1, new NAlias("block"), area).run(gui);
         }else{
             if(!Finder.findObjectsInArea(new NAlias("log"),area).isEmpty()){
@@ -28,6 +28,8 @@ public class CreateBranch implements Action {
                             Results.Types.SUCCESS ) {
                         return new Results ( Results.Types.NO_ITEMS );
                     }
+            }else{
+                return new Results ( Results.Types.NO_FUEL );
             }
         }
         WItem block = gui.getInventory ().getItem ( new NAlias ( "block" ) );
