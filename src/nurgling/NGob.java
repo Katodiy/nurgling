@@ -789,7 +789,7 @@ public class NGob {
                     if (gob.isTag(Tags.sheep) || gob.isTag(Tags.goat))
                         gob.addcustomol(new NWoolMarker(gob, 12));
 
-                    if(!gob.isTag(Tags.knocked) && gob.getattr(Composite.class)!=null) {
+                    if(gob.getattr(Composite.class)!=null && gob.getpose()!=null && !gob.isTag(Tags.knocked)) {
                         for (String ring : NConfiguration.getInstance().rings.keySet()) {
                             if (gob.getResName().contains(ring)) {
                                 NConfiguration.Ring ringprop = NConfiguration.getInstance().rings.get(ring);

@@ -21,7 +21,7 @@ public class TransferToContainer implements Action {
             /// Находим все необходимые предметы в инвентаре
             ArrayList<WItem> items;
             items = gui.getInventory ().getItems ( names, q );
-            if(aFreeSpace==-1) {
+            if(aFreeSpace==0) {
                 /// Переносим предметы в контейнер
                 for ( WItem item : items ) {
                     if ( gui.getInventory ( cap ).getFreeSpace () == 0 ) {
@@ -86,7 +86,7 @@ public class TransferToContainer implements Action {
     }
 
 
-    int aFreeSpace = -1;
+    int aFreeSpace = 0;
     NAlias names;
     String cap;
     boolean isInfo;

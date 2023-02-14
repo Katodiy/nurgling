@@ -28,14 +28,17 @@ public class NAlarmManager {
         alarms.put(NGob.Tags.winter_stoat,"alarm/stoat");
         alarms.put(NGob.Tags.stalagoomba,"alarm/stalagoomba");
 
+
     }
 
     public static void play (
             NGob.Tags tag
     ) {
         mutex.lock();
+        if (startTick > NUtils.getTickId())
+            startTick = 0;
         if (last != tag || NUtils.getTickId() - startTick > duration) {
-            if(alarms.isEmpty())
+            if (alarms.isEmpty())
                 init();
             Audio.play(Audio.fromres(Resource.local().loadwait(alarms.get(tag))));
             last = tag;

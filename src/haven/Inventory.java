@@ -31,6 +31,7 @@ import nurgling.NWItem;
 
 import java.util.*;
 import java.awt.image.WritableRaster;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Inventory extends Widget implements DTarget {
     public static final Coord sqsz = UI.scale(new Coord(33, 33));
@@ -38,7 +39,7 @@ public class Inventory extends Widget implements DTarget {
     public boolean dropul = true;
     public Coord isz;
     public boolean[] sqmask = null;
-    Map<GItem, WItem> wmap = new HashMap<GItem, WItem>();
+    protected Map<GItem, WItem> wmap = new ConcurrentHashMap<>();
 
     static {
 	Coord sz = sqsz.add(1, 1);

@@ -373,9 +373,13 @@ public class NQuestInfo extends Widget {
                 else if(name.contains("auroch"))
                     name = "cattle";
                 else if(name.contains("chantrell"))
-                    name = "chantrell";
+                    name = "herbs/chantrell";
                 else if(name.contains("horse"))
                     name = "horse/horse";
+                else if(name.contains("woodgrouse hen"))
+                    name = "woodgrouse-f";
+                else if(name.contains("rat"))
+                    name = "/rat";
                 items.add((name.replaceAll("\\s+","")).replaceAll("'+",""));
             }
         }

@@ -280,6 +280,7 @@ public class NConfiguration {
         iconsettings.put("mm/claim",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/claim"),true,true,false,false));
         iconsettings.put("mm/gem",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/gem"),true,true,false,false));
         iconsettings.put("mm/stalagoomba",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/stalagoomba"),true,true,false,false));
+        iconsettings.put("mm/candelabrum",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/candelabrum"),true,true,false,false));
         iconsettings.put("mm/cauldron",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/cauldron"),true,true,false,false));
         iconsettings.put("mm/cart",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/cart"),true,true,false,false));
         iconsettings.put("mm/clay-cave",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/clay-cave"),true,true,false,false));

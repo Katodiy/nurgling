@@ -414,12 +414,17 @@ public class NUtils {
     ) {
         if (item != null) {
             try {
+                NUtils.waitEvent(() -> item.item != null && item.item.spr != null && item.item.info() != null && item.item.getinfo(ItemInfo.Name.class) != null, 50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
                 /// Запрашиваем ресур
                 Resource res = null;
                 res = item.item.getres();
                 if (res != null) {
                     /// Проверяем имя на соответствие
-                    return checkName(res.name, regEx);
+                    return checkName(res.name, regEx) || checkName(item.item.getinfo(ItemInfo.Name.class).str.text, regEx);
                 }
             } catch (Loading e) {
             }
@@ -794,6 +799,8 @@ public class NUtils {
         Resource.loadimg("mm/cauldron");
         iconMap.put("gfx/terobjs/anvil","mm/anvil");
         Resource.loadimg("mm/anvil");
+        iconMap.put("gfx/terobjs/candelabrum","mm/candelabrum");
+        Resource.loadimg("mm/candelabrum");
         iconMap.put("gfx/kritter/stalagoomba/stalagoomba","mm/stalagoomba");
         Resource.loadimg("mm/stalagoomba");
         iconMap.put("gfx/terobjs/claim","mm/claim");

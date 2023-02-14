@@ -32,7 +32,7 @@ public class CraftRope implements Action {
             }
         }
         else {
-            new TakeFromContainers ( new NAlias ( "stockpile" ), target, 10, in_area, "Stockpile" ).run ( gui );
+            new TakeFromContainers ( new NAlias ( "stockpile" ), target, (NUtils.getGameUI().getInventory().getFreeSpace()/10)*10, in_area, "Stockpile" ).run ( gui );
         }
         if(NUtils.getStamina()<0.5){
             new Drink(0.9,false).run(gui);
