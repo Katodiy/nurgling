@@ -44,7 +44,7 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
     public boolean removed = false;
     public final Glob glob;
     public Map<Class<? extends GAttrib>, GAttrib> attr = new ConcurrentHashMap<>();
-    public final Collection<Overlay> ols = new ArrayList<Overlay>();
+    public final Collection<Overlay> ols = new ConcurrentLinkedDeque<>();
     public final Collection<RenderTree.Slot> slots = new ArrayList<>(1);
     public int updateseq = 0;
     private final Collection<SetupMod> setupmods = new ArrayList<>();

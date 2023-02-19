@@ -40,11 +40,11 @@ public class TransferToContainer implements Action {
                     return new Results ( Results.Types.FULL );
                 }
                 for(int i = 0; i <freeSpace; i++){
-                    WItem item = gui.getInventory ().getItem ( names, q );
+                    WItem item = gui.getInventory ().getItem ( names, q , gui.getInventory ( cap ).getFreeSpace ());
                     if (item!=null) {
                         NUtils.transferItem ( gui.getInventory (), item, gui.getInventory ( cap ));
-                        if ( gui.getInventory ( cap ).getFreeSpace () - aFreeSpace <= 0 ) {
-                            return new Results ( Results.Types.FULL );
+                        if ( gui.getInventory ( cap ).getFreeSpace () == 0 ) {
+                            return new Results(Results.Types.FULL);
                         }
                     }else
                         return new Results ( Results.Types.SUCCESS );

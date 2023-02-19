@@ -1118,8 +1118,7 @@ public class NUtils {
             Gob gob,
             NAlias name
     ) {
-        ArrayList<Gob.Overlay> core = (ArrayList<Gob.Overlay>) gob.ols;
-        for (Gob.Overlay ov : core) {
+        for (Gob.Overlay ov : gob.ols) {
             if (ov.res != null) {
                 Resource res_ov = ov.res.get();
                 if (res_ov != null) {
@@ -1488,12 +1487,13 @@ public class NUtils {
     )
             throws InterruptedException {
         int space = inv.getFreeSpace();
+        int oldspace = targetinv.getFreeSpace();
         if (item != null) {
             if(targetinv.getNumberFreeCoord(item)==0)
                 return false;
             item.item.wdgmsg("transfer", item.sz, 1);
-            waitEvent(() -> space != inv.getFreeSpace(), 200);
-            return space != inv.getFreeSpace();
+            waitEvent(() -> space != inv.getFreeSpace() && targetinv.getFreeSpace()!=oldspace, 200);
+            return oldspace != targetinv.getFreeSpace();
         }
         return false;
     }

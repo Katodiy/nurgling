@@ -183,14 +183,47 @@ public class NInventory extends Inventory {
             throws InterruptedException {
         /// Рзбираются компоненты инвентаря
         for (WItem wdg : wmap.values()) {
-                /// Для каждого найденго в компонентах предмета осуществляется проверка на его соответствие ключу
-                if (NUtils.isIt(wdg, key) ) {
-                    if (NUtils.getWItemQuality(wdg) >= q)
-                    /// Если предмет соответствует , то возвращааем его
-                    {
-                        return wdg;
-                    }
+            try {
+                NUtils.waitEvent(() -> wdg.item != null && wdg.item.spr != null && wdg.item.info() != null && wdg.item.getinfo(ItemInfo.Name.class) != null, 50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            /// Для каждого найденго в компонентах предмета осуществляется проверка на его соответствие ключу
+            if (NUtils.isIt(wdg, key)) {
+                if (NUtils.getWItemQuality(wdg) >= q)
+                /// Если предмет соответствует , то возвращааем его
+                {
+                    return wdg;
                 }
+            }
+        }
+        return null;
+    }
+
+    public WItem getItem(
+            NAlias key,
+            double q,
+            int freeSpace
+    )
+            throws InterruptedException {
+        /// Рзбираются компоненты инвентаря
+        for (WItem wdg : wmap.values()) {
+            try {
+                NUtils.waitEvent(() -> wdg.item != null && wdg.item.spr != null && wdg.item.info() != null && wdg.item.getinfo(ItemInfo.Name.class) != null, 50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            /// Для каждого найденго в компонентах предмета осуществляется проверка на его соответствие ключу
+            if (NUtils.isIt(wdg, key)) {
+
+                if (NUtils.getWItemQuality(wdg) >= q)
+                /// Если предмет соответствует , то возвращааем его
+                {
+                    Coord size = new Coord((wdg.item.spr.sz().x+1) / sqsz.x, (wdg.item.spr.sz().y+1) / sqsz.y);
+                    if(size.x*size.y<=freeSpace)
+                        return wdg;
+                }
+            }
         }
         return null;
     }
@@ -332,9 +365,9 @@ public class NInventory extends Inventory {
                 e.printStackTrace();
             }
             Coord sz =  wdg.item.spr.sz();
-            Coord pos = new Coord((wdg.c.x - 1) / sqsz.x, (wdg.c.y - 1) / sqsz.y);
-            Coord size = new Coord((sz.x+1) / sqsz.x, (sz.y+1) / sqsz.y);
-            Coord endPos = new Coord(pos.x + size.x - 1, pos.y + size.y - 1);
+            Coord pos = new Coord(wdg.c.x  / (sqsz.x-1), wdg.c.y / (sqsz.x-1));
+            Coord size = new Coord(sz.x / (sqsz.x-1), sz.y / (sqsz.y-1));
+            Coord endPos = new Coord(pos.x + size.x - 1, pos.y + size.y -1);
             for (int i = pos.x; i <= endPos.x; i++) {
                 for (int j = pos.y; j <= endPos.y; j++) {
                     inventory[i][j] = true;
@@ -365,8 +398,8 @@ public class NInventory extends Inventory {
                 e.printStackTrace();
             }
             Coord sz =  wdg.item.spr.sz();
-            Coord pos = new Coord((wdg.c.x - 1) / sqsz.x, (wdg.c.y - 1) / sqsz.y);
-            Coord size = new Coord((sz.x+1) / sqsz.x, (sz.y+1) / sqsz.y);
+            Coord pos = new Coord(wdg.c.x  / (sqsz.x-1), wdg.c.y / (sqsz.x-1));
+            Coord size = new Coord(sz.x / (sqsz.x-1), sz.y / (sqsz.y-1));
             Coord endPos = new Coord(pos.x + size.x - 1, pos.y + size.y - 1);
             for (int i = pos.x; i <= endPos.x; i++) {
                 for (int j = pos.y; j <= endPos.y; j++) {

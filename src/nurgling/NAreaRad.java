@@ -17,11 +17,11 @@ public class NAreaRad extends NSprite {
 	final VertexBuf vbuf;
 	final Model smod, emod;
 	private Coord2d lc;
-
+	int n;
 
 	public NAreaRad(Owner owner, float r) {
 		super(owner, null);
-		int n = Math.max(24, (int)(2 * Math.PI * r / 11.0));
+		n = Math.max(48, (int)(2 * Math.PI * r / 11.0));
 		FloatBuffer posb = Utils.wfbuf(n * 3 * 2);
 		FloatBuffer nrmb = Utils.wfbuf(n * 3 * 2);
 		for(int i = 0; i < n; i++) {
@@ -68,8 +68,8 @@ public class NAreaRad extends NSprite {
 	}
 
 	private void setz(Render g, Glob glob, Coord2d c) {
-		FloatBuffer posb = posa.data;
 		int n = posa.size() / 2;
+		FloatBuffer posb = Utils.wfbuf(n * 3 * 2);
 		try {
 			float bz = (float)glob.map.getcz(c.x, c.y);
 			for(int i = 0; i < n; i++) {
@@ -81,6 +81,17 @@ public class NAreaRad extends NSprite {
 			return;
 		}
 		vbuf.update(g);
+	}
+
+	void setR(Render g, float r){
+		FloatBuffer posb = posa.data;
+		for(int i = 0; i < n; i++) {
+			float s = (float)Math.sin(2 * Math.PI * i / n);
+			float c = (float)Math.cos(2 * Math.PI * i / n);
+			posb.put(     i  * 3 + 0, c * r).put(     i  * 3 + 1, s * r).put(     i  * 3 + 2,  10);
+			posb.put((n + i) * 3 + 0, c * r).put((n + i) * 3 + 1, s * r).put((n + i) * 3 + 2, -10);
+		}
+		this.vbuf.update(g);
 	}
 
 	public void gtick(Render g) {

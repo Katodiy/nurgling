@@ -78,6 +78,7 @@ public class NGob {
         gem,
         truffle,
         item,
+        barterarea,
         unknown,
         foe,
         notmarked,
@@ -551,7 +552,11 @@ public class NGob {
                     gob.addTag(Tags.sheep);
             } else if (NUtils.checkName(name, "borka")) {
                 gob.addTag(Tags.borka);
-            } else if (NUtils.checkName(name, "items")) {
+            }
+            else if (NUtils.checkName(name, "barterarea")) {
+                gob.addTag(Tags.barterarea);
+            }
+            else if (NUtils.checkName(name, "items")) {
                 gob.addTag(Tags.item);
                 if (NUtils.checkName(name, "gem")) {
                     gob.addTag(Tags.gem);
@@ -637,7 +642,7 @@ public class NGob {
                 gob.addTag(Tags.minesupport);
             }
 
-            if (!gob.isTag(Tags.item) && !gob.isTag(Tags.plant) && !gob.isTag(Tags.cellar) && !(gob.isTag(Tags.pow) && (gob.getModelAttribute() & 17) == 17) && !(gob.isTag(Tags.kritter) && NUtils.checkName(name, "cavemoth"))) {
+            if (!gob.isTag(Tags.item) && !gob.isTag(Tags.barterarea) && !gob.isTag(Tags.plant) && !gob.isTag(Tags.cellar) && !(gob.isTag(Tags.pow) && (gob.getModelAttribute() & 17) == 17) && !(gob.isTag(Tags.kritter) && NUtils.checkName(name, "cavemoth"))) {
                 gob.hitBox = NHitBox.get(name);
             }
 
@@ -725,7 +730,7 @@ public class NGob {
                     gob.addcustomol(new NHighlightRing(gob));
                     gob.addcustomattr(new NGobHighlight(gob));
 
-                } else if ((gob.isTag(Tags.quest) && !gob.isTag(Tags.knocked))/*|| gob.getResName().contains("woodensign")*/) {
+                } else if ((gob.isTag(Tags.quest) && !gob.isTag(Tags.knocked)) || (gob.getResName()!=null && gob.getResName().contains("woodensign"))) {
                     NAlarmManager.play(Tags.quest);
                     gob.addcustomol(new NNotifiedRing(gob, Color.CYAN, 30, 0.7f, gob.noteImg));
                 } else if (gob.isTag(Tags.notified)) {
