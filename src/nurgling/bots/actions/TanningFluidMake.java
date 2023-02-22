@@ -18,12 +18,17 @@ public class TanningFluidMake implements Action {
         if(gui.getInventory ().getItems ( new NAlias("bark")).size()<10) {
             return new Results(Results.Types.NO_ITEMS);
         }
-        for (int i = 0 ; i<10; i++) {
+        int count = 0;
+        while (count<10) {
             if (gui.hand.isEmpty()) {
                 new TakeToHand(new NAlias("bark")).run(gui);
             }
-            NUtils.activateItem(gob);
-            NUtils.waitEvent(() -> gui.hand.isEmpty(), 20);
+            if(!gui.hand.isEmpty()) {
+                NUtils.activateItem(gob);
+                NUtils.waitEvent(() -> gui.hand.isEmpty(), 500);
+                if (gui.hand.isEmpty())
+                    count++;
+            }
         }
         return new Results ( Results.Types.SUCCESS );
     }

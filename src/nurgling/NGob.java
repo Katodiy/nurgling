@@ -730,7 +730,7 @@ public class NGob {
                     gob.addcustomol(new NHighlightRing(gob));
                     gob.addcustomattr(new NGobHighlight(gob));
 
-                } else if ((gob.isTag(Tags.quest) && !gob.isTag(Tags.knocked)) || (gob.getResName()!=null /*&& gob.getResName().contains("woodensign")*/)) {
+                } else if ((gob.isTag(Tags.quest) && !gob.isTag(Tags.knocked)) /*|| (gob.getResName()!=null && gob.getResName().contains("woodensign"))*/) {
                     NAlarmManager.play(Tags.quest);
                     gob.addcustomol(new NNotifiedRing(gob, Color.CYAN, 30, 0.7f, gob.noteImg));
                 } else if (gob.isTag(Tags.notified)) {

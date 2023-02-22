@@ -21,6 +21,7 @@ public class BackerAction implements Action {
     @Override
     public Results run ( NGameUI gui )
             throws InterruptedException {
+        int totalOven = Finder.findObjects(new NAlias("oven")).size();
         /// Ждем пока смелтеры не потухнут
         while ( true ) {
             new WaitAction ( () -> {

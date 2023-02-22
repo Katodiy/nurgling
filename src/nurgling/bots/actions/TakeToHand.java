@@ -22,7 +22,7 @@ public class TakeToHand implements Action {
         }
         if ( item != null ) {
                 NUtils.takeItemToHand ( item.item );
-                NUtils.waitEvent(()->!gui.hand.isEmpty () , 20);
+                NUtils.waitEvent(()->!gui.hand.isEmpty () , 500);
             if ( !gui.hand.isEmpty () ) {
                 return new Results ( Results.Types.SUCCESS );
             }

@@ -40,16 +40,24 @@ public class FillFuelFromPiles implements Action {
                     }
                 }
                 if(need>0) {
+                    int for_load = need;
                     need = need - gui.getInventory().getItems(items).size();
                     if (inPile == null) {
                         return new Results(Results.Types.NO_FUEL);
                     }
                     new TakeFromPile(iname,need,items,input).run(gui);
                     new PathFinder(gui, gob).run();
-                    while (!gui.getInventory().getItems(items).isEmpty()) {
-                        new TakeToHand(items).run(gui);
-                        NUtils.activateItem(gob);
-                        NUtils.waitEvent(() -> gui.hand.isEmpty(), 200);
+                    int count = 0;
+                    while (count<for_load) {
+                        if (gui.hand.isEmpty()) {
+                            new TakeToHand(items).run(gui);
+                        }
+                        if(!gui.hand.isEmpty()) {
+                            NUtils.activateItem(gob);
+                            NUtils.waitEvent(() -> gui.hand.isEmpty(), 500);
+                            if (gui.hand.isEmpty())
+                                count++;
+                        }
                     }
                 }
             }
