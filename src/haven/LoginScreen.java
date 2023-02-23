@@ -33,7 +33,7 @@ public class LoginScreen extends Widget {
     public static final Text.Foundry
 	textf = new Text.Foundry(Text.sans, 16).aa(true),
 	textfs = new Text.Foundry(Text.sans, 14).aa(true);
-    public static final Tex bg = Resource.loadtex("gfx/loginscr");
+    public static final Tex bg = Resource.loadtex("nurgling/loginscr");
     public static final Position bgc = new Position(UI.scale(420, 300));
     public final Credbox login;
     public final String hostname;
@@ -139,7 +139,7 @@ public class LoginScreen extends Widget {
 	    tkbox.pack();
 	    tkbox.hide();
 
-	    adda(exec = new IButton("gfx/hud/buttons/login", "u", "d", "o") {
+	    adda(exec = new IButton("nurgling/hud/buttons/login", "u", "d", "o") {
 		    protected void depress() {ui.sfx(Button.clbtdown.stream());}
 		    protected void unpress() {ui.sfx(Button.clbtup.stream());}
 		    public void click() {enter();}
