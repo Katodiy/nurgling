@@ -31,29 +31,29 @@ import java.awt.image.BufferedImage;
 import static haven.PUtils.*;
 
 public class Window extends Widget implements DTarget {
-    public static final Tex bg = Resource.loadtex("gfx/hud/wnd/lg/bg");
-    public static final Tex bgl = Resource.loadtex("gfx/hud/wnd/lg/bgl");
-    public static final Tex bgr = Resource.loadtex("gfx/hud/wnd/lg/bgr");
-    public static final Tex cl = Resource.loadtex("gfx/hud/wnd/lg/cl");
-    public static final TexI cm = new TexI(Resource.loadsimg("gfx/hud/wnd/lg/cm"));
-    public static final Tex cr = Resource.loadtex("gfx/hud/wnd/lg/cr");
-    public static final Tex tm = Resource.loadtex("gfx/hud/wnd/lg/tm");
-    public static final Tex tr = Resource.loadtex("gfx/hud/wnd/lg/tr");
-    public static final Tex lm = Resource.loadtex("gfx/hud/wnd/lg/lm");
-    public static final Tex lb = Resource.loadtex("gfx/hud/wnd/lg/lb");
-    public static final Tex rm = Resource.loadtex("gfx/hud/wnd/lg/rm");
-    public static final Tex bl = Resource.loadtex("gfx/hud/wnd/lg/bl");
-    public static final Tex bm = Resource.loadtex("gfx/hud/wnd/lg/bm");
-    public static final Tex br = Resource.loadtex("gfx/hud/wnd/lg/br");
-    public static final Tex sizer = Resource.loadtex("gfx/hud/wnd/sizer");
+    public static final Tex bg = Resource.loadtex("nurgling/hud/wnd/lg/bg");
+    public static final Tex bgl = Resource.loadtex("nurgling/hud/wnd/lg/bgl");
+    public static final Tex bgr = Resource.loadtex("nurgling/hud/wnd/lg/bgr");
+    public static final Tex cl = Resource.loadtex("nurgling/hud/wnd/lg/cl");
+    public static final TexI cm = new TexI(Resource.loadsimg("nurgling/hud/wnd/lg/cm"));
+    public static final Tex cr = Resource.loadtex("nurgling/hud/wnd/lg/cr");
+    public static final Tex tm = Resource.loadtex("nurgling/hud/wnd/lg/tm");
+    public static final Tex tr = Resource.loadtex("nurgling/hud/wnd/lg/tr");
+    public static final Tex lm = Resource.loadtex("nurgling/hud/wnd/lg/lm");
+    public static final Tex lb = Resource.loadtex("nurgling/hud/wnd/lg/lb");
+    public static final Tex rm = Resource.loadtex("nurgling/hud/wnd/lg/rm");
+    public static final Tex bl = Resource.loadtex("nurgling/hud/wnd/lg/bl");
+    public static final Tex bm = Resource.loadtex("nurgling/hud/wnd/lg/bm");
+    public static final Tex br = Resource.loadtex("nurgling/hud/wnd/lg/br");
+    public static final Tex sizer = Resource.loadtex("nurgling/hud/wnd/sizer");
     public static final Coord tlm = UI.scale(18, 30);
     public static final Coord brm = UI.scale(13, 22);
-    public static final Coord cpo = UI.rscale(36, 16.4);
+    public static final Coord cpo = UI.rscale(36, 12.4);
     public static final int capo = 7, capio = 2;
     public static final Coord dlmrgn = UI.scale(23, 14);
     public static final Coord dsmrgn = UI.scale(9, 9);
-    public static final BufferedImage ctex = Resource.loadimg("gfx/hud/fonttex");
-    public static final Text.Furnace cf = new Text.Imager(new TexFurn(new Text.Foundry(Text.sans, 15).aa(true), ctex)) {
+    public static final BufferedImage ctex = Resource.loadimg("nurgling/hud/fonttex");
+    public static final Text.Furnace cf = new Text.Imager(new PUtils.TexFurn(new Text.Foundry(Text.sans, 15).aa(true), ctex)) {
 	    protected BufferedImage proc(Text text) {
 		// return(rasterimg(blurmask2(text.img.getRaster(), 1, 1, Color.BLACK)));
 		return(rasterimg(blurmask2(text.img.getRaster(), UI.rscale(0.75), UI.rscale(1.0), Color.BLACK)));
@@ -70,9 +70,9 @@ public class Window extends Widget implements DTarget {
 	    public Coord cisz() {return(super.cisz().sub(co.mul(2)));}
 	};
     private static final BufferedImage[] cbtni = new BufferedImage[] {
-	Resource.loadsimg("gfx/hud/wnd/lg/cbtnu"),
-	Resource.loadsimg("gfx/hud/wnd/lg/cbtnd"),
-	Resource.loadsimg("gfx/hud/wnd/lg/cbtnh")};
+	Resource.loadsimg("nurgling/hud/wnd/lg/cbtnu"),
+	Resource.loadsimg("nurgling/hud/wnd/lg/cbtnd"),
+	Resource.loadsimg("nurgling/hud/wnd/lg/cbtnh")};
     public final Coord tlo, rbo, mrgn;
     public final IButton cbtn;
     public boolean dt = false;
@@ -83,7 +83,7 @@ public class Window extends Widget implements DTarget {
     private Coord doff;
     public boolean decohide = false;
 
-	@RName("wnd")
+    @RName("wnd")
     public static class $_ implements Factory {
 	public Widget create(UI ui, Object[] args) {
 	    Coord sz = UI.scale((Coord)args[0]);
@@ -218,7 +218,7 @@ public class Window extends Widget implements DTarget {
 	cptl = new Coord(ctl.x, tlo.y);
 	cpsz = tlo.add(cpo.x + cmw, cm.sz().y).sub(cptl);
 	cmw = cmw - (cl.sz().x - cpo.x) - UI.scale(5);
-	cbtn.c = xlate(tlo.add(wsz.x - cbtn.sz.x, 0), false);
+	cbtn.c = xlate(tlo.add(wsz.x - cbtn.sz.x - UI.scale(7),  UI.scale(-2)), false);
 	for(Widget ch = child; ch != null; ch = ch.next)
 	    ch.presize();
     }
