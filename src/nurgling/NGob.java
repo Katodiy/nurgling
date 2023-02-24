@@ -3,11 +3,14 @@ package nurgling;
 import haven.*;
 import haven.Composite;
 import haven.res.lib.tree.TreeScale;
+import nurgling.tools.AreasID;
 import nurgling.tools.Finder;
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+
+import static haven.res.lib.itemtex.ItemTex.made_id;
 
 public class NGob {
     public Tex noteImg = null;
@@ -830,6 +833,29 @@ public class NGob {
                 }
                 gob.addcustomol(new NObjectLabel(gob, String.format("%.0f %%", (float) scale), Color.WHITE));
             }
+
+            if (gob.isTag(Tags.iconsign)) {
+                if(NConfiguration.getInstance().showAreas) {
+                    if ( NUtils.getGameUI()!=null && NUtils.getGameUI().updated()) {
+                        for (String name : made_id.keySet()) {
+                            if (made_id.get(name) == gob.modelAttribute)
+                                try {
+                                    NOCache.constructOverlay(AreasID.find(name));
+                                } catch (IllegalArgumentException e) {
+//                                    e.printStackTrace();
+                                } catch (Resource.Loading | MCache.LoadingMap e) {
+                                    gob.status = Status.ready_for_update;
+                                }
+                        }
+                    }
+                    else
+                    {
+                        gob.status = Status.ready_for_update;
+                        return;
+                    }
+                }
+            }
+
             gob.status = Status.updated;
         }
 
