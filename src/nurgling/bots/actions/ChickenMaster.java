@@ -120,7 +120,7 @@ public class ChickenMaster implements Action {
             if ( new OpenTargetContainer ( gob, "Chicken Coop" ).run ( gui ).type != Results.Types.SUCCESS ) {
                 return new Results ( Results.Types.OPEN_FAIL );
             }
-            NUtils.waitEvent ( () -> false, 5 );
+            NUtils.waitEvent (()-> gui.getInventory ( "Chicken Coop" )!=null , 200);
             WItem curroost = gui.getInventory ( "Chicken Coop" ).getItem ( new NAlias ( "roost" ) );
             ChickenCoop currentChickenCoop = new ChickenCoop ( gob, NUtils.getWItemQuality ( curroost ) );
             
@@ -148,7 +148,6 @@ public class ChickenMaster implements Action {
             if (new OpenTargetContainer(inc, "Chicken Coop").run(gui).type != Results.Types.SUCCESS) {
                 return new Results(Results.Types.OPEN_FAIL);
             }
-            NUtils.waitEvent(() -> false, 5);
             /// Получаем инфо по курочкам
             ArrayList<WItem> curhens = gui.getInventory("Chicken Coop").getItems(new NAlias("hen"));
             for (WItem hen : curhens) {
@@ -170,7 +169,7 @@ public class ChickenMaster implements Action {
             if (new OpenTargetContainer(qcocks.get(i).gob, "Chicken Coop").run(gui).type != Results.Types.SUCCESS) {
                 return new Results(Results.Types.OPEN_FAIL);
             }
-            NUtils.waitEvent(() -> gui.getInventory("Chicken Coop") != null, 20);
+            NUtils.waitEvent(() -> gui.getInventory("Chicken Coop") != null, 200);
             double current_quality = qcocks.get(i).quality;
             NUtils.transferItem(gui.getInventory("Chicken Coop"),
                     gui.getInventory("Chicken Coop").getItem(current_quality, new NAlias("roost")));
@@ -185,18 +184,14 @@ public class ChickenMaster implements Action {
                     NUtils.waitEvent ( () -> gui.getInventory ( "Chicken Coop" )!=null,200);
                     int finalJ = j;
                     NUtils.waitEvent ( () -> gui.getInventory("Chicken Coop")
-                            .getItem(chickens.get(finalJ).quality, new NAlias("roost"))!=null, 20 );
+                            .getItem(chickens.get(finalJ).quality, new NAlias("roost"))!=null, 200 );
                     WItem lqhen = gui.getInventory("Chicken Coop")
                             .getItem(chickens.get(j).quality, new NAlias("roost"));
                     Coord pos = new Coord((lqhen.c.x - 1) / 33, (lqhen.c.y - 1) / 33);
                     NUtils.transferItem(gui.getInventory("Chicken Coop"), lqhen);
                     NUtils.takeItemToHand(
                             gui.getInventory().getItem(current_quality, new NAlias("roost")).item);
-                    int counter = 0;
-                    while (gui.vhand == null && counter < 20) {
-                        Thread.sleep(100);
-                        counter += 1;
-                    }
+                    NUtils.waitEvent(()->!gui.hand.isEmpty(),200);
                     NUtils.transferToInventory("Chicken Coop", pos);
                     chickens.get(j).quality = current_quality;
                     current_quality = NUtils.getWItemQuality(lqhen);
@@ -278,18 +273,14 @@ public class ChickenMaster implements Action {
                         int finalJ = j;
                         int finalK = k;
                         NUtils.waitEvent ( () -> gui.getInventory ( "Chicken Coop" )
-                                .getItem ( chickens.get (finalJ).hens.get (finalK), new NAlias ( "hen" ) )!=null, 20 );
+                                .getItem ( chickens.get (finalJ).hens.get (finalK), new NAlias ( "hen" ) )!=null, 200 );
                         WItem lqhen = gui.getInventory ( "Chicken Coop" )
                                          .getItem ( chickens.get ( j ).hens.get ( k ), new NAlias ( "hen" ) );
                         Coord pos = new Coord ( ( lqhen.c.x - 1 ) / 33, ( lqhen.c.y - 1 ) / 33 );
                         NUtils.transferItem ( gui.getInventory ( "Chicken Coop" ), lqhen );
                         NUtils.takeItemToHand (
                                 gui.getInventory ().getItem ( current_quality, new NAlias ( "hen" ) ).item );
-                        int counter = 0;
-                        while ( gui.vhand == null && counter < 20 ) {
-                            Thread.sleep ( 100 );
-                            counter += 1;
-                        }
+                        NUtils.waitEvent(()->!gui.hand.isEmpty(),200);
                         NUtils.transferToInventory ( "Chicken Coop", pos );
                         current_quality = NUtils.getWItemQuality ( lqhen );
                         /// Обновляем данные по курочкам
@@ -368,7 +359,6 @@ public class ChickenMaster implements Action {
                 Results.Types.SUCCESS ) {
             return new Results ( Results.Types.OPEN_FAIL );
         }
-        NUtils.waitEvent ( () -> false, 5 );
         /// Получаем инфо по курочкам
         ArrayList<WItem> tophens = gui.getInventory ( "Chicken Coop" ).getItems ( new NAlias ( "hen" ) );
         ArrayList<Double> qtop = new ArrayList<> ();

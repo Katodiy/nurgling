@@ -1386,7 +1386,7 @@ public class NUtils {
     }
 
     public static void takeItemToHand(GItem item) {
-        item.wdgmsg("take", new Coord(item.sz.x / 2, item.sz.y / 2));
+        item.wdgmsg("take", Coord.z);
     }
 
     public static boolean transferAlltoStockPile(
