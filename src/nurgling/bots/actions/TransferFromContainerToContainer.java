@@ -53,7 +53,7 @@ public class TransferFromContainerToContainer implements Action {
         if ( flagMode ) {
             ArrayList<Gob> fixedigobs = new ArrayList<> ();
             for ( Gob gob : igobs ) {
-                if ( ( gob.getModelAttribute() & flag ) == 0 ) {
+                if ( !gob.isTag(NGob.Tags.free)) {
                     fixedigobs.add ( gob );
                 }
             }
@@ -201,7 +201,7 @@ public class TransferFromContainerToContainer implements Action {
         }
         ArrayList<Status> sgobs = new ArrayList<> ();
         for ( Gob ogob : ogobs ) {
-            sgobs.add ( new Status ( ogob, true ) );
+            sgobs.add ( new Status ( ogob, !ogob.isTag(NGob.Tags.full) ) );
         }
         return sgobs;
     }

@@ -2,6 +2,7 @@ package nurgling;
 
 import haven.*;
 import haven.Label;
+import haven.Window;
 
 import java.awt.*;
 import java.awt.font.TextAttribute;
@@ -57,13 +58,24 @@ public class NQuestInfo extends Widget {
     public static HashMap<String, List<Quest>> questData = new HashMap<>();
     public static HashMap<String, List<TreeCondition>> treeData = new HashMap<>();
     public static HashMap<String, List<CharWnd.Quest.Condition>> condData = new HashMap<>();
+
+    NQuestsStats stats;
     private Tex glowon;
 
     public static boolean update = true;
     public final Text.Foundry prsf = new Text.Foundry(Text.sans, 25).aa(true);
     public NQuestInfo() {
         super ( new Coord( NUtils.getGameUI().sz.x-500, NUtils.getGameUI().sz.y-200 ) );
+        stats = NUtils.getGameUI().getStats();
+        stats.hide();
         add(new NMiniMapWnd.NMenuCheckBox("lbtn-hidenq", GameUI.kb_vil, "Show/hide without quest"), 0, 0).changed(a -> {update=true; isNQvisible = a;});
+        add(new NMiniMapWnd.NMenuCheckBox("lbtn-hidenq", GameUI.kb_vil, "Show stats"), 20, 0).changed(a -> {
+            if(stats.visible())
+                stats.hide();
+            else
+                stats.show();
+        }
+        );
         pack();
     }
 

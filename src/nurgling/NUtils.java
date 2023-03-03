@@ -34,6 +34,7 @@ import java.security.CodeSource;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 import static haven.MCache.tilesz;
 import static haven.OCache.posres;
@@ -1134,7 +1135,7 @@ public class NUtils {
     public static boolean isOverlay(
             Gob gob
     ) {
-        ArrayList<Gob.Overlay> core = (ArrayList<Gob.Overlay>) gob.ols;
+        ConcurrentLinkedDeque<Gob.Overlay> core = (ConcurrentLinkedDeque<Gob.Overlay>) gob.ols;
         for (Gob.Overlay ov : core) {
             if (ov.res != null) {
                 Resource res_ov = ov.res.get();
@@ -1173,7 +1174,7 @@ public class NUtils {
 
     public static boolean alarmOrcalot() {
         ArrayList<Gob> gobs = Finder.findObjectsInArea(
-                new NAlias(new ArrayList<>(Arrays.asList("/orca", "/spermwhale")),new ArrayList<>(Arrays.asList("beef", "skeleton"))),
+                new NAlias(new ArrayList<>(Arrays.asList("/orca", "/spermwhale", "/greyseal")),new ArrayList<>(Arrays.asList("beef", "skeleton"))),
                 new NArea(gameUI.map.player().rc, 3999));
         for(Gob gob: gobs) {
             if (!gob.isTag(NGob.Tags.knocked))

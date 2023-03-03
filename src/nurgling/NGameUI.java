@@ -24,6 +24,7 @@ public class NGameUI extends GameUI {
 
     public NBotsInfo botsInfo;
     public NQuestInfo questInfo;
+    public NQuestsStats stats;
     public NPathQueue pathQueue = null;
     public Optional<NPathQueue> pathQueue() {
         return (pathQueue != null) ? Optional.of(pathQueue) : Optional.empty();
@@ -42,6 +43,10 @@ public class NGameUI extends GameUI {
 
     public boolean updated() {
         return map!=null && map.glob!=null && map.glob.map!=null && map.glob.map.isLoaded() && map.player()!=null;
+    }
+
+    public NQuestsStats getStats() {
+        return stats;
     }
 
     public class PaginaBeltSlot extends BeltSlot {
@@ -80,6 +85,7 @@ public class NGameUI extends GameUI {
         timers.hide();
         chat = add(new NChatUIDrag("ChatUI"),NConfiguration.getInstance().dragWidgets.get("ChatUI"));
         botsInfo = add ( new NBotsInfo ( this ), new Coord ( 30, 150 ) );
+        stats = add(new NQuestsStats(), new Coord ( 30, 150 ));
         questInfo = add ( new NQuestInfo (), new Coord ( 30, 150 ) );
         chat.resize(NConfiguration.getInstance().resizeWidgets.get("ChatUI").coord);
         syslog = chat.chat.add(new ChatUI.Log("System"));

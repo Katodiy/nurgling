@@ -15,7 +15,7 @@ public class BackerAction implements Action {
     final NAlias backed = new NAlias ( new ArrayList<> (
             Arrays.asList ( "ringofbrodgar", "meatpie", "bread", "jellycake", "pirozhki", "seedcrispbread", "fishpie",
                     "wellplaicedpie", "marrowcake", "mushroompie", "greenleafpie", "lardycake", "strawberrycake",
-                    "blueberryslice", "honeybun","shepherdspie" )),
+                    "blueberryslice", "honeybun","shepherdspie", "grubpie" )),
             new ArrayList<> (Arrays.asList ( "dough" ))  );
     
     @Override
