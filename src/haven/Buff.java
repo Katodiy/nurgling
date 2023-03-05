@@ -70,7 +70,8 @@ public class Buff extends Widget implements ItemInfo.ResOwner, Bufflist.Managed 
     public Resource resource() {
 	return(res.get());
     }
-    private static final ClassResolver<Buff> ctxr = new ClassResolver<Buff>()
+    private static final OwnerContext.ClassResolver<Buff> ctxr = new OwnerContext.ClassResolver<Buff>()
+	.add(Buff.class, wdg ->wdg)
 	.add(Glob.class, wdg -> wdg.ui.sess.glob)
 	.add(Session.class, wdg -> wdg.ui.sess);
     public <T> T context(Class<T> cl) {return(ctxr.context(cl, this));}

@@ -80,7 +80,8 @@ public abstract class LayerMeter extends Widget implements ItemInfo.Owner {
 	return(buf);
     }
 
-    private static final ClassResolver<LayerMeter> ctxr = new ClassResolver<LayerMeter>()
+    private static final OwnerContext.ClassResolver<LayerMeter> ctxr = new OwnerContext.ClassResolver<LayerMeter>()
+	.add(LayerMeter.class, wdg -> wdg)
 	.add(Glob.class, wdg -> wdg.ui.sess.glob)
 	.add(Session.class, wdg -> wdg.ui.sess);
     public <T> T context(Class<T> cl) {return(ctxr.context(cl, this));}
