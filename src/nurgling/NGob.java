@@ -105,7 +105,7 @@ public class NGob {
         wild,
         mammoth,
         stoat,
-        rabbithutch, chickencoop, stalagoomba, winter_stoat
+        rabbithutch, chickencoop, stalagoomba, kritter_is_ready, winter_stoat
     }
 
     public final HashSet<Tags> tags = new HashSet<>();
@@ -498,6 +498,10 @@ public class NGob {
                         if (NUtils.isIt(pose, "dead", "knock", "rigormortis", "drowned")) {
                             gob.addTag(Tags.knocked);
                         }
+                        else
+                        {
+                            gob.addTag(Tags.kritter_is_ready);
+                        }
                 }
             }
         }
@@ -797,7 +801,7 @@ public class NGob {
                     if (gob.isTag(Tags.sheep) || gob.isTag(Tags.goat))
                         gob.addcustomol(new NWoolMarker(gob, 12));
 
-                    if(gob.getattr(Composite.class)!=null && gob.getpose()!=null && !gob.isTag(Tags.knocked)) {
+                    if(gob.getattr(Composite.class)!=null && gob.getpose()!=null && !gob.isTag(Tags.knocked) && gob.isTag(Tags.kritter_is_ready)) {
                         for (String ring : NConfiguration.getInstance().rings.keySet()) {
                             if (gob.getResName().contains(ring)) {
                                 NConfiguration.Ring ringprop = NConfiguration.getInstance().rings.get(ring);
