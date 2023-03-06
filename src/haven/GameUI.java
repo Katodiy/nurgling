@@ -1315,7 +1315,7 @@ public class GameUI extends ConsoleHost implements Console.Directory, UI.Message
 	return(ret);
     }
 
-    private void fitwdg(Widget wdg) {
+    public void fitwdg(Widget wdg) {
 	wdg.c = fitwdg(wdg, wdg.c);
     }
 

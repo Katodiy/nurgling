@@ -42,7 +42,7 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
     public Widget contents = null;
     public String contentsnm = null;
     public Object contentsid = null;
-    private GSprite spr = null;
+    public GSprite spr = null;
 	public ItemInfo.Raw rawinfo;
 	protected List<ItemInfo> info = Collections.emptyList();
 

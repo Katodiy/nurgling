@@ -666,7 +666,7 @@ public class NUtils {
                     new Thread(new DreamHarvester(gameUI)).start();
                     break;
                 case "Steel":
-//                    new Thread(new DreamHarvester(gameUI)).start();
+                    new Thread(new FillSteel(gameUI)).start();
                     break;
                 case "Truffle":
                     new Thread(new Truffle(gameUI)).start();
@@ -1174,7 +1174,7 @@ public class NUtils {
 
     public static boolean alarmOrcalot() {
         ArrayList<Gob> gobs = Finder.findObjectsInArea(
-                new NAlias(new ArrayList<>(Arrays.asList("/orca", "/spermwhale", "/greyseal")),new ArrayList<>(Arrays.asList("beef", "skeleton"))),
+                new NAlias(new ArrayList<>(Arrays.asList("/orca", "/spermwhale")),new ArrayList<>(Arrays.asList("beef", "skeleton"))),
                 new NArea(gameUI.map.player().rc, 3999));
         for(Gob gob: gobs) {
             if (!gob.isTag(NGob.Tags.knocked) && gob.isTag(NGob.Tags.kritter_is_ready))

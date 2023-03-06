@@ -316,6 +316,8 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
                     "bots/icons/gobfinder"  ) );
             layouts.get ( 5000 ).add ( new NButton ( "FishSorter", new SortAndTransferFish ( gui ),
                     "bots/icons/fishsorter"  ) );
+            layouts.get ( 5000 ).add ( new NButton ( "FillSteel", new FillSteel ( gui ),
+                    "bots/icons/steelcrucible"  ) );
 //            layouts.get ( 5000 ).add ( new NButton ( "BattleBot", new BattleBot ( gui ),
 //                    Special.getPath () + "/icons/battle.png" ) );
 //            layouts.get ( 5000 ).add ( new NButton ( "BattleBot2", new BattleAction2 ( gui ),
@@ -544,7 +546,7 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
     NButton find(Resource res){
         for(Integer key: layouts.keySet()){
             for(Layout.ButtonPos button: layouts.get(key).buttons){
-                if(NUtils.checkName(res.name,button.button.name))
+                if(button.button.name.equals(res.name))
                     return button.button;
             }
         }
