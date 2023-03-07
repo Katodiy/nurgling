@@ -2,10 +2,7 @@ package nurgling.bots.actions;
 
 import haven.*;
 
-import nurgling.NAlias;
-import nurgling.NConfiguration;
-import nurgling.NGameUI;
-import nurgling.NUtils;
+import nurgling.*;
 import nurgling.tools.Finder;
 import nurgling.tools.NArea;
 
@@ -70,8 +67,9 @@ public class NomadFinder implements Action {
                     gui.map.wdgmsg("click", Coord.z, pos.floor(posres), 1, 0);
                 if (NUtils.alarmOrcalot()) {
                     Gob target = Finder.findObject(new NAlias(new ArrayList<>(Arrays.asList("/orca", "/spermwhale")), new ArrayList<>(Arrays.asList("beef", "skeleton"))));
-                    if(target!=null) {
-                        String name = target.getResName();;
+                    if(target!=null && target.isTag(NGob.Tags.kritter_is_ready)) {
+                        String name = target.getResName();
+                        ;
                         Long id = target.id;
                         for (ChatUI.Selector.DarkChannel chan : gui.chat.chat.chansel.chls) {
                             if (chan.chan.name().equals(NConfiguration.getInstance().village)) {
@@ -79,19 +77,20 @@ public class NomadFinder implements Action {
                                 gui.chat.chat.sel.wdgmsg("msg", "I found : " + name + "\040" + "!");
                             }
                         }
-                        //if (Finder.findObject(new NAlias(new ArrayList<>(Arrays.asList("/greyseal")), new ArrayList<>(Arrays.asList("beef", "skeleton")))) != null) {
-                        //    while (NUtils.getGob(id) != null) {
-                        //        Gob targ = NUtils.getGob(target.id);
-                        //        if(targ!=null) {
-                        //            gui.map.wdgmsg("click", Coord.z, targ.rc.floor(posres), 1, 0);
-                        //            Thread.sleep(1000);
-                        //        }
-                        //    }
-                        //    Thread.sleep(1000);
-                        //}
-                    }
+                        if (Finder.findObject(new NAlias(new ArrayList<>(Arrays.asList("/greyseal")), new ArrayList<>(Arrays.asList("beef", "skeleton")))) != null) {
+                            while (NUtils.getGob(id) != null) {
+                                Gob targ = NUtils.getGob(target.id);
+                                if (targ != null) {
+                                    gui.map.wdgmsg("click", Coord.z, targ.rc.floor(posres), 1, 0);
+                                    Thread.sleep(1000);
+                                }
+                            }
+                            Thread.sleep(1000);
+                        }
 
-                    return new Results(Results.Types.FULL);
+
+                        return new Results(Results.Types.FULL);
+                    }
                 }
             }while(gui.map.player().rc.dist(finalPos) >= 5);
 
