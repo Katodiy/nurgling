@@ -1,6 +1,6 @@
 #name
-Cheese Racks Builder
+Transfer Cheese trays
 #req
-
+cheese_main, c_outside, c_inside, c_mine, c_cellar
 #text
-Select an area to build Cheese Racks. As building materials, you can use piles with boards, or logs - for boards and  piles with blocks, or logs - for blocks.
+Transfer cheese treys from zone to zone using barter stands and Scheduler.

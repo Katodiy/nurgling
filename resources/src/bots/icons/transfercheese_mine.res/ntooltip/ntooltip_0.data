@@ -1,6 +1,6 @@
 #name
-Transfer meat from containers
+Transfer Cheese trays
 #req
-
+cheese_out, cheese_in, c_mine
 #text
-Transfer meat from containers using Ingredient system
+Transfer Cheese trays from racks via barter stand into mine.

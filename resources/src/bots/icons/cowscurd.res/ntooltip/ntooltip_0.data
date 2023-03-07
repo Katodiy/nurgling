@@ -1,6 +1,6 @@
 #name
-Preparation of blocks and boards
+Curd to Cheese trays
 #req
-
+cows, curd_out
 #text
-If you choose logs for boards - you will be sawing boards. If you select logs for blocks - you will cut logs into blocks. You also need to specify the area for piles
+Take curd and place into trays. Send via barter to curd_out zone.
