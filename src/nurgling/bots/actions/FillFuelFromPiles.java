@@ -30,13 +30,20 @@ public class FillFuelFromPiles implements Action {
         for ( Gob gob : out ) {
             if(marker==-1 || (gob.getModelAttribute()&marker) ==0) {
                 int need = size;
-                if(cap!=null && (cap.contains("Smelter")) ){
-                    if((gob.getModelAttribute()&2)==0) {
-                        new PathFinder(gui, gob).run();
-                        new OpenTargetContainer(gob, cap).run(gui);
-                        need -= (30 * NUtils.getFuelLvl(cap, new Color(255, 128, 0)));
-                    }else {
-                        need = 0;
+                if (cap != null) {
+                    if (cap.contains("Smelter")) {
+                        if ((gob.getModelAttribute() & 2) == 0) {
+                            new PathFinder(gui, gob).run();
+                            new OpenTargetContainer(gob, cap).run(gui);
+                            need -= (30 * NUtils.getFuelLvl(cap, new Color(255, 128, 0)));
+                        } else {
+                            need = 0;
+                        }
+                    }
+                    else if (cap.contains("Steelbox")) {
+                            new PathFinder(gui, gob).run();
+                            new OpenTargetContainer(gob, cap).run(gui);
+                            need -= (18 * NUtils.getFuelLvl(cap, new Color(255, 128, 0)));
                     }
                 }
                 if(need>0) {

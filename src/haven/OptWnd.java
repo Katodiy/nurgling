@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-interface Operationable{
+interface NOperationable{
 	void addWidget(Widget w);
 }
 public class OptWnd extends Window {
@@ -1780,7 +1780,7 @@ public class OptWnd extends Window {
 				}, prev.pos("bl").add(0,5));
 
 
-				Operationable l = (w)->{
+				NOperationable l = (w)->{
 					add(w,prev.pos("bl").add(0,5));
 					settings.add(w);
 					names.add(w.getClass().getName().substring(23));
