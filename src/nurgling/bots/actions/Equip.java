@@ -2,6 +2,7 @@ package nurgling.bots.actions;
 
 import haven.Coord;
 import haven.Coord2d;
+import haven.GItem;
 import haven.WItem;
 
 import nurgling.*;
@@ -27,27 +28,18 @@ public class Equip implements Action{
         }
 
         NUtils.freeHands (exception);
-        WItem item = null;
+        GItem item = null;
         WItem wbelt = Finder.findDressedItem ( new NAlias ("belt") );
         if(wbelt!=null) {
-            wbelt.item.wdgmsg ( "iact", wbelt.sz, 0 );
-            NUtils.waitEvent ( ()->gui.getWindow ( "elt" )!=null && gui.getWindow ( "elt" ).packed(),300 );
-
-            NInventory belt = gui.getInventory ( "elt" );
-            if ( belt == null ) {
-                return new Results ( Results.Types.NO_BELT );
-            }
+            NInventory belt = ((NInventory)wbelt.item.contents);
             item = belt.getItem ( name );
             if(item!=null) {
-                NUtils.getGameUI().setfocus(NUtils.getGameUI().getInventory());
-                item.item.wdgmsg("transfer", Coord.z, 1);
+                NUtils.takeItemToHand(item);
                 /// Дожидаемся окончания экипировки
-                NUtils.waitEvent(() -> gui.getInventory().getItem(name) != null, 50);
-                NUtils.getGameUI().getInventory().lostfocus();
-
+                NUtils.waitEvent(() -> gui.vhand != null, 50);
+                NUtils.getEquipment().wdgmsg("drop",-1);
+                NUtils.waitEvent(() -> gui.vhand == null, 50);
             }
-            gui.getWindow ( "elt" ).cbtn.wdgmsg ( "activate" );
-            NUtils.waitEvent(() -> gui.getWindow("elt") == null, 30000);
             if(Finder.findDressedItem ( name ) != null)
                 return new Results(Results.Types.SUCCESS);
         }
@@ -57,7 +49,7 @@ public class Equip implements Action{
         if ( item != null ) {
             NUtils.getGameUI().setfocus(NUtils.getGameUI().getEquipment());
             /// Иначе освобождаем руки и берем нужный предмет
-            item.item.wdgmsg ( "transfer", Coord.z, 1 );
+            item.wdgmsg ( "transfer", Coord.z, 1 );
             NUtils.getGameUI().getEquipment().lostfocus();
             /// Дожидаемся окончания экипировки
             NUtils.waitEvent(()-> Finder.findDressedItem ( name ) != null,50);

@@ -414,10 +414,13 @@ public class NUtils {
             final NAlias regEx
     ) {
         if (item != null) {
-            try {
-                NUtils.waitEvent(() -> item.item != null && item.item.spr != null && item.item.info() != null && item.item.getinfo(ItemInfo.Name.class) != null, 50);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if(!(item.parent.parent instanceof NGItem))
+            {
+                try {
+                    NUtils.waitEvent(() -> item.item != null && item.item.spr != null && item.item.info() != null && item.item.getinfo(ItemInfo.Name.class) != null, 50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
             try {
                 /// Запрашиваем ресур
@@ -425,7 +428,10 @@ public class NUtils {
                 res = item.item.getres();
                 if (res != null) {
                     /// Проверяем имя на соответствие
-                    return checkName(res.name, regEx) || checkName(item.item.getinfo(ItemInfo.Name.class).str.text, regEx);
+                    if(item.item.info()!=null)
+                        return checkName(res.name, regEx) || checkName(item.item.getinfo(ItemInfo.Name.class).str.text, regEx);
+                    else
+                        return checkName(res.name, regEx);
                 }
             } catch (Loading e) {
             }
@@ -1254,19 +1260,15 @@ public class NUtils {
                     freeSlotById(6, exceptions);
                     freeSlotById(7, exceptions);
                 } else {
-                    wbelt.item.wdgmsg("iact", wbelt.sz, 0);
-                    waitEvent(() -> getGameUI().getWindow("elt") != null, 300);
                     for (int i = 6; i <= 7; i++) {
-                        if (NUtils.getGameUI().getInventory("Belt").getFreeSpace() != 0) {
+                        if (((NInventory)wbelt.item.contents).getFreeSpace() != 0) {
                             if (gameUI.getEquipment().quickslots[i] != null) {
                                 ArrayList<WItem> items = gameUI.getInventory().getItems();
                                 freeSlotById(i, exceptions);
                                 for(WItem item : gameUI.getInventory().getItems()){
                                     if(!items.contains(item)){
-                                        getGameUI().setfocus(gameUI.getWindow("elt"));
                                         item.item.wdgmsg("transfer", Coord.z, 1);
                                         NUtils.waitEvent(() -> NUtils.getGameUI().getInventory().getItem(item.item) == null, 50);
-                                        gameUI.getWindow("elt").lostfocus();
                                         break;
                                     }
                                 }
@@ -1277,8 +1279,6 @@ public class NUtils {
                             return;
                         }
                     }
-                    getGameUI().getWindow ( "elt" ).cbtn.wdgmsg ( "activate" );
-                    NUtils.waitEvent(() -> getGameUI().getWindow("elt") == null, 300);
                 }
             }
         }

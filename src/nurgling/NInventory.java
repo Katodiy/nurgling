@@ -57,14 +57,14 @@ public class NInventory extends Inventory {
      * @param key ключ имя предмета
      * @return Предмет из инвентаря
      */
-    public WItem getItem(NAlias key) {
+    public GItem getItem(NAlias key) {
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
-            if (widget instanceof WItem) {
+            if (widget instanceof GItem) {
                 /// Для каждого найденго в компонентах предмета осуществляется проверка на его соответствие ключу
-                if (NUtils.isIt((WItem) widget, key)) {
+                if (NUtils.isIt((GItem) widget, key)) {
                     /// Если предмет соответствует , то возвращааем его
-                    return (WItem) widget;
+                    return ((GItem) widget);
                 }
             }
         }
@@ -352,32 +352,42 @@ public class NInventory extends Inventory {
      */
     public int getFreeSpace() {
         int freespace = 0;
-        boolean[][] inventory = new boolean[isz.x][isz.y];
-        for (int i = 0; i < isz.x; i++) {
-            for (int j = 0; j < isz.y; j++) {
-                inventory[i][j] = false;
+        if(parent instanceof NGameUI) {
+            boolean[][] inventory = new boolean[isz.x][isz.y];
+            for (int i = 0; i < isz.x; i++) {
+                for (int j = 0; j < isz.y; j++) {
+                    inventory[i][j] = false;
+                }
             }
-        }
-        for (WItem wdg : wmap.values()) {
-            try {
-                NUtils.waitEvent(()->wdg.item!=null && wdg.item.spr!=null && wdg.item.info()!=null && wdg.item.getinfo(ItemInfo.Name.class)!=null,50);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            for (WItem wdg : wmap.values()) {
+                try {
+                    NUtils.waitEvent(() -> wdg.item != null && wdg.item.spr != null && wdg.item.info() != null && wdg.item.getinfo(ItemInfo.Name.class) != null, 50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Coord sz = wdg.item.spr.sz();
+                Coord pos = new Coord(wdg.c.x / (sqsz.x - 1), wdg.c.y / (sqsz.x - 1));
+                Coord size = new Coord(sz.x / (sqsz.x - 1), sz.y / (sqsz.y - 1));
+                Coord endPos = new Coord(pos.x + size.x - 1, pos.y + size.y - 1);
+                for (int i = pos.x; i <= endPos.x; i++) {
+                    for (int j = pos.y; j <= endPos.y; j++) {
+                        inventory[i][j] = true;
+                    }
+                }
             }
-            Coord sz =  wdg.item.spr.sz();
-            Coord pos = new Coord(wdg.c.x  / (sqsz.x-1), wdg.c.y / (sqsz.x-1));
-            Coord size = new Coord(sz.x / (sqsz.x-1), sz.y / (sqsz.y-1));
-            Coord endPos = new Coord(pos.x + size.x - 1, pos.y + size.y -1);
-            for (int i = pos.x; i <= endPos.x; i++) {
-                for (int j = pos.y; j <= endPos.y; j++) {
-                    inventory[i][j] = true;
+            for (int i = 0; i < isz.x; i++) {
+                for (int j = 0; j < isz.y; j++) {
+                    if (!inventory[i][j])
+                        freespace++;
                 }
             }
         }
-        for (int i = 0; i < isz.x; i++) {
-            for (int j = 0; j < isz.y; j++) {
-                if(!inventory[i][j])
-                    freespace++;
+        else {
+            freespace = isz.x * isz.y;
+            for (Widget wdg = child; wdg != null; wdg = wdg.next) {
+                if (wdg instanceof WItem) {
+                    freespace -= (wdg.sz.x * wdg.sz.y) / (sqsz.x * sqsz.y);
+                }
             }
         }
         return freespace;
