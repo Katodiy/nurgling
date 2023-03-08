@@ -39,9 +39,9 @@ public class TransferCheeseAction implements Action {
                 }
                 if (spwnd != null) {
                     /// Находим все необходимые предметы в контейнере
-                    for (WItem item : gui.getInventory("Rack").getItems()) {
-                        NUtils.waitEvent(()->item.item.spr!=null,10);
-                        if (candidates.contains(NUtils.getContentName(item.item.info()))) {
+                    for (GItem item : gui.getInventory("Rack").getItems()) {
+                        NUtils.waitEvent(()->item.spr!=null,10);
+                        if (candidates.contains(NUtils.getContentName(item.info()))) {
                             if (!NUtils.transferItem(gui.getInventory("Rack"), item, gui.getInventory())) {
                                 return new Results(Results.Types.FULL);
                             }

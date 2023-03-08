@@ -1,6 +1,7 @@
 package nurgling.bots.actions;
 
 import haven.Coord;
+import haven.GItem;
 import haven.WItem;
 
 import nurgling.NAlias;
@@ -24,14 +25,14 @@ public class CheckClay implements Action {
         gui.map.wdgmsg("click", Coord.z, gui.map.player().rc.floor(posres), 3, 0);
         NUtils.waitEvent(NUtils::isIdleCurs,20);
         NUtils.stopWithClick ();
-        ArrayList<WItem> items = gui.getInventory ().getItems (
+        ArrayList<GItem> items = gui.getInventory ().getItems (
                 new NAlias( new ArrayList<> ( Arrays.asList ( "clay", "sand", "soil", "worm" ) ),
                         new ArrayList<> ( Arrays.asList ( "pit", "cave" ) ) ) );
         
         if ( !items.isEmpty () ) {
-            for ( WItem item : items ) {
-                double q = NUtils.getWItemQuality ( item );
-                gui.msg ( item.item.getres ().name + " quality = " + q );
+            for ( GItem item : items ) {
+                double q = NUtils.getItemQuality( item );
+                gui.msg ( item.getres ().name + " quality = " + q );
                 NUtils.drop ( item );
                 Thread.sleep ( 100 );
             }

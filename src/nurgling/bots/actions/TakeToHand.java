@@ -1,6 +1,6 @@
 package nurgling.bots.actions;
 
-import haven.WItem;
+import haven.GItem;
 import nurgling.NAlias;
 import nurgling.NGameUI;
 import nurgling.NUtils;
@@ -10,7 +10,7 @@ public class TakeToHand implements Action {
         this.name = name;
     }
     
-    public TakeToHand(WItem item ) {
+    public TakeToHand(GItem item ) {
         this.item = item;
     }
     
@@ -21,7 +21,7 @@ public class TakeToHand implements Action {
             item = gui.getInventory ().getItem ( name );
         }
         if ( item != null ) {
-                NUtils.takeItemToHand ( item.item );
+                NUtils.takeItemToHand ( item );
                 NUtils.waitEvent(()->!gui.hand.isEmpty () , 500);
             if ( !gui.hand.isEmpty () ) {
                 return new Results ( Results.Types.SUCCESS );
@@ -31,5 +31,5 @@ public class TakeToHand implements Action {
     }
     
     NAlias name;
-    WItem item = null;
+    GItem item = null;
 }

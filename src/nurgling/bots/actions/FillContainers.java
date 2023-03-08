@@ -1,10 +1,7 @@
 package nurgling.bots.actions;
 
-import haven.Coord2d;
-import haven.Gob;
-import haven.Pair;
+import haven.*;
 
-import haven.WItem;
 import nurgling.*;
 import nurgling.bots.tools.InContainer;
 import nurgling.bots.tools.OutContainer;
@@ -63,9 +60,9 @@ public class FillContainers implements Action
                     if (!outContainer.isFull) {
                         if (items != null && NConfiguration.getInstance().ingrTh.get(items.keys.get(0)) != null) {
 
-                            for (WItem item : gui.getInventory().getItems(items,q)) {
+                            for (GItem item : gui.getInventory().getItems(items,q)) {
                                 int th = NConfiguration.getInstance().ingrTh.get(NUtils.getInfo(item));
-                                if (((NWItem) item).quality() < th)
+                                if (((NGItem) item).quality() < th)
                                     NUtils.drop(item);
                             }
                         }

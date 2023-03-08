@@ -1,5 +1,6 @@
 package nurgling.bots.actions;
 
+import haven.GItem;
 import haven.Gob;
 import haven.WItem;
 import haven.res.ui.tt.leashed.Leashed;
@@ -14,15 +15,15 @@ public class LeashAnimal implements Action {
         while(gui.map.player().rc.dist(NUtils.getGob(gob.id).rc)>15) {
             new PathFinder(gui, gob, PathFinder.Type.dyn).run();
         }
-        WItem rope = gui.getInventory().getItem(new NAlias("rope"));
+        GItem rope = gui.getInventory().getItem(new NAlias("rope"));
         if(rope == null && gui.vhand!=null)
             if(NUtils.isIt(gui.vhand,new NAlias("rope")))
-                rope = gui.vhand;
+                rope = gui.vhand.item;
 
         new TakeToHand(gui.getInventory().getItem(new NAlias("rope"))).run(gui);
         NUtils.activateItem(gob);
-        WItem finalRope = rope;
-        NUtils.waitEvent(()-> finalRope.item.info()!=null && ((NGItem) finalRope.item).getInfo(Leashed.class)!=null,50);
+        GItem finalRope = rope;
+        NUtils.waitEvent(()-> finalRope.info()!=null && ((NGItem) finalRope).getInfo(Leashed.class)!=null,50);
         NUtils.transferToInventory();
         NUtils.waitEvent(()->gui.getInventory().getItem(new NAlias("rope"), Leashed.class)!=null,20);
         if(gui.getInventory().getItem(new NAlias("rope"), Leashed.class)!=null)

@@ -1,5 +1,6 @@
 package nurgling.bots.actions;
 
+import haven.GItem;
 import haven.WItem;
 import haven.Window;
 
@@ -20,10 +21,10 @@ public class TakeFromContainerAndDrop implements Action {
         }
         if ( spwnd != null ) {
             /// Находим все необходимые предметы в контейнере
-            ArrayList<WItem> items = gui.getInventory ( cap ).getItems ( names );
+            ArrayList<GItem> items = gui.getInventory ( cap ).getItems ( names );
             /// Переносим предметы в инвентарь
             
-            for ( WItem item : items ) {
+            for ( GItem item : items ) {
                 NUtils.dropFrom(item,cap);
             }
             return new Results ( Results.Types.SUCCESS );

@@ -1,5 +1,6 @@
 package nurgling;
 
+import haven.GItem;
 import haven.WItem;
 
 import java.util.ArrayList;
@@ -19,8 +20,8 @@ public class Dropper implements Runnable {
         try {
             while ( isAlive.get () ) {
                 Thread.sleep ( 500 );
-                ArrayList<WItem> items = gui.getInventory ().getItems ();
-                for(WItem item:items){
+                ArrayList<GItem> items = gui.getInventory ().getItems ();
+                for(GItem item:items){
                     if(!saved.contains ( item ))
                         if(!NUtils.isIt ( item,regEx ))
                             NUtils.drop (item);
@@ -33,7 +34,7 @@ public class Dropper implements Runnable {
     }
     
     NGameUI gui;
-    public ArrayList<WItem> saved;
+    public ArrayList<GItem> saved;
     public AtomicBoolean isAlive = new AtomicBoolean (true);
     NAlias regEx;
 }

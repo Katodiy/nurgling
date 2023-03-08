@@ -81,6 +81,7 @@ public class NGob {
         gem,
         truffle,
         item,
+        moundbed,
         barterarea,
         unknown,
         foe,
@@ -603,6 +604,8 @@ public class NGob {
                 }
             } else if (NUtils.checkName(name, "cellar")) {
                 gob.addTag(Tags.cellar);
+            } else if (NUtils.checkName(name, "moundbed")) {
+                    gob.addTag(Tags.moundbed);
             } else if (NUtils.checkName(name, "gate")) {
                 gob.addTag(Tags.gate);
             } else if (NUtils.checkName(name, "pow")) {

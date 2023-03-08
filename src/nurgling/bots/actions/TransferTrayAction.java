@@ -124,10 +124,10 @@ public class TransferTrayAction implements Action {
         else
         {
             int count = 0;
-            for(WItem item: gui.getInventory().getItems(new NAlias("cheesetray")))  {
-                if(NUtils.checkName(NUtils.getContentName(item.item.info()),task.target)) {
+            for(GItem item: gui.getInventory().getItems(new NAlias("cheesetray")))  {
+                if(NUtils.checkName(NUtils.getContentName(item.info()),task.target)) {
                     new SelectFlowerAction(item, "Slice up", SelectFlowerAction.Types.Inventory).run(gui);
-                    NUtils.waitEvent(()->NUtils.getContent(item.item)==null,50);
+                    NUtils.waitEvent(()->NUtils.getContent(item)==null,50);
                     count++;
                     if(gui.getInventory().getFreeSpace()<4) {
                         new TransferCheese().run(gui);

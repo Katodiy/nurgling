@@ -1,6 +1,7 @@
 package nurgling.bots.actions;
 
 import haven.Coord;
+import haven.GItem;
 import haven.Gob;
 import haven.WItem;
 
@@ -44,12 +45,12 @@ public class BranchAshMaker implements Action {
                     }
                 }
                 new PathFinder(gui, brazier).run();
-                WItem block = gui.getInventory().getItem(new NAlias("block"));
+                GItem block = gui.getInventory().getItem(new NAlias("block"));
                 while (block != null) {
                     new SelectFlowerAction(block, "Split", SelectFlowerAction.Types.Inventory).run(gui);
                     NUtils.waitEvent(() -> !gui.getInventory().getItems(new NAlias("branch")).isEmpty(), 20);
                     while (!gui.getInventory().getItems(new NAlias("branch")).isEmpty()) {
-                        NUtils.takeItemToHand(gui.getInventory().getItem(new NAlias("branch")).item);
+                        NUtils.takeItemToHand(gui.getInventory().getItem(new NAlias("branch")));
                         NUtils.activateItem(brazier);
                         NUtils.waitEvent(() -> NUtils.getProg() >= 0, 100);
                         NUtils.waitEvent(() -> !gui.hand.isEmpty() && !NUtils.isIt(gui.vhand, new NAlias("branch")), 200);
@@ -63,7 +64,7 @@ public class BranchAshMaker implements Action {
                 new TakeMaxFromPile(area_blocks).run(gui);
                 NUtils.waitEvent(() -> !gui.getInventory().getItems(new NAlias("branch")).isEmpty(), 20);
                 while (!gui.getInventory().getItems(new NAlias("branch")).isEmpty()) {
-                    NUtils.takeItemToHand(gui.getInventory().getItem(new NAlias("branch")).item);
+                    NUtils.takeItemToHand(gui.getInventory().getItem(new NAlias("branch")));
                     NUtils.activateItem(brazier);
                     NUtils.waitEvent(() -> NUtils.getProg() >= 0, 100);
                     NUtils.waitEvent(() -> !gui.hand.isEmpty() && !NUtils.isIt(gui.vhand, new NAlias("branch")), 200);
@@ -76,12 +77,12 @@ public class BranchAshMaker implements Action {
             if (Finder.findObjectInArea(new NAlias("log"), 1000, area_blocks) != null) {
                 new WorkWithLog(gui.getInventory().getNumberFreeCoord(new Coord(2, 1))-2,new NAlias("log"),true,area_blocks).run(gui);
                 new PathFinder(gui, brazier).run();
-                WItem block = gui.getInventory().getItem(new NAlias("block"));
+                GItem block = gui.getInventory().getItem(new NAlias("block"));
                 while (block != null) {
                     new SelectFlowerAction(block, "Split", SelectFlowerAction.Types.Inventory).run(gui);
                     NUtils.waitEvent(() -> !gui.getInventory().getItems(new NAlias("branch")).isEmpty(), 20);
                     while (!gui.getInventory().getItems(new NAlias("branch")).isEmpty()) {
-                        NUtils.takeItemToHand(gui.getInventory().getItem(new NAlias("branch")).item);
+                        NUtils.takeItemToHand(gui.getInventory().getItem(new NAlias("branch")));
                         NUtils.activateItem(brazier);
                         NUtils.waitEvent(() -> NUtils.getProg() >= 0, 100);
                         NUtils.waitEvent(() -> !gui.hand.isEmpty() && !NUtils.isIt(gui.vhand, new NAlias("branch")), 200);
@@ -94,7 +95,7 @@ public class BranchAshMaker implements Action {
                 new TakeMaxFromPile(area_blocks).run(gui);
                 NUtils.waitEvent(() -> !gui.getInventory().getItems(new NAlias("branch")).isEmpty(), 20);
                 while (!gui.getInventory().getItems(new NAlias("branch")).isEmpty()) {
-                    NUtils.takeItemToHand(gui.getInventory().getItem(new NAlias("branch")).item);
+                    NUtils.takeItemToHand(gui.getInventory().getItem(new NAlias("branch")));
                     NUtils.activateItem(brazier);
                     NUtils.waitEvent(() -> NUtils.getProg() >= 0, 100);
                     NUtils.waitEvent(() -> !gui.hand.isEmpty() && !NUtils.isIt(gui.vhand, new NAlias("branch")), 200);

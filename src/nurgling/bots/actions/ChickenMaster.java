@@ -1,6 +1,7 @@
 package nurgling.bots.actions;
 
 import haven.Coord;
+import haven.GItem;
 import haven.Gob;
 import haven.WItem;
 import nurgling.*;
@@ -11,7 +12,6 @@ import nurgling.tools.Finder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Objects;
 
 public class ChickenMaster implements Action {
     private class ChickenCoop {
@@ -121,21 +121,21 @@ public class ChickenMaster implements Action {
                 return new Results ( Results.Types.OPEN_FAIL );
             }
             NUtils.waitEvent (()-> gui.getInventory ( "Chicken Coop" )!=null , 200);
-            WItem curroost = gui.getInventory ( "Chicken Coop" ).getItem ( new NAlias ( "roost" ) );
-            ChickenCoop currentChickenCoop = new ChickenCoop ( gob, NUtils.getWItemQuality ( curroost ) );
+            GItem curroost = gui.getInventory ( "Chicken Coop" ).getItem ( new NAlias ( "roost" ) );
+            ChickenCoop currentChickenCoop = new ChickenCoop ( gob, NUtils.getItemQuality( curroost ) );
             
             /// Получаем инфо по курочкам
-            ArrayList<WItem> curhens = gui.getInventory ( "Chicken Coop" ).getItems ( new NAlias ( "hen" ) );
-            for ( WItem hen : curhens ) {
-                currentChickenCoop.hens.add ( NUtils.getWItemQuality ( hen ) );
+            ArrayList<GItem> curhens = gui.getInventory ( "Chicken Coop" ).getItems ( new NAlias ( "hen" ) );
+            for ( GItem hen : curhens ) {
+                currentChickenCoop.hens.add ( NUtils.getItemQuality( hen ) );
             }
             currentChickenCoop.hens.sort ( Double::compareTo );
             chickens.add ( currentChickenCoop );
             
             /// Получаем инфо по яйкам
-            ArrayList<WItem> cureggs = gui.getInventory ( "Chicken Coop" ).getItems ( new NAlias ( "egg" ) );
-            for ( WItem egg : cureggs ) {
-                eggs.add ( new EggsInfo ( NUtils.getWItemQuality ( egg ), gob ) );
+            ArrayList<GItem> cureggs = gui.getInventory ( "Chicken Coop" ).getItems ( new NAlias ( "egg" ) );
+            for ( GItem egg : cureggs ) {
+                eggs.add ( new EggsInfo ( NUtils.getItemQuality( egg ), gob ) );
             }
         }
         eggs.sort ( comparator2 );
@@ -149,14 +149,14 @@ public class ChickenMaster implements Action {
                 return new Results(Results.Types.OPEN_FAIL);
             }
             /// Получаем инфо по курочкам
-            ArrayList<WItem> curhens = gui.getInventory("Chicken Coop").getItems(new NAlias("hen"));
-            for (WItem hen : curhens) {
-                qhens.add(new KFC_chicken_Q(inc,NUtils.getWItemQuality(hen)));
+            ArrayList<GItem> curhens = gui.getInventory("Chicken Coop").getItems(new NAlias("hen"));
+            for (GItem hen : curhens) {
+                qhens.add(new KFC_chicken_Q(inc,NUtils.getItemQuality(hen)));
             }
             /// Получаем инфо по петушкам
-            ArrayList<WItem> curroost = gui.getInventory("Chicken Coop").getItems(new NAlias("roost"));
-            for (WItem roost : curroost) {
-                qcocks.add(new KFC_chicken_Q(inc,NUtils.getWItemQuality(roost)));
+            ArrayList<GItem> curroost = gui.getInventory("Chicken Coop").getItems(new NAlias("roost"));
+            for (GItem roost : curroost) {
+                qcocks.add(new KFC_chicken_Q(inc,NUtils.getItemQuality(roost)));
             }
         }
 
@@ -185,29 +185,30 @@ public class ChickenMaster implements Action {
                     int finalJ = j;
                     NUtils.waitEvent ( () -> gui.getInventory("Chicken Coop")
                             .getItem(chickens.get(finalJ).quality, new NAlias("roost"))!=null, 200 );
-                    WItem lqhen = gui.getInventory("Chicken Coop")
+                    GItem lqhen = gui.getInventory("Chicken Coop")
                             .getItem(chickens.get(j).quality, new NAlias("roost"));
-                    Coord pos = new Coord((lqhen.c.x - 1) / 33, (lqhen.c.y - 1) / 33);
+                    Coord wpos = gui.getInventory ( "Chicken Coop" ).wmap.get(lqhen).c;
+                    Coord pos = new Coord ( ( wpos.x - 1 ) / 33, ( wpos.y - 1 ) / 33 );
                     NUtils.transferItem(gui.getInventory("Chicken Coop"), lqhen);
                     NUtils.takeItemToHand(
-                            gui.getInventory().getItem(current_quality, new NAlias("roost")).item);
+                            gui.getInventory().getItem(current_quality, new NAlias("roost")));
                     NUtils.waitEvent(()->!gui.hand.isEmpty(),200);
                     NUtils.transferToInventory("Chicken Coop", pos);
                     chickens.get(j).quality = current_quality;
-                    current_quality = NUtils.getWItemQuality(lqhen);
+                    current_quality = NUtils.getItemQuality(lqhen);
                 }
             }
 
             NUtils.waitEvent(()-> gui.getInventory().getItem(new NAlias("roost"))!=null,200);
             /// Сворачиваем шею петуху
-            WItem roost = gui.getInventory().getItem(new NAlias("roost"));
+            GItem roost = gui.getInventory().getItem(new NAlias("roost"));
             if (roost == null) {
                 return new Results(Results.Types.NO_ITEMS);
             }
             new SelectFlowerAction(roost, "Wring neck", SelectFlowerAction.Types.Inventory).run(gui);
             NUtils.waitEvent(()-> gui.getInventory().getItem(new NAlias("rooster-dead"))!=null,200);
             /// Ощипываем
-            WItem roost_dead = gui.getInventory().getItem(new NAlias("rooster-dead"));
+            GItem roost_dead = gui.getInventory().getItem(new NAlias("rooster-dead"));
             if (roost_dead == null) {
                 return new Results(Results.Types.NO_ITEMS);
             }
@@ -216,12 +217,12 @@ public class ChickenMaster implements Action {
 
             /// Сбрасываем перья
 
-            ArrayList<WItem> items = gui.getInventory()
+            ArrayList<GItem> items = gui.getInventory()
                     .getItems(new NAlias(new ArrayList<String>(Arrays.asList("feather"))),
                             AreasID.getTh(AreasID.feather), false);
             /// Переносим предметы в инвентарь
 
-            for (WItem item : items) {
+            for (GItem item : items) {
                 NUtils.drop(item);
             }
             if (Finder.findObjectInArea(new NAlias("barter"), 1000, Finder.findNearestMark(AreasID.feather)) != null) {
@@ -231,7 +232,7 @@ public class ChickenMaster implements Action {
                         new NAlias("feather")).run(gui);
             }
             /// Свежуем курицу
-            WItem chicken_plucked = gui.getInventory().getItem(new NAlias("chicken-plucked"));
+            GItem chicken_plucked = gui.getInventory().getItem(new NAlias("chicken-plucked"));
             if (chicken_plucked == null) {
                 return new Results(Results.Types.NO_ITEMS);
             }
@@ -239,7 +240,7 @@ public class ChickenMaster implements Action {
             NUtils.waitEvent(()-> gui.getInventory().getItem(new NAlias("entrails"))!=null && gui.getInventory().getItem(new NAlias("chicken-cleaned"))!=null,500);
             new TransferTrash().run(gui);
             /// Разделываем курицу
-            WItem chicken_cleaned = gui.getInventory().getItem(new NAlias("chicken-cleaned"));
+            GItem chicken_cleaned = gui.getInventory().getItem(new NAlias("chicken-cleaned"));
             if (chicken_cleaned == null) {
                 return new Results(Results.Types.NO_ITEMS);
             }
@@ -274,22 +275,23 @@ public class ChickenMaster implements Action {
                         int finalK = k;
                         NUtils.waitEvent ( () -> gui.getInventory ( "Chicken Coop" )
                                 .getItem ( chickens.get (finalJ).hens.get (finalK), new NAlias ( "hen" ) )!=null, 200 );
-                        WItem lqhen = gui.getInventory ( "Chicken Coop" )
+                        GItem lqhen = gui.getInventory ( "Chicken Coop" )
                                          .getItem ( chickens.get ( j ).hens.get ( k ), new NAlias ( "hen" ) );
-                        Coord pos = new Coord ( ( lqhen.c.x - 1 ) / 33, ( lqhen.c.y - 1 ) / 33 );
+                        Coord wpos = gui.getInventory ( "Chicken Coop" ).wmap.get(lqhen).c;
+                        Coord pos = new Coord ( ( wpos.x - 1 ) / 33, ( wpos.y - 1 ) / 33 );
                         NUtils.transferItem ( gui.getInventory ( "Chicken Coop" ), lqhen );
                         NUtils.takeItemToHand (
-                                gui.getInventory ().getItem ( current_quality, new NAlias ( "hen" ) ).item );
+                                gui.getInventory ().getItem ( current_quality, new NAlias ( "hen" ) ) );
                         NUtils.waitEvent(()->!gui.hand.isEmpty(),200);
                         NUtils.transferToInventory ( "Chicken Coop", pos );
-                        current_quality = NUtils.getWItemQuality ( lqhen );
+                        current_quality = NUtils.getItemQuality( lqhen );
                         /// Обновляем данные по курочкам
                         Thread.sleep ( 300 );
-                        ArrayList<WItem> newcurhens = gui.getInventory ( "Chicken Coop" )
+                        ArrayList<GItem> newcurhens = gui.getInventory ( "Chicken Coop" )
                                                          .getItems ( new NAlias ( "hen" ) );
                         chickens.get ( j ).hens = new ArrayList<> ();
-                        for ( WItem hen : newcurhens ) {
-                            chickens.get ( j ).hens.add ( NUtils.getWItemQuality ( hen ) );
+                        for ( GItem hen : newcurhens ) {
+                            chickens.get ( j ).hens.add ( NUtils.getItemQuality( hen ) );
                         }
                         chickens.get ( j ).hens.sort ( Double::compareTo );
                         break;
@@ -298,7 +300,7 @@ public class ChickenMaster implements Action {
             }
             NUtils.waitEvent(()-> gui.getInventory().getItem(new NAlias("hen"))!=null,200);
             /// Сворачиваем шею курице
-            WItem hen = gui.getInventory ().getItem ( new NAlias ( "hen" ) );
+            GItem hen = gui.getInventory ().getItem ( new NAlias ( "hen" ) );
             if ( hen == null ) {
                 return new Results ( Results.Types.NO_ITEMS );
             }
@@ -306,19 +308,19 @@ public class ChickenMaster implements Action {
 
             NUtils.waitEvent(()-> gui.getInventory().getItem(new NAlias("hen-dead"))!=null,200);
             /// Ощипываем
-            WItem hen_dead = gui.getInventory ().getItem ( new NAlias ( "hen-dead" ) );
+            GItem hen_dead = gui.getInventory ().getItem ( new NAlias ( "hen-dead" ) );
             if ( hen_dead == null ) {
                 return new Results ( Results.Types.NO_ITEMS );
             }
             new SelectFlowerAction ( hen_dead, "Pluck", SelectFlowerAction.Types.Inventory ).run ( gui );
             NUtils.waitEvent(()-> gui.getInventory().getItems(new NAlias("feather")).size()>=3 && gui.getInventory().getItem(new NAlias("chicken-plucked"))!=null,500);
             /// Сбрасываем перья
-            ArrayList<WItem> items = gui.getInventory()
+            ArrayList<GItem> items = gui.getInventory()
                     .getItems(new NAlias(new ArrayList<String>(Arrays.asList("feather"))),
                             AreasID.getTh(AreasID.feather), false);
             /// Переносим предметы в инвентарь
 
-            for (WItem item : items) {
+            for (GItem item : items) {
                 NUtils.drop(item);
             }
             if (Finder.findObjectInArea(new NAlias("barter"), 1000, Finder.findNearestMark(AreasID.feather)) != null) {
@@ -329,7 +331,7 @@ public class ChickenMaster implements Action {
             }
             NUtils.waitEvent(()-> gui.getInventory().getItem(new NAlias("chicken-plucked"))!=null,200);
             /// Свежуем курицу
-            WItem chicken_plucked = gui.getInventory ().getItem ( new NAlias ( "chicken-plucked" ) );
+            GItem chicken_plucked = gui.getInventory ().getItem ( new NAlias ( "chicken-plucked" ) );
             if ( chicken_plucked == null ) {
                 return new Results ( Results.Types.NO_ITEMS );
             }
@@ -338,7 +340,7 @@ public class ChickenMaster implements Action {
 
             new TransferTrash ().run ( gui );
             /// Разделываем курицу
-            WItem chicken_cleaned = gui.getInventory ().getItem ( new NAlias ( "chicken-cleaned" ) );
+            GItem chicken_cleaned = gui.getInventory ().getItem ( new NAlias ( "chicken-cleaned" ) );
             if ( chicken_cleaned == null ) {
                 return new Results ( Results.Types.NO_ITEMS );
             }
@@ -360,10 +362,10 @@ public class ChickenMaster implements Action {
             return new Results ( Results.Types.OPEN_FAIL );
         }
         /// Получаем инфо по курочкам
-        ArrayList<WItem> tophens = gui.getInventory ( "Chicken Coop" ).getItems ( new NAlias ( "hen" ) );
+        ArrayList<GItem> tophens = gui.getInventory ( "Chicken Coop" ).getItems ( new NAlias ( "hen" ) );
         ArrayList<Double> qtop = new ArrayList<> ();
-        for ( WItem top : tophens ) {
-            qtop.add ( NUtils.getWItemQuality ( top ) );
+        for ( GItem top : tophens ) {
+            qtop.add ( NUtils.getItemQuality( top ) );
         }
         qtop.sort ( Double::compareTo );
         

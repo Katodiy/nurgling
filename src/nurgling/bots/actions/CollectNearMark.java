@@ -1,6 +1,7 @@
 package nurgling.bots.actions;
 
 import haven.Coord2d;
+import haven.GItem;
 import haven.Gob;
 
 import haven.WItem;
@@ -22,7 +23,7 @@ public class CollectNearMark implements Action {
             if ( gui.getInventory ().getFreeSpace () != 0 ) {
                 if(leashed){
                     if(gob.rc.dist(leashed_gob.rc)<20){
-                        WItem urope = gui.getInventory().getItem(new NAlias("rope"), Leashed.class);
+                        GItem urope = gui.getInventory().getItem(new NAlias("rope"), Leashed.class);
                         if(urope!=null){
                             new SelectFlowerAction(urope,"Pull", SelectFlowerAction.Types.Inventory).run(gui);
                         }

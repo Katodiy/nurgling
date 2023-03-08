@@ -39,7 +39,7 @@ public class Inventory extends Widget implements DTarget {
     public boolean dropul = true;
     public Coord isz;
     public boolean[] sqmask = null;
-    protected Map<GItem, WItem> wmap = new ConcurrentHashMap<>();
+    public Map<GItem, WItem> wmap = new ConcurrentHashMap<>();
 
     static {
 	Coord sz = sqsz.add(1, 1);

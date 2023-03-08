@@ -44,7 +44,7 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
     public Object contentsid = null;
     public GSprite spr = null;
 	public ItemInfo.Raw rawinfo;
-	protected List<ItemInfo> info = Collections.emptyList();
+	public List<ItemInfo> info = Collections.emptyList();
 
     @RName("item")
     public static class $_ implements Factory {

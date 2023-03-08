@@ -1,5 +1,6 @@
 package nurgling.bots.actions;
 
+import haven.GItem;
 import haven.Gob;
 import haven.WItem;
 import nurgling.*;
@@ -56,10 +57,10 @@ public class TransferToPile implements Action {
                         break;
                     }
                 }
-                ArrayList<WItem> witems = gui.getInventory().getItems(items);
+                ArrayList<GItem> witems = gui.getInventory().getItems(items);
                 boolean qIsFind = false;
-                for (WItem witem : witems) {
-                    if (NUtils.getWItemQuality(witem) >= q) {
+                for (GItem witem : witems) {
+                    if (NUtils.getItemQuality(witem) >= q) {
                         qIsFind = true;
                         break;
                     }

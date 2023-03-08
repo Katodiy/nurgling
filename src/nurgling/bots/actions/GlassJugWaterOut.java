@@ -1,6 +1,7 @@
 package nurgling.bots.actions;
 
 import haven.Coord;
+import haven.GItem;
 import haven.Gob;
 import haven.WItem;
 import nurgling.*;
@@ -18,8 +19,8 @@ public class GlassJugWaterOut implements Action {
     private NAlias resource = null;
 
     private boolean allFree(NGameUI gui) throws InterruptedException {
-        for(WItem item :  gui.getInventory().getItems(new NAlias("jug")))
-            if(NUtils.isContentWater(item.item))
+        for(GItem item :  gui.getInventory().getItems(new NAlias("jug")))
+            if(NUtils.isContentWater(item))
                 return false;
         return true;
     }
@@ -73,12 +74,12 @@ public class GlassJugWaterOut implements Action {
             }
 
             new PathFinder(gui, gob).run();
-            for (WItem item : gui.getInventory().getItems(new NAlias("jug"))) {
+            for (GItem item : gui.getInventory().getItems(new NAlias("jug"))) {
                 if (!gui.hand.isEmpty()) {
                     NUtils.transferToInventory();
                     NUtils.waitEvent(() -> gui.hand.isEmpty(), 50);
                 }
-                if (NUtils.isContentWater(item.item)) {
+                if (NUtils.isContentWater(item)) {
                     new TakeToHand(item).run(gui);
                     NUtils.waitEvent(() -> !gui.hand.isEmpty(), 200);
                     NUtils.activateItem(gob);

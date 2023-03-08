@@ -1,5 +1,6 @@
 package nurgling.bots.actions;
 
+import haven.GItem;
 import haven.WItem;
 import nurgling.NAlias;
 import nurgling.NGameUI;
@@ -15,19 +16,19 @@ public class TransferTrash implements Action {
     public Results run ( NGameUI gui )
             throws InterruptedException {
     
-        ArrayList<WItem> items = gui.getInventory ()
+        ArrayList<GItem> items = gui.getInventory ()
                                     .getItems ( new NAlias( new ArrayList<String> ( Arrays.asList ( "entrails" ) ) ),
                                             AreasID.getTh(AreasID.entr), false );
         /// Переносим предметы в инвентарь
-        for ( WItem item : items ) {
+        for ( GItem item : items ) {
             NUtils.drop ( item );
         }
 
-        ArrayList<WItem> items2 = gui.getInventory ().getItems (
+        ArrayList<GItem> items2 = gui.getInventory ().getItems (
                 new NAlias ( new ArrayList<String> ( Arrays.asList ( "intestines" ) ) ), AreasID.getTh(AreasID.inten), false );
         /// Переносим предметы в инвентарь
         
-        for ( WItem item : items2 ) {
+        for ( GItem item : items2 ) {
             NUtils.drop ( item );
         }
         new TransferItemsToBarter ( AreasID.inten,new NAlias ( "intest" ), false ).run ( gui );

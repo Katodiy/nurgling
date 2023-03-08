@@ -1,5 +1,6 @@
 package nurgling.bots.actions;
 
+import haven.GItem;
 import haven.Gob;
 import haven.WItem;
 import nurgling.NAlias;
@@ -52,7 +53,7 @@ public class Butching implements Action {
             new CollectFromGob("Clean", gob, new NAlias("butch")).run(gui);
             new TransferTrash().run(gui);
 
-            for(WItem item : gui.getInventory().getItems(new NAlias("suckmaw")))
+            for(GItem item : gui.getInventory().getItems(new NAlias("suckmaw")))
             {
                 new TransferItemsToBarter(Ingredient.get(item).barter_out, new NAlias("suckmaw"),false).run(gui);
             }
@@ -66,7 +67,7 @@ public class Butching implements Action {
             }
             new TransferMeat().run(gui);
 
-            ArrayList<WItem> fat_and_other = gui.getInventory().getItems(new NAlias("animalfat", "fishyeyeball"));
+            ArrayList<GItem> fat_and_other = gui.getInventory().getItems(new NAlias("animalfat", "fishyeyeball"));
             if(fat_and_other.size()>0) {
                 if (Finder.findObjectInArea(new NAlias("barter"), 1000, Finder.findNearestMark(AreasID.fat)) !=
                         null) {
@@ -76,12 +77,12 @@ public class Butching implements Action {
                 }
             }
 
-            for(WItem item : gui.getInventory().getItems(new NAlias("Bollock")))
+            for(GItem item : gui.getInventory().getItems(new NAlias("Bollock")))
             {
                 new TransferItemsToBarter(Ingredient.get(item).barter_out, new NAlias(NUtils.getInfo(item)),true).run(gui);
             }
 
-            for(WItem item : gui.getInventory().getItems(new NAlias("foetus")))
+            for(GItem item : gui.getInventory().getItems(new NAlias("foetus")))
             {
                 new TransferItemsToBarter(Ingredient.get(item).barter_out, new NAlias("foetus"),false).run(gui);
             }

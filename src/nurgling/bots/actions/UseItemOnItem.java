@@ -1,5 +1,6 @@
 package nurgling.bots.actions;
 
+import haven.GItem;
 import haven.WItem;
 import nurgling.NAlias;
 import nurgling.NGameUI;
@@ -11,19 +12,19 @@ public class UseItemOnItem implements Action {
     public Results run ( NGameUI gui )
             throws InterruptedException {
         new TakeToHand ( src_item ).run ( gui );
-        target_item.item.wdgmsg ( "itemact",0 );
+        target_item.wdgmsg ( "itemact",0 );
         NUtils.waitEvent(()->gui.vhand==null,50);
         return new Results ( Results.Types.SUCCESS );
     }
     
     public UseItemOnItem(
             NAlias src_item,
-            WItem target_item
+            GItem target_item
     ) {
         this.src_item = src_item;
         this.target_item = target_item;
     }
     
     NAlias src_item;
-    WItem target_item;
+    GItem target_item;
 }

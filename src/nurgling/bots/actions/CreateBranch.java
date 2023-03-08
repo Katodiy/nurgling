@@ -1,5 +1,6 @@
 package nurgling.bots.actions;
 
+import haven.GItem;
 import haven.WItem;
 
 import nurgling.NAlias;
@@ -32,7 +33,7 @@ public class CreateBranch implements Action {
                 return new Results ( Results.Types.NO_FUEL );
             }
         }
-        WItem block = gui.getInventory ().getItem ( new NAlias ( "block" ) );
+        GItem block = gui.getInventory ().getItem ( new NAlias ( "block" ) );
         if ( block == null ) {
             return new Results ( Results.Types.NO_ITEMS );
         }

@@ -2,6 +2,7 @@ package nurgling;
 
 import haven.*;
 import haven.res.ui.tt.q.qbuff.QBuff;
+import haven.res.ui.tt.q.quality.Quality;
 import haven.resutil.FoodInfo;
 
 import java.awt.*;
@@ -9,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class NGItem extends GItem {
     public double quantity = -1;
@@ -219,5 +221,10 @@ public class NGItem extends GItem {
             g.chcolor();
             g.aimage(tex, g.sz(), 1, 1);
         }
+    }
+
+    public double quality () {
+        Optional<ItemInfo> qInfo = this.info ().stream ().filter ( (info ) -> info instanceof Quality).findFirst ();
+        return qInfo.map(itemInfo -> ((Quality) itemInfo).q).orElse(-1.0);
     }
 }

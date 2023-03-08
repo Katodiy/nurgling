@@ -1,5 +1,6 @@
 package nurgling.bots.actions;
 
+import haven.GItem;
 import haven.Gob;
 import haven.Widget;
 import haven.Window;
@@ -96,16 +97,19 @@ public class TransferItemsToBarter implements Action {
                                         if ( sb.res == null ) {
                                             if ( paving == null ) {
                                                 if(area == null){
+                                                    fcknbranchbundle();
                                                     new TransferItemsToContainers ( id, new NAlias (
                                                             new ArrayList<> ( Arrays.asList ( "Branch", "branch" ) ) ),
                                                             true ).run ( gui );
                                                 }else {
+                                                    fcknbranchbundle();
                                                     new TransferItemsToContainers ( area, new NAlias (
                                                             new ArrayList<> ( Arrays.asList ( "Branch", "branch" ) ) ),
                                                             true ).run ( gui );
                                                 }
                                             }
                                             else {
+                                                fcknbranchbundle();
                                                 new TransferItemsToContainers ( Finder.findNearestMark ( id, paving ),
                                                         new NAlias ( new ArrayList<> (
                                                                 Arrays.asList ( "Branch", "branch" ) ) ), true ).run (
@@ -128,14 +132,17 @@ public class TransferItemsToBarter implements Action {
                 Thread.sleep ( 300 );
                 if ( paving == null ) {
                     if(area == null) {
+                        fcknbranchbundle();
                         new TransferItemsToContainers(id,
                                 new NAlias(new ArrayList<>(Arrays.asList("Branch", "branch"))), true).run(gui);
                     }else {
+                        fcknbranchbundle();
                         new TransferItemsToContainers(area,
                                 new NAlias(new ArrayList<>(Arrays.asList("Branch", "branch"))), true).run(gui);
                     }
                 }
                 else {
+                    fcknbranchbundle();
                     new TransferItemsToContainers ( Finder.findNearestMark ( id, paving ),
                             new NAlias ( new ArrayList<> ( Arrays.asList ( "Branch", "branch" ) ) ), true ).run ( gui );
                 }
@@ -146,7 +153,14 @@ public class TransferItemsToBarter implements Action {
             return new Results ( Results.Types.NO_BARTER );
         }
     }
-    
+
+    void fcknbranchbundle() throws InterruptedException {
+        for(GItem branch: NUtils.getGameUI().getInventory().getItems(new NAlias("branch")))
+            if(branch.contents!=null) {
+                NUtils.destroyFCNbndl(branch);
+                NUtils.waitEvent(()->NUtils.getGameUI().getInventory().wmap.get(branch)==null,50);
+            }
+    }
     
     public TransferItemsToBarter(
             Gob gob,

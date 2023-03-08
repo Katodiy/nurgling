@@ -1,5 +1,6 @@
 package nurgling.bots.actions;
 
+import haven.GItem;
 import haven.WItem;
 import nurgling.NAlias;
 import nurgling.NGameUI;
@@ -20,10 +21,10 @@ public class TransferBars implements Action {
     public Results run ( NGameUI gui )
             throws InterruptedException {
         new CollectQuicksilver ().run ( gui );
-        ArrayList<WItem> items = gui.getInventory().getItems(metals);
-        for(WItem item : items){
+        ArrayList<GItem> items = gui.getInventory().getItems(metals);
+        for(GItem item : items){
             AItem ingredient = Ingredient.get(item);
-            NAlias name = new NAlias(item.item.res.get().name);
+            NAlias name = new NAlias(item.res.get().name);
             if(ingredient!=null) {
                 new TransferItemsToBarter(ingredient.barter_out, name, false).run(gui);
                 new FillContainers(name, ingredient.area_out, new ArrayList<>()).run(gui);

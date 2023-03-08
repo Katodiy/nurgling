@@ -1,5 +1,6 @@
 package nurgling.bots.actions;
 
+import haven.GItem;
 import haven.Gob;
 import haven.WItem;
 import haven.res.ui.croster.CattleId;
@@ -24,7 +25,7 @@ public class BranderAction implements Action {
             Gob kiln = Finder.findObject(new NAlias("kiln"));
             if (kiln != null) {
                 new FromBeltToInventory(new NAlias("branding")).run(gui);
-                WItem branding = gui.getInventory().getItem(new NAlias("branding"));
+                GItem branding = gui.getInventory().getItem(new NAlias("branding"));
                 if (branding == null)
                     return new Results(Results.Types.NO_ITEMS);
                 new FillContainers(new NAlias("branding"), new NAlias("kiln"), new ArrayList<>()).run(gui);

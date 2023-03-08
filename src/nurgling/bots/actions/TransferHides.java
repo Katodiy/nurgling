@@ -1,5 +1,6 @@
 package nurgling.bots.actions;
 
+import haven.GItem;
 import haven.Gob;
 
 import haven.WItem;
@@ -20,11 +21,11 @@ public class TransferHides implements Action {
     public Results run ( NGameUI gui )
             throws InterruptedException {
 
-        ArrayList<WItem> items = gui.getInventory().getItems(hides);
-        for(WItem item : items){
+        ArrayList<GItem> items = gui.getInventory().getItems(hides);
+        for(GItem item : items){
             AItem ingredient = Ingredient.get(item);
             NAlias name = new NAlias(NUtils.getInfo(item));
-            if((ingredient != null) && (NConfiguration.getInstance().ingrTh.get(name.keys.get(0))==null || ((NWItem) item).quality() > NConfiguration.getInstance().ingrTh.get(name.keys.get(0)))) {
+            if((ingredient != null) && (NConfiguration.getInstance().ingrTh.get(name.keys.get(0))==null || ((NGItem) item).quality() > NConfiguration.getInstance().ingrTh.get(name.keys.get(0)))) {
                 new TransferItemsToBarter(ingredient.barter_out, name, true).run(gui);
                 new FillContainers(name, ingredient.area_out, new ArrayList<>()).run(gui);
             }

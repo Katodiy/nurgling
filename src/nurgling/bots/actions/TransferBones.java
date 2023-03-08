@@ -1,5 +1,6 @@
 package nurgling.bots.actions;
 
+import haven.GItem;
 import haven.WItem;
 
 import nurgling.NAlias;
@@ -25,16 +26,16 @@ public class TransferBones implements Action {
                         "antlers" + "-reddeer", "tusk" ) ),
                 new ArrayList<> ( Arrays.asList ( "saw", "finebonering", "borewormbeak","glue" ) ) );
         
-        ArrayList<WItem> ditems = gui.getInventory ().getItems ( bones, AreasID.getTh(AreasID.lqbone), false );
+        ArrayList<GItem> ditems = gui.getInventory ().getItems ( bones, AreasID.getTh(AreasID.lqbone), false );
         /// Переносим предметы в инвентарь
         
-        for ( WItem item : ditems ) {
+        for ( GItem item : ditems ) {
             NUtils.drop ( item );
         }
 
 
-        ArrayList<WItem> items = gui.getInventory().getItems(bones);
-        for (WItem item : items) {
+        ArrayList<GItem> items = gui.getInventory().getItems(bones);
+        for (GItem item : items) {
             AItem ingredient = Ingredient.get(item);
             NAlias name = new NAlias(NUtils.getInfo(item));
             if(ingredient!=null) {

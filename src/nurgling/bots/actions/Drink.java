@@ -1,5 +1,6 @@
 package nurgling.bots.actions;
 
+import haven.GItem;
 import haven.WItem;
 
 import nurgling.NAlias;
@@ -47,28 +48,25 @@ public class Drink implements Action {
                 }
             }
             else {
-                Results.Types res = new OpenBelt ().run ( gui ).type;
-                if ( res == Results.Types.SUCCESS ) {
-                    NInventory belt = gui.getInventory ( "elt" );
-                    ArrayList<WItem> wskins = belt.getItems ( new NAlias ( "waterskin" ) );
-                    for ( WItem witem : wskins ) {
-                        if ( NUtils.isContentWater ( witem.item ) ) {
+                WItem wbelt = Finder.findDressedItem ( new NAlias ("belt") );
+                if(wbelt!=null) {
+                    NInventory belt = ((NInventory)wbelt.item.contents);
+                    ArrayList<GItem> wskins = belt.getItems ( new NAlias ( "waterskin" ) );
+                    for ( GItem witem : wskins ) {
+                        if ( NUtils.isContentWater ( witem ) ) {
                             if ( new SelectFlowerAction ( witem, "Drink", SelectFlowerAction.Types.Inventory )
                                     .run ( gui ).type != Results.Types.SUCCESS ) {
-                                belt.parent.destroy ();
                                 return new Results ( Results.Types.SELECT_FLOWER_FAIL );
                             }
                             if ( new BarChangeAction<> ( NUtils::getStamina,
                                     () -> NUtils.getStamina() >= stopLvl ).run ( gui ).type ==
                                     Results.Types.SUCCESS ) {
-                                belt.parent.destroy ();
                                 return new Results ( Results.Types.SUCCESS );
                             }
                         }
                     }
-                    belt.parent.hide ();
                 }
-                else if ( res == Results.Types.BELT_FAIL ) {
+                else {
                     return new Results ( Results.Types.BELT_FAIL );
                 }
             }
