@@ -1,6 +1,7 @@
 package nurgling.bots.actions;
 
 import haven.Coord;
+import haven.GItem;
 import haven.WItem;
 import nurgling.*;
 import nurgling.tools.NArea;
@@ -27,13 +28,13 @@ public class Fishing implements Action {
             /// Ищем удочку
             NAlias fish_rod_name = new NAlias("bushpole");
             NAlias primrod_name = new NAlias("primrod");
-            WItem fish_rod = gui.getEquipment().getFreeSlot(fish_rod_name);
+            GItem fish_rod = gui.getEquipment().getFreeSlot(fish_rod_name);
             if (fish_rod == null) {
                 fish_rod = gui.getInventory().getItem(fish_rod_name);
             }
             if (fish_rod == null) {
 
-                WItem primrod = gui.getEquipment().getFreeSlot(primrod_name);
+                GItem primrod = gui.getEquipment().getFreeSlot(primrod_name);
                 if (primrod == null) {
                     primrod = gui.getInventory().getItem(primrod_name);
                 }

@@ -1,6 +1,7 @@
 package nurgling.bots.actions;
 
 import haven.Coord;
+import haven.GItem;
 import haven.Gob;
 import haven.WItem;
 import nurgling.NAlias;
@@ -77,13 +78,13 @@ public class RabbitMaster implements Action {
                 return new Results ( Results.Types.OPEN_FAIL );
             }
             NUtils.waitEvent(()-> gui.getInventory ( "Rabbit Hutch" ).getItem ( new NAlias ( "rabbit-buck" ) )!=null,50);
-            WItem buck = gui.getInventory ( "Rabbit Hutch" ).getItem ( new NAlias ( "rabbit-buck" ) );
-            RabbitCoop curRabbitHutch = new RabbitCoop ( gob, NUtils.getWItemQuality ( buck ) );
+            GItem buck = gui.getInventory ( "Rabbit Hutch" ).getItem ( new NAlias ( "rabbit-buck" ) );
+            RabbitCoop curRabbitHutch = new RabbitCoop ( gob, NUtils.getItemQuality( buck ) );
             
             /// Получаем инфо по зайчихам
-            ArrayList<WItem> curdoes = gui.getInventory ( "Rabbit Hutch" ).getItems ( new NAlias ( "rabbit-doe" ) );
-            for ( WItem hen : curdoes ) {
-                curRabbitHutch.bunnies.add ( NUtils.getWItemQuality ( hen ) );
+            ArrayList<GItem> curdoes = gui.getInventory ( "Rabbit Hutch" ).getItems ( new NAlias ( "rabbit-doe" ) );
+            for ( GItem hen : curdoes ) {
+                curRabbitHutch.bunnies.add ( NUtils.getItemQuality( hen ) );
             }
             curRabbitHutch.bunnies.sort ( Double::compareTo );
             does.add ( curRabbitHutch );
@@ -99,14 +100,14 @@ public class RabbitMaster implements Action {
                 return new Results ( Results.Types.OPEN_FAIL );
             }
             /// Получаем инфо по зайчихам
-            ArrayList<WItem> curdoes = gui.getInventory ( "Rabbit Hutch" ).getItems ( new NAlias ( "rabbit-doe" ) );
-            for ( WItem hen : curdoes ) {
-                qdoes.add ( NUtils.getWItemQuality ( hen ) );
+            ArrayList<GItem> curdoes = gui.getInventory ( "Rabbit Hutch" ).getItems ( new NAlias ( "rabbit-doe" ) );
+            for ( GItem hen : curdoes ) {
+                qdoes.add ( NUtils.getItemQuality( hen ) );
             }
             /// Получаем инфо по зайцам
-            ArrayList<WItem> curbucks = gui.getInventory ( "Rabbit Hutch" ).getItems ( new NAlias ( "rabbit-buck" ) );
-            for ( WItem roost : curbucks ) {
-                qbucks.add ( NUtils.getWItemQuality ( roost ) );
+            ArrayList<GItem> curbucks = gui.getInventory ( "Rabbit Hutch" ).getItems ( new NAlias ( "rabbit-buck" ) );
+            for ( GItem roost : curbucks ) {
+                qbucks.add ( NUtils.getItemQuality( roost ) );
             }
             qdoes.sort ( Double::compareTo );
             qbucks.sort ( Double::compareTo );
@@ -133,28 +134,28 @@ public class RabbitMaster implements Action {
                         int finalJ = j;
                         NUtils.waitEvent ( () -> gui.getInventory("Rabbit Hutch")
                                 .getItem(does.get(finalJ).quality, new NAlias("rabbit-buck"))!=null, 20 );
-                        WItem lqhen = gui.getInventory ( "Rabbit Hutch" ).getItem ( does.get ( j ).quality, new NAlias ( "rabbit-buck" ) );
+                        GItem lqhen = gui.getInventory ( "Rabbit Hutch" ).getItem ( does.get ( j ).quality, new NAlias ( "rabbit-buck" ) );
                         Coord pos = new Coord ( ( lqhen.c.x - 1 ) / 33, ( lqhen.c.y - 1 ) / 33 );
                         NUtils.transferItem ( gui.getInventory ( "Rabbit Hutch" ), lqhen );
                         NUtils.takeItemToHand (
-                                gui.getInventory ().getItem ( current_quality, new NAlias ( "rabbit-buck" ) ).item );
+                                gui.getInventory ().getItem ( current_quality, new NAlias ( "rabbit-buck" ) ) );
                         NUtils.waitEvent(()-> gui.vhand!=null,50);
 
                         NUtils.transferToInventory ( "Rabbit Hutch", pos );
                         does.get ( j ).quality = current_quality;
-                        current_quality = NUtils.getWItemQuality ( lqhen );
+                        current_quality = NUtils.getItemQuality( lqhen );
                     }
                 }
                 NUtils.waitEvent (()->gui.getInventory ().getItem ( new NAlias ( "rabbit-buck" ) )!=null,delay  );
                 /// Сворачиваем шею зайцу
-                WItem buck = gui.getInventory ().getItem ( new NAlias ( "rabbit-buck" ) );
+                GItem buck = gui.getInventory ().getItem ( new NAlias ( "rabbit-buck" ) );
                 if ( buck == null ) {
                     return new Results ( Results.Types.NO_ITEMS );
                 }
                 new SelectFlowerAction ( buck, "Wring neck", SelectFlowerAction.Types.Inventory ).run ( gui );
                 NUtils.waitEvent (()->gui.getInventory ().getItem ( new NAlias ( "rabbit-dead" ) )!=null,delay) ;
                 /// Снимаем шкуру
-                WItem rabbit_dead = gui.getInventory ().getItem ( new NAlias ( "rabbit-dead" ) );
+                GItem rabbit_dead = gui.getInventory ().getItem ( new NAlias ( "rabbit-dead" ) );
                 if ( rabbit_dead == null ) {
                     return new Results ( Results.Types.NO_ITEMS );
                 }
@@ -164,7 +165,7 @@ public class RabbitMaster implements Action {
                 /// Сбрасываем шкуру
                 new TransferRawHides ().run ( gui );
                 /// Свежуем зайца
-                WItem carcas = gui.getInventory ().getItem ( new NAlias ( "rabbit-carcas" ) );
+                GItem carcas = gui.getInventory ().getItem ( new NAlias ( "rabbit-carcas" ) );
                 if ( carcas == null ) {
                     return new Results ( Results.Types.NO_ITEMS );
                 }
@@ -173,7 +174,7 @@ public class RabbitMaster implements Action {
                 NUtils.waitEvent (()->gui.getInventory ().getItem ( new NAlias ( "entrails" ) )!=null,delay);
                 new TransferTrash ().run ( gui );
                 /// Разделываем зайца
-                WItem rabbit_cleaned = gui.getInventory ().getItem ( new NAlias ( "rabbit-clean" ) );
+                GItem rabbit_cleaned = gui.getInventory ().getItem ( new NAlias ( "rabbit-clean" ) );
                 if ( rabbit_cleaned == null ) {
                     return new Results ( Results.Types.NO_ITEMS );
                 }
@@ -204,24 +205,24 @@ public class RabbitMaster implements Action {
                                 return new Results ( Results.Types.OPEN_FAIL );
                             }
                             NUtils.waitEvent ( () -> false, 5 );
-                            WItem lqhen = gui.getInventory ( "Rabbit Hutch" ).getItem ( does.get ( j ).bunnies.get ( k ), new NAlias ( "rabbit-doe" ) );
+                            GItem lqhen = gui.getInventory ( "Rabbit Hutch" ).getItem ( does.get ( j ).bunnies.get ( k ), new NAlias ( "rabbit-doe" ) );
                             Coord pos = new Coord ( ( lqhen.c.x - 1 ) / 33, ( lqhen.c.y - 1 ) / 33 );
                             NUtils.transferItem ( gui.getInventory ( "Rabbit Hutch" ), lqhen );
                             NUtils.takeItemToHand (
-                                    gui.getInventory ().getItem ( current_quality, new NAlias ( "rabbit-doe" ) ).item );
+                                    gui.getInventory ().getItem ( current_quality, new NAlias ( "rabbit-doe" ) ) );
                             int counter = 0;
                             while ( gui.vhand == null && counter < 20 ) {
                                 Thread.sleep ( 100 );
                                 counter += 1;
                             }
                             NUtils.transferToInventory ( "Rabbit Hutch", pos );
-                            current_quality = NUtils.getWItemQuality ( lqhen );
+                            current_quality = NUtils.getItemQuality( lqhen );
                             /// Обновляем данные по зайчихам
                             Thread.sleep ( 300 );
-                            ArrayList<WItem> newcurhens = gui.getInventory ( "Rabbit Hutch" ).getItems ( new NAlias ( "rabbit-doe" ) );
+                            ArrayList<GItem> newcurhens = gui.getInventory ( "Rabbit Hutch" ).getItems ( new NAlias ( "rabbit-doe" ) );
                             does.get ( j ).bunnies = new ArrayList<> ();
-                            for ( WItem hen : newcurhens ) {
-                                does.get ( j ).bunnies.add ( NUtils.getWItemQuality ( hen ) );
+                            for ( GItem hen : newcurhens ) {
+                                does.get ( j ).bunnies.add ( NUtils.getItemQuality( hen ) );
                             }
                             does.get ( j ).bunnies.sort ( Double::compareTo );
                             break;
@@ -230,14 +231,14 @@ public class RabbitMaster implements Action {
                 }
                 NUtils.waitEvent (()->gui.getInventory ().getItem ( new NAlias ( "rabbit-doe" ) )!=null,delay  );
                 /// Сворачиваем шею зайцу
-                WItem buck = gui.getInventory ().getItem ( new NAlias ( "rabbit-doe" ) );
+                GItem buck = gui.getInventory ().getItem ( new NAlias ( "rabbit-doe" ) );
                 if ( buck == null ) {
                     return new Results ( Results.Types.NO_ITEMS );
                 }
                 new SelectFlowerAction ( buck, "Wring neck", SelectFlowerAction.Types.Inventory ).run ( gui );
                 NUtils.waitEvent (()->gui.getInventory ().getItem ( new NAlias ( "rabbit-dead" ) )!=null,delay  );
                 /// Снимаем шкуру
-                WItem rabbit_dead = gui.getInventory ().getItem ( new NAlias ( "rabbit-dead" ) );
+                GItem rabbit_dead = gui.getInventory ().getItem ( new NAlias ( "rabbit-dead" ) );
                 if ( rabbit_dead == null ) {
                     return new Results ( Results.Types.NO_ITEMS );
                 }
@@ -247,7 +248,7 @@ public class RabbitMaster implements Action {
                 /// Сбрасываем шкуру
                 new TransferRawHides ().run ( gui );
                 /// Свежуем зайца
-                WItem carcas = gui.getInventory ().getItem ( new NAlias ( "rabbit-carcas" ) );
+                GItem carcas = gui.getInventory ().getItem ( new NAlias ( "rabbit-carcas" ) );
                 if ( carcas == null ) {
                     return new Results ( Results.Types.NO_ITEMS );
                 }
@@ -256,7 +257,7 @@ public class RabbitMaster implements Action {
                 NUtils.waitEvent (()->gui.getInventory ().getItem ( new NAlias ( "entrails" ) )!=null,delay);
                 new TransferTrash ().run ( gui );
                 /// Разделываем зайца
-                WItem rabbit_cleaned = gui.getInventory ().getItem ( new NAlias ( "rabbit-clean" ) );
+                GItem rabbit_cleaned = gui.getInventory ().getItem ( new NAlias ( "rabbit-clean" ) );
                 if ( rabbit_cleaned == null ) {
                     return new Results ( Results.Types.NO_ITEMS );
                 }

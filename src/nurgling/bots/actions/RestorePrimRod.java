@@ -1,5 +1,6 @@
 package nurgling.bots.actions;
 
+import haven.GItem;
 import haven.WItem;
 import nurgling.NAlias;
 import nurgling.NGameUI;
@@ -56,7 +57,7 @@ public class RestorePrimRod implements Action {
     public RestorePrimRod(
             NArea baits,
             NArea tools,
-            WItem rod
+            GItem rod
     ) {
         this.baits = baits;
         this.tools = tools;
@@ -66,6 +67,6 @@ public class RestorePrimRod implements Action {
     NArea baits;
     NArea tools;
     
-    WItem rod;
+    GItem rod;
     
 }

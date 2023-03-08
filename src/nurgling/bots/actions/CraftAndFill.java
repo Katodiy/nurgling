@@ -1,5 +1,6 @@
 package nurgling.bots.actions;
 
+import haven.GItem;
 import haven.Gob;
 import haven.WItem;
 import haven.Window;
@@ -35,9 +36,9 @@ public class CraftAndFill implements Action {
                         new TransferItemsToContainers(fullMark, oarea, oname, ocap, result).run(gui);
                     }
                 }else{
-                    WItem out_item = gui.getInventory().getItem(new NAlias("wurst"));
+                    GItem out_item = gui.getInventory().getItem(new NAlias("wurst"));
                     if(out_item!=null) {
-                        String out_name = out_item.item.getres().name;
+                        String out_name = out_item.getres().name;
                         out_name = out_name.substring(out_name.lastIndexOf('/')+1);
 
 //                        new TransferItemsToBarter(Objects.requireNonNull(NUtils.getWarhouse(out_name))).run(gui);

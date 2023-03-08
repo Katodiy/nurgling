@@ -1,5 +1,6 @@
 package nurgling.bots.actions;
 
+import haven.GItem;
 import haven.Gob;
 import haven.WItem;
 
@@ -90,7 +91,7 @@ public class TakeFromContainers implements Action {
                     }
                 }
                 else {
-                    ArrayList<WItem> witems = gui.getInventory ( cap ).getItems ( items );
+                    ArrayList<GItem> witems = gui.getInventory ( cap ).getItems ( items );
                     if ( witems.isEmpty () ) {
                         break;
                     }

@@ -1,5 +1,6 @@
 package nurgling.bots.actions;
 
+import haven.GItem;
 import haven.Gob;
 import haven.WItem;
 
@@ -51,7 +52,7 @@ public class TransferToBarrel implements Action {
             }
             
             new PathFinder( gui, gob ).run ();
-            for ( WItem item : gui.getInventory ().getItems ( items ) ) {
+            for ( GItem item : gui.getInventory ().getItems ( items ) ) {
                 if ( gui.hand.isEmpty () ) {
                     new TakeToHand ( item ).run ( gui );
                 }

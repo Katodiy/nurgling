@@ -44,10 +44,4 @@ public class NWItem extends WItem {
         return(false);
 
     }
-
-    public double quality () {
-        Optional<ItemInfo> qInfo = this.info ().stream ().filter ( (info ) -> info instanceof Quality).findFirst ();
-        return qInfo.map(itemInfo -> ((Quality) itemInfo).q).orElse(-1.0);
-    }
-
 }

@@ -1,5 +1,6 @@
 package nurgling.bots.tools;
 
+import haven.GItem;
 import haven.WItem;
 import nurgling.NAlias;
 import nurgling.NUtils;
@@ -49,7 +50,7 @@ public class Ingredient extends AItem{
         this.count = count;
     }
 
-    public static AItem get(WItem item) {
+    public static AItem get(GItem item) {
         return IngredientSettings.data.get(NUtils.getInfo(item));
     }
 

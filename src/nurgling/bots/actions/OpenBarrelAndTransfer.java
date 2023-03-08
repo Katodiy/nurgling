@@ -23,12 +23,12 @@ public class OpenBarrelAndTransfer implements Action {
                 if(barrelCont>-1 && barrelCont <content_count) {
                     do {
 
-                        WItem item = gui.getInventory().getItem(content);
+                        GItem item = gui.getInventory().getItem(content);
                         if (item != null) {
                             if (gui.hand.isEmpty()) {
                                 new TakeToHand(item).run(gui);
                             }
-                            barrelCont+=NUtils.getAmount(item.item);
+                            barrelCont+=NUtils.getAmount(item);
                             NUtils.activateItem(barrel);
                             NUtils.waitEvent(()->gui.hand.isEmpty(),200);
                         } else {

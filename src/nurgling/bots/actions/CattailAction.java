@@ -1,6 +1,7 @@
 package nurgling.bots.actions;
 
 import haven.Coord;
+import haven.GItem;
 import haven.Gob;
 import haven.WItem;
 
@@ -20,7 +21,7 @@ public class CattailAction implements Action {
             throws InterruptedException {
         while (gui.getInventory().getFreeSpace() > 0) {
             Thread.sleep(50);
-            for (WItem fordrop : gui.getInventory().getItems(
+            for (GItem fordrop : gui.getInventory().getItems(
                     new NAlias(new ArrayList<String>(Arrays.asList("cattail")),
                             new ArrayList<>(Arrays.asList("fibre"))))) {
                 NUtils.drop(fordrop);

@@ -1,5 +1,6 @@
 package nurgling.bots.actions;
 
+import haven.GItem;
 import haven.Gob;
 import haven.WItem;
 
@@ -59,9 +60,9 @@ public class CollectQuicksilver implements Action {
                 /// Собираем ртуть
                 new PathFinder( gui, gob ).run ();
                 new OpenTargetContainer ( gob, cap ).run ( gui );
-                ArrayList<WItem> items = gui.getInventory ( cap ).getItems ( new NAlias ( "mercury" ) );
-                for ( WItem item : items ) {
-                    item.item.wdgmsg ( "itemact", 0 );
+                ArrayList<GItem> items = gui.getInventory ( cap ).getItems ( new NAlias ( "mercury" ) );
+                for ( GItem item : items ) {
+                    item.wdgmsg ( "itemact", 0 );
                     while ( gui.getInventory ( cap ).findItem ( item ) ) {
                         Thread.sleep ( 50 );
                     }

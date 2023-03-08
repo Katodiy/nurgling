@@ -5,7 +5,6 @@ import haven.Button;
 import haven.Composite;
 import haven.Label;
 import haven.Window;
-import haven.res.gfx.hud.rosters.pig.Pig;
 import haven.res.ui.barterbox.Shopbox;
 import haven.res.ui.croster.CattleId;
 import haven.res.ui.croster.Entry;
@@ -13,10 +12,7 @@ import haven.res.ui.croster.RosterWindow;
 import haven.res.ui.tt.q.qbuff.QBuff;
 import haven.res.ui.tt.q.quality.Quality;
 import nurgling.bots.*;
-import nurgling.bots.actions.UseItemOnItem;
 import nurgling.bots.actions.WaitAction;
-import nurgling.bots.tools.Ingredient;
-import nurgling.bots.tools.Warhouse;
 import nurgling.json.JSONObject;
 import nurgling.json.parser.JSONParser;
 import nurgling.tools.AreasID;
@@ -469,13 +465,13 @@ public class NUtils {
     }
 
     public static boolean dropFrom(
-            WItem item,
+            GItem item,
             String cap
     )
             throws InterruptedException {
         int counter = 0;
         while (gameUI.getInventory(cap).isInInventory(item) && counter < 20) {
-            item.item.wdgmsg("drop", item.sz, gameUI.map.player().rc, 0);
+            item.wdgmsg("drop", item.sz, gameUI.map.player().rc, 0);
             Thread.sleep(50);
             counter++;
         }
@@ -523,11 +519,11 @@ public class NUtils {
         return 0;
     }
 
-    public static double getContentQuality(WItem item)
+    public static double getContentQuality(GItem item)
             throws InterruptedException {
         ItemInfo.Contents content = null;
         for (int i = 0; i < 20; i++) {
-            content = getContent(item.item);
+            content = getContent(item);
             if (content != null) {
                 break;
             }
@@ -604,8 +600,8 @@ public class NUtils {
 
 
 
-    public static void activateItem(WItem item) {
-        item.item.wdgmsg("iact", Coord.z, 1);
+    public static void activateItem(GItem item) {
+        item.wdgmsg("iact", Coord.z, 1);
     }
 
     public static void takeFromEarth(Gob gob) throws InterruptedException {
@@ -626,7 +622,7 @@ public class NUtils {
     public static void digSnow(Coord2d pos)
             throws InterruptedException {
             if (!gameUI.hand.isEmpty()) {
-                drop(gameUI.vhand);
+                drop(gameUI.vhand.item);
             }
             NUtils.command(new char[]{'q', 'a', 'd'});
             Coord pltc = new Coord2d(pos.x / 11, pos.y / 11).floor();
@@ -730,11 +726,11 @@ public class NUtils {
     }
 
     public static boolean checkContent(
-            WItem item,
+            GItem item,
             NAlias candidates
     ) {
         boolean result = false;
-        for (Object info : item.item.rawinfo.data) {
+        for (Object info : item.rawinfo.data) {
             if (info instanceof Object[]) {
                 Object[] info_array = (Object[]) info;
                 for (Object subinfo : info_array) {
@@ -1031,13 +1027,17 @@ public class NUtils {
     )  {
         while (true) {
             try {
+                if(item.info == null) {
+                    item.info();
+                    NUtils.waitEvent(()->item.info!=null,50);
+                }
                 for (ItemInfo info : item.info()) {
                     if (info instanceof ItemInfo.Contents) {
                         return (ItemInfo.Contents) info;
                     }
                 }
                 break;
-            } catch (Loading ignored) {
+            } catch (Loading | InterruptedException ignored) {
             }
         }
         return null;
@@ -1074,25 +1074,26 @@ public class NUtils {
         return null;
     }
 
-    public static double getWItemQuality(WItem item)
+    public static double getItemQuality(GItem item)
             throws InterruptedException {
-        NUtils.waitEvent (()->item.item.spr != null, 20,20);
-        for (ItemInfo info : item.item.info()) {
-            if (info instanceof QBuff) {
-                return ((QBuff) info).q;
+        if(item.spr!=null) {
+            for (ItemInfo info : item.info()) {
+                if (info instanceof QBuff) {
+                    return ((QBuff) info).q;
+                }
             }
         }
         return -1;
     }
 
     public static boolean isItInfo(
-            final WItem item,
+            final GItem item,
             final NAlias regEx
     ) {
         if (item != null) {
             try {
                 /// Запрашиваем информацию по предмету
-                for (ItemInfo info : item.item.info()) {
+                for (ItemInfo info : item.info()) {
                     if (info instanceof ItemInfo.Name) {
                         return checkName(((ItemInfo.Name) info).str.text, regEx);
                     }
@@ -1263,12 +1264,12 @@ public class NUtils {
                     for (int i = 6; i <= 7; i++) {
                         if (((NInventory)wbelt.item.contents).getFreeSpace() != 0) {
                             if (gameUI.getEquipment().quickslots[i] != null) {
-                                ArrayList<WItem> items = gameUI.getInventory().getItems();
+                                ArrayList<GItem> items = gameUI.getInventory().getItems();
                                 freeSlotById(i, exceptions);
-                                for(WItem item : gameUI.getInventory().getItems()){
+                                for(GItem item : gameUI.getInventory().getItems()){
                                     if(!items.contains(item)){
-                                        item.item.wdgmsg("transfer", Coord.z, 1);
-                                        NUtils.waitEvent(() -> NUtils.getGameUI().getInventory().getItem(item.item) == null, 50);
+                                        item.wdgmsg("transfer", Coord.z, 1);
+                                        NUtils.waitEvent(() -> NUtils.getGameUI().getInventory().getItem(item) == null, 50);
                                         break;
                                     }
                                 }
@@ -1408,14 +1409,14 @@ public class NUtils {
             if (sp instanceof NISBox) {
                 /// Для каждого элемента из списка кандидатов выполняем процедуру переноса
                 /// Находим предмет в инвентаре
-                ArrayList<WItem> wItems = gameUI.getInventory().getItems(names);
+                ArrayList<GItem> wItems = gameUI.getInventory().getItems(names);
                 /// Вычисляем оставшееся свободное место в пайле
-                for (WItem wItem : wItems) {
-                    if(getWItemQuality(wItem)>=q) {
+                for (GItem wItem : wItems) {
+                    if(getItemQuality(wItem)>=q) {
                         int freeSpace = ((NISBox) sp).getFreeSpace();
                         /// Передаем предмет и дожидаемся изменения пайла
                         int count = 0;
-                        wItem.item.wdgmsg("transfer", wItem.sz, 1);
+                        wItem.wdgmsg("transfer", wItem.sz, 1);
                         while (freeSpace == ((NISBox) sp).getFreeSpace() && count < 50) {
                             Thread.sleep(10);
                             count += 1;
@@ -1455,25 +1456,29 @@ public class NUtils {
         return false;
     }
 
-    public static boolean drop(WItem item)
+    public static boolean drop(GItem item)
             throws InterruptedException {
         int counter = 0;
         while (gameUI.getInventory().isInInventory(item) && counter < 20) {
-            item.item.wdgmsg("drop", item.sz, gameUI.map.player().rc, 0);
+            item.wdgmsg("drop", item.sz, gameUI.map.player().rc, 0);
             Thread.sleep(50);
             counter++;
         }
         return !gameUI.getInventory().isInInventory(item);
     }
 
+    public static void destroyFCNbndl(GItem item){
+        item.wdgmsg("iact", item.sz, 3);
+    }
+
     public static boolean transferItem(
             NInventory inv,
-            WItem item
+            GItem item
     )
             throws InterruptedException {
         int space = inv.getFreeSpace();
         if (item != null) {
-            item.item.wdgmsg("transfer", item.sz, 1);
+            item.wdgmsg("transfer", item.sz, 1);
             NUtils.waitEvent(() -> space != inv.getFreeSpace(), 200);
             return space != inv.getFreeSpace();
         }
@@ -1483,7 +1488,7 @@ public class NUtils {
 
     public static boolean transferItem(
             NInventory inv,
-            WItem item,
+            GItem item,
             NInventory targetinv
     )
             throws InterruptedException {
@@ -1492,7 +1497,7 @@ public class NUtils {
         if (item != null) {
             if(targetinv.getNumberFreeCoord(item)==0)
                 return false;
-            item.item.wdgmsg("transfer", item.sz, 1);
+            item.wdgmsg("transfer", item.sz, 1);
             waitEvent(() -> space != inv.getFreeSpace() && targetinv.getFreeSpace()!=oldspace, 200);
             return oldspace != targetinv.getFreeSpace();
         }

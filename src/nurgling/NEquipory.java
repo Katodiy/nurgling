@@ -115,12 +115,12 @@ public class NEquipory extends Equipory {
             //    }
         //}
     //
-    public WItem getFreeSlot ( NAlias name ) {
+    public GItem getFreeSlot ( NAlias name ) {
         if ( quickslots[6] != null && NUtils.isIt ( quickslots[6].item, name ) ) {
-            return quickslots[6];
+            return quickslots[6].item;
         }
         else if ( quickslots[7] != null && NUtils.isIt ( quickslots[7].item, name ) ) {
-            return quickslots[7];
+            return quickslots[7].item;
         }
         return null;
     }

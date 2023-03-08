@@ -1,5 +1,6 @@
 package nurgling.bots.actions;
 
+import haven.GItem;
 import haven.WItem;
 import haven.Window;
 import nurgling.NAlias;
@@ -19,7 +20,7 @@ public class TakeMaxFromContainer implements Action {
         if ( spwnd != null ) {
             /// Находим все необходимые предметы в контейнере
             if(!NUtils.checkName(cap,"Stockpile")) {
-                ArrayList<WItem> items;
+                ArrayList<GItem> items;
                 if (qMode) {
                     items = gui.getInventory(cap).getItems(names, q, isMore);
                 } else {
@@ -27,7 +28,7 @@ public class TakeMaxFromContainer implements Action {
                 }
 
                 /// Переносим предметы в инвентарь
-                for (WItem item : items) {
+                for (GItem item : items) {
                     if (!NUtils.transferItem(gui.getInventory(cap), item, gui.getInventory())) {
                         return new Results(Results.Types.FULL);
                     }

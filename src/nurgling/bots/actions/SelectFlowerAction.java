@@ -1,6 +1,7 @@
 package nurgling.bots.actions;
 
 import haven.Coord;
+import haven.GItem;
 import haven.Gob;
 import haven.WItem;
 import haven.res.gfx.terobjs.items.gridiron.Roastspit;
@@ -21,7 +22,7 @@ public class SelectFlowerAction implements Action {
     }
     
     public SelectFlowerAction (
-            WItem item,
+            GItem item,
             String action,
             Types type
     ) {
@@ -137,7 +138,7 @@ public class SelectFlowerAction implements Action {
             throws InterruptedException {
         if ( _item != null ) {
             for ( int i = 0 ; i < 5 ; i++ ) {
-                _item.item.wdgmsg ( "iact", _item.sz, 0 );
+                _item.wdgmsg ( "iact", _item.sz, 0 );
                 if ( NUtils.waitEvent ( () -> NFlowerMenu.instance != null, 5 ) ) {
                     if(NFlowerMenu.instance.isContain ( _action )) {
                         NFlowerMenu.instance.selectInCurrent ( _action );
@@ -173,7 +174,7 @@ public class SelectFlowerAction implements Action {
     
     
     NAlias _name;
-    WItem _item = null;
+    GItem _item = null;
     Gob gob = null;
     String _action;
     Types _type;

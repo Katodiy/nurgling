@@ -70,7 +70,7 @@ public class NomadCollector implements Action {
                 pf.setWithAlarm(true);
             }else{
                 if(NUtils.getGob(leashed.id).rc.dist(gui.map.player().rc)>=77) {
-                    WItem rope = gui.getInventory().getItem(new NAlias("rope"), Leashed.class);
+                    GItem rope = gui.getInventory().getItem(new NAlias("rope"), Leashed.class);
 //                    new SelectFlowerAction(rope, "Pull", SelectFlowerAction.Types.Inventory).run(gui);
                     NUtils.waitEvent(() -> NUtils.getGob(leashed.id).rc.dist(gui.map.player().rc) < 77, 1000);
                 }

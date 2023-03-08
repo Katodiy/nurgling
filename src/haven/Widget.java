@@ -1566,8 +1566,8 @@ public class Widget {
 	public boolean isPacked = false;
 	public boolean packed() {
 		if(this instanceof NInventory){
-			for(WItem item :((NInventory)this).getItems()){
-				if(item.item.spr==null || item.item.info==null || item.item.getinfo(ItemInfo.Name.class)==null){
+			for(GItem item :((NInventory)this).getItems()){
+				if(item.spr==null || item.info==null || item.getinfo(ItemInfo.Name.class)==null){
 					return false;
 				}
 			}

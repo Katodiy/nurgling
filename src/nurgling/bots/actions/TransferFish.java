@@ -1,5 +1,6 @@
 package nurgling.bots.actions;
 
+import haven.GItem;
 import haven.WItem;
 import nurgling.NAlias;
 import nurgling.NGameUI;
@@ -15,8 +16,8 @@ public class TransferFish implements Action {
     @Override
     public Results run ( NGameUI gui )
             throws InterruptedException {
-        ArrayList<WItem> items = gui.getInventory().getItems(new NAlias("fish"));
-        for(WItem item : items){
+        ArrayList<GItem> items = gui.getInventory().getItems(new NAlias("fish"));
+        for(GItem item : items){
             AItem ingredient = Ingredient.get(item);
             NAlias name = new NAlias(NUtils.getInfo(item));
             if(ingredient!=null) {

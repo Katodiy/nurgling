@@ -1,5 +1,6 @@
 package nurgling.bots.actions;
 
+import haven.GItem;
 import haven.Gob;
 import haven.WItem;
 
@@ -22,7 +23,7 @@ public class TransferToTrough implements Action {
             
             
             new PathFinder( gui, gob ).run ();
-            for ( WItem item : gui.getInventory ().getItems ( items ) ) {
+            for ( GItem item : gui.getInventory ().getItems ( items ) ) {
                 do {
                     if ( gob.getModelAttribute() != 7 ) {
                         if ( gui.hand.isEmpty () ) {

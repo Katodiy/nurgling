@@ -1,5 +1,6 @@
 package nurgling.bots.actions;
 
+import haven.GItem;
 import haven.Gob;
 import haven.Resource;
 import haven.WItem;
@@ -42,7 +43,7 @@ public class CurdTubeAction implements Action {
                         return new Results(Results.Types.NO_FUEL);
 
                     res = new TakeFromContainer("Curding Tub", new NAlias("curd"), 4- gui.getInventory().getItems(new NAlias("curd")).size()).run(gui);
-                    WItem cheese_tray = NUtils.getGameUI().getInventory().getItem(new NAlias("cheesetray"));
+                    GItem cheese_tray = NUtils.getGameUI().getInventory().getItem(new NAlias("cheesetray"));
                     NUtils.waitEvent(()->gui.getInventory().getItems(new NAlias("invobjs/curd-")).size()>=4,10);
                     if(gui.getInventory().getItems(new NAlias("invobjs/curd-")).size()<4)
                         return new Results(Results.Types.NO_FUEL);

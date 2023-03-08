@@ -74,11 +74,11 @@ public class TestBot extends Bot {
                 y = min.y;
             }
             
-            for(WItem item: gameUI.getInventory ().getItems ()){
+            for(GItem item: gameUI.getInventory ().getItems ()){
                 if(NUtils.isIt(item, "bronzesword")){
                     int a = 8;
                 }
-                System.out.println (item.item.getres ());
+                System.out.println (item.getres ());
             }
             synchronized ( gameUI.ui.sess.glob.oc ) {
                 for ( Gob gob : gameUI.ui.sess.glob.oc ) {

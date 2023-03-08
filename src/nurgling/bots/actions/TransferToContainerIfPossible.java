@@ -1,5 +1,6 @@
 package nurgling.bots.actions;
 
+import haven.GItem;
 import haven.WItem;
 import haven.Window;
 
@@ -20,11 +21,11 @@ public class TransferToContainerIfPossible implements Action {
         }
         if ( spwnd != null ) {
             /// Находим все необходимые предметы в инвентаре
-            ArrayList<WItem> items;
+            ArrayList<GItem> items;
             items = gui.getInventory ().getItems ( names );
             if(aFreeSpace==-1) {
                 /// Переносим предметы в контейнер
-                for ( WItem item : items ) {
+                for ( GItem item : items ) {
                     if ( gui.getInventory ( cap ).getFreeSpace () == 0 ) {
                         return new Results ( Results.Types.FULL );
                     }
@@ -41,7 +42,7 @@ public class TransferToContainerIfPossible implements Action {
                     return new Results ( Results.Types.FULL );
                 }
                 for(int i = 0; i <freeSpace; i++){
-                    WItem item = gui.getInventory ().getItem ( names );
+                    GItem item = gui.getInventory ().getItem ( names );
                     if (item!=null) {
                         NUtils.transferItem ( gui.getInventory (), item, gui.getInventory ( cap ));
                         if ( gui.getInventory ( cap ).getFreeSpace () - aFreeSpace <= 0 ) {
