@@ -9,7 +9,7 @@ import haven.res.lib.layspr.*;
 import java.util.*;
 
 /* >ispr: Meat */
-@FromResource(name = "gfx/invobjs/meat", version = 22)
+@haven.FromResource(name = "gfx/invobjs/meat", version = 23)
 public class Meat extends Layered implements haven.res.ui.tt.defn.DynName {
     public final String name;
 

@@ -667,7 +667,7 @@ public class NConfiguration {
             file.write ( obj.toJSONString () );
         }
         catch ( IOException e ) {
-            e.printStackTrace ();
+            System.out.println("No config. config.nurgling.json not found");
         }
 
     }

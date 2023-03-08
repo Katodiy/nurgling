@@ -1,6 +1,7 @@
 package nurgling.bots.actions;
 
 import haven.Coord;
+import haven.GItem;
 import haven.WItem;
 import nurgling.*;
 import nurgling.tools.Finder;
@@ -21,32 +22,16 @@ public class FromBeltToInventory implements Action{
 
         WItem wbelt = Finder.findDressedItem ( new NAlias ("belt") );
         if(wbelt!=null) {
-            wbelt.item.wdgmsg ( "iact", wbelt.sz, 0 );
-            NUtils.waitEvent ( ()->gui.getWindow ( "elt" )!=null,300 );
-
-            int count = 0;
-            while(count < 5) {
-                NInventory belt = gui.getInventory ( "elt" );
-                if ( belt == null ) {
-                    return new Results ( Results.Types.NO_ITEMS );
-                }
-                WItem item = belt.getItem ( name );
-                if(item!=null) {
-                    NUtils.getGameUI().setfocus(NUtils.getGameUI().getInventory());
-                    item.item.wdgmsg("transfer", Coord.z, 1);
-                    /// waiting for the completion of the transfer to the inventory
-                    NUtils.waitEvent(() -> gui.getInventory().getItem(name) != null, 50);
-                    NUtils.getGameUI().getInventory().lostfocus();
-                    if (gui.getInventory().getItem(name) != null) {
-                        break;
-                    }
-                    count++;
-                }else {
-                    break;
-                }
+            NInventory belt = (NInventory)wbelt.item.contents;
+            if ( belt == null ) {
+                return new Results ( Results.Types.NO_ITEMS );
             }
-            gui.getWindow ( "elt" ).cbtn.wdgmsg ( "activate" );
-            NUtils.waitEvent(() -> gui.getWindow("elt") == null, 300);
+            GItem item = belt.getItem ( name );
+            if(item!=null) {
+                item.wdgmsg("transfer", Coord.z, 1);
+                /// waiting for the completion of the transfer to the inventory
+                NUtils.waitEvent(() -> gui.getInventory().getItem(name) != null, 50);
+            }
             if(gui.getInventory().getItem ( name ) != null)
                 return new Results(Results.Types.SUCCESS);
         }

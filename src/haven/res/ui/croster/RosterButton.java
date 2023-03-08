@@ -9,7 +9,7 @@ import haven.MenuGrid.Pagina;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-@FromResource(name = "ui/croster", version = 72)
+@haven.FromResource(name = "ui/croster", version = 73)
 public class RosterButton extends MenuGrid.PagButton {
     public final GameUI gui;
     public RosterWindow wnd;

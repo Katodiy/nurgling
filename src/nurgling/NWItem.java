@@ -1,12 +1,11 @@
 package nurgling;
 
-import haven.Coord;
-import haven.GItem;
-import haven.ItemInfo;
-import haven.WItem;
+import haven.*;
 import haven.res.ui.tt.q.quality.Quality;
 
 import java.util.Optional;
+
+import static haven.Inventory.sqsz;
 
 public class NWItem extends WItem {
     public NWItem(GItem item) {
@@ -50,4 +49,5 @@ public class NWItem extends WItem {
         Optional<ItemInfo> qInfo = this.info ().stream ().filter ( (info ) -> info instanceof Quality).findFirst ();
         return qInfo.map(itemInfo -> ((Quality) itemInfo).q).orElse(-1.0);
     }
+
 }

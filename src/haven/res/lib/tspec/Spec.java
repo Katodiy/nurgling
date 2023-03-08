@@ -7,7 +7,7 @@ import java.util.*;
 @FromResource(name = "lib/tspec", version = 3, override = true)
 public class Spec implements GSprite.Owner, ItemInfo.SpriteOwner {
     private static final Object[] definfo = {
-	new Object[] {Resource.remote().loadwait("ui/tt/defn").pool.load("ui/tt/defn", 5)},
+	new Object[] {Resource.remote().loadwait("ui/tt/defn").pool.load("ui/tt/defn", 6)},
     };
     public final Object[] info;
     public final ResData res;

@@ -43,7 +43,10 @@ public class WItem extends Widget implements DTarget {
     public final GItem item;
     public Contents contents;
     public Window contentswnd;
-    private boolean hovering = false;
+
+	public boolean proxy = true;
+	public Coord proxypos;
+    protected boolean hovering = false;
     private Resource cspr = null;
     private Message csdt = Message.nil;
 
@@ -208,7 +211,11 @@ public class WItem extends Widget implements DTarget {
 			}
 		    }
 		    item.contents.unlink();
-		    contents = cont.add(new Contents(this, item.contents), parentpos(cont, sz.sub(5, 5).sub(Contents.hovermarg)));
+			if(!proxy)
+		    	contents = cont.add(new Contents(this, item.contents), parentpos(cont, sz.sub(5, 5).sub(Contents.hovermarg)));
+			else {
+				contents = cont.add(new Contents(this, item.contents), proxypos);
+			}
 		}
 	    }
 	} else {
@@ -218,6 +225,7 @@ public class WItem extends Widget implements DTarget {
 	    }
 	}
 	hovering = false;
+	proxy = false;
     }
 
     public void draw(GOut g) {

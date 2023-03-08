@@ -60,7 +60,7 @@ public enum AreasID {
                 }
             }
         } catch (IOException | ParseException ex) {
-            ex.printStackTrace();
+            System.out.println("No areas settings. calibr.json not found");
         }
     }
 

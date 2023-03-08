@@ -3,19 +3,27 @@ package haven.res.ui.tt.defn;
 
 import haven.*;
 
-@FromResource(name = "ui/tt/defn", version = 5)
+@haven.FromResource(name = "ui/tt/defn", version = 6)
 public class DefName implements ItemInfo.InfoFactory {
-    public ItemInfo build(ItemInfo.Owner owner, Object... args) {
+    public static String getname(ItemInfo.Owner owner) {
 	if(owner instanceof ItemInfo.SpriteOwner) {
 	    GSprite spr = ((ItemInfo.SpriteOwner)owner).sprite();
 	    if(spr instanceof DynName)
-			return(new ItemInfo.Name(owner, ((DynName)spr).name()));
+		return(((DynName)spr).name());
 	}
 	if(!(owner instanceof ItemInfo.ResOwner))
 	    return(null);
 	Resource res = ((ItemInfo.ResOwner)owner).resource();
 	Resource.Tooltip tt = res.layer(Resource.tooltip);
-		 //throw(new RuntimeException("Item resource " + res + " is missing default tooltip"));
-	return(new ItemInfo.Name(owner, (tt == null)?"":tt.t));
+	if(tt == null)
+	    throw(new RuntimeException("Item resource " + res + " is missing default tooltip"));
+	return(tt.t);
+    }
+
+    public ItemInfo build(ItemInfo.Owner owner, ItemInfo.Raw raw, Object... args) {
+	String nm = getname(owner);
+	if(nm == null)
+	    return(null);
+	return(new ItemInfo.Name(owner, nm));
     }
 }
