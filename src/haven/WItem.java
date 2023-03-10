@@ -41,12 +41,6 @@ import static haven.Inventory.sqsz;
 public class WItem extends Widget implements DTarget {
     public static final Resource missing = Resource.local().loadwait("gfx/invobjs/missing");
     public final GItem item;
-    public Contents contents;
-    public Window contentswnd;
-
-	public boolean proxy = true;
-	public Coord proxypos;
-    protected boolean hovering = false;
     private Resource cspr = null;
     private Message csdt = Message.nil;
 
@@ -162,7 +156,7 @@ public class WItem extends Widget implements DTarget {
 	    GItem.InfoOverlay<?>[] ret = buf.toArray(new GItem.InfoOverlay<?>[0]);
 	    return(() -> ret);
 	});
-    public final AttrCache<Double> itemmeter = new AttrCache<Double>(this::info, AttrCache.map1(GItem.MeterInfo.class, minf -> minf::meter));
+    public final AttrCache<Double> itemmeter = new AttrCache<>(this::info, AttrCache.map1(GItem.MeterInfo.class, minf -> minf::meter));
 
     private Widget contparent() {
 	/* XXX: This is a bit weird, but I'm not sure what the alternative is... */

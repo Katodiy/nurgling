@@ -33,6 +33,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owner {
     public Indir<Resource> res;
@@ -47,6 +48,9 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 	public List<ItemInfo> info = Collections.emptyList();
     public int infoseq;
     public Widget hovering;
+
+	public boolean proxy = false;
+	public Coord proxypos = Coord.z;
 
     @RName("item")
     public static class $_ implements Factory {
@@ -91,7 +95,7 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 	}
 
 	public default Tex overlay() {
-	    return(new TexI(NumberInfo.numrender(itemnum(), numcolor())));
+	    return(new TexI(GItem.NumberInfo.numrender(itemnum(), numcolor())));
 	}
 
 	public default void drawoverlay(GOut g, Tex tex) {
@@ -196,7 +200,7 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 
     public GSprite sprite() {
 	if(spr == null)
-		throw(new Loading("Still waiting for sprite to be constructed"));
+	    throw(new Loading("Still waiting for sprite to be constructed"));
 	return(spr);
     }
 
@@ -363,7 +367,11 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 			}
 		    }
 		    this.contents.unlink();
-		    contentswdg = cont.add(new Contents(this, this.contents), hovering.parentpos(cont, hovering.sz.sub(UI.scale(5, 5)).sub(Contents.hovermarg)));
+			if(!proxy)
+				contentswdg = cont.add(new Contents(this, this.contents), hovering.parentpos(cont, hovering.sz.sub(UI.scale(5, 5)).sub(Contents.hovermarg)));
+			else {
+				contentswdg = cont.add(new Contents(this, this.contents), proxypos);
+			}
 		}
 	    }
 	} else {

@@ -47,7 +47,6 @@ public class FreeFrames implements Action {
                     NUtils.waitEvent(()->gui.getWindow ( "Frame" )==null,300);
                     new OpenTargetContainer ( gob, "Frame" ).run ( gui );
                     NUtils.waitEvent(()->gui.getInventory( "Frame" )!=null && (!gob.ols.isEmpty() && gui.getInventory("Frame").getFreeSpace()<4),300);
-                    System.out.println(gui.getInventory("Frame").getFreeSpace());
                     res = new TakeMaxFromContainer ( "Frame", items ).run ( gui );
                     if ( res.type == Results.Types.FULL ) {
                         new TransferHides ().run ( gui );

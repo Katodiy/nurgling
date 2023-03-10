@@ -126,7 +126,7 @@ public class Session implements Resource.Resolver {
 	    resid = id;
 	}
 	
-	private class Ref implements Indir<Resource> {
+	public class Ref implements Indir<Resource> {
 	    private Resource res;
 		    
 	    public Resource get() {
@@ -153,6 +153,10 @@ public class Session implements Resource.Resolver {
 	    private void reset() {
 		res = null;
 	    }
+
+		public boolean check() {
+			return res != null;
+		}
 	}
 
 	private Ref get() {

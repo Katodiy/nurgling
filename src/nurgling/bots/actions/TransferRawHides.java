@@ -24,7 +24,8 @@ public class TransferRawHides implements Action {
         /// Переносим предметы в инвентарь
 
         for (GItem item : items) {
-            NUtils.drop(item);
+            if(item.contents==null)
+                NUtils.drop(item);
         }
 
         new TransferItemsToBarter(AreasID.raw_hides, raw_hides, false).run(gui);

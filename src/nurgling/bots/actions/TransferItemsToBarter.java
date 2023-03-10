@@ -91,6 +91,12 @@ public class TransferItemsToBarter implements Action {
                                 }
                                 if ( isFind ) {
                                     int size = gui.getInventory ().getItems ( items, q, true ).size ();
+                                    for(GItem item:  gui.getInventory ().getItems ( items, q, true )){
+                                        if(item.contents!=null) {
+                                            NUtils.destroyFCNbndl(item);
+                                            NUtils.waitEvent(()->NUtils.getGameUI().getInventory().wmap.get(item)==null,50);
+                                        }
+                                    }
                                     while ( gui.getInventory ().getItems ( items, q, true ).size () > 0 ) {
                                         sb.bbtn.click ();
                                         Thread.sleep ( 50 );

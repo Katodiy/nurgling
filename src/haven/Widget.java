@@ -702,7 +702,6 @@ public class Widget {
 	    }
 	} else if(msg == "pack") {
 	    pack();
-		isPacked = true;
 	} else if(msg == "z") {
 	    z((Integer)args[0]);
 	} else if(msg == "show") {
@@ -1565,16 +1564,4 @@ public class Widget {
 
 	public abstract void ntick(double a);
     }
-
-	public boolean isPacked = false;
-	public boolean packed() {
-		if(this instanceof NInventory){
-			for(GItem item :((NInventory)this).getItems()){
-				if(item.spr==null || item.info==null || item.getinfo(ItemInfo.Name.class)==null){
-					return false;
-				}
-			}
-		}
-		return isPacked;
-	}
 }

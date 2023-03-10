@@ -51,8 +51,8 @@ public class NEquipProxy extends NDraggableWidget implements NDTarget2 {
 		if(e != null) {
 			NWItem w = (NWItem) NUtils.getEquipment().quickslots[slot(c).idx];
 			if (w != null) {
-				w.proxy = true;
-				w.proxypos = this.c.add(((c.div(invsq.sz())).mul(invsq.sz())));
+				w.item.proxy = true;
+				w.item.proxypos = this.c.add(((c.div(invsq.sz())).mul(invsq.sz())));
 				w.mousehover(Coord.z);
 				return true;
 			}

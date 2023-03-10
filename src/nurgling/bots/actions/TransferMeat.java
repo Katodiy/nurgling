@@ -18,6 +18,13 @@ public class TransferMeat implements Action {
     public Results run ( NGameUI gui )
             throws InterruptedException {
         ArrayList<GItem> items = gui.getInventory().getItems(new NAlias("meat"));
+        for(GItem item:  items){
+            if(item.contents!=null) {
+                NUtils.destroyFCNbndl(item);
+                NUtils.waitEvent(()->NUtils.getGameUI().getInventory().wmap.get(item)==null,50);
+            }
+        }
+        items = gui.getInventory().getItems(new NAlias("meat"));
         for(GItem item : items){
             AItem ingredient = Ingredient.get(item);
             NAlias name = new NAlias(NUtils.getInfo(item));

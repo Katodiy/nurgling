@@ -1042,6 +1042,22 @@ public class NUtils {
         return null;
     }
 
+    public static float getQuality(
+            GItem item
+    )  {
+        for (Object o : item.rawinfo.data) {
+            if (o instanceof Object[]) {
+                Object[] a = (Object[]) o;
+                if (a[0] instanceof Integer) {
+                    if (NUtils.checkName("ui/tt/q/quality", ((Session.CachedRes) item.glob().sess.rescache.get((Integer) a[0])).resnm)) {
+                        return (float)a[1];
+                    }
+                }
+            }
+        }
+        return -1.f;
+    }
+
     public static ItemInfo.Contents getContent(
             List<ItemInfo> iteminfo
     )  {
@@ -1071,18 +1087,6 @@ public class NUtils {
             }
         }
         return null;
-    }
-
-    public static double getItemQuality(GItem item)
-            throws InterruptedException {
-        if(item.spr!=null) {
-            for (ItemInfo info : item.info()) {
-                if (info instanceof QBuff) {
-                    return ((QBuff) info).q;
-                }
-            }
-        }
-        return -1;
     }
 
     public static boolean isItInfo(
@@ -1180,7 +1184,7 @@ public class NUtils {
 
     public static boolean alarmOrcalot() {
         ArrayList<Gob> gobs = Finder.findObjectsInArea(
-                new NAlias(new ArrayList<>(Arrays.asList("/orca", "/spermwhale")),new ArrayList<>(Arrays.asList("beef", "skeleton"))),
+                new NAlias(new ArrayList<>(Arrays.asList("/orca", "/spermwhale", "/greyseal")),new ArrayList<>(Arrays.asList("beef", "skeleton"))),
                 new NArea(gameUI.map.player().rc, 3999));
         for(Gob gob: gobs) {
             if (!gob.isTag(NGob.Tags.knocked) && gob.isTag(NGob.Tags.kritter_is_ready))
@@ -1411,7 +1415,7 @@ public class NUtils {
                 ArrayList<GItem> wItems = gameUI.getInventory().getItems(names);
                 /// Вычисляем оставшееся свободное место в пайле
                 for (GItem wItem : wItems) {
-                    if(getItemQuality(wItem)>=q) {
+                    if(((NGItem)wItem).quality()>=q) {
                         int freeSpace = ((NISBox) sp).getFreeSpace();
                         /// Передаем предмет и дожидаемся изменения пайла
                         int count = 0;
@@ -1521,7 +1525,14 @@ public class NUtils {
                         sp.wdgmsg("xfer");
                         /// Ожидаем изменения свободного места в пайле
                         NUtils.waitEvent(()->(freeSpace != nis.getFreeSpace()),50,25);
-
+                        for(GItem item : gameUI.getInventory().getItems()){
+                            if( item.contents!=null) {
+                                destroyFCNbndl(item);
+                                NUtils.waitEvent(()->NUtils.getGameUI().getInventory().wmap.get(item)==null,50);
+                                if (NUtils.getGameUI().getInventory().wmap.get(item)!=null)
+                                    return false;
+                            }
+                        }
                         if (freeSpace == nis.getFreeSpace()) {
                             return false;
                         }

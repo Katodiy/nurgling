@@ -28,6 +28,8 @@ package haven;
 
 import nurgling.NCharlist;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 public class RemoteUI implements UI.Receiver, UI.Runner {
     public final Session sess;
     private Session ret;
@@ -36,7 +38,7 @@ public class RemoteUI implements UI.Receiver, UI.Runner {
 	this.sess = sess;
 	Widget.initnames();
     }
-	
+
     public void rcvmsg(int id, String name, Object... args) {
 	PMessage msg = new PMessage(RMessage.RMSG_WDGMSG);
 	msg.addint32(id);

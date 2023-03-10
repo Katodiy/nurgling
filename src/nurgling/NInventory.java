@@ -41,23 +41,14 @@ public class NInventory extends Inventory {
         return containers;
     }
 
-    public boolean isLoaded() {
-        for (Widget widget = child; widget != null; widget = widget.next) {
-            if (widget instanceof WItem) {
-                if (((WItem) widget).item.spr == null) {
-                  return false;
-                }
-            }
-        }
-        return true;
-    }
     /**
      * Процедура запроса предмета из инвентаря
      *
      * @param key ключ имя предмета
      * @return Предмет из инвентаря
      */
-    public GItem getItem(NAlias key) {
+    public GItem getItem(NAlias key) throws InterruptedException {
+        NUtils.waitEvent(this::isLoaded,50);
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof GItem) {
@@ -71,7 +62,8 @@ public class NInventory extends Inventory {
         return null;
     }
 
-    public WItem getItem(GItem item) {
+    public WItem getItem(GItem item) throws InterruptedException {
+        NUtils.waitEvent(this::isLoaded,50);
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
@@ -85,7 +77,8 @@ public class NInventory extends Inventory {
         return null;
     }
 
-    public GItem getItem(NAlias key, Class <? extends ItemInfo> candidate) {
+    public GItem getItem(NAlias key, Class <? extends ItemInfo> candidate) throws InterruptedException {
+        NUtils.waitEvent(this::isLoaded,50);
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
@@ -131,6 +124,7 @@ public class NInventory extends Inventory {
             QualityType type
     )
             throws InterruptedException {
+        NUtils.waitEvent(this::isLoaded,50);
         double quality = (type == QualityType.High) ? -1 : 10000;
         WItem res = null;
         /// Рзбираются компоненты инвентаря
@@ -138,7 +132,7 @@ public class NInventory extends Inventory {
             if (widget instanceof WItem) {
                 /// Для каждого найденго в компонентах предмета осуществляется проверка на его соответствие ключу
                 if (NUtils.isIt((WItem) widget, key)) {
-                    double q = NUtils.getItemQuality(((WItem) widget).item);
+                    double q = ((NGItem)((WItem) widget).item).quality();
                     if (((type == QualityType.High) ? (q > quality) : (q < quality))) {
                         res = (WItem) widget;
                         quality = q;
@@ -155,12 +149,13 @@ public class NInventory extends Inventory {
             NAlias name
     )
             throws InterruptedException {
+        NUtils.waitEvent(this::isLoaded,50);
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
                 /// Для каждого найденго в компонентах предмета осуществляется проверка на его соответствие ключу
                 if (NUtils.isIt((WItem) widget, name) &&
-                        quality == NUtils.getItemQuality(((WItem) widget).item)) {
+                        quality == (((NGItem)((WItem) widget).item).quality())) {
                     /// Если предмет соответствует , то возвращааем его
                     return ((WItem) widget).item;
                 }
@@ -181,6 +176,7 @@ public class NInventory extends Inventory {
             double q
     )
             throws InterruptedException {
+        NUtils.waitEvent(this::isLoaded,50);
         /// Рзбираются компоненты инвентаря
         for (WItem wdg : wmap.values()) {
             try {
@@ -190,7 +186,7 @@ public class NInventory extends Inventory {
             }
             /// Для каждого найденго в компонентах предмета осуществляется проверка на его соответствие ключу
             if (NUtils.isIt(wdg, key)) {
-                if (NUtils.getItemQuality(((WItem) wdg).item) >= q)
+                if ((((NGItem)(((WItem) wdg).item)).quality()) >= q)
                 /// Если предмет соответствует , то возвращааем его
                 {
                     return wdg;
@@ -206,6 +202,7 @@ public class NInventory extends Inventory {
             int freeSpace
     )
             throws InterruptedException {
+        NUtils.waitEvent(this::isLoaded,50);
         /// Рзбираются компоненты инвентаря
         for (WItem wdg : wmap.values()) {
             try {
@@ -216,7 +213,7 @@ public class NInventory extends Inventory {
             /// Для каждого найденго в компонентах предмета осуществляется проверка на его соответствие ключу
             if (NUtils.isIt(wdg, key)) {
 
-                if (NUtils.getItemQuality(((WItem) wdg).item) >= q)
+                if ((((NGItem)(((WItem) wdg).item)).quality()) >= q)
                 /// Если предмет соответствует , то возвращааем его
                 {
                     Coord size = new Coord((wdg.item.spr.sz().x+1) / sqsz.x, (wdg.item.spr.sz().y+1) / sqsz.y);
@@ -250,16 +247,16 @@ public class NInventory extends Inventory {
             final NAlias names,
             double q
     ) throws InterruptedException {
+        NUtils.waitEvent(this::isLoaded,50);
         ArrayList<GItem> result = new ArrayList<>();
         /// Рзбираются компоненты инвентаря
         for (GItem wdg : wmap.keySet()) {
             /// Для каждого найденго в компонентах предмета осуществляется проверка на его соответствие ключу
             if (NUtils.isIt(wdg, names) || (NUtils.isItInfo(wdg, names))) {
-                if (NUtils.getItemQuality(wdg) >= q) {
+                if ((((NGItem)(wdg)).quality()) >= q) {
                     result.add(wdg);
                 }
             }
-
         }
         return result;
     }
@@ -270,6 +267,7 @@ public class NInventory extends Inventory {
             boolean isMore
     )
             throws InterruptedException {
+        NUtils.waitEvent(this::isLoaded,50);
         ArrayList<GItem> result = new ArrayList<>();
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
@@ -278,11 +276,11 @@ public class NInventory extends Inventory {
                 if (NUtils.isIt((WItem) widget, names) || (NUtils.isItInfo(((WItem) widget).item, names)))
                    {
                     if (isMore) {
-                        if (NUtils.getItemQuality(((WItem) widget).item) >= q) {
+                        if ((((NGItem)((WItem) widget).item).quality()) >= q) {
                             result.add(((WItem) widget).item);
                         }
                     } else {
-                        if (NUtils.getItemQuality(((WItem) widget).item) <= q) {
+                        if  ((((NGItem)((WItem) widget).item).quality()) <= q) {
                             result.add(((WItem) widget).item);
                         }
                     }
@@ -293,8 +291,8 @@ public class NInventory extends Inventory {
     }
 
     public ArrayList<GItem> getItems(
-    )
-    {
+    ) throws InterruptedException {
+        NUtils.waitEvent(this::isLoaded,50);
         ArrayList<GItem> result = new ArrayList<>();
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
@@ -360,14 +358,8 @@ public class NInventory extends Inventory {
                 }
             }
             for (WItem wdg : wmap.values()) {
-                try {
-                    NUtils.waitEvent(() -> wdg.item != null && wdg.item.spr != null && wdg.item.info() != null && wdg.item.getinfo(ItemInfo.Name.class) != null, 50);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                Coord sz = wdg.item.spr.sz();
                 Coord pos = new Coord(wdg.c.x / (sqsz.x - 1), wdg.c.y / (sqsz.x - 1));
-                Coord size = new Coord(sz.x / (sqsz.x - 1), sz.y / (sqsz.y - 1));
+                Coord size = ((NGItem)wdg.item).spriteSize;
                 Coord endPos = new Coord(pos.x + size.x - 1, pos.y + size.y - 1);
                 for (int i = pos.x; i <= endPos.x; i++) {
                     for (int j = pos.y; j <= endPos.y; j++) {
@@ -402,14 +394,8 @@ public class NInventory extends Inventory {
             }
         }
         for (WItem wdg : wmap.values()) {
-            try {
-                NUtils.waitEvent(()->wdg.item!=null && wdg.item.spr!=null && wdg.item.info()!=null && wdg.item.getinfo(ItemInfo.Name.class)!=null,50);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            Coord sz =  wdg.item.spr.sz();
             Coord pos = new Coord(wdg.c.x  / (sqsz.x-1), wdg.c.y / (sqsz.x-1));
-            Coord size = new Coord(sz.x / (sqsz.x-1), sz.y / (sqsz.y-1));
+            Coord size = ((NGItem)wdg.item).spriteSize;
             Coord endPos = new Coord(pos.x + size.x - 1, pos.y + size.y - 1);
             for (int i = pos.x; i <= endPos.x; i++) {
                 for (int j = pos.y; j <= endPos.y; j++) {
@@ -451,14 +437,8 @@ public class NInventory extends Inventory {
                 }
             }
             for (WItem wdg : wmap.values()) {
-                try {
-                    NUtils.waitEvent(() -> wdg.item != null && wdg.item.spr != null && wdg.item.info() != null && wdg.item.getinfo(ItemInfo.Name.class) != null, 50);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                Coord sz = wdg.item.spr.sz();
                 Coord pos = new Coord((wdg.c.x - 1) / sqsz.x, (wdg.c.y - 1) / sqsz.y);
-                Coord size = new Coord((sz.x + 1) / sqsz.x, (sz.y + 1) / sqsz.y);
+                Coord size = ((NGItem)wdg.item).spriteSize;
                 Coord endPos = new Coord(pos.x + size.x - 1, pos.y + size.y - 1);
                 for (int i = pos.x; i <= endPos.x; i++) {
                     for (int j = pos.y; j <= endPos.y; j++) {
@@ -513,9 +493,8 @@ public class NInventory extends Inventory {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            Coord sz = wdg.item.spr.sz();
             Coord pos = new Coord((wdg.c.x - 1) / sqsz.x, (wdg.c.y - 1) / sqsz.y);
-            Coord size = new Coord((sz.x + 1) / sqsz.x, (sz.y + 1) / sqsz.y);
+            Coord size = ((NGItem)wdg.item).spriteSize;
             Coord endPos = new Coord(pos.x + size.x - 1, pos.y + size.y - 1);
             for (int i = pos.x; i <= endPos.x; i++) {
                 for (int j = pos.y; j <= endPos.y; j++) {
@@ -614,6 +593,14 @@ public class NInventory extends Inventory {
         for (GItem item : items) {
             item.wdgmsg(action, Coord.z);
         }
+    }
+
+    public boolean isLoaded(){
+        for (GItem item : wmap.keySet()) {
+            if((((NGItem)item).status&NGItem.COMPLETED)==0)
+                return false;
+        }
+        return true;
     }
 }
 

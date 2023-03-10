@@ -5,6 +5,7 @@ import haven.GItem;
 import haven.WItem;
 
 import nurgling.NAlias;
+import nurgling.NGItem;
 import nurgling.NGameUI;
 import nurgling.NUtils;
 
@@ -31,7 +32,7 @@ public class CheckClay implements Action {
         
         if ( !items.isEmpty () ) {
             for ( GItem item : items ) {
-                double q = NUtils.getItemQuality( item );
+                double q = ((NGItem)item).quality();
                 gui.msg ( item.getres ().name + " quality = " + q );
                 NUtils.drop ( item );
                 Thread.sleep ( 100 );
