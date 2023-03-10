@@ -1025,19 +1025,18 @@ public class NUtils {
     public static ItemInfo.Contents getContent(
             GItem item
     )  {
-        while (true) {
-            try {
-                if(item.info == null) {
-                    item.info();
-                    NUtils.waitEvent(()->item.info!=null,50);
-                }
-                for (ItemInfo info : item.info()) {
-                    if (info instanceof ItemInfo.Contents) {
-                        return (ItemInfo.Contents) info;
+        for (Object o : item.rawinfo.data) {
+            if (o instanceof Object[]) {
+                Object[] a = (Object[]) o;
+                if (a[0] instanceof Integer) {
+                    if (NUtils.checkName("ui/tt/cont", ((Session.CachedRes) item.glob().sess.rescache.get((Integer) a[0])).resnm)) {
+                        Resource ttres = item.glob().sess.getres((Integer) a[0]).get();
+                        ItemInfo.InfoFactory f = ttres.getcode(ItemInfo.InfoFactory.class, true);
+                        ItemInfo inf = null;
+                        inf = f.build(item, item.rawinfo, a);
+                        return (ItemInfo.Contents) inf;
                     }
                 }
-                break;
-            } catch (Loading | InterruptedException ignored) {
             }
         }
         return null;

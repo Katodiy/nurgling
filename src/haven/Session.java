@@ -71,7 +71,7 @@ public class Session implements Resource.Resolver {
     Map<Long, ObjAck> objacks = new TreeMap<Long, ObjAck>();
     public String username;
     byte[] cookie;
-    final Map<Integer, CachedRes> rescache = new TreeMap<Integer, CachedRes>();
+    final public Map<Integer, CachedRes> rescache = new TreeMap<Integer, CachedRes>();
     public final Glob glob;
     public byte[] sesskey;
 
@@ -114,10 +114,10 @@ public class Session implements Resource.Resolver {
 	}
     }
 
-    private static class CachedRes {
+    public static class CachedRes {
 	private final Waitable.Queue wq = new Waitable.Queue();
 	private final int resid;
-	private String resnm = null;
+	public String resnm = null;
 	private int resver;
 	private Reference<Ref> ind;
 	private int prio = -6;
