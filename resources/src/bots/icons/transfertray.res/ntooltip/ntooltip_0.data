@@ -1,6 +1,6 @@
 #name
 Transfer Cheese trays
 #req
-cheese_main, c_outside, c_inside, c_mine, c_cellar
+cheese_main, c_outside, c_inside, c_mine, c_cellar, cheese_final
 #text
-Transfer cheese treys from zone to zone using barter stands and Scheduler.
+Check scheduler, buy raw cheese trays and send them to LOCATION barter (in c_outside/inside/mine/cellar zone), trays go to "cheese_in" zone in the LOCATION itself. Buy cheese from LOCATION barters and send it further, according to stage in scheduler. Send ready cheese to cheese_final zone barter.
