@@ -2,6 +2,8 @@ package nurgling.tools;
 
 import haven.Coord2d;
 import nurgling.NGameUI;
+import nurgling.NMapView;
+import nurgling.NUtils;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -38,8 +40,10 @@ public class AreaSelecter implements Runnable {
                 result.end = new Coord2d( gameUI.getMap ().getSelection ().end.x, gameUI.getMap ().getSelection ().end.y);
                 result.center = new Coord2d ( result.begin.x + (result.end.x-result.begin.x)/2,
                         result.begin.y + (result.end.y-result.begin.y)/2 );
-            } flag.set ( true );
+            }
+            flag.set ( true );
             result.show();
+            NUtils.getGameUI().getMap().destroySelector();
             selection_start.set ( false );
         }
         catch ( InterruptedException e ) {

@@ -1503,35 +1503,29 @@ public class NUtils {
             throws InterruptedException {
         Window spwnd = gameUI.getWindow("Stockpile");
         if (spwnd != null) {
-            boolean nisFind = false;
-            do {
-                for (Widget sp = spwnd.lchild; sp != null; sp = sp.prev) {
-                    /// Выбираем внутренний контейнер
-                    if (sp instanceof NISBox) {
-                        final NISBox nis = (NISBox)sp;
-                        nisFind = true;
-                        /// Вычисляем свободное место в пайле
-                        int freeSpace = nis.getFreeSpace();
+            for (Widget sp = spwnd.lchild; sp != null; sp = sp.prev) {
+                /// Выбираем внутренний контейнер
+                if (sp instanceof NISBox) {
+                    final NISBox nis = (NISBox) sp;
+                    /// Вычисляем свободное место в пайле
+                    int freeSpace = nis.getFreeSpace();
+                    int minv_freeSpace = gameUI.getInventory().getFreeSpace();
 
-
-                        if(gameUI.getInventory().getFreeSpace()>0)
+                    if (gameUI.getInventory().getFreeSpace() > 0) {
+                        /// Берем один предмет
+                        sp.wdgmsg("xfer");
+                        NUtils.waitEvent(() -> (freeSpace != nis.getFreeSpace()), 50, 10);
+                        if(freeSpace != nis.getFreeSpace())
                         {
-                            /// Берем один предмет
-                            sp.wdgmsg("xfer");
-                            NUtils.waitEvent(()->(freeSpace != nis.getFreeSpace() || findBundle()),50,10);
-                            destroyAllBundle();
-                            if(freeSpace == nis.getFreeSpace())
-                                return false;
+                            NUtils.waitEvent(() -> (minv_freeSpace != gameUI.getInventory().getFreeSpace() || findBundle()), 100, 10);
                         }
-                        else
-                        {
-                            return false;
-                        }
+                        destroyAllBundle();
+                        return !(freeSpace == nis.getFreeSpace());
+                    } else {
+                        return false;
                     }
                 }
             }
-            while (!nisFind);
-            return true;
         }
         return false;
     }
