@@ -410,22 +410,14 @@ public class NUtils {
             final NAlias regEx
     ) {
         if (item != null) {
-            if(!(item.parent.parent instanceof NGItem))
-            {
-                try {
-                    NUtils.waitEvent(() -> item.item != null && item.item.spr != null && item.item.info() != null && item.item.getinfo(ItemInfo.Name.class) != null, 50);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
             try {
                 /// Запрашиваем ресур
                 Resource res = null;
                 res = item.item.getres();
                 if (res != null) {
                     /// Проверяем имя на соответствие
-                    if(item.item.info()!=null)
-                        return checkName(res.name, regEx) || checkName(item.item.getinfo(ItemInfo.Name.class).str.text, regEx);
+                    if(((NGItem)item.item).dfname!=null)
+                        return checkName(res.name, regEx) || checkName(((NGItem)item.item).dfname, regEx);
                     else
                         return checkName(res.name, regEx);
                 }

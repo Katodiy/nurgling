@@ -1,6 +1,7 @@
 package nurgling;
 
 import haven.*;
+import haven.res.gfx.invobjs.meat.Meat;
 import haven.res.ui.tt.q.qbuff.QBuff;
 import haven.res.ui.tt.q.quality.Quality;
 import haven.resutil.FoodInfo;
@@ -233,9 +234,9 @@ public class NGItem extends GItem {
     }
 
     public Coord spriteSize = null;
-    public Double quality = null;
+    public Double quality = -1.;
     public ItemInfo.Contents content = null;
-
+    public String dfname = null;
 
     static int UNDEFINED = 0x0000;
     static int RAW = 0x0001;
@@ -252,6 +253,10 @@ public class NGItem extends GItem {
             if(res instanceof Resource.Pool.Queued)
             {
                 if(((Resource.Pool.Queued)res).check())
+                    if(resource().name.contains("meat"))
+                    {
+                        dfname = new Meat(this,resource(),sdt).name;
+                    }
                     status |= COMPLETED;
             }
         } else if (name == "tt") {
@@ -271,8 +276,11 @@ public class NGItem extends GItem {
             if (res instanceof Session.CachedRes.Ref) {
                 if ((((Session.CachedRes.Ref) res).check()))
                 {
-                    Coord sz = res.get().layer(Resource.imgc).ssz;
-                    spriteSize = sz.div(32);
+                    Resource.Image img = res.get().layer(Resource.imgc);
+                    if(img!=null) {
+                        Coord sz = img.ssz;
+                        spriteSize = sz.div(32);
+                    }
                     status |= COMPLETED;
                 }
             }
