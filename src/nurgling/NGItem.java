@@ -1,6 +1,7 @@
 package nurgling;
 
 import haven.*;
+import haven.res.gfx.invobjs.meat.Meat;
 import haven.res.ui.tt.q.qbuff.QBuff;
 import haven.res.ui.tt.q.quality.Quality;
 import haven.resutil.FoodInfo;
@@ -11,19 +12,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class NGItem extends GItem {
     public double quantity = -1;
     public double wear;
     public int d;
     public int m;
+
     public NGItem(Indir<Resource> res, Message sdt) {
         super(res, sdt);
+        checkStatus();
     }
 
-    public ItemInfo getInfo(Class <? extends ItemInfo> candidate){
-        for(ItemInfo inf : info){
-            if(inf.getClass() == candidate){
+    public ItemInfo getInfo(Class<? extends ItemInfo> candidate) {
+        for (ItemInfo inf : info) {
+            if (inf.getClass() == candidate) {
                 return inf;
             }
         }
@@ -34,7 +38,7 @@ public class NGItem extends GItem {
     public List<ItemInfo> info() {
         super.info();
         checkFood(info, getres().name);
-        return(info);
+        return (info);
     }
 
     private static double round2Dig(double value) {
@@ -131,6 +135,7 @@ public class NGItem extends GItem {
             return energy;
         }
     }
+
     public static void checkFood(List<ItemInfo> infoList, String resName) {
         try {
             FoodInfo foodInfo = ItemInfo.find(FoodInfo.class, infoList);
@@ -141,7 +146,7 @@ public class NGItem extends GItem {
 
                 ParsedFoodInfo parsedFoodInfo = new ParsedFoodInfo();
                 parsedFoodInfo.resourceName = resName;
-                parsedFoodInfo.energy = (int)(Math.round(foodInfo.end * 100));
+                parsedFoodInfo.energy = (int) (Math.round(foodInfo.end * 100));
                 parsedFoodInfo.hunger = round2Dig(foodInfo.glut * 100);
 
                 for (int i = 0; i < foodInfo.evs.length; i++) {
@@ -165,13 +170,13 @@ public class NGItem extends GItem {
                         String name = (String) info.getClass().getField("name").get(info);
                         Double value = (Double) info.getClass().getField("val").get(info);
                         parsedFoodInfo.ingredients.add(new FoodIngredient(name, (int) (value * 100)));
-                    } else if(info.getClass().getName().equals("Smoke")) {
+                    } else if (info.getClass().getName().equals("Smoke")) {
                         String name = (String) info.getClass().getField("name").get(info);
                         Double value = (Double) info.getClass().getField("val").get(info);
                         parsedFoodInfo.ingredients.add(new FoodIngredient(name, (int) (value * 100)));
                     }
                 }
-                if(NConfiguration.getInstance().collectFoodInfo)
+                if (NConfiguration.getInstance().collectFoodInfo)
                     NFoodWriter.add(parsedFoodInfo);
             }
         } catch (Exception ex) {
@@ -185,7 +190,7 @@ public class NGItem extends GItem {
         public double value();
 
         public default Tex overlay() {
-            return(new TexI(RichText.render(String.format("$col[225,255,125]{%.2f}", value()),0).img));
+            return (new TexI(RichText.render(String.format("$col[225,255,125]{%.2f}", value()), 0).img));
         }
 
         public default void drawoverlay(GOut g, Tex tex) {
@@ -193,9 +198,10 @@ public class NGItem extends GItem {
         }
 
         public static BufferedImage doublerender(double value, Color col) {
-            return(Utils.outline2(Text.render(Double.toString(value), col).img, Utils.contrast(col)));
+            return (Utils.outline2(Text.render(Double.toString(value), col).img, Utils.contrast(col)));
         }
     }
+
     public static class Quantity extends ItemInfo implements DoubleInfo {
         private final double quantity;
 
@@ -217,14 +223,100 @@ public class NGItem extends GItem {
         @Override
         public void drawoverlay(GOut g, Tex tex) {
             g.chcolor(new Color(0, 0, 0, 75));
-            g.frect(g.sz().sub(tex.sz().x+2, tex.sz().y), tex.sz());
+            g.frect(g.sz().sub(tex.sz().x + 2, tex.sz().y), tex.sz());
             g.chcolor();
             g.aimage(tex, g.sz(), 1, 1);
         }
     }
 
-    public double quality () {
-        Optional<ItemInfo> qInfo = this.info ().stream ().filter ( (info ) -> info instanceof Quality).findFirst ();
-        return qInfo.map(itemInfo -> ((Quality) itemInfo).q).orElse(-1.0);
+    public double quality() {
+        return quality;
+    }
+
+    public Coord spriteSize = null;
+    public Double quality = -1.;
+    public ItemInfo.Contents content = null;
+    public String dfname = null;
+
+    static int UNDEFINED = 0x0000;
+    static int RAW = 0x0001;
+    static int INDIR = 0x0002;
+    static int COMPLETED = 0x0004;
+
+    public int status = UNDEFINED;
+
+    public void uimsg(String name, Object... args) {
+        if (name == "chres") {
+            Indir<Resource> res = ui.sess.getres((Integer) args[0]);
+            if(res!=null)
+                status |= INDIR;
+            if(res instanceof Resource.Pool.Queued)
+            {
+                if(((Resource.Pool.Queued)res).check())
+                    if(resource().name.contains("meat"))
+                    {
+                        dfname = new Meat(this,resource(),sdt).name;
+                    }
+                    status |= COMPLETED;
+            }
+        } else if (name == "tt") {
+            rawinfo = new ItemInfo.Raw(args);
+            content = NUtils.getContent(this);
+            quality = (double)NUtils.getQuality(this);
+            status |= RAW;
+        }
+        super.uimsg(name, args);
+    }
+
+    void checkStatus(){
+        if(rawinfo!=null)
+            status |= RAW;
+        if(res!=null) {
+            status |= INDIR;
+            if (res instanceof Session.CachedRes.Ref) {
+                if ((((Session.CachedRes.Ref) res).check()))
+                {
+                    Resource.Image img = res.get().layer(Resource.imgc);
+                    if(img!=null) {
+                        Coord sz = img.ssz;
+                        spriteSize = sz.div(32);
+                    }
+                    status |= COMPLETED;
+                }
+            }
+        }
+    }
+
+   // static void debug() {
+   //     int undefined = 0;
+   //     int raw = 0;
+   //     int indir = 0;
+   //     int compited = 0;
+   //     for (GItem item : allItems) {
+   //         if (((NGItem) item).status == undefined)
+   //             undefined++;
+   //         if ((((NGItem) item).status & RAW) != 0)
+   //             raw++;
+   //         if ((((NGItem) item).status & INDIR) != 0)
+   //             indir++;
+   //         if ((((NGItem) item).status & COMPLETED) != 0) {
+   //             compited++;
+   //         }
+   //     }
+   //     System.out.println(undefined);
+   //     System.out.println(raw);
+   //     System.out.println(indir);
+   //     System.out.println(compited);
+   // }
+
+    @Override
+    public void tick(double dt) {
+        if(status!=COMPLETED)
+        {
+            checkStatus();
+        }
+        super.tick(dt);
     }
 }
+
+

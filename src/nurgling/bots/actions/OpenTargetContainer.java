@@ -42,7 +42,6 @@ public class OpenTargetContainer implements Action {
             }
             else {
                 /// Задержка на подгрузку данных
-                NUtils.waitEvent(wnd::packed, 1000);
 
                 if(gui.isBarter()){
                     NUtils.waitEvent(this::waitBarterLoading, 1000);

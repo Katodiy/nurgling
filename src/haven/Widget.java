@@ -44,6 +44,7 @@ public class Widget {
     public Coord c, sz;
     public int z;
     public Widget next, prev, child, lchild, parent;
+    public int childseq;
     public boolean focustab = false, focusctl = false, hasfocus = false, visible = true;
     private boolean attached = false;
     private boolean canfocus = false, autofocus = false;
@@ -261,6 +262,7 @@ public class Widget {
 	child.parent = this;
 	child.link();
 	child.added();
+	childseq++;
 	if(attached)
 	    child.attached();
 	if(((Widget)child).canfocus && child.visible)
@@ -574,6 +576,7 @@ public class Widget {
 
     /* XXX: Should be renamed to cremove at this point. */
     public void cdestroy(Widget w) {
+	childseq++;
     }
 
     public int wdgid() {
@@ -699,7 +702,6 @@ public class Widget {
 	    }
 	} else if(msg == "pack") {
 	    pack();
-		isPacked = true;
 	} else if(msg == "z") {
 	    z((Integer)args[0]);
 	} else if(msg == "show") {
@@ -1562,16 +1564,4 @@ public class Widget {
 
 	public abstract void ntick(double a);
     }
-
-	public boolean isPacked = false;
-	public boolean packed() {
-		if(this instanceof NInventory){
-			for(GItem item :((NInventory)this).getItems()){
-				if(item.spr==null || item.info==null || item.getinfo(ItemInfo.Name.class)==null){
-					return false;
-				}
-			}
-		}
-		return isPacked;
-	}
 }

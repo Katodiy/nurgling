@@ -66,7 +66,7 @@ public class NomadFinder implements Action {
                 if(gui.map.player().rc.dist(finalPos) >= 5)
                     gui.map.wdgmsg("click", Coord.z, pos.floor(posres), 1, 0);
                 if (NUtils.alarmOrcalot()) {
-                    Gob target = Finder.findObject(new NAlias(new ArrayList<>(Arrays.asList("/orca", "/spermwhale")), new ArrayList<>(Arrays.asList("beef", "skeleton"))));
+                    Gob target = Finder.findObject(new NAlias(new ArrayList<>(Arrays.asList("/orca", "/spermwhale", "/greyseal")), new ArrayList<>(Arrays.asList("beef", "skeleton"))));
                     if(target!=null && target.isTag(NGob.Tags.kritter_is_ready)) {
                         String name = target.getResName();
                         ;

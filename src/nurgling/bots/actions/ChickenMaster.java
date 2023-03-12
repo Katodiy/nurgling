@@ -120,14 +120,14 @@ public class ChickenMaster implements Action {
             if ( new OpenTargetContainer ( gob, "Chicken Coop" ).run ( gui ).type != Results.Types.SUCCESS ) {
                 return new Results ( Results.Types.OPEN_FAIL );
             }
-            NUtils.waitEvent (()-> gui.getInventory ( "Chicken Coop" )!=null , 200);
-            GItem curroost = gui.getInventory ( "Chicken Coop" ).getItem ( new NAlias ( "roost" ) );
-            ChickenCoop currentChickenCoop = new ChickenCoop ( gob, NUtils.getItemQuality( curroost ) );
+            NUtils.waitEvent (()->gui.getInventory ( "Chicken Coop" )!=null && gui.getInventory ( "Chicken Coop" ).isLoaded() , 200);
+            NGItem curroost = (NGItem) gui.getInventory ( "Chicken Coop" ).getItem ( new NAlias ( "roost" ) );
+            ChickenCoop currentChickenCoop = new ChickenCoop ( gob, curroost.quality );
             
             /// Получаем инфо по курочкам
             ArrayList<GItem> curhens = gui.getInventory ( "Chicken Coop" ).getItems ( new NAlias ( "hen" ) );
             for ( GItem hen : curhens ) {
-                currentChickenCoop.hens.add ( NUtils.getItemQuality( hen ) );
+                currentChickenCoop.hens.add (((NGItem) hen ).quality());
             }
             currentChickenCoop.hens.sort ( Double::compareTo );
             chickens.add ( currentChickenCoop );
@@ -135,7 +135,7 @@ public class ChickenMaster implements Action {
             /// Получаем инфо по яйкам
             ArrayList<GItem> cureggs = gui.getInventory ( "Chicken Coop" ).getItems ( new NAlias ( "egg" ) );
             for ( GItem egg : cureggs ) {
-                eggs.add ( new EggsInfo ( NUtils.getItemQuality( egg ), gob ) );
+                eggs.add ( new EggsInfo ( ((NGItem) egg ).quality(), gob ) );
             }
         }
         eggs.sort ( comparator2 );
@@ -151,12 +151,12 @@ public class ChickenMaster implements Action {
             /// Получаем инфо по курочкам
             ArrayList<GItem> curhens = gui.getInventory("Chicken Coop").getItems(new NAlias("hen"));
             for (GItem hen : curhens) {
-                qhens.add(new KFC_chicken_Q(inc,NUtils.getItemQuality(hen)));
+                qhens.add(new KFC_chicken_Q(inc,((NGItem) hen ).quality()));
             }
             /// Получаем инфо по петушкам
             ArrayList<GItem> curroost = gui.getInventory("Chicken Coop").getItems(new NAlias("roost"));
             for (GItem roost : curroost) {
-                qcocks.add(new KFC_chicken_Q(inc,NUtils.getItemQuality(roost)));
+                qcocks.add(new KFC_chicken_Q(inc,((NGItem) roost ).quality()));
             }
         }
 
@@ -195,7 +195,7 @@ public class ChickenMaster implements Action {
                     NUtils.waitEvent(()->!gui.hand.isEmpty(),200);
                     NUtils.transferToInventory("Chicken Coop", pos);
                     chickens.get(j).quality = current_quality;
-                    current_quality = NUtils.getItemQuality(lqhen);
+                    current_quality = ((NGItem) lqhen ).quality();
                 }
             }
 
@@ -284,14 +284,14 @@ public class ChickenMaster implements Action {
                                 gui.getInventory ().getItem ( current_quality, new NAlias ( "hen" ) ) );
                         NUtils.waitEvent(()->!gui.hand.isEmpty(),200);
                         NUtils.transferToInventory ( "Chicken Coop", pos );
-                        current_quality = NUtils.getItemQuality( lqhen );
+                        current_quality = ((NGItem)lqhen).quality();
                         /// Обновляем данные по курочкам
                         Thread.sleep ( 300 );
                         ArrayList<GItem> newcurhens = gui.getInventory ( "Chicken Coop" )
                                                          .getItems ( new NAlias ( "hen" ) );
                         chickens.get ( j ).hens = new ArrayList<> ();
                         for ( GItem hen : newcurhens ) {
-                            chickens.get ( j ).hens.add ( NUtils.getItemQuality( hen ) );
+                            chickens.get ( j ).hens.add ( ((NGItem)hen).quality() );
                         }
                         chickens.get ( j ).hens.sort ( Double::compareTo );
                         break;
@@ -365,7 +365,7 @@ public class ChickenMaster implements Action {
         ArrayList<GItem> tophens = gui.getInventory ( "Chicken Coop" ).getItems ( new NAlias ( "hen" ) );
         ArrayList<Double> qtop = new ArrayList<> ();
         for ( GItem top : tophens ) {
-            qtop.add ( NUtils.getItemQuality( top ) );
+            qtop.add ( ((NGItem)top).quality() );
         }
         qtop.sort ( Double::compareTo );
         

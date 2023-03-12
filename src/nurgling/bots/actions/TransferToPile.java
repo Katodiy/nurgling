@@ -60,7 +60,7 @@ public class TransferToPile implements Action {
                 ArrayList<GItem> witems = gui.getInventory().getItems(items);
                 boolean qIsFind = false;
                 for (GItem witem : witems) {
-                    if (NUtils.getItemQuality(witem) >= q) {
+                    if (((NGItem)witem).quality() >= q) {
                         qIsFind = true;
                         break;
                     }
