@@ -348,9 +348,10 @@ public class NInventory extends Inventory {
      *
      * @return свободное место
      */
-    public int getFreeSpace() {
+    public int getFreeSpace() throws InterruptedException {
+        NUtils.waitEvent(this::isLoaded,50);
         int freespace = 0;
-        if(parent instanceof NGameUI) {
+        if(parent instanceof NGameUI || parent instanceof Window) {
             boolean[][] inventory = new boolean[isz.x][isz.y];
             for (int i = 0; i < isz.x; i++) {
                 for (int j = 0; j < isz.y; j++) {
@@ -385,7 +386,8 @@ public class NInventory extends Inventory {
         return freespace;
     }
 
-    public Coord getFreeCoord(WItem item) {
+    public Coord getFreeCoord(WItem item) throws InterruptedException {
+        NUtils.waitEvent(this::isLoaded,50);
         int freespace = isz.x * isz.y;
         boolean[][] inventory = new boolean[isz.x][isz.y];
         for (int i = 0; i < isz.x; i++) {

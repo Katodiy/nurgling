@@ -1512,20 +1512,19 @@ public class NUtils {
                         nisFind = true;
                         /// Вычисляем свободное место в пайле
                         int freeSpace = nis.getFreeSpace();
-                        int counter = 0;
-                        /// Берем один предмет
-                        sp.wdgmsg("xfer");
-                        /// Ожидаем изменения свободного места в пайле
-                        NUtils.waitEvent(()->(freeSpace != nis.getFreeSpace()),50,25);
-                        for(GItem item : gameUI.getInventory().getItems()){
-                            if( item.contents!=null) {
-                                destroyFCNbndl(item);
-                                NUtils.waitEvent(()->NUtils.getGameUI().getInventory().wmap.get(item)==null,50);
-                                if (NUtils.getGameUI().getInventory().wmap.get(item)!=null)
-                                    return false;
-                            }
+
+
+                        if(gameUI.getInventory().getFreeSpace()>0)
+                        {
+                            /// Берем один предмет
+                            sp.wdgmsg("xfer");
+                            NUtils.waitEvent(()->(freeSpace != nis.getFreeSpace() || findBundle()),50,10);
+                            destroyAllBundle();
+                            if(freeSpace == nis.getFreeSpace())
+                                return false;
                         }
-                        if (freeSpace == nis.getFreeSpace()) {
+                        else
+                        {
                             return false;
                         }
                     }
@@ -1535,6 +1534,24 @@ public class NUtils {
             return true;
         }
         return false;
+    }
+
+    static boolean findBundle() throws InterruptedException {
+        for(GItem item : gameUI.getInventory().getItems()) {
+            if (item.contents != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    static void destroyAllBundle() throws InterruptedException {
+        for(GItem item : gameUI.getInventory().getItems()) {
+            if (item.contents != null) {
+                item.wdgmsg("iact", item.sz, 3);
+                NUtils.waitEvent(()->NUtils.getGameUI().getInventory().wmap.get(item)==null,50,10);
+            }
+        }
     }
 
     public static String prettyResName(String biome) {
@@ -1668,6 +1685,11 @@ public class NUtils {
             result.fullMark = 1024;
             result.cap = "Table";
             result.name = new NAlias("table");
+        } else if (Finder.findObjectsInArea(new NAlias("ttub"), area).size() > 0 ||
+                (target != null && isIt(target, new NAlias("ttub")))) {
+            result.fullMark = 1024;
+            result.cap = "Tub";
+            result.name = new NAlias("ttub");
         }
         return result;
     }
