@@ -604,5 +604,27 @@ public class NInventory extends Inventory {
         }
         return true;
     }
+
+    public boolean locked = false;
+    @Override
+    public boolean mousewheel(Coord c, int amount) {
+        if(!locked) {
+            return super.mousewheel(c, amount);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean drop(Coord cc, Coord ul) {
+        if(!locked) {
+            return super.drop(cc, ul);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean mousedown(Coord c, int button) {
+        return !locked && super.mousedown(c, button);
+    }
 }
 

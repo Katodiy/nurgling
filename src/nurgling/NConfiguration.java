@@ -61,6 +61,7 @@ public class NConfiguration {
     public ArrayList<String> fishCandidates = new ArrayList<>();
     public boolean isInfo = true;
     public boolean collectFoodInfo = false;
+    public boolean lockStudy = false;
 
     public static String getCharKey()
     {
@@ -523,6 +524,7 @@ public class NConfiguration {
         }
         obj.put("ingredients" ,ingredients);
         obj.put("isMinerCredo" ,isMinerCredo);
+        obj.put("lockStudy" ,lockStudy);
 
         JSONArray users = new JSONArray ();
         for ( NLoginData user : logins ) {
@@ -878,6 +880,9 @@ public class NConfiguration {
             }
             if(jsonObject.get("isMinerCredo")!=null){
                 isMinerCredo = (boolean) jsonObject.get("isMinerCredo");
+            }
+            if(jsonObject.get("lockStudy")!=null){
+                lockStudy = (boolean) jsonObject.get("lockStudy");
             }
             if(jsonObject.get("white_players")!=null){
                 JSONObject white = (JSONObject)jsonObject.get("white_players");
