@@ -944,7 +944,7 @@ public class NConfiguration {
 
         }
         catch ( IOException | ParseException e ) {
-            e.printStackTrace ();
+            System.out.println("No config. config.nurgling.json not found");
         }
         /// TODO light
 //        Light.isEnable = Configuration.getInstance().nightVision;
