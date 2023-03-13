@@ -1,6 +1,6 @@
 #name
-Fill glass jugs with water
+Free glass jugs with water.
 #req
-
+build_area
 #text
 The bot will free all the glass jugs in the inventory into the barrel

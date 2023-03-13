@@ -6,9 +6,8 @@ public class EquipWaepon extends Bot {
 
     public EquipWaepon(NGameUI gameUI ) {
         super ( gameUI );
-        win_title = "Check Water";
+        win_title = "Equip weapons";
         win_sz.y = 100;
-        /// Ждем пока килны не потухнут
  
         runActions.add ( new nurgling.bots.actions.EquipWaepon () );
         
