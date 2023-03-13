@@ -8,9 +8,8 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.*;
 
-@FromResource(name = "lib/layspr", version = 14)
-public
-class Image extends Layer {
+@haven.FromResource(name = "lib/layspr", version = 15)
+public class Image extends Layer {
     public final Resource.Image img;
 
     Image(Resource.Image img) {

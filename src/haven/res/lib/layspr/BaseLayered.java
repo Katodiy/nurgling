@@ -8,7 +8,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.*;
 
-@FromResource(name = "lib/layspr", version = 14)
+@haven.FromResource(name = "lib/layspr", version = 15)
 public class BaseLayered extends Layered implements haven.res.ui.tt.defn.DynName {
     public final String name;
 

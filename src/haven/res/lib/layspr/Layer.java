@@ -8,7 +8,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.*;
 
-@FromResource(name = "lib/layspr", version = 14)
+@haven.FromResource(name = "lib/layspr", version = 15)
 public abstract class Layer {
     final int z;
     final Coord sz;

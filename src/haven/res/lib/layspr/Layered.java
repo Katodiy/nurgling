@@ -8,9 +8,9 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.*;
 
-@FromResource(name = "lib/layspr", version = 14)
+@haven.FromResource(name = "lib/layspr", version = 15)
 public class Layered extends GSprite implements GSprite.ImageSprite {
-    public final Layer[] lay;
+	public final Layer[] lay;
     final Coord sz;
 
     public static List<Indir<Resource>> decode(Resource.Resolver rr, Message sdt) {
