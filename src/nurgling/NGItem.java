@@ -235,7 +235,7 @@ public class NGItem extends GItem {
 
     public Coord spriteSize = null;
     public Double quality = -1.;
-    public ItemInfo.Contents content = null;
+    public String content = null;
     public String dfname = null;
 
     static int UNDEFINED = 0x0000;
