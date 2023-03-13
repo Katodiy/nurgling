@@ -371,6 +371,7 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 				contentswdg = cont.add(new Contents(this, this.contents), hovering.parentpos(cont, hovering.sz.sub(UI.scale(5, 5)).sub(Contents.hovermarg)));
 			else {
 				contentswdg = cont.add(new Contents(this, this.contents), proxypos);
+				proxy = false;
 			}
 		}
 	    }

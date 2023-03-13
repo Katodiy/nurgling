@@ -34,8 +34,7 @@ public class MineAction implements Action {
         new Equip(new NAlias("axe")).run(gui);
         Coord2d pos = new Coord2d ( area.begin.x + MCache.tilesz.x / 2, area.begin.y + MCache.tilesz.x / 2 );
         ArrayList<Tile> arrayList = new ArrayList<> ();
-//        System.out.println ( "++++" );
-        
+
         for ( double x = pos.x ; x <= area.end.x ; x += MCache.tilesz.x ) {
             for ( double y = pos.y ; y <= area.end.y ; y += MCache.tilesz.y ) {
                 arrayList.add ( new Tile ( new Coord2d ( x, y ), true ) );
@@ -133,23 +132,6 @@ public class MineAction implements Action {
                 }
             }
         }
-        int counter = 0;
-        Coord2d p_pos = gui.getMap ().player ().rc;
-        while ( true ) {
-            Thread.sleep ( 100 );
-            if ( NUtils.getProg() >= 0 || p_pos.dist ( gui.getMap ().player ().rc ) > 0 ) {
-                p_pos = gui.getMap ().player ().rc;
-                counter = 0;
-            }
-            else {
-                p_pos = gui.getMap ().player ().rc;
-                counter += 1;
-                if ( counter == 10 ) {
-                    break;
-                }
-            }
-        }
-        
         return new Results ( Results.Types.SUCCESS );
     }
     

@@ -193,8 +193,7 @@ public class NMapView extends MapView {
             }
         }
         else if ( selection != null && n_selection ) {
-            selection.destroy ();
-            selection = null;
+            destroySelector();
             n_selection = false;
             isAreaSelectorEnable = false;
         }
@@ -223,6 +222,13 @@ public class NMapView extends MapView {
         return super.mousedown ( c, button );
         //        }
         //        return false;
+    }
+
+    public void destroySelector() {
+        if(selection!=null) {
+            selection.destroy();
+            selection = null;
+        }
     }
 
     public static String defcam(){

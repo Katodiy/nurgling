@@ -1,6 +1,6 @@
 #name
-Wood to ashes
+Scheduler
 #req
 
 #text
-This bot burns branches to ashes in a brazier. Branches can be obtained both from piles and from piles with blocks, and from logs directly. The ashes are stacked in a barrel, so you need to specify the barrel.
+This is scheduling bot. You can specify cheese and amount of cheese you expect to get.

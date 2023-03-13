@@ -3,6 +3,7 @@ package nurgling.bots;
 import haven.Coord;
 import nurgling.NGameUI;
 import nurgling.NOCache;
+import nurgling.NUtils;
 import nurgling.NWindow;
 import nurgling.bots.actions.Action;
 import nurgling.bots.actions.Results;
@@ -25,6 +26,15 @@ public class Bot implements Runnable {
      */
     @Override
     public void run() {
+        if(thread!=null && thread.isAlive())
+        {
+            thread.interrupt();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
         /// Получаем ссылку на текущий поток
         thread = Thread.currentThread();
         /// Вызываем функцию инициализации бота
@@ -41,6 +51,7 @@ public class Bot implements Runnable {
         } finally {
             endAction();
         }
+
     }
 
     /**
@@ -68,6 +79,7 @@ public class Bot implements Runnable {
 //        NUtils.destroyOverlays();
         /// Убиваем окно состояния бота
         window.destroy();
+        window = null;
     }
 
     public void closeAction() {

@@ -1,6 +1,6 @@
 #name
-Cheese Racks Builder
+Transfer Cheese trays
 #req
-
+cheese_main, c_outside, c_inside, c_mine, c_cellar, cheese_final
 #text
-Select an area to build Cheese Racks. As building materials, you can use piles with boards, or logs - for boards and  piles with blocks, or logs - for blocks.
+Check scheduler, buy raw cheese trays and send them to LOCATION barter (in c_outside/inside/mine/cellar zone), trays go to "cheese_in" zone in the LOCATION itself. Buy cheese from LOCATION barters and send it further, according to stage in scheduler. Send ready cheese to cheese_final zone barter.
