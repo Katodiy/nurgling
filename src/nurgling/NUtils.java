@@ -470,64 +470,11 @@ public class NUtils {
         return !gameUI.getInventory().isInInventory(item);
     }
 
-    public static String getContent(WItem item)
-            throws InterruptedException {
-        ItemInfo.Contents content = null;
-        for (int i = 0; i < 20; i++) {
-            content = getContent(item.item);
-            if (content != null) {
-                break;
-            }
-            Thread.sleep(50);
-        }
-        if (content != null) {
-            for (ItemInfo info : content.sub) {
-                if (info instanceof ItemInfo.Name) {
-                    return ((ItemInfo.Name) info).str.text.toLowerCase();
-                }
-            }
-        }
-        return "free";
-    }
-
     public static double getContentNumber(WItem item)
             throws InterruptedException {
-        ItemInfo.Contents content = null;
-        for (int i = 0; i < 20; i++) {
-            content = getContent(item.item);
-            if (content != null) {
-                break;
-            }
-            Thread.sleep(50);
-        }
-        if (content != null) {
-            for (ItemInfo info : content.sub) {
-                if (info instanceof ItemInfo.Name) {
-                    String value = (((ItemInfo.Name) info).str).text;
-                    return Double.parseDouble(value.substring(0, value.indexOf('\040')));
-                }
-            }
-        }
-        return 0;
-    }
-
-    public static double getContentQuality(GItem item)
-            throws InterruptedException {
-        ItemInfo.Contents content = null;
-        for (int i = 0; i < 20; i++) {
-            content = getContent(item);
-            if (content != null) {
-                break;
-            }
-            Thread.sleep(50);
-        }
-        if (content != null) {
-            for (ItemInfo info : content.sub) {
-                if (info instanceof Quality) {
-                    return ((Quality) info).q;
-                }
-            }
-        }
+        String value = getContent(item.item);
+        if (value != null)
+            return Double.parseDouble(value.substring(0, value.indexOf('\040')));
         return 0;
     }
 
@@ -1000,21 +947,15 @@ public class NUtils {
 
     public static boolean isContentWater(GItem item)
             throws InterruptedException {
-        ItemInfo.Contents content = getContent(item);
-
-        if (content != null) {
-            for (ItemInfo info : content.sub) {
-                if (info instanceof ItemInfo.Name) {
-                    if (((ItemInfo.Name) info).str.text.toLowerCase().contains("water")) {
-                        return true;
-                    }
-                }
+        String value = getContent(item);
+        if (value != null)
+            if (value.toLowerCase().contains("water")) {
+                return true;
             }
-        }
         return false;
     }
 
-    public static ItemInfo.Contents getContent(
+    public static String getContent(
             GItem item
     )  {
         for (Object o : item.rawinfo.data) {
@@ -1022,16 +963,47 @@ public class NUtils {
                 Object[] a = (Object[]) o;
                 if (a[0] instanceof Integer) {
                     if (NUtils.checkName("ui/tt/cont", ((Session.CachedRes) item.glob().sess.rescache.get((Integer) a[0])).resnm)) {
-                        Resource ttres = item.glob().sess.getres((Integer) a[0]).get();
-                        ItemInfo.InfoFactory f = ttres.getcode(ItemInfo.InfoFactory.class, true);
-                        ItemInfo inf = null;
-                        inf = f.build(item, item.rawinfo, a);
-                        return (ItemInfo.Contents) inf;
+                        for(Object o1 : (Object[])a[1])
+                        {
+                            if ( o1 instanceof Object[]) {
+                                Object[] b = (Object[]) o1;
+                                if (b[0] instanceof Integer) {
+                                    if (NUtils.checkName("ui/tt/cn", ((Session.CachedRes) item.glob().sess.rescache.get((Integer) b[0])).resnm)) {
+                                        return (String) b[1];
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
         return null;
+    }
+
+    public static double getContentQuality(
+            GItem item
+    )  {
+        for (Object o : item.rawinfo.data) {
+            if (o instanceof Object[]) {
+                Object[] a = (Object[]) o;
+                if (a[0] instanceof Integer) {
+                    if (NUtils.checkName("ui/tt/cont", ((Session.CachedRes) item.glob().sess.rescache.get((Integer) a[0])).resnm)) {
+                        for(Object o1 : (Object[])a[1]) {
+                            if (o1 instanceof Object[]) {
+                                Object[] b = (Object[]) o1;
+                                if (b[0] instanceof Integer) {
+                                    if (NUtils.checkName("ui/tt/q/quality", ((Session.CachedRes) item.glob().sess.rescache.get((Integer) b[0])).resnm)) {
+                                        return (double) (float) b[1];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return -1;
     }
 
     public static float getQuality(

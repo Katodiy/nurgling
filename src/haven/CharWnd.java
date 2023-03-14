@@ -32,9 +32,7 @@ import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.function.*;
 
-import nurgling.NCuriosity;
-import nurgling.NFoodInfo;
-import nurgling.NQuestInfo;
+import nurgling.*;
 
 import static haven.CharWnd.Constipations.*;
 import static haven.PUtils.*;
@@ -664,6 +662,17 @@ public class CharWnd extends Window {
 		plbl = add(new Label("LP/hour:"), pval.pos("bl").adds(0, 2).xs(2));
 		pval = adda(new RLabel<Integer>(() -> tlph, Utils::thformat, new Color(192, 255, 255, 255)),
 				plbl.pos("br").adds(0, 2).x(sz.x - UI.scale(2)), 1.0, 0.0);
+		((NInventory)(this.study)).locked = NConfiguration.getInstance().lockStudy;
+		CheckBox studywnd = add(new CheckBox("Lock study", NConfiguration.getInstance().lockStudy){
+			@Override
+			public void set(boolean a) {
+				super.set(a);
+				NConfiguration.getInstance().lockStudy = a;
+				((NInventory)(StudyInfo.this.study)).locked = a;
+			}
+		}, pval.pos("bl").adds(0, 5).xs(2));
+		studywnd.set(((NInventory)(this.study)).locked);
+		pack();
 	}
 
 	private void upd() {
