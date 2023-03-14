@@ -18,7 +18,7 @@ import java.util.Comparator;
 import java.util.Objects;
 
 public class DryerAction implements Action {
-    private NAlias hides = new NAlias(new ArrayList<>(Arrays.asList("hide", "scale")),
+    public static final NAlias hides = new NAlias(new ArrayList<>(Arrays.asList("hide", "scale")),
             new ArrayList<>(Arrays.asList("blood", "raw", "Fresh", "Jacket", "hidejacket", "cape")));
 
     private NAlias raw_hides = new NAlias(new ArrayList<String>(Arrays.asList("blood", "raw", "fresh")),

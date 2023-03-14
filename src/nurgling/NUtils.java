@@ -9,6 +9,7 @@ import haven.res.ui.barterbox.Shopbox;
 import haven.res.ui.croster.CattleId;
 import haven.res.ui.croster.Entry;
 import haven.res.ui.croster.RosterWindow;
+import haven.res.ui.tt.defn.DefName;
 import haven.res.ui.tt.q.qbuff.QBuff;
 import haven.res.ui.tt.q.quality.Quality;
 import nurgling.bots.*;
@@ -1021,6 +1022,22 @@ public class NUtils {
         }
         return -1.f;
     }
+
+    public static String getName(NGItem item) {
+        for (Object o : item.rawinfo.data) {
+            if (o instanceof Object[]) {
+                Object[] a = (Object[]) o;
+                if (a[0] instanceof Integer) {
+                    if (NUtils.checkName("ui/tt/defn", ((Session.CachedRes) item.glob().sess.rescache.get((Integer) a[0])).resnm)) {
+                        return DefName.getname(item);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+
 
     public static ItemInfo.Contents getContent(
             List<ItemInfo> iteminfo
