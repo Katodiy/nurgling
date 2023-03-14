@@ -2,6 +2,7 @@ package nurgling;
 
 import haven.*;
 import haven.res.gfx.invobjs.meat.Meat;
+import haven.res.ui.tt.defn.DefName;
 import haven.res.ui.tt.q.qbuff.QBuff;
 import haven.res.ui.tt.q.quality.Quality;
 import haven.resutil.FoodInfo;
@@ -250,19 +251,20 @@ public class NGItem extends GItem {
             Indir<Resource> res = ui.sess.getres((Integer) args[0]);
             if(res!=null)
                 status |= INDIR;
-            if(res instanceof Resource.Pool.Queued)
-            {
-                if(((Resource.Pool.Queued)res).check())
-                    if(resource().name.contains("meat"))
-                    {
-                        dfname = new Meat(this,resource(),sdt).name;
+            if(res instanceof Resource.Pool.Queued) {
+                if (((Resource.Pool.Queued) res).check())
+                    if (resource().name.contains("meat")) {
+                        dfname = new Meat(this, resource(), sdt).name;
+                    } else if (resource().name.contains("defn")) {
+                        dfname = DefName.getname(this);
                     }
-                    status |= COMPLETED;
+                status |= COMPLETED;
             }
         } else if (name == "tt") {
             rawinfo = new ItemInfo.Raw(args);
             content = NUtils.getContent(this);
             quality = (double)NUtils.getQuality(this);
+
             status |= RAW;
         }
         super.uimsg(name, args);
@@ -281,6 +283,9 @@ public class NGItem extends GItem {
                         Coord sz = img.ssz;
                         spriteSize = sz.div(32);
                     }
+                    Resource.Tooltip tt = res.get().layer(Resource.tooltip);
+                    if(tt!=null)
+                        dfname = tt.t;
                     status |= COMPLETED;
                 }
             }
@@ -311,8 +316,7 @@ public class NGItem extends GItem {
 
     @Override
     public void tick(double dt) {
-        if(status!=COMPLETED)
-        {
+        if ((status & COMPLETED) == 0) {
             checkStatus();
         }
         super.tick(dt);
