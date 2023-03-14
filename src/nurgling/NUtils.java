@@ -9,6 +9,7 @@ import haven.res.ui.barterbox.Shopbox;
 import haven.res.ui.croster.CattleId;
 import haven.res.ui.croster.Entry;
 import haven.res.ui.croster.RosterWindow;
+import haven.res.ui.tt.defn.DefName;
 import haven.res.ui.tt.q.qbuff.QBuff;
 import haven.res.ui.tt.q.quality.Quality;
 import nurgling.bots.*;
@@ -410,22 +411,14 @@ public class NUtils {
             final NAlias regEx
     ) {
         if (item != null) {
-            if(!(item.parent.parent instanceof NGItem))
-            {
-                try {
-                    NUtils.waitEvent(() -> item.item != null && item.item.spr != null && item.item.info() != null && item.item.getinfo(ItemInfo.Name.class) != null, 50);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
             try {
                 /// Запрашиваем ресур
                 Resource res = null;
                 res = item.item.getres();
                 if (res != null) {
                     /// Проверяем имя на соответствие
-                    if(item.item.info()!=null)
-                        return checkName(res.name, regEx) || checkName(item.item.getinfo(ItemInfo.Name.class).str.text, regEx);
+                    if(((NGItem)item.item).dfname!=null)
+                        return checkName(res.name, regEx) || checkName(((NGItem)item.item).dfname, regEx);
                     else
                         return checkName(res.name, regEx);
                 }
@@ -478,64 +471,11 @@ public class NUtils {
         return !gameUI.getInventory().isInInventory(item);
     }
 
-    public static String getContent(WItem item)
-            throws InterruptedException {
-        ItemInfo.Contents content = null;
-        for (int i = 0; i < 20; i++) {
-            content = getContent(item.item);
-            if (content != null) {
-                break;
-            }
-            Thread.sleep(50);
-        }
-        if (content != null) {
-            for (ItemInfo info : content.sub) {
-                if (info instanceof ItemInfo.Name) {
-                    return ((ItemInfo.Name) info).str.text.toLowerCase();
-                }
-            }
-        }
-        return "free";
-    }
-
     public static double getContentNumber(WItem item)
             throws InterruptedException {
-        ItemInfo.Contents content = null;
-        for (int i = 0; i < 20; i++) {
-            content = getContent(item.item);
-            if (content != null) {
-                break;
-            }
-            Thread.sleep(50);
-        }
-        if (content != null) {
-            for (ItemInfo info : content.sub) {
-                if (info instanceof ItemInfo.Name) {
-                    String value = (((ItemInfo.Name) info).str).text;
-                    return Double.parseDouble(value.substring(0, value.indexOf('\040')));
-                }
-            }
-        }
-        return 0;
-    }
-
-    public static double getContentQuality(GItem item)
-            throws InterruptedException {
-        ItemInfo.Contents content = null;
-        for (int i = 0; i < 20; i++) {
-            content = getContent(item);
-            if (content != null) {
-                break;
-            }
-            Thread.sleep(50);
-        }
-        if (content != null) {
-            for (ItemInfo info : content.sub) {
-                if (info instanceof Quality) {
-                    return ((Quality) info).q;
-                }
-            }
-        }
+        String value = getContent(item.item);
+        if (value != null)
+            return Double.parseDouble(value.substring(0, value.indexOf('\040')));
         return 0;
     }
 
@@ -1008,21 +948,15 @@ public class NUtils {
 
     public static boolean isContentWater(GItem item)
             throws InterruptedException {
-        ItemInfo.Contents content = getContent(item);
-
-        if (content != null) {
-            for (ItemInfo info : content.sub) {
-                if (info instanceof ItemInfo.Name) {
-                    if (((ItemInfo.Name) info).str.text.toLowerCase().contains("water")) {
-                        return true;
-                    }
-                }
+        String value = getContent(item);
+        if (value != null)
+            if (value.toLowerCase().contains("water")) {
+                return true;
             }
-        }
         return false;
     }
 
-    public static ItemInfo.Contents getContent(
+    public static String getContent(
             GItem item
     )  {
         for (Object o : item.rawinfo.data) {
@@ -1030,17 +964,80 @@ public class NUtils {
                 Object[] a = (Object[]) o;
                 if (a[0] instanceof Integer) {
                     if (NUtils.checkName("ui/tt/cont", ((Session.CachedRes) item.glob().sess.rescache.get((Integer) a[0])).resnm)) {
-                        Resource ttres = item.glob().sess.getres((Integer) a[0]).get();
-                        ItemInfo.InfoFactory f = ttres.getcode(ItemInfo.InfoFactory.class, true);
-                        ItemInfo inf = null;
-                        inf = f.build(item, item.rawinfo, a);
-                        return (ItemInfo.Contents) inf;
+                        for(Object o1 : (Object[])a[1])
+                        {
+                            if ( o1 instanceof Object[]) {
+                                Object[] b = (Object[]) o1;
+                                if (b[0] instanceof Integer) {
+                                    if (NUtils.checkName("ui/tt/cn", ((Session.CachedRes) item.glob().sess.rescache.get((Integer) b[0])).resnm)) {
+                                        return (String) b[1];
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
         return null;
     }
+
+    public static double getContentQuality(
+            GItem item
+    )  {
+        for (Object o : item.rawinfo.data) {
+            if (o instanceof Object[]) {
+                Object[] a = (Object[]) o;
+                if (a[0] instanceof Integer) {
+                    if (NUtils.checkName("ui/tt/cont", ((Session.CachedRes) item.glob().sess.rescache.get((Integer) a[0])).resnm)) {
+                        for(Object o1 : (Object[])a[1]) {
+                            if (o1 instanceof Object[]) {
+                                Object[] b = (Object[]) o1;
+                                if (b[0] instanceof Integer) {
+                                    if (NUtils.checkName("ui/tt/q/quality", ((Session.CachedRes) item.glob().sess.rescache.get((Integer) b[0])).resnm)) {
+                                        return (double) (float) b[1];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+
+    public static float getQuality(
+            GItem item
+    )  {
+        for (Object o : item.rawinfo.data) {
+            if (o instanceof Object[]) {
+                Object[] a = (Object[]) o;
+                if (a[0] instanceof Integer) {
+                    if (NUtils.checkName("ui/tt/q/quality", ((Session.CachedRes) item.glob().sess.rescache.get((Integer) a[0])).resnm)) {
+                        return (float)a[1];
+                    }
+                }
+            }
+        }
+        return -1.f;
+    }
+
+    public static String getName(NGItem item) {
+        for (Object o : item.rawinfo.data) {
+            if (o instanceof Object[]) {
+                Object[] a = (Object[]) o;
+                if (a[0] instanceof Integer) {
+                    if (NUtils.checkName("ui/tt/defn", ((Session.CachedRes) item.glob().sess.rescache.get((Integer) a[0])).resnm)) {
+                        return DefName.getname(item);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+
 
     public static ItemInfo.Contents getContent(
             List<ItemInfo> iteminfo
@@ -1071,18 +1068,6 @@ public class NUtils {
             }
         }
         return null;
-    }
-
-    public static double getItemQuality(GItem item)
-            throws InterruptedException {
-        if(item.spr!=null) {
-            for (ItemInfo info : item.info()) {
-                if (info instanceof QBuff) {
-                    return ((QBuff) info).q;
-                }
-            }
-        }
-        return -1;
     }
 
     public static boolean isItInfo(
@@ -1180,7 +1165,7 @@ public class NUtils {
 
     public static boolean alarmOrcalot() {
         ArrayList<Gob> gobs = Finder.findObjectsInArea(
-                new NAlias(new ArrayList<>(Arrays.asList("/orca", "/spermwhale")),new ArrayList<>(Arrays.asList("beef", "skeleton"))),
+                new NAlias(new ArrayList<>(Arrays.asList("/orca", "/spermwhale", "/greyseal")),new ArrayList<>(Arrays.asList("beef", "skeleton"))),
                 new NArea(gameUI.map.player().rc, 3999));
         for(Gob gob: gobs) {
             if (!gob.isTag(NGob.Tags.knocked) && gob.isTag(NGob.Tags.kritter_is_ready))
@@ -1411,7 +1396,7 @@ public class NUtils {
                 ArrayList<GItem> wItems = gameUI.getInventory().getItems(names);
                 /// Вычисляем оставшееся свободное место в пайле
                 for (GItem wItem : wItems) {
-                    if(getItemQuality(wItem)>=q) {
+                    if(((NGItem)wItem).quality()>=q) {
                         int freeSpace = ((NISBox) sp).getFreeSpace();
                         /// Передаем предмет и дожидаемся изменения пайла
                         int count = 0;
@@ -1507,31 +1492,49 @@ public class NUtils {
             throws InterruptedException {
         Window spwnd = gameUI.getWindow("Stockpile");
         if (spwnd != null) {
-            boolean nisFind = false;
-            do {
-                for (Widget sp = spwnd.lchild; sp != null; sp = sp.prev) {
-                    /// Выбираем внутренний контейнер
-                    if (sp instanceof NISBox) {
-                        final NISBox nis = (NISBox)sp;
-                        nisFind = true;
-                        /// Вычисляем свободное место в пайле
-                        int freeSpace = nis.getFreeSpace();
-                        int counter = 0;
+            for (Widget sp = spwnd.lchild; sp != null; sp = sp.prev) {
+                /// Выбираем внутренний контейнер
+                if (sp instanceof NISBox) {
+                    final NISBox nis = (NISBox) sp;
+                    /// Вычисляем свободное место в пайле
+                    int freeSpace = nis.getFreeSpace();
+                    int minv_freeSpace = gameUI.getInventory().getFreeSpace();
+
+                    if (gameUI.getInventory().getFreeSpace() > 0) {
                         /// Берем один предмет
                         sp.wdgmsg("xfer");
-                        /// Ожидаем изменения свободного места в пайле
-                        NUtils.waitEvent(()->(freeSpace != nis.getFreeSpace()),50,25);
-
-                        if (freeSpace == nis.getFreeSpace()) {
-                            return false;
+                        NUtils.waitEvent(() -> (freeSpace != nis.getFreeSpace()), 50, 10);
+                        if(freeSpace != nis.getFreeSpace())
+                        {
+                            NUtils.waitEvent(() -> (minv_freeSpace != gameUI.getInventory().getFreeSpace() || findBundle()), 100, 10);
                         }
+                        destroyAllBundle();
+                        return !(freeSpace == nis.getFreeSpace());
+                    } else {
+                        return false;
                     }
                 }
             }
-            while (!nisFind);
-            return true;
         }
         return false;
+    }
+
+    static boolean findBundle() throws InterruptedException {
+        for(GItem item : gameUI.getInventory().getItems()) {
+            if (item.contents != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    static void destroyAllBundle() throws InterruptedException {
+        for(GItem item : gameUI.getInventory().getItems()) {
+            if (item.contents != null) {
+                item.wdgmsg("iact", item.sz, 3);
+                NUtils.waitEvent(()->NUtils.getGameUI().getInventory().wmap.get(item)==null,50,10);
+            }
+        }
     }
 
     public static String prettyResName(String biome) {
@@ -1665,6 +1668,11 @@ public class NUtils {
             result.fullMark = 1024;
             result.cap = "Table";
             result.name = new NAlias("table");
+        } else if (Finder.findObjectsInArea(new NAlias("ttub"), area).size() > 0 ||
+                (target != null && isIt(target, new NAlias("ttub")))) {
+            result.fullMark = 1024;
+            result.cap = "Tub";
+            result.name = new NAlias("ttub");
         }
         return result;
     }

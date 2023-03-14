@@ -601,7 +601,7 @@ public class OptWnd extends Window {
 		y = addbtn(cont, "Check clay", NMapView.kb_checkClay, y);
 		y = addbtn(cont, "Check water", NMapView.kb_checkWater, y);
 		y = addbtn(cont, "Feed clover", NMapView.kb_feedclower, y);
-		y = addbtn(cont, "Give", NMapView.kb_give, y);
+		y = addbtn(cont, "Toggle combat/peace", NMapView.kb_give, y);
 
 		y = cont.adda(new Label("Tool belt"), cont.sz.x / 2, y + UI.scale(10), 0.5, 0.0).pos("bl").adds(0, 5).y;
 		y = addbtn(cont, "Button 1", NConfiguration.getInstance().toolBelts.get("belt0").toolKeys[0], y, true);

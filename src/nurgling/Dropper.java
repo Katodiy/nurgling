@@ -27,10 +27,9 @@ public class Dropper implements Runnable {
                             NUtils.drop (item);
                 }
             }
-        } catch (InterruptedException e) {
+        } catch (InterruptedException ignored) {
         
         }
-        
     }
     
     NGameUI gui;

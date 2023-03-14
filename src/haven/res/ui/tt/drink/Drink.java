@@ -7,7 +7,7 @@ import haven.*;
 import haven.res.lib.tspec.*;
 import java.awt.image.BufferedImage;
 
-@FromResource(name = "ui/tt/drink", version = 1)
+@haven.FromResource(name = "ui/tt/drink", version = 2)
 public class Drink extends ItemInfo.Tip {
     public final Type[] types;
 

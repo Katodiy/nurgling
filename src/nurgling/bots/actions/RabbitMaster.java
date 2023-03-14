@@ -4,10 +4,7 @@ import haven.Coord;
 import haven.GItem;
 import haven.Gob;
 import haven.WItem;
-import nurgling.NAlias;
-import nurgling.NGameUI;
-import nurgling.NUtils;
-import nurgling.PathFinder;
+import nurgling.*;
 import nurgling.tools.AreasID;
 import nurgling.tools.Finder;
 
@@ -79,12 +76,12 @@ public class RabbitMaster implements Action {
             }
             NUtils.waitEvent(()-> gui.getInventory ( "Rabbit Hutch" ).getItem ( new NAlias ( "rabbit-buck" ) )!=null,50);
             GItem buck = gui.getInventory ( "Rabbit Hutch" ).getItem ( new NAlias ( "rabbit-buck" ) );
-            RabbitCoop curRabbitHutch = new RabbitCoop ( gob, NUtils.getItemQuality( buck ) );
+            RabbitCoop curRabbitHutch = new RabbitCoop ( gob, ((NGItem)buck).quality() );
             
             /// Получаем инфо по зайчихам
             ArrayList<GItem> curdoes = gui.getInventory ( "Rabbit Hutch" ).getItems ( new NAlias ( "rabbit-doe" ) );
             for ( GItem hen : curdoes ) {
-                curRabbitHutch.bunnies.add ( NUtils.getItemQuality( hen ) );
+                curRabbitHutch.bunnies.add ( ((NGItem)hen).quality() );
             }
             curRabbitHutch.bunnies.sort ( Double::compareTo );
             does.add ( curRabbitHutch );
@@ -102,12 +99,12 @@ public class RabbitMaster implements Action {
             /// Получаем инфо по зайчихам
             ArrayList<GItem> curdoes = gui.getInventory ( "Rabbit Hutch" ).getItems ( new NAlias ( "rabbit-doe" ) );
             for ( GItem hen : curdoes ) {
-                qdoes.add ( NUtils.getItemQuality( hen ) );
+                qdoes.add ( ((NGItem)hen).quality() );
             }
             /// Получаем инфо по зайцам
             ArrayList<GItem> curbucks = gui.getInventory ( "Rabbit Hutch" ).getItems ( new NAlias ( "rabbit-buck" ) );
             for ( GItem roost : curbucks ) {
-                qbucks.add ( NUtils.getItemQuality( roost ) );
+                qbucks.add ( ((NGItem)roost).quality() );
             }
             qdoes.sort ( Double::compareTo );
             qbucks.sort ( Double::compareTo );
@@ -135,7 +132,8 @@ public class RabbitMaster implements Action {
                         NUtils.waitEvent ( () -> gui.getInventory("Rabbit Hutch")
                                 .getItem(does.get(finalJ).quality, new NAlias("rabbit-buck"))!=null, 20 );
                         GItem lqhen = gui.getInventory ( "Rabbit Hutch" ).getItem ( does.get ( j ).quality, new NAlias ( "rabbit-buck" ) );
-                        Coord pos = new Coord ( ( lqhen.c.x - 1 ) / 33, ( lqhen.c.y - 1 ) / 33 );
+                        Coord wpos = gui.getInventory ( "Rabbit Hutch" ).wmap.get(lqhen).c;
+                        Coord pos = new Coord ( ( wpos.x - 1 ) / 33, ( wpos.y - 1 ) / 33 );
                         NUtils.transferItem ( gui.getInventory ( "Rabbit Hutch" ), lqhen );
                         NUtils.takeItemToHand (
                                 gui.getInventory ().getItem ( current_quality, new NAlias ( "rabbit-buck" ) ) );
@@ -143,7 +141,7 @@ public class RabbitMaster implements Action {
 
                         NUtils.transferToInventory ( "Rabbit Hutch", pos );
                         does.get ( j ).quality = current_quality;
-                        current_quality = NUtils.getItemQuality( lqhen );
+                        current_quality = ((NGItem)lqhen).quality();
                     }
                 }
                 NUtils.waitEvent (()->gui.getInventory ().getItem ( new NAlias ( "rabbit-buck" ) )!=null,delay  );
@@ -204,9 +202,9 @@ public class RabbitMaster implements Action {
                                     Results.Types.SUCCESS ) {
                                 return new Results ( Results.Types.OPEN_FAIL );
                             }
-                            NUtils.waitEvent ( () -> false, 5 );
                             GItem lqhen = gui.getInventory ( "Rabbit Hutch" ).getItem ( does.get ( j ).bunnies.get ( k ), new NAlias ( "rabbit-doe" ) );
-                            Coord pos = new Coord ( ( lqhen.c.x - 1 ) / 33, ( lqhen.c.y - 1 ) / 33 );
+                            Coord wpos = gui.getInventory ( "Rabbit Hutch" ).wmap.get(lqhen).c;
+                            Coord pos = new Coord ( ( wpos.x - 1 ) / 33, ( wpos.y - 1 ) / 33 );
                             NUtils.transferItem ( gui.getInventory ( "Rabbit Hutch" ), lqhen );
                             NUtils.takeItemToHand (
                                     gui.getInventory ().getItem ( current_quality, new NAlias ( "rabbit-doe" ) ) );
@@ -216,13 +214,13 @@ public class RabbitMaster implements Action {
                                 counter += 1;
                             }
                             NUtils.transferToInventory ( "Rabbit Hutch", pos );
-                            current_quality = NUtils.getItemQuality( lqhen );
+                            current_quality = ((NGItem)lqhen).quality();
                             /// Обновляем данные по зайчихам
                             Thread.sleep ( 300 );
                             ArrayList<GItem> newcurhens = gui.getInventory ( "Rabbit Hutch" ).getItems ( new NAlias ( "rabbit-doe" ) );
                             does.get ( j ).bunnies = new ArrayList<> ();
                             for ( GItem hen : newcurhens ) {
-                                does.get ( j ).bunnies.add ( NUtils.getItemQuality( hen ) );
+                                does.get ( j ).bunnies.add ( ((NGItem)hen).quality() );
                             }
                             does.get ( j ).bunnies.sort ( Double::compareTo );
                             break;

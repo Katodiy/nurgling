@@ -31,7 +31,7 @@ public class CollectQuicksilver implements Action {
             /// Находим одетое ведро и берем его в руку
             WItem activeBucket = null;
             for ( WItem bucket : buckets ) {
-                if ( NUtils.checkName ( NUtils.getContent ( bucket ),
+                if ( NUtils.checkName ( NUtils.getContent ( bucket.item ),
                         new NAlias ( new ArrayList<> ( Arrays.asList ( "quicksilver", "free" ) ) ) ) ) {
                     activeBucket = bucket;
                 }
@@ -50,7 +50,7 @@ public class CollectQuicksilver implements Action {
             }
     
             for ( Gob gob : in ) {
-                if ( NUtils.checkName ( NUtils.getContent ( gui.vhand ), new NAlias ( new ArrayList<> ( Arrays.asList ( "quicksilver" ) ) ) ) ) {
+                if ( NUtils.checkName ( NUtils.getContent ( gui.vhand.item ), new NAlias ( new ArrayList<> ( Arrays.asList ( "quicksilver" ) ) ) ) ) {
                     if ( NUtils.getContentNumber ( gui.vhand ) > 1 ) {
                         /// Сливаем лишнюю ртуть
                         new TransferBucketToBarrel ( AreasID.barrels, new NAlias ( new ArrayList<> ( Arrays.asList ( "quicksilver", "mercury" ) ) ) ).run (

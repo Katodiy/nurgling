@@ -17,7 +17,6 @@ public class Loop implements Action {
             for (Action action : _actions) {
                 Results res = action.run(gui);
                 if(res.type!=Results.Types.SUCCESS) {
-                    System.out.println(res.toString());
                     return res;
                 }
             }

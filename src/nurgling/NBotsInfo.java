@@ -252,7 +252,7 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
                     "bots/icons/shedule" ) );
             layouts.get ( 7 ).add ( new NButton ( "CowsCurd", new CurdCows (  gui ),
                     "bots/icons/cowscurd" ) );
-            layouts.get ( 7 ).add ( new NButton ( "CowsCurd", new CurdGoats (  gui ),
+            layouts.get ( 7 ).add ( new NButton ( "GoatsCurd", new CurdGoats (  gui ),
                     "bots/icons/goatscurd" ) );
             layouts.get ( 7 ).add ( new NButton ( "SheepsCurd", new CurdSheeps (  gui ),
                     "bots/icons/sheepscurd" ) );
@@ -316,6 +316,8 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
                     "bots/icons/gobfinder"  ) );
             layouts.get ( 5000 ).add ( new NButton ( "FishSorter", new SortAndTransferFish ( gui ),
                     "bots/icons/fishsorter"  ) );
+            layouts.get ( 5000 ).add ( new NButton ( "HideSorter", new SortAndTransferHides ( gui ),
+                    "bots/icons/transfersorthides"  ) );
             layouts.get ( 5000 ).add ( new NButton ( "FillSteel", new FillSteel ( gui ),
                     "bots/icons/steelcrucible"  ) );
 //            layouts.get ( 5000 ).add ( new NButton ( "BattleBot", new BattleBot ( gui ),

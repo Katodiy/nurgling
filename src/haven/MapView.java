@@ -54,7 +54,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
     public Camera camera = restorecam();
     protected Loader.Future<Plob> placing = null;
     protected Grabber grab;
-    protected Selector selection;
+    public Selector selection;
     private Coord3f camoff = new Coord3f(Coord3f.o);
     public double shake = 0.0;
     public static double plobpgran = Utils.getprefd("plobpgran", 8);

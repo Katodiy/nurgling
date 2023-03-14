@@ -496,7 +496,7 @@ public class Resource implements Serializable {
 	    sources.add(src);
 	}
 
-	private class Queued extends Named implements Prioritized, Serializable {
+	public class Queued extends Named implements Prioritized, Serializable {
 	    transient final Collection<Queued> rdep = new LinkedList<Queued>();
 	    final Waitable.Queue wq = new Waitable.Queue();
 	    volatile int prio;
@@ -533,6 +533,10 @@ public class Resource implements Serializable {
 		}
 		return(res);
 	    }
+
+		public boolean check(){
+			return done;
+		}
 
 	    private void done() {
 		synchronized(this) {

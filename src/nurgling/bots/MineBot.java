@@ -25,29 +25,34 @@ public class MineBot extends Bot {
             throws InterruptedException {
         super.initAction ();
         gameUI.getMap ().isAreaSelectorEnable = true;
+        Thread sl = null;
         if ( !m_selection_start.get () ) {
             m_selection_start.set ( true );
-            new Thread ( new AreaSelecter( gameUI, _start, m_selection_start, mine_area ),
-                    "Cont Area Selecter" ).start ();
+            sl = new Thread ( new AreaSelecter( gameUI, _start, m_selection_start, mine_area ),
+                    "Cont Area Selecter" );
+            sl.start ();
         }
         while ( !_start.get () ) {
             Thread.sleep ( 100 );
         }
-        _dropper = new Dropper( gameUI, new NAlias("axe","sword","shield","saw") );
-        dropper = new Thread ( _dropper );
-        dropper.start ();
+        if(sl!=null)
+            sl.join();
+        if((dropper==null  || _dropper!=null && !_dropper.isAlive.get())) {
+            _dropper = new Dropper(gameUI, new NAlias("axe", "sword", "shield", "saw"));
+            dropper = new Thread(_dropper);
+            dropper.start();
+        }
     }
     
     @Override
     public void endAction () {
         _start.set (false);
         m_selection_start.set ( false );
-        if(dropper.isAlive ()){
+        if(dropper!= null && dropper.isAlive ()){
             _dropper.isAlive.set ( false );
             try {
                 dropper.join ();
-            }
-            catch ( InterruptedException e ) {
+            } catch (InterruptedException e) {
             }
         }
         super.endAction ();
@@ -56,6 +61,6 @@ public class MineBot extends Bot {
     private AtomicBoolean _start = new AtomicBoolean ( false );
     private NArea mine_area = new NArea();
     private AtomicBoolean m_selection_start = new AtomicBoolean ( false );
-    Dropper _dropper;
-    Thread dropper;
+    static Dropper _dropper;
+    static Thread dropper;
 }
