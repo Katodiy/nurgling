@@ -3,3 +3,10 @@
 /local-config.properties
 /local-boot.properties
 *~
+.idea/*
+/out/*
+/resources/*
+nurgling.iml
+notes3.txt
+calibr.json
+config.nurgling.json
