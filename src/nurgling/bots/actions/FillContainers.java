@@ -69,7 +69,7 @@ public class FillContainers implements Action
                         if (gui.getInventory().getItems(items,q).isEmpty()) {
                             break;
                         }
-                        new PathFinder(gui, outContainer.gob).run();
+                        new PathFinder(gui, outContainer.gob, true).run();
                         if (new OpenTargetContainer(outContainer.gob, NUtils.getContainerType(outContainer.gob).cap).run(gui).type != Results.Types.SUCCESS) {
                             return new Results(Results.Types.OPEN_FAIL);
                         }

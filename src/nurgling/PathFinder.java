@@ -50,38 +50,16 @@ public class PathFinder {
         this.endCoord = endCoord;
         this.gui = gui;
         this.target = null;
-        this.default_delta = 1;
     }
 
     public PathFinder(
             NGameUI gui,
             Coord2d endCoord,
-            boolean quick
-    ) {
-        this.endCoord = endCoord;
-        this.gui = gui;
-        this.target = null;
-        this.default_delta = 1;
-        this.quick = true;
-    }
-
-    public PathFinder(
-            NGameUI gui,
-            Gob targetGob,
-            boolean quick
-    ) {
-        if (NUtils.isIt(targetGob, new NAlias("trellis"))) {
-            this.endCoord = NUtils.getTrellisCoord(targetGob.rc);
-        } else {
-            this.endCoord = targetGob.rc;
-        }
-        this.gui = gui;
-        this.target = targetGob;
-        this.default_delta = 1;
-        if (NUtils.isIt(targetGob, new NAlias("kritter"))) {
-            kritter = true;
-        }
-        this.quick = true;
+            boolean hardMode
+    )
+    {
+        this(gui,endCoord);
+        this.hardMode = hardMode;
     }
 
     public PathFinder(
@@ -99,6 +77,16 @@ public class PathFinder {
         if (NUtils.isIt(targetGob, new NAlias("kritter"))) {
             kritter = true;
         }
+    }
+
+    public PathFinder(
+            NGameUI gui,
+            Gob targetGob,
+            boolean hardMode
+    )
+    {
+        this(gui,targetGob);
+        this.hardMode = hardMode;
     }
 
     public static enum Type{

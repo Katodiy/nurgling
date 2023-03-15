@@ -62,7 +62,7 @@ public class TakeMaxFromContainers implements Action {
                 if (gui.getInventory().getFreeSpace() == 0) {
                     return new Results(Results.Types.SUCCESS);
                 }
-                new PathFinder(gui, in.gob).run();
+                new PathFinder(gui, in.gob, true).run();
                 String cap = NUtils.getContainerType(in.gob).cap;
                 if (!NUtils.checkName(cap, "Stockpile")) {
                     if (new OpenTargetContainer(in.gob, cap).run(gui).type == Results.Types.SUCCESS) {
