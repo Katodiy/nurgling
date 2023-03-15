@@ -14,7 +14,7 @@ public class ReagrAction implements Action {
     @Override
     public Results run(NGameUI gui)
             throws InterruptedException {
-        Gob gob;
+        Gob gob = null;
         while (true) {
 
             NFightView fightView = NUtils.getFightView();
@@ -39,7 +39,7 @@ public class ReagrAction implements Action {
             } else {
                 count = 0;
             }
-            if (NUtils.getFightView().curdisp == null) {
+            if (NUtils.getFightView().curdisp == null || NUtils.getFightView().getCurrentGob()!=gob) {
                 do {
                     count++;
                     NUtils.command(new char[]{'t'});
