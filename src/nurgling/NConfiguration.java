@@ -62,6 +62,7 @@ public class NConfiguration {
     public boolean isInfo = true;
     public boolean collectFoodInfo = false;
     public boolean lockStudy = false;
+    public boolean alarmGreyseal = false;
 
     public static String getCharKey()
     {
@@ -525,6 +526,7 @@ public class NConfiguration {
         obj.put("ingredients" ,ingredients);
         obj.put("isMinerCredo" ,isMinerCredo);
         obj.put("lockStudy" ,lockStudy);
+        obj.put("alarmGreyseal" ,alarmGreyseal);
 
         JSONArray users = new JSONArray ();
         for ( NLoginData user : logins ) {
@@ -883,6 +885,9 @@ public class NConfiguration {
             }
             if(jsonObject.get("lockStudy")!=null){
                 lockStudy = (boolean) jsonObject.get("lockStudy");
+            }
+            if(jsonObject.get("alarmGreyseal")!=null){
+                alarmGreyseal = (boolean) jsonObject.get("alarmGreyseal");
             }
             if(jsonObject.get("white_players")!=null){
                 JSONObject white = (JSONObject)jsonObject.get("white_players");
