@@ -30,7 +30,7 @@ public class TransferCheeseAction implements Action {
                 if (gui.getInventory().getNumberFreeCoord(new Coord(2, 1)) < 3) {
                     new FillContainers(new NAlias("cheesetray"), AreasID.cheese_out, outContainers).run(gui);
                 }
-                new PathFinder(gui, gob).run();
+                new PathFinder(gui, gob, true).run();
                 new OpenTargetContainer(gob, "Rack").run(gui);
 
                 Window spwnd = gui.getWindow("Rack");

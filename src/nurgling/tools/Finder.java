@@ -13,7 +13,49 @@ import java.util.Objects;
 
 public class Finder {
 
+    static final Comparator<Gob> x_comp = new Comparator<Gob> () {
+        @Override
+        public int compare(
+                Gob lhs,
+                Gob rhs
+        ) {
+            // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
+            return (lhs.rc.x > rhs.rc.x) ? -1 : ((lhs.rc.x < rhs.rc.x) ? 1 : (lhs.rc.y > rhs.rc.y) ? -1 : (
+                    lhs.rc.y < rhs.rc.y) ? 1 : 0);
+        }
+    };
 
+    static final Comparator<Gob> y_comp = new Comparator<Gob> () {
+        @Override
+        public int compare(
+                Gob lhs,
+                Gob rhs
+        ) {
+            // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
+            return (lhs.rc.y > rhs.rc.y) ? -1 : ((lhs.rc.y < rhs.rc.y) ? 1 : (lhs.rc.x > rhs.rc.x) ? -1 : (
+                    lhs.rc.x < rhs.rc.x) ? 1 : 0);
+        }
+    };
+
+    static void sort(ArrayList<Gob> gobs)
+    {
+        if(!gobs.isEmpty())
+        {
+            Coord2d min = new Coord2d(gobs.get(0).rc.x,gobs.get(0).rc.y);
+            Coord2d max = new Coord2d(gobs.get(0).rc.x,gobs.get(0).rc.y);
+            for(Gob gob: gobs)
+            {
+                max.x = Math.max(gob.rc.x,max.x);
+                max.y = Math.max(gob.rc.y,max.y);
+                min.x = Math.min(gob.rc.x,min.x);
+                min.y = Math.min(gob.rc.y,min.y);
+            }
+            if(Math.abs(max.y-min.y) > Math.abs(max.x - min.x))
+                gobs.sort(x_comp);
+            else
+                gobs.sort(y_comp);
+        }
+    }
 
     public static ArrayList<Gob> findObjects(NAlias name, Object o){
         ArrayList<Gob> outarray = new ArrayList<>();
@@ -95,38 +137,7 @@ public class Finder {
 //        }
         return result;
     }
-    
-    public static Gob findObjectWithCoontent (
-            NAlias name,
-            NAlias content,
-            Coord2d coord2d,
-            double distance
-    ) {
-        Gob result = null;
-        synchronized ( NUtils.getGameUI().ui.sess.glob.oc ) {
-            for ( Gob gob : NUtils.getGameUI().ui.sess.glob.oc ) {
-                
-                if ( NUtils.isIt ( gob, name ) ) {
-                    /// Сравнивается расстояние между игроком и объектом
-                    double dist = coord2d.dist ( gob.rc );
-                    /// Если расстояние минимально то оно и объект запоминаются
-                    if ( dist < distance ) {
-                        if ( NUtils.isOverlay ( gob, content ) ) {
-                            distance = dist;
-                            result = gob;
-                        }
-                    }
-                }
-            }
-        }
-//        if ( result != null ) {
-//            if ( result.getres () != null ) {
-//                System.out.println ( result.getres ().name );
-//            }
-//        }
-        return result;
-    }
-    
+
     
     public static Gob findObjectInArea (
             NAlias name,
@@ -218,18 +229,7 @@ public class Finder {
                 }
             }
         }
-        
-        result.sort ( new Comparator<Gob> () {
-            @Override
-            public int compare (
-                    Gob lhs,
-                    Gob rhs
-            ) {
-                // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
-                return ( lhs.rc.x > rhs.rc.x ) ? -1 : ( ( lhs.rc.x < rhs.rc.x ) ? 1 : ( lhs.rc.y > rhs.rc.y ) ? -1 : (
-                        lhs.rc.y < rhs.rc.y ) ? 1 : 0 );
-            }
-        } );
+        sort(result);
         return result;
     }
     
@@ -249,18 +249,7 @@ public class Finder {
                     }
                 }
             }
-    
-            result.sort ( new Comparator<Gob> () {
-                @Override
-                public int compare (
-                        Gob lhs,
-                        Gob rhs
-                ) {
-                    // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
-                    return ( lhs.rc.x > rhs.rc.x ) ? -1 : ( ( lhs.rc.x < rhs.rc.x ) ? 1 : ( lhs.rc.y > rhs.rc.y ) ? -1 : (
-                            lhs.rc.y < rhs.rc.y ) ? 1 : 0 );
-                }
-            } );
+            sort(result);
         }
         return result;
     }
@@ -278,18 +267,7 @@ public class Finder {
                 }
             }
         }
-        
-        result.sort ( new Comparator<Gob> () {
-            @Override
-            public int compare (
-                    Gob lhs,
-                    Gob rhs
-            ) {
-                // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
-                return ( lhs.rc.x > rhs.rc.x ) ? -1 : ( ( lhs.rc.x < rhs.rc.x ) ? 1 : ( lhs.rc.y > rhs.rc.y ) ? -1 : (
-                        lhs.rc.y < rhs.rc.y ) ? 1 : 0 );
-            }
-        } );
+        sort(result);
         return result;
     }
     
@@ -307,18 +285,7 @@ public class Finder {
                     }
                 }
             }
-    
-            result.sort ( new Comparator<Gob> () {
-                @Override
-                public int compare (
-                        Gob lhs,
-                        Gob rhs
-                ) {
-                    // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
-                    return ( lhs.rc.x > rhs.rc.x ) ? -1 : ( ( lhs.rc.x < rhs.rc.x ) ? 1 : ( lhs.rc.y > rhs.rc.y ) ? -1 : (
-                            lhs.rc.y < rhs.rc.y ) ? 1 : 0 );
-                }
-            } );
+            sort(result);
         }
         return result;
     }
@@ -358,18 +325,7 @@ public class Finder {
                 }
             }
         }
-        
-        result.sort ( new Comparator<Gob> () {
-            @Override
-            public int compare (
-                    Gob lhs,
-                    Gob rhs
-            ) {
-                // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
-                return ( lhs.rc.x > rhs.rc.x ) ? -1 : ( ( lhs.rc.x < rhs.rc.x ) ? 1 : ( lhs.rc.y > rhs.rc.y ) ? -1 : (
-                        lhs.rc.y < rhs.rc.y ) ? 1 : 0 );
-            }
-        } );
+        sort(result);
         return result;
     }
     

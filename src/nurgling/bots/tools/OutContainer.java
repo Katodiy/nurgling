@@ -73,7 +73,7 @@ public class OutContainer {
                             OutContainer rhs
                     ) {
                         // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
-                        return (lhs.gob.rc.y > rhs.gob.rc.y) ? -1 : ((lhs.gob.rc.y < rhs.gob.rc.y) ? 1 : Double.compare(rhs.gob.rc.x, lhs.gob.rc.x));
+                        return (lhs.gob.rc.x > rhs.gob.rc.x) ? -1 : ((lhs.gob.rc.x < rhs.gob.rc.x) ? 1 : Double.compare(rhs.gob.rc.y, lhs.gob.rc.y));
                     }
                 });
             } else {
@@ -84,7 +84,7 @@ public class OutContainer {
                             OutContainer rhs
                     ) {
                         // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
-                        return (lhs.gob.rc.x > rhs.gob.rc.x) ? -1 : ((lhs.gob.rc.x < rhs.gob.rc.x) ? 1 : Double.compare(rhs.gob.rc.y, lhs.gob.rc.y));
+                        return (lhs.gob.rc.y > rhs.gob.rc.y) ? -1 : ((lhs.gob.rc.y < rhs.gob.rc.y) ? 1 : Double.compare(rhs.gob.rc.x, lhs.gob.rc.x));
                     }
                 });
             }
