@@ -296,6 +296,8 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
                     "bots/icons/battle" ) );
             layouts.get ( 5000 ).add ( new NButton ( "ShieldSword", new EquipWaepon (  gui ),
                     "bots/icons/shieldsword" ) );
+            layouts.get ( 5000 ).add ( new NButton ( "TravellersSacks", new EquipTravellersSacks (  gui ),
+                    "bots/icons/tsacks" ) );
             layouts.get ( 5000 ).add ( new NButton ( "TanningFluid", new TanningFluid (  gui ),
                     "bots/icons/tanfluid" ) );
             layouts.get ( 5000 ).add ( new NButton ( "TransferLog", new TransferLogs (  gui ),

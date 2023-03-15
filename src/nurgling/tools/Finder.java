@@ -562,6 +562,25 @@ public class Finder {
         
         return res;
     }
+
+    public static boolean findDressedItems(NAlias name, int count) {
+        int found = 0;
+        /// Запрашиваем текующую экипировку
+        NEquipory equipory = NUtils.getGameUI().getEquipment ();
+        /// Просматриваем экипировку
+        for ( int i = 0 ; i < Equipory.ecoords.length ; i++ ) {
+            /// Если в слоте есть предмет, то проверяем его
+            if ( equipory.quickslots[i] != null ) {
+                /// Проверяем соответствие
+                if ( NUtils.isIt ( equipory.quickslots[i].item, name ) ) {
+                    ///  учитываем количество найденых предметов
+                    found++;
+                }
+            }
+        }
+
+        return found == count;
+    }
     
     public static NArea findNearestMark (AreasID id ) {
         if(id!=null && AreasID.get(id)!=null) {
@@ -1229,4 +1248,6 @@ public class Finder {
         }
         return result;
     }
+
+
 }

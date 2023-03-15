@@ -24,7 +24,7 @@ public class EquipWaepon implements Action {
 
         /// Иначе освобождаем руки и берем нужный предмет
 
-        new Equip(shiled).run(gui);
+        new Equip(shiled, sword).run(gui);
         new Equip(sword, shiled).run(gui);
 
 
