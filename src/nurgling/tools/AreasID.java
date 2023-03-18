@@ -16,6 +16,8 @@ public enum AreasID {
     seed_out,
     raw_hides,
     lqhides,
+    tobacco_in,
+    tobacco_out,
     block,
     ore,
     bar,
