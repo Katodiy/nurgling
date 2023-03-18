@@ -80,6 +80,8 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
                     "bots/icons/www" ) );
             layouts.get ( 2 ).add ( new NButton ( "Dryer", new Dryer ( gui ),
                     "bots/icons/hide" ) );
+            layouts.get ( 2 ).add ( new NButton ( "TobaccoDryer", new TobaccoDryer ( gui ),
+                    "bots/icons/tabacco" ) );
             layouts.get ( 2 ).add ( new NButton ( "TarKiln", new TarKilnRefiller ( gui ),
                     "bots/icons/tarkiln" ) );
             layouts.get ( 2 ).add ( new NButton ( "Smelter", new Smelter ( gui ),
