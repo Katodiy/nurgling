@@ -1075,7 +1075,7 @@ public class NUtils {
             final NAlias regEx
     ) {
         if (item != null) {
-                return checkName(((NGItem)item).dfname, regEx);
+            return checkName(((NGItem)item).dfname, regEx);
         }
         return false;
     }

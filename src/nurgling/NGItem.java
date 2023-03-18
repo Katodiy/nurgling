@@ -276,17 +276,24 @@ public class NGItem extends GItem {
         if(res!=null) {
             status |= INDIR;
             if (res instanceof Session.CachedRes.Ref) {
-                if ((((Session.CachedRes.Ref) res).check()))
-                {
+                if ((((Session.CachedRes.Ref) res).check())) {
                     Resource.Image img = res.get().layer(Resource.imgc);
-                    if(img!=null) {
+                    if (img != null) {
                         Coord sz = img.ssz;
                         spriteSize = sz.div(32);
                     }
                     Resource.Tooltip tt = res.get().layer(Resource.tooltip);
-                    if(tt!=null)
-                        dfname = tt.t;
-                    status |= COMPLETED;
+                    if (tt != null) {
+                        if (tt.t.equals("Meat")) {
+                            if (ui != null) {
+                                dfname = new Meat(this, null, sdt).name();
+                            }
+                        } else {
+                            dfname = tt.t;
+                        }
+                    }
+                    if (dfname != null)
+                        status |= COMPLETED;
                 }
             }
         }
