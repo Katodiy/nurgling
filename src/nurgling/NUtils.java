@@ -1075,15 +1075,7 @@ public class NUtils {
             final NAlias regEx
     ) {
         if (item != null) {
-            try {
-                /// Запрашиваем информацию по предмету
-                for (ItemInfo info : item.info()) {
-                    if (info instanceof ItemInfo.Name) {
-                        return checkName(((ItemInfo.Name) info).str.text, regEx);
-                    }
-                }
-            } catch (Loading e) {
-            }
+                return checkName(((NGItem)item).dfname, regEx);
         }
         return false;
     }
