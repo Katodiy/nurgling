@@ -4,6 +4,8 @@ package nurgling;
 public class NLoginData {
     public String name;
     public String pass;
+    public byte[] token;
+    public boolean isTokenUsed = false;
     
     public NLoginData(String name, String pass) {
         this.name = name;
