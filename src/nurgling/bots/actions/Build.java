@@ -32,7 +32,7 @@ public class Build implements Action {
         while ( true ) {
             Gob buildedObj = Finder.findObjectInArea ( new NAlias ( "consobj" ), 1000, workArea );
             if ( buildedObj == null ) {
-                if(!NUtils.checkName("trellis",name)) {
+                if(!NUtils.checkName("gfx/terobjs/trellis",name)) {
                     hitbox = NHitBox.get(name);
                     phantom = NHitBox.get(name);
                 }else{
@@ -47,7 +47,7 @@ public class Build implements Action {
                         rotation = Math.PI / 2;
                     }
                 }
-                else if ( NUtils.checkName ( "trellis", new NAlias ( name ) ) ) {
+                else if ( NUtils.checkName ( "gfx/terobjs/trellis", new NAlias ( name ) ) ) {
                     phantom = NHitBox.get ( );
                     if ( ( workArea.end.x - workArea.begin.x ) > ( workArea.end.y - workArea.begin.y ) ) {
                         hitbox.rotate90 ();
@@ -55,7 +55,7 @@ public class Build implements Action {
                         rotation = Math.PI / 2;
                     }
                 }
-                else if ( NUtils.checkName ( "dframe", new NAlias ( name ) ) ) {
+                else if ( NUtils.checkName ( "gfx/terobjs/dframe", new NAlias ( name ) ) ) {
                     if ( ( workArea.end.x - workArea.begin.x ) < ( workArea.end.y - workArea.begin.y ) ) {
                         hitbox.rotate90 ();
                         phantom.rotate90 ();
@@ -67,7 +67,7 @@ public class Build implements Action {
                 }
                 try {
                     Coord2d pos;
-                    if (NUtils.checkName("trellis", new NAlias(name))) {
+                    if (NUtils.checkName("gfx/terobjs/trellis", new NAlias(name))) {
                         pos = Finder.findPlaceTrellis(hitbox, workArea, "");
                     } else {
                         pos = Finder.findPlace(hitbox, workArea, "");
@@ -218,7 +218,7 @@ public class Build implements Action {
             if ( buildedObj == null ) {
                 try {
                     Coord2d pos;
-                    if ( NUtils.checkName ( "trellis", new NAlias ( name ) ) ) {
+                    if ( NUtils.checkName ( "gfx/terobjs/trellis", new NAlias ( name ) ) ) {
                         pos = Finder.findPlaceTrellis ( hitbox, workArea, "" );
                     }
                     else {
