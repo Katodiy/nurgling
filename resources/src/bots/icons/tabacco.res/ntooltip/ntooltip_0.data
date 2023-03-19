@@ -1,0 +1,6 @@
+#name
+Dryer tobacco
+#req
+tobacco_in, tobacco_out, tobacco_work
+#text
+This bot stockpile and collect cured tobacco leaves from herbalist tables and put fresh leaves for drying. Can work with barter stands

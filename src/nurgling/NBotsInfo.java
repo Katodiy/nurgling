@@ -324,12 +324,8 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
                     "bots/icons/transfersorthides"  ) );
             layouts.get ( 5000 ).add ( new NButton ( "FillSteel", new FillSteel ( gui ),
                     "bots/icons/steelcrucible"  ) );
-//            layouts.get ( 5000 ).add ( new NButton ( "BattleBot", new BattleBot ( gui ),
-//                    Special.getPath () + "/icons/battle.png" ) );
-//            layouts.get ( 5000 ).add ( new NButton ( "BattleBot2", new BattleAction2 ( gui ),
-//                    Special.getPath () + "/icons/battle.png" ) );
-//            layouts.get ( 5000 ).add ( new NButton ( "BattleMinion", new BattleMinionBot ( gui ),
-//                    Special.getPath () + "/icons/minion.png" ) );
+            layouts.get ( 5000 ).add ( new NButton ( "FillWaterskins", new FillWaterskin ( gui ),
+                    "bots/icons/fillwaterskin"  ) );
 
 //            layouts.get ( 5000 ).add ( new NButton ( "Sort and Transfer Trash", new SortAndTransferTrash ( gui ),
 //                    Special.getPath () + "/icons/trash.png" ) );

@@ -59,7 +59,7 @@ public class LightFire implements Action {
                 if ( new Drink ( 0.9, false ).run ( gui ).type != Results.Types.SUCCESS ) {
                     return new Results ( Results.Types.Drink_FAIL );
                 }
-                NUtils.craft ( new char[]{ 'a', 'g' }, "Light fire", true );
+                NUtils.craft ( new char[]{ 'a', 'f', 'g' }, "Light fire", true );
                 NUtils.waitEvent(()->!gui.hand.isEmpty(),20000,10);
 //                int counter = 0;
 //                while ( gui.hand.isEmpty () && counter < 50) {

@@ -14,7 +14,7 @@ import java.util.Arrays;
 public class SmelterAction implements Action {
     static NAlias ores = new NAlias ( new ArrayList<> (
             Arrays.asList ( "cassiterite", "hematite", "peacockore", "chalcopyrite", "malachite", "leadglance",
-                    "cinnabar", "ilmenite", "hornsilver", "argentite", "sylvanite" , "magnetite", "nagyagite", "petzite", "cuprite","limonite") ) );
+                    "cinnabar", "galena", "ilmenite", "hornsilver", "argentite", "sylvanite" , "magnetite", "nagyagite", "petzite", "cuprite","limonite") ) );
     private final NAlias smelter_name = new NAlias ( new ArrayList<> ( Arrays.asList ( "smelter" ) ),
             new ArrayList<> () );
 

@@ -15,8 +15,8 @@ public class NLoginScreen extends LoginScreen {
     public NLoginScreen (String hostname) {
         super (hostname);
         NConfiguration.getInstance().disabledCheck = false;
-        add ( new LoginList ( 200, 29 ), new Coord ( 10, 10 ) );
-        optbtn.move(new Coord(680, 30));
+        add ( new LoginList ( UI.scale(200), 29 ), new Coord ( UI.scale(10), UI.scale(10) ) );
+        optbtn.move(new Coord(UI.scale(680), UI.scale(30)));
         adda(new StatusLabel(hostname, 0.5), bgc.x, bg.sz().y, 0.5, 1);
     }
     
@@ -74,7 +74,7 @@ public class NLoginScreen extends LoginScreen {
                 int w,
                 int h
         ) {
-            super ( w, h, ITEM_HEIGHT );
+            super ( w, h, UI.scale(ITEM_HEIGHT) );
         }
         
         @Override
@@ -114,8 +114,8 @@ public class NLoginScreen extends LoginScreen {
         }
         
         private void setHoverItem ( Coord c ) {
-            if ( c.x > 0 && c.x < sz.x && c.y > 0 && c.y < listitems () * ITEM_HEIGHT ) {
-                hover = c.y / ITEM_HEIGHT + sb.val;
+            if ( c.x > 0 && c.x < sz.x && c.y > 0 && c.y < listitems () * UI.scale(ITEM_HEIGHT) ) {
+                hover = c.y / UI.scale(ITEM_HEIGHT) + sb.val;
             }
             else {
                 hover = -1;
@@ -134,9 +134,9 @@ public class NLoginScreen extends LoginScreen {
                 g.chcolor ();
             }
             Tex tex = textfs.render ( item.name, Color.WHITE ).tex ();
-            int y = ITEM_HEIGHT / 2 - tex.sz ().y / 2;
-            g.image ( tex, new Coord ( 5, y ) );
-            g.image ( xicon, new Coord ( sz.x - 25, y ) );
+            int y = UI.scale(ITEM_HEIGHT) / 2 - tex.sz ().y / 2;
+            g.image ( tex, new Coord ( UI.scale(5), y ) );
+            g.image ( xicon, new Coord ( sz.x - UI.scale(25), y ) );
         }
         
         @Override
@@ -160,7 +160,10 @@ public class NLoginScreen extends LoginScreen {
                 }
                 else if ( c.x < sz.x - 35 ) {
                     parent.wdgmsg ( "forget" );
-                    parent.wdgmsg ( "login", new Object[]{ new AuthClient.NativeCred ( itm.name, itm.pass ), false } );
+                    if(!itm.isTokenUsed)
+                        parent.wdgmsg ( "login", new Object[]{ new AuthClient.NativeCred ( itm.name, itm.pass ), false } );
+                    else
+                        parent.wdgmsg ( "login", new Object[]{ new AuthClient.TokenCred ( itm.name, itm.token ), false } );
                 }
                 super.itemclick ( itm, button );
             }

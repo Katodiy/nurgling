@@ -19,17 +19,7 @@ public class FreeFrames implements Action {
     public Results run ( NGameUI gui )
             throws InterruptedException {
         ArrayList<Gob> in = Finder.findObjects ( new NAlias("dframe") );
-        in.sort ( new Comparator<Gob> () {
-            @Override
-            public int compare (
-                    Gob lhs,
-                    Gob rhs
-            ) {
-                // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
-                return ( lhs.rc.y > rhs.rc.y ) ? -1 : ( ( lhs.rc.y < rhs.rc.y ) ? 1 : ( lhs.rc.x > rhs.rc.x ) ? -1 : (
-                        lhs.rc.x < rhs.rc.x ) ? 1 : 0 );
-            }
-        } );
+
         for ( Gob gob : in ) {
             boolean empty = true;
             for ( Gob.Overlay ol : gob.ols ) {

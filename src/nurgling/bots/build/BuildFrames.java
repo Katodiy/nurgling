@@ -41,7 +41,7 @@ public class BuildFrames extends Bot {
                         branch_area,
                         5 ) );
         ///Добавление цикла в действия бота
-        runActions.add ( new Build( build_area, "dframe", command ) );
+        runActions.add ( new Build( build_area, "gfx/terobjs/dframe", command ) );
     }
     
     

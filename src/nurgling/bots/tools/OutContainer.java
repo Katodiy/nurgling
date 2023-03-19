@@ -65,7 +65,7 @@ public class OutContainer {
                     max.y = gob.gob.rc.y;
                 }
             }
-            if (Math.abs(max.x - min.x) > Math.abs(max.y - min.y)) {
+            if (Math.abs(max.x - min.x) < Math.abs(max.y - min.y)) {
                 outarray.sort(new Comparator<OutContainer>() {
                     @Override
                     public int compare(

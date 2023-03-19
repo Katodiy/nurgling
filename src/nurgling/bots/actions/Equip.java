@@ -55,20 +55,20 @@ public class Equip implements Action{
                 return new Results(Results.Types.SUCCESS);
 
         }
-        for (int i = 0 ; i <count; i++) {
-            item = gui.getInventory().getItem(name);
-
-            /// Одеваем
-            if (item != null) {
-                NUtils.getGameUI().setfocus(NUtils.getGameUI().getEquipment());
-                /// Иначе освобождаем руки и берем нужный предмет
-                item.wdgmsg("transfer", Coord.z, 1);
-                NUtils.getGameUI().getEquipment().lostfocus();
-                /// Дожидаемся окончания экипировки
-                NUtils.waitEvent(() -> Finder.findDressedItem(name) != null, 50);
-            }
-        }
-        NUtils.waitEvent(() -> Finder.findDressedItems(name, count), 50);
+//        for (int i = 0 ; i <count; i++) {
+//            item = gui.getInventory().getItem(name);
+//
+//            /// Одеваем
+//            if (item != null) {
+//                NUtils.getGameUI().setfocus(NUtils.getGameUI().getEquipment());
+//                /// Иначе освобождаем руки и берем нужный предмет
+//                item.wdgmsg("transfer", Coord.z, 1);
+//                NUtils.getGameUI().getEquipment().lostfocus();
+//                /// Дожидаемся окончания экипировки
+//                NUtils.waitEvent(() -> Finder.findDressedItem(name) != null, 50);
+//            }
+//        }
+//        NUtils.waitEvent(() -> Finder.findDressedItems(name, count), 50);
         if (Finder.findDressedItems(name, count))
             return new Results(Results.Types.SUCCESS);
         else
@@ -77,5 +77,5 @@ public class Equip implements Action{
 
     NAlias name;
     private int count = 1;
-    NAlias exception = new NAlias("bucket", "traveller");
+    NAlias exception = new NAlias("bucket");
 }

@@ -80,7 +80,12 @@ public class NHitBox extends NArea {
             {
                 result = gob.getHitBox();
             }
-        } else if (trellis) {
+        }
+        else if (gob.isTag(NGob.Tags.moundbed))
+        {
+            return null;
+        }
+        else if (trellis) {
             if (gob.isTag(NGob.Tags.trellis)) {
                 result = getByName("ptrellis");
                 result.correct(NUtils.getTrellisCoord(gob.rc), gob.a);
@@ -202,6 +207,7 @@ public class NHitBox extends NArea {
         hitboxes.put("gfx/terobjs/vehicle/wheelbarrow", new NHitBox( new Coord2d ( -8.25, -5.5 ), new Coord2d ( 8.25, 5.5 )));
         hitboxes.put("gfx/terobjs/vehicle/plow", new NHitBox( new Coord2d ( -8.25, -5.5 ), new Coord2d ( 8.25, 5.5 )));
         hitboxes.put("gfx/terobjs/cistern", new NHitBox(  new Coord2d ( -9.625, -9.625 ), new Coord2d ( 9.625, 9.625 )));
+        hitboxes.put("gfx/terobjs/ladder", new NHitBox(  new Coord2d ( -2.75, -8.25 ), new Coord2d ( 2.75, 8.25 )));
     }
 
 

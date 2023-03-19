@@ -227,7 +227,7 @@ public class Shopbox extends Widget implements ItemInfo.SpriteOwner, GSprite.Own
 	if(sender == bbtn) {
 		try {
 			if (ui.modshift) {
-				int count = NUtils.getGameUI().getInventory().getItems(new NAlias(price.getres().name)).size();
+				int count = NUtils.getGameUI().getInventory().getItems(new NAlias(price.getres().name, price.name())).size();
 				for (int i = 0; i < count; i++) {
 					this.wdgmsg("buy", new Object[0]);
 				}
