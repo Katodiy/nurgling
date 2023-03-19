@@ -153,36 +153,32 @@ public class Build implements Action {
                         needed[num] -= current;
                     }
                     else {
-                        NUtils.ContainerProp icontainer = NUtils.getContainerType ( data.inarea );
-                        if ( icontainer.name == null ) {
-                            return new Results ( Results.Types.NO_ITEMS );
+                        NUtils.ContainerProp icontainer = NUtils.getContainerType(data.inarea);
+                        if (icontainer.name == null) {
+                            return new Results(Results.Types.NO_ITEMS);
                         }
-                        ArrayList<Gob> igobs = Finder.findObjectsInArea ( icontainer.name, data.inarea );
-                        for ( Gob in : igobs ) {
-                            if ( in.getModelAttribute() != 0 ) {
-                                PathFinder pf = new PathFinder ( gui, in );
-                                pf.run ();
-                                if ( new OpenTargetContainer ( in, icontainer.cap ).run ( gui ).type ==
-                                        Results.Types.OPEN_FAIL ) {
-                                    return new Results ( Results.Types.OPEN_FAIL );
+                        ArrayList<Gob> igobs = Finder.findObjectsInArea(icontainer.name, data.inarea);
+                        for (Gob in : igobs) {
+                            if (in.getModelAttribute() != 0) {
+                                PathFinder pf = new PathFinder(gui, in);
+                                pf.run();
+                                if (new OpenTargetContainer(in, icontainer.cap).run(gui).type ==
+                                        Results.Types.OPEN_FAIL) {
+                                    return new Results(Results.Types.OPEN_FAIL);
                                 }
-                                if ( new TakeFromContainer ( icontainer.cap, data.item, taked ).run ( gui ).type ==
-                                        Results.Types.FULL ) {
-                                    return new Results ( Results.Types.NO_FREE_SPACE );
+                                int fs = gui.getInventory().getFreeSpace();
+                                if (new TakeFromContainer(icontainer.cap, data.item, taked).run(gui).type ==
+                                        Results.Types.FULL) {
+                                    return new Results(Results.Types.NO_FREE_SPACE);
                                 }
-                                Thread.sleep ( 500 );
-                                int current = gui.getInventory ().getItems ( data.item ).size ();
+                                int current = (NUtils.checkName("stone", data.item)) ? fs - gui.getInventory().getFreeSpace() : gui.getInventory().getItems(data.item).size();
                                 taked = taked - current;
-                                if ( taked <= 0 ) {
-                                    Window wnd = gui.getWindow ( icontainer.cap );
-                                    if ( wnd != null ) {
-                                        wnd.destroy ();
+                                if (taked <= 0) {
+                                    Window wnd = gui.getWindow(icontainer.cap);
+                                    if (wnd != null) {
+                                        wnd.destroy();
                                     }
-                                    int count = 0;
-                                    while ( count < 20 && gui.getWindow ( icontainer.cap ) != null ) {
-                                        Thread.sleep ( 50 );
-                                        count++;
-                                    }
+                                    NUtils.waitEvent(() -> gui.getWindow(icontainer.cap) == null, 50);
                                     break;
                                 }
                             }
