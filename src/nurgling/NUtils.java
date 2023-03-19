@@ -13,6 +13,7 @@ import haven.res.ui.tt.defn.DefName;
 import haven.res.ui.tt.q.qbuff.QBuff;
 import haven.res.ui.tt.q.quality.Quality;
 import nurgling.bots.*;
+import nurgling.bots.actions.UseItemOnItem;
 import nurgling.bots.actions.WaitAction;
 import nurgling.json.JSONObject;
 import nurgling.json.parser.JSONParser;
@@ -1234,32 +1235,27 @@ public class NUtils {
     )
             throws InterruptedException {
         /// Освобождаем слоты рук
-        if(NUtils.getEquipment()!= null && (NUtils.getEquipment().quickslots[6]!=null || NUtils.getEquipment().quickslots[7]!=null)){
+        if(NUtils.getEquipment()!= null && (NUtils.getEquipment().quickslots[6]!=null || NUtils.getEquipment().quickslots[7]!=null)) {
             {
                 WItem wbelt = Finder.findDressedItem(new NAlias("belt"));
 
                 if (wbelt == null) {
-                    //NUtils.getGameUI().setfocus(NUtils.getGameUI().getInventory());
                     freeSlotById(6, exceptions);
                     freeSlotById(7, exceptions);
                 } else {
+                    NInventory belt = ((NInventory) wbelt.item.contents);
                     for (int i = 6; i <= 7; i++) {
-                        if (((NInventory)wbelt.item.contents).getFreeSpace() != 0) {
-                            if (gameUI.getEquipment().quickslots[i] != null) {
-                                ArrayList<GItem> items = gameUI.getInventory().getItems();
-                                freeSlotById(i, exceptions);
-                                for(GItem item : gameUI.getInventory().getItems()){
-                                    if(!items.contains(item)){
-                                        item.wdgmsg("transfer", Coord.z, 1);
-                                        NUtils.waitEvent(() -> NUtils.getGameUI().getInventory().getItem(item) == null, 50);
-                                        break;
-                                    }
+                        if (gameUI.getEquipment().quickslots[i] != null) {
+                            if (belt.getFreeSpace() != 0) {
+                                /// Проверяем отсутствие соответствия заданным ключам исключениями
+                                if (!isIt(gameUI.getEquipment().quickslots[i].item, exceptions)) {
+                                    GItem item = gameUI.getEquipment().quickslots[i].item;
+                                    new UseItemOnItem(item,wbelt.item).run(gameUI);
                                 }
+                            } else {
+                                freeSlotById(i, exceptions);
                             }
-                        } else {
-                            freeSlotById(6, exceptions);
-                            freeSlotById(7, exceptions);
-                            return;
+
                         }
                     }
                 }

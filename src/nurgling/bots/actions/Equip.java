@@ -77,5 +77,5 @@ public class Equip implements Action{
 
     NAlias name;
     private int count = 1;
-    NAlias exception = new NAlias("bucket", "traveller");
+    NAlias exception = new NAlias("bucket");
 }
