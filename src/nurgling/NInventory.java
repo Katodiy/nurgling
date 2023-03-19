@@ -221,7 +221,8 @@ public class NInventory extends Inventory {
         return null;
     }
 
-    public boolean isInInventory(GItem item) {
+    public boolean isInInventory(GItem item) throws InterruptedException {
+        NUtils.waitEvent(this::isLoaded,50);
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
@@ -304,6 +305,7 @@ public class NInventory extends Inventory {
 
     public ArrayList<WItem> getAll()
             throws InterruptedException {
+        NUtils.waitEvent(this::isLoaded,50);
         ArrayList<WItem> result = new ArrayList<>();
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
@@ -434,7 +436,8 @@ public class NInventory extends Inventory {
         return new Coord(-1, -1);
     }
 
-    public int getNumberFreeCoord(GItem item) {
+    public int getNumberFreeCoord(GItem item) throws InterruptedException {
+        NUtils.waitEvent(this::isLoaded,50);
         if (item != null) {
             boolean[][] inventory = new boolean[isz.x][isz.y];
             for (int i = 0; i < isz.x; i++) {
@@ -487,7 +490,8 @@ public class NInventory extends Inventory {
         }
     }
 
-    public int getNumberFreeCoord(Coord target_size) {
+    public int getNumberFreeCoord(Coord target_size) throws InterruptedException {
+        NUtils.waitEvent(this::isLoaded,50);
         int count = 0;
         /// Вычисляем свободные слоты в инвентаре
         boolean[][] inventory = new boolean[isz.x][isz.y];
