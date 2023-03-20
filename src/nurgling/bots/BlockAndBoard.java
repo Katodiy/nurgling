@@ -3,6 +3,7 @@ package nurgling.bots;
 import haven.Button;
 import haven.Coord;
 
+import haven.UI;
 import nurgling.NGameUI;
 import nurgling.bots.actions.TreeLogAction;
 import nurgling.tools.AreaSelecter;
@@ -16,8 +17,8 @@ public class BlockAndBoard extends Bot {
     
     public BlockAndBoard(NGameUI gameUI ) {
         super ( gameUI );
-        win_title = "Chopper";
-        win_sz.y = 100;
+        win_title = "Block & Board";
+        win_sz.y = UI.scale(100);
         
         
         ///Добавление цикла в действия бота
@@ -44,7 +45,7 @@ public class BlockAndBoard extends Bot {
                 }
             }
         }, new Coord ( 0, y  ) );
-        y+=25;
+        y+=UI.scale(25);
         window.add ( new Button ( window.buttons_size, "Log for Blocks" ) {
             @Override
             public void click () {
@@ -60,7 +61,7 @@ public class BlockAndBoard extends Bot {
                 }
             }
         }, new Coord ( 0, y ) );
-        y+=25;
+        y+=UI.scale(25);
         window.add ( new Button ( window.buttons_size, "Output piles" ) {
             @Override
             public void click () {

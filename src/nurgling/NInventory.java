@@ -504,7 +504,7 @@ public class NInventory extends Inventory {
             if (widget instanceof WItem) {
                 WItem wdg = (WItem) widget;
                 Coord pos = new Coord((wdg.c.x - 1) / sqsz.x, (wdg.c.y - 1) / sqsz.y);
-                Coord size = ((NGItem) wdg.item).spriteSize;
+                Coord size = UI.unscale(((NGItem) wdg.item).spriteSize);
                 Coord endPos = new Coord(pos.x + size.x - 1, pos.y + size.y - 1);
                 for (int i = pos.x; i <= endPos.x; i++) {
                     for (int j = pos.y; j <= endPos.y; j++) {
