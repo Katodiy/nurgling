@@ -48,7 +48,7 @@ public class Window extends Widget implements DTarget {
     public static final Tex sizer = Resource.loadtex("nurgling/hud/wnd/sizer");
     public static final Coord tlm = UI.scale(18, 30);
     public static final Coord brm = UI.scale(13, 22);
-    public static final Coord cpo = UI.rscale(36, 12.4);
+    public static final Coord cpo = UI.rscale(24, 12.4);
     public static final int capo = 7, capio = 2;
     public static final Coord dlmrgn = UI.scale(23, 14);
     public static final Coord dsmrgn = UI.scale(9, 9);

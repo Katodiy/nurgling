@@ -538,7 +538,7 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
     NButton find(String path){
         for(Integer key: layouts.keySet()){
             for(Layout.ButtonPos button: layouts.get(key).buttons){
-                if(NUtils.checkName(path,button.button.name))
+                if(button.button.name.equals(path))
                     return button.button;
             }
         }

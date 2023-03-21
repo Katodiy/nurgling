@@ -579,7 +579,7 @@ public class Finder {
             }
         }
 
-        return found == count;
+        return found >= count;
     }
     
     public static NArea findNearestMark (AreasID id ) {

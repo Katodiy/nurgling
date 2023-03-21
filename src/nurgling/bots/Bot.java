@@ -1,6 +1,7 @@
 package nurgling.bots;
 
 import haven.Coord;
+import haven.UI;
 import nurgling.NGameUI;
 import nurgling.NOCache;
 import nurgling.NUtils;
@@ -104,7 +105,7 @@ public class Bot implements Runnable {
     /// Заголовок виджета состояния бота
     protected String win_title = "Bot";
     /// Параметры виджета состояния окна
-    protected Coord win_sz = new Coord(80, 200);
+    protected Coord win_sz = new Coord(UI.scale(80), UI.scale(200));
     protected ArrayList<Action> initActions = new ArrayList<>();
     protected ArrayList<Action> runActions = new ArrayList<>();
 }
