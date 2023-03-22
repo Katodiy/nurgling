@@ -376,6 +376,7 @@ public class NConfiguration {
         dragWidgets.put("belt0", new Coord(50,200));
         dragWidgets.put("belt1", new Coord(50,230));
         dragWidgets.put("belt2", new Coord(50,250));
+        dragWidgets.put("NQuestInfo", new Coord(200,250));
         resizeWidgets.put("ChatUI", new ResizeWdg(false,new Coord(700,300)));
         resizeWidgets.put("MiniMap", new ResizeWdg(false,new Coord(133,133)));
 

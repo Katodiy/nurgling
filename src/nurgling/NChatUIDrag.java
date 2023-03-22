@@ -9,6 +9,7 @@ public class NChatUIDrag extends NResizedWidget{
     private static final int blpw = UI.scale(142), brpw = UI.scale(142);
     public NChatUIDrag(String name) {
         super(name);
+        isVisible = false;
         chat = add(new ChatUI(0,0));
         chat.show();
         pack();

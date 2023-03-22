@@ -1,12 +1,11 @@
 package nurgling;
 
-import haven.Coord;
-import haven.UI;
-import haven.Widget;
+import haven.*;
 
 
 public class NDraggableWidget extends Widget {
 
+	protected boolean isVisible = true;
     protected final String name;
     private UI.Grab dm;
     private Coord doff;
@@ -71,6 +70,18 @@ public class NDraggableWidget extends Widget {
 	}
     }
 
-
-
+	@Override
+	public void draw(GOut g) {
+		if(isVisible) {
+			Tex bg = Window.bg;
+			Coord bgc = new Coord();
+			Coord cbr = sz;
+			Coord ctl = Coord.z;
+			for (bgc.y = ctl.y; bgc.y < cbr.y; bgc.y += bg.sz().y) {
+				for (bgc.x = ctl.x; bgc.x < cbr.x; bgc.x += bg.sz().x)
+					g.image(bg, bgc, ctl, cbr);
+			}
+		}
+		super.draw(g);
+	}
 }
