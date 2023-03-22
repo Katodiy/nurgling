@@ -162,7 +162,7 @@ public class NQuestInfo extends NDraggableWidget {
             needUpdate = true;
             isNQvisible = a;
         });
-        add(new NMiniMapWnd.NMenuCheckBox("lbtn-hidenq", GameUI.kb_vil, "Show stats"), UI.scale(20), 0).changed(a -> {
+        add(new NMiniMapWnd.NMenuCheckBox("lbtn-stats", GameUI.kb_vil, "Show stats"), UI.scale(20), 0).changed(a -> {
                     if (stats.visible())
                         stats.hide();
                     else
@@ -303,17 +303,6 @@ public class NQuestInfo extends NDraggableWidget {
         return false;
     }
 
-    //
-//    public static void update(String title, CharWnd.Quest.Condition c) {
-//        if(title!=null && condData.get(title)!=null)
-//            for(CharWnd.Quest.Condition c1 :condData.get(title)){
-//                if(c1.desc.contains(c.desc))
-//                {
-//                    c1.done = c.done;
-//                    update = true;
-//                }
-//            }
-//    }
     Thread th = null;
 
     public void tick(double dt) {
@@ -336,18 +325,12 @@ public class NQuestInfo extends NDraggableWidget {
             mutex.lock();
             items.clear();
             Collection<BufferedImage> imgs = new LinkedList<BufferedImage>();
-            int maxW = 0;
-            int maxH = 0;
             if(credo!=null && !credo.main_quests.isEmpty())
             {
                 imgs.add(credo_title.render(credo.name).img);
-                maxW = credo.name.length();
-                maxH += 1;
                 for (CharWnd.Quest.Condition c : credo.main_quests.get(credo.name).conditions) {
                     if (c.done != 1) {
                         imgs.add(gfnd2_under.render(c.desc).img);
-                        maxW = Math.max(c.desc.length() / 2, maxW);
-                        maxH += 1;
                     }
                 }
             }
@@ -368,8 +351,6 @@ public class NQuestInfo extends NDraggableWidget {
                 }
                 if (quester.main_quests.size() > 0) {
                     imgs.add(catimgsh(5, active_title.render(name).img, fnd1.render(String.format("($col[128,255,128]{%d}|$col[255,128,128]{%d})", quester.ended, quester.main_quests.size() - quester.ended), UI.scale(200)).img));
-                    maxW = Math.max(name.length(), maxW);
-                    maxH += 1;
                 } else {
                     if (isNQvisible && quester.linked_quests.size() > 0) {
                         for (Quester.Quest q : quester.linked_quests.values()) {
@@ -383,8 +364,6 @@ public class NQuestInfo extends NDraggableWidget {
                             if (need)
                             {
                                 imgs.add(unactive_title.render(name).img);
-                                maxW = Math.max(name.length(), maxW);
-                                maxH += 1;
                                 break;
                             }
                         }
@@ -395,8 +374,6 @@ public class NQuestInfo extends NDraggableWidget {
                     for (CharWnd.Quest.Condition c : q.conditions) {
                         if (c.done != 1 && !c.desc.contains("Tell")) {
                             imgs.add(gfnd2_under.render(c.desc).img);
-                            maxW = Math.max(c.desc.length() / 2, maxW);
-                            maxH += 1;
                         }
                     }
                 }
@@ -405,8 +382,6 @@ public class NQuestInfo extends NDraggableWidget {
                         for (CharWnd.Quest.Condition c : q.conditions) {
                             if (c.done != 1 && !c.desc.contains("Tell") && c.desc.contains(quester.name)) {
                                 imgs.add(gfnd2.render(c.desc).img);
-                                maxW = Math.max(c.desc.length() / 2, maxW);
-                                maxH += 1;
                             }
                         }
                     }
@@ -414,7 +389,7 @@ public class NQuestInfo extends NDraggableWidget {
             }
 
             glowon = new TexI(catimgs(1, imgs.toArray(new BufferedImage[0])));
-            resize(new Coord(maxW * UI.scale(16), maxH * UI.scale(28)));
+            resize(new Coord(glowon.sz()));
             needUpdate = false;
             mutex.unlock();
         }
