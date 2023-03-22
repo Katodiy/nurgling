@@ -130,6 +130,7 @@ public class NQuestInfo extends NDraggableWidget {
 
     public static boolean needUpdate = false;
     boolean isNQvisible = false;
+    boolean isVisible = true;
     static TreeMap<String, Quester> questers = new TreeMap<>();
 
     static Quester credo = new Quester(null);
@@ -162,11 +163,19 @@ public class NQuestInfo extends NDraggableWidget {
         super("NQuestInfo");
         stats = NUtils.getGameUI().getStats();
         stats.hide();
-        add(new NMiniMapWnd.NMenuCheckBox("lbtn-hidenq", GameUI.kb_vil, "Show/hide without quest"), 0, 0).changed(a -> {
+        isVisible = NConfiguration.getInstance().isQuestInfoVisible;
+        NMiniMapWnd.NMenuCheckBox vc = (NMiniMapWnd.NMenuCheckBox) add(new NMiniMapWnd.NMenuCheckBox("lbtn-qshow", GameUI.kb_vil, "Show/hide list of quests"), 0, 0).changed(a -> {
+            isVisible = !a;
+            NConfiguration.getInstance().isQuestInfoVisible = !a;
+            needUpdate = true;
+        });
+        vc.a = !isVisible;
+        vc.h = !isVisible;
+        add(new NMiniMapWnd.NMenuCheckBox("lbtn-hidenq", GameUI.kb_vil, "Show/hide without quest"), UI.scale(20), 0).changed(a -> {
             needUpdate = true;
             isNQvisible = a;
         });
-        add(new NMiniMapWnd.NMenuCheckBox("lbtn-stats", GameUI.kb_vil, "Show stats"), UI.scale(20), 0).changed(a -> {
+        add(new NMiniMapWnd.NMenuCheckBox("lbtn-stats", GameUI.kb_vil, "Show stats"), UI.scale(40), 0).changed(a -> {
                     if (stats.visible())
                         stats.hide();
                     else
@@ -342,72 +351,77 @@ public class NQuestInfo extends NDraggableWidget {
             mutex.lock();
             items.clear();
             imgs = new LinkedList<QuestImage>();
-            if (credo != null && !credo.main_quests.isEmpty()) {
-                int id = credo.main_quests.get(credo.name).id;
-                imgs.add(new QuestImage(credo_title.render(credo.name).img, id));
-                for (CharWnd.Quest.Condition c : credo.main_quests.get(credo.name).conditions) {
-                    if (c.done != 1) {
-                        imgs.add(new QuestImage(gfnd2_under.render(c.desc).img, id));
+            if(isVisible) {
+                if (credo != null && !credo.main_quests.isEmpty()) {
+                    int id = credo.main_quests.get(credo.name).id;
+                    imgs.add(new QuestImage(credo_title.render(credo.name).img, id));
+                    for (CharWnd.Quest.Condition c : credo.main_quests.get(credo.name).conditions) {
+                        if (c.done != 1) {
+                            imgs.add(new QuestImage(gfnd2_under.render(c.desc).img, id));
+                        }
                     }
                 }
-            }
-            for (String name : questers.keySet()) {
-                Quester quester = questers.get(name);
-                int qid = -1;
-                quester.ended = 0;
-                for (Quester.Quest q : quester.main_quests.values()) {
-                    int completed = 0;
-                    qid = q.id;
-                    for (CharWnd.Quest.Condition c : q.conditions) {
-                        if (c.done == 1)
-                            completed += 1;
-                        else
-                            checkTarget(c.desc);
+                for (String name : questers.keySet()) {
+                    Quester quester = questers.get(name);
+                    int qid = -1;
+                    quester.ended = 0;
+                    for (Quester.Quest q : quester.main_quests.values()) {
+                        int completed = 0;
+                        qid = q.id;
+                        for (CharWnd.Quest.Condition c : q.conditions) {
+                            if (c.done == 1)
+                                completed += 1;
+                            else
+                                checkTarget(c.desc);
+                        }
+                        if (completed == q.conditions.length - 1)
+                            quester.ended += 1;
                     }
-                    if (completed == q.conditions.length - 1)
-                        quester.ended += 1;
-                }
-                if (quester.main_quests.size() > 0) {
-                    imgs.add(new QuestImage(catimgsh(5, active_title.render(name).img, fnd1.render(String.format("($col[128,255,128]{%d}|$col[255,128,128]{%d})", quester.ended, quester.main_quests.size() - quester.ended), UI.scale(200)).img), qid));
-                } else {
-                    if (isNQvisible && quester.linked_quests.size() > 0) {
-                        for (Quester.Quest q : quester.linked_quests.values()) {
-                            boolean need = false;
-                            for (CharWnd.Quest.Condition c : q.conditions) {
-                                if (c.done == 0 && c.desc.contains(name)) {
-                                    need = true;
+                    if (quester.main_quests.size() > 0) {
+                        imgs.add(new QuestImage(catimgsh(5, active_title.render(name).img, fnd1.render(String.format("($col[128,255,128]{%d}|$col[255,128,128]{%d})", quester.ended, quester.main_quests.size() - quester.ended), UI.scale(200)).img), qid));
+                    } else {
+                        if (isNQvisible && quester.linked_quests.size() > 0) {
+                            for (Quester.Quest q : quester.linked_quests.values()) {
+                                boolean need = false;
+                                for (CharWnd.Quest.Condition c : q.conditions) {
+                                    if (c.done == 0 && c.desc.contains(name)) {
+                                        need = true;
+                                        break;
+                                    }
+                                }
+                                if (need) {
+                                    imgs.add(new QuestImage(unactive_title.render(name).img, -1));
                                     break;
                                 }
                             }
-                            if (need) {
-                                imgs.add(new QuestImage(unactive_title.render(name).img, -1));
-                                break;
+                        }
+                    }
+
+                    for (Quester.Quest q : quester.main_quests.values()) {
+                        for (CharWnd.Quest.Condition c : q.conditions) {
+                            if (c.done != 1 && !c.desc.contains("Tell")) {
+                                imgs.add(new QuestImage(gfnd2_under.render(c.desc).img, q.id));
                             }
                         }
                     }
-                }
-
-                for (Quester.Quest q : quester.main_quests.values()) {
-                    for (CharWnd.Quest.Condition c : q.conditions) {
-                        if (c.done != 1 && !c.desc.contains("Tell")) {
-                            imgs.add(new QuestImage(gfnd2_under.render(c.desc).img, q.id));
-                        }
-                    }
-                }
-                if (isNQvisible || quester.main_quests.size() > 0) {
-                    for (Quester.Quest q : quester.linked_quests.values()) {
-                        for (CharWnd.Quest.Condition c : q.conditions) {
-                            if (c.done != 1 && !c.desc.contains("Tell") && c.desc.contains(quester.name)) {
-                                imgs.add(new QuestImage(gfnd2.render(c.desc).img, q.id));
+                    if (isNQvisible || quester.main_quests.size() > 0) {
+                        for (Quester.Quest q : quester.linked_quests.values()) {
+                            for (CharWnd.Quest.Condition c : q.conditions) {
+                                if (c.done != 1 && !c.desc.contains("Tell") && c.desc.contains(quester.name)) {
+                                    imgs.add(new QuestImage(gfnd2.render(c.desc).img, q.id));
+                                }
                             }
                         }
                     }
                 }
             }
-
             if (!imgs.isEmpty()) {
                 glowon = new TexI(ncatimgs(1, imgs.toArray(new QuestImage[0])));
-                resize(new Coord(glowon.sz()));
+                resize(new Coord(glowon.sz().x, glowon.sz().y + dy));
+            }else
+            {
+                glowon = null;
+                resize(3*UI.scale(20),dy);
             }
             needUpdate = false;
             mutex.unlock();
