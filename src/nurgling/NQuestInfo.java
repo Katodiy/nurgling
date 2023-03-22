@@ -13,7 +13,6 @@ import static haven.ItemInfo.catimgs;
 import static haven.ItemInfo.catimgsh;
 
 public class NQuestInfo extends NDraggableWidget {
-
     Text.Furnace gfnd2 = new PUtils.BlurFurn(new Text.Foundry(Text.sans, 14, Color.white).aa(true), 2, 1, Color.BLACK);
     Text.Furnace gfnd2_under = new PUtils.BlurFurn(new Text.Foundry(Text.sans, 14, new Color(222, 205, 171)).aa(true), 2, 1, Color.BLACK);
     public static final RichText.Foundry fnd1 = new RichText.Foundry(new ChatUI.ChatParser(TextAttribute.FONT, Text.dfont.deriveFont(UI.scale(18f)), TextAttribute.FOREGROUND, Color.YELLOW));
@@ -41,8 +40,9 @@ public class NQuestInfo extends NDraggableWidget {
             Resource.loadtex("nurgling/hud/gear12"),
             Resource.loadtex("nurgling/hud/gear13")};
 
+    private int dy = 0;
     public static void selectedQuest() {
-        if(!questers.isEmpty()) {
+        if (!questers.isEmpty()) {
             mutex.lock();
             try {
                 NUtils.waitEvent(() -> NUtils.getGameUI().chrwdg.quest != null && ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond != null && ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond.length > 0, 200);
@@ -77,7 +77,7 @@ public class NQuestInfo extends NDraggableWidget {
         }
     }
 
-    public static class QuestGob{
+    public static class QuestGob {
         public boolean isFound = false;
         public String name;
 
@@ -93,11 +93,12 @@ public class NQuestInfo extends NDraggableWidget {
 
 
     static Mutex mutex = new Mutex();
+
     public static void setMarker(String name, MapFile.Marker marker) {
-        markers.put(name,new QuestGob(marker));
+        markers.put(name, new QuestGob(marker));
     }
 
-    public static HashMap<String, QuestGob> getMarkers(){
+    public static HashMap<String, QuestGob> getMarkers() {
         return markers;
     }
 
@@ -115,8 +116,11 @@ public class NQuestInfo extends NDraggableWidget {
 
             CharWnd.Quest.Condition[] conditions;
 
-            public Quest(CharWnd.Quest.Condition[] cond) {
+            int id;
+
+            public Quest(CharWnd.Quest.Condition[] cond, int id) {
                 conditions = cond;
+                this.id = id;
             }
         }
 
@@ -169,9 +173,11 @@ public class NQuestInfo extends NDraggableWidget {
                         stats.show();
                 }
         );
+        dy = Resource.loadtex("hud/lbtn-stats").sz().y;
         pack();
     }
 
+    private Collection<QuestImage> imgs = null;
     public static AtomicBoolean updCompleted = new AtomicBoolean(false);
     public static AtomicBoolean in_work = new AtomicBoolean(false);
 
@@ -198,7 +204,7 @@ public class NQuestInfo extends NDraggableWidget {
                                     if (!new_questers.containsKey(qname)) {
                                         new_questers.put(qname, new Quester(qname));
                                     }
-                                    new_questers.get(qname).main_quests.put(q.title, new Quester.Quest(((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond));
+                                    new_questers.get(qname).main_quests.put(q.title, new Quester.Quest(((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond, q.id));
                                 } else {
                                     if (c.desc.contains("Greet")) {
                                         qname = c.desc.substring(6);
@@ -211,17 +217,17 @@ public class NQuestInfo extends NDraggableWidget {
                                         if (!new_questers.containsKey(qname)) {
                                             new_questers.put(qname, new Quester(qname));
                                         }
-                                        new_questers.get(qname).linked_quests.put(q.title, new Quester.Quest(((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond));
+                                        new_questers.get(qname).linked_quests.put(q.title, new Quester.Quest(((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond, q.id));
                                     }
                                 }
                             }
                         }
                     }
-                    if(q.title == null && q.title()!=null) {
+                    if (q.title == null && q.title() != null) {
                         String name1 = q.title();
                         credo = new Quester(name1);
                         credo.name = name1;
-                        credo.main_quests.put(name1,new Quester.Quest(((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond));
+                        credo.main_quests.put(name1, new Quester.Quest(((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond, q.id));
                     }
                 }
             } catch (InterruptedException ignored) {
@@ -244,8 +250,8 @@ public class NQuestInfo extends NDraggableWidget {
                 g.image(glowon, new Coord(0, 25));
             }
             super.draw(g);
-            int id = (int)(NUtils.getTickId()/2)%13;
-            if(!questers.isEmpty()) {
+            int id = (int) (NUtils.getTickId() / 2) % 13;
+            if (!questers.isEmpty()) {
                 g.image(gear[id], new Coord(sz.x / 2 - gear[0].sz().x / 2, sz.y / 2 - gear[0].sz().y / 2));
             }
         }
@@ -305,9 +311,20 @@ public class NQuestInfo extends NDraggableWidget {
 
     Thread th = null;
 
+    class QuestImage {
+        public Pair<Coord, Coord> area = new Pair<>(new Coord(), new Coord());
+        public BufferedImage img;
+        public int id;
+
+        public QuestImage(BufferedImage img, int id) {
+            this.img = img;
+            this.id = id;
+        }
+    }
+
     public void tick(double dt) {
         if (!in_work.get()) {
-            if (NUtils.getGameUI() != null && NUtils.getGameUI().chrwdg != null && NUtils.getGameUI().chrwdg.quest != null && !NUtils.getGameUI().chrwdg.cqst.quests.isEmpty() && (needUpdate()||forceUpdate.get())) {
+            if (NUtils.getGameUI() != null && NUtils.getGameUI().chrwdg != null && NUtils.getGameUI().chrwdg.quest != null && !NUtils.getGameUI().chrwdg.cqst.quests.isEmpty() && (needUpdate() || forceUpdate.get())) {
                 (th = new Thread(new Loader())).start();
             }
         }
@@ -324,22 +341,23 @@ public class NQuestInfo extends NDraggableWidget {
         if (isAvailable() && needUpdate) {
             mutex.lock();
             items.clear();
-            Collection<BufferedImage> imgs = new LinkedList<BufferedImage>();
-            if(credo!=null && !credo.main_quests.isEmpty())
-            {
-                imgs.add(credo_title.render(credo.name).img);
+            imgs = new LinkedList<QuestImage>();
+            if (credo != null && !credo.main_quests.isEmpty()) {
+                int id = credo.main_quests.get(credo.name).id;
+                imgs.add(new QuestImage(credo_title.render(credo.name).img, id));
                 for (CharWnd.Quest.Condition c : credo.main_quests.get(credo.name).conditions) {
                     if (c.done != 1) {
-                        imgs.add(gfnd2_under.render(c.desc).img);
+                        imgs.add(new QuestImage(gfnd2_under.render(c.desc).img, id));
                     }
                 }
             }
             for (String name : questers.keySet()) {
                 Quester quester = questers.get(name);
-
+                int qid = -1;
                 quester.ended = 0;
                 for (Quester.Quest q : quester.main_quests.values()) {
                     int completed = 0;
+                    qid = q.id;
                     for (CharWnd.Quest.Condition c : q.conditions) {
                         if (c.done == 1)
                             completed += 1;
@@ -350,7 +368,7 @@ public class NQuestInfo extends NDraggableWidget {
                         quester.ended += 1;
                 }
                 if (quester.main_quests.size() > 0) {
-                    imgs.add(catimgsh(5, active_title.render(name).img, fnd1.render(String.format("($col[128,255,128]{%d}|$col[255,128,128]{%d})", quester.ended, quester.main_quests.size() - quester.ended), UI.scale(200)).img));
+                    imgs.add(new QuestImage(catimgsh(5, active_title.render(name).img, fnd1.render(String.format("($col[128,255,128]{%d}|$col[255,128,128]{%d})", quester.ended, quester.main_quests.size() - quester.ended), UI.scale(200)).img), qid));
                 } else {
                     if (isNQvisible && quester.linked_quests.size() > 0) {
                         for (Quester.Quest q : quester.linked_quests.values()) {
@@ -361,9 +379,8 @@ public class NQuestInfo extends NDraggableWidget {
                                     break;
                                 }
                             }
-                            if (need)
-                            {
-                                imgs.add(unactive_title.render(name).img);
+                            if (need) {
+                                imgs.add(new QuestImage(unactive_title.render(name).img, -1));
                                 break;
                             }
                         }
@@ -373,7 +390,7 @@ public class NQuestInfo extends NDraggableWidget {
                 for (Quester.Quest q : quester.main_quests.values()) {
                     for (CharWnd.Quest.Condition c : q.conditions) {
                         if (c.done != 1 && !c.desc.contains("Tell")) {
-                            imgs.add(gfnd2_under.render(c.desc).img);
+                            imgs.add(new QuestImage(gfnd2_under.render(c.desc).img, q.id));
                         }
                     }
                 }
@@ -381,73 +398,101 @@ public class NQuestInfo extends NDraggableWidget {
                     for (Quester.Quest q : quester.linked_quests.values()) {
                         for (CharWnd.Quest.Condition c : q.conditions) {
                             if (c.done != 1 && !c.desc.contains("Tell") && c.desc.contains(quester.name)) {
-                                imgs.add(gfnd2.render(c.desc).img);
+                                imgs.add(new QuestImage(gfnd2.render(c.desc).img, q.id));
                             }
                         }
                     }
                 }
             }
 
-            glowon = new TexI(catimgs(1, imgs.toArray(new BufferedImage[0])));
-            resize(new Coord(glowon.sz()));
+            if (!imgs.isEmpty()) {
+                glowon = new TexI(ncatimgs(1, imgs.toArray(new QuestImage[0])));
+                resize(new Coord(glowon.sz()));
+            }
             needUpdate = false;
             mutex.unlock();
         }
     }
 
-    public static boolean isAvailable()
-    {
+    public static BufferedImage ncatimgs(int margin, QuestImage... imgs) {
+        int w = 0, h = -margin;
+        for (QuestImage img : imgs) {
+            if (img == null)
+                continue;
+            if (img.img.getWidth() > w)
+                w = img.img.getWidth();
+            h += img.img.getHeight() + margin;
+        }
+        BufferedImage ret = TexI.mkbuf(new Coord(w, h));
+        Graphics g = ret.getGraphics();
+        int y = 0;
+        for (QuestImage img : imgs) {
+            if (img == null)
+                continue;
+            img.area.a.x = 0;
+            img.area.a.y = y;
+            g.drawImage(img.img, 0, y, null);
+            y += img.img.getHeight() + margin;
+            img.area.b.x = img.img.getWidth();
+            img.area.b.y = y - margin;
+        }
+        g.dispose();
+        return (ret);
+    }
+
+    public static boolean isAvailable() {
         return !in_work.get() && !updCompleted.get();
     }
 
     public static Set<String> items = new HashSet<>();
+
     void checkTarget(String info) {
         if (info.contains("Defeat ") || info.contains("Pick ") || info.contains("Catch ")) {
             String name;
             int ind = info.indexOf(" a ");
-            if(ind!=-1)
+            if (ind != -1)
                 name = info.substring(info.indexOf(" a ") + 3);
             else {
                 ind = info.indexOf(" an ");
-                if(ind!=-1)
+                if (ind != -1)
                     name = info.substring(info.indexOf(" an ") + 4);
                 else
                     name = info.substring(info.indexOf(" ") + 1);
             }
-            if(!name.isEmpty()){
-                if(name.contains("blueberr"))
+            if (!name.isEmpty()) {
+                if (name.contains("blueberr"))
                     name = "blueberr";
-                else if(name.contains("lingon"))
+                else if (name.contains("lingon"))
                     name = "lingon";
-                else if(name.contains("morel"))
+                else if (name.contains("morel"))
                     name = "lorchel";
-                else if(name.contains("yellowf"))
+                else if (name.contains("yellowf"))
                     name = "yellowf";
-                else if(name.contains("a hen"))
+                else if (name.contains("a hen"))
                     name = "chicken/chicken";
-                else if(name.contains("a cock"))
+                else if (name.contains("a cock"))
                     name = "chicken/roast";
-                else if(name.contains("mouflon"))
+                else if (name.contains("mouflon"))
                     name = "sheep";
-                else if(name.contains("auroch"))
+                else if (name.contains("auroch"))
                     name = "cattle";
-                else if(name.contains("chantrell"))
+                else if (name.contains("chantrell"))
                     name = "herbs/chantrell";
-                else if(name.contains("horse"))
+                else if (name.contains("horse"))
                     name = "horse/horse";
-                else if(name.contains("woodgrouse hen"))
+                else if (name.contains("woodgrouse hen"))
                     name = "woodgrouse-f";
-                else if(name.contains("rat"))
+                else if (name.contains("rat"))
                     name = "/rat";
-                items.add((name.replaceAll("\\s+","")).replaceAll("'+",""));
+                items.add((name.replaceAll("\\s+", "")).replaceAll("'+", ""));
             }
         }
         if (info.contains("Raid a")) {
             String name = info.substring(info.indexOf(" a ") + 3);
-            if(name.isEmpty())
+            if (name.isEmpty())
                 name = info.substring(info.indexOf(" an ") + 4);
-            if(!name.isEmpty()){
-                if(name.contains("bird"))
+            if (!name.isEmpty()) {
+                if (name.contains("bird"))
                     items.add("nest");
                 else
                     items.add("anthill");
@@ -455,9 +500,9 @@ public class NQuestInfo extends NDraggableWidget {
         }
     }
 
-    public static boolean isQuested(Gob gob, Tex tex){
+    public static boolean isQuested(Gob gob, Tex tex) {
         String name = gob.getResName();
-        if(name!=null) {
+        if (name != null) {
             for (String item : items) {
                 if (NUtils.checkName(name, new NAlias(new ArrayList<>(Arrays.asList(item)), new ArrayList<>(Arrays.asList("crabapp"))))) {
                     gob.noteImg = tex;
@@ -470,9 +515,21 @@ public class NQuestInfo extends NDraggableWidget {
         return false;
     }
 
-
-
-    public void change(Coord sz) {
-        move(new Coord(sz.x-300,  100 ));
+    @Override
+    public boolean mousedown(Coord c, int button) {
+        Coord pos = new Coord(c.x, c.y-dy);
+        if (isAvailable()) {
+            if (imgs != null) {
+                for (QuestImage img : imgs) {
+                    if (img.id >= 0) {
+                        if (img.area.a.x <= pos.x && pos.x <= img.area.b.x && img.area.a.y <= pos.y && pos.y <= img.area.b.y) {
+                            NUtils.getGameUI().chrwdg.wdgmsg("qsel", img.id);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return super.mousedown(c, button);
     }
 }
