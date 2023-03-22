@@ -107,7 +107,7 @@ public class NGob {
         wild,
         mammoth,
         stoat,
-        rabbithutch, chickencoop, stalagoomba, kritter_is_ready, winter_stoat
+        rabbithutch, chickencoop, stalagoomba, kritter_is_ready, qbring, qrage, qwave, qlaugh, qgreet, qcompleted, winter_stoat
     }
 
     public final HashSet<Tags> tags = new HashSet<>();

@@ -1301,10 +1301,7 @@ public class CharWnd extends Window {
 		this.ccond = cond;
 		this.rcond = rcond;
 		resize();
-		if(NQuestInfo.isAvailable())
-		{
-			NQuestInfo.selectedQuest();
-		}
+		NQuestInfo.selectedQuest();
 	    }
 
 	    void update(Condition c) {

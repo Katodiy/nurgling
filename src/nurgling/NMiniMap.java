@@ -158,6 +158,7 @@ public class NMiniMap extends MiniMap {
                 {
                     Coord2d tmp = marker.tc.sub(loc.tc).mul(tilesz).add(6, 6);
                     NQuestInfo.setMarker(marker.name(), marker);
+                    NQuestInfo.updateTags(marker.name());
                     Gob gob = Finder.findObject(tmp,new NAlias("tree","bumling"));
                     if(gob!=null){
                         gob.addTag(NGob.Tags.quester);
