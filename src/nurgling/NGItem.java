@@ -286,7 +286,14 @@ public class NGItem extends GItem {
                     if (tt != null) {
                         if (tt.t.equals("Meat")) {
                             if (ui != null) {
-                                dfname = new Meat(this, null, sdt).name();
+                                try {
+                                    dfname = new Meat(this, null, sdt).name();
+                                }
+                                catch (Exception e)
+                                {
+                                    status = UNDEFINED;
+                                }
+
                             }
                         } else {
                             dfname = tt.t;
