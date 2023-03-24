@@ -822,8 +822,7 @@ public class NConfiguration {
                 Iterator<JSONObject> iterator2 = widgetsPos.iterator();
                 while (iterator2.hasNext()) {
                     JSONObject item = iterator2.next();
-                    if(item.get("locked")!=null)
-                        dragWidgets.put(item.get("name").toString(), new DragWdg((boolean) item.get("locked"),new Coord((int)((long) item.get("x")), (int)((long) item.get("y")))));
+                    dragWidgets.put(item.get("name").toString(), new DragWdg(item.get("locked") == null || (boolean) item.get("locked"),new Coord((int)((long) item.get("x")), (int)((long) item.get("y")))));
                 }
             }
 
