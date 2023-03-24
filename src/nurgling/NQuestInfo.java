@@ -552,7 +552,7 @@ public class NQuestInfo extends NDraggableWidget {
                 else if (name.contains("woodgrouse hen"))
                     name = "woodgrouse-f";
                 else if (name.contains("rat"))
-                    name = "/rat";
+                    name = "rat/rat";
                 items.add((name.replaceAll("\\s+", "")).replaceAll("'+", ""));
             }
         }
