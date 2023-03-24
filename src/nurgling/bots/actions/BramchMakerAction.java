@@ -14,7 +14,7 @@ public class BramchMakerAction implements Action {
 
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
-        while(Finder.findObjectsInArea ( new NAlias( "stockpile" ), tree_area )
+        while(!Finder.findObjectsInArea ( new NAlias( "stockpile-wblock" ), tree_area )
                 .isEmpty () || !Finder.findObjectsInArea ( new NAlias( "log" ), tree_area )
                 .isEmpty () ) {
             new Equip( new NAlias ( lumber_tools, new ArrayList<String> () ) ).run(gui);

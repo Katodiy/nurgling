@@ -1,5 +1,6 @@
 package nurgling.bots.actions;
 
+import haven.Coord;
 import haven.GItem;
 import haven.WItem;
 
@@ -19,13 +20,14 @@ public class CreateBranch implements Action {
     @Override
     public Results run ( NGameUI gui )
             throws InterruptedException {
+        int targetSize = Math.min(gui.getInventory().getFreeSpace()/5,gui.getInventory().getNumberFreeCoord(new Coord(2,1)));
         if(!Finder.findObjectsInArea(new NAlias("stockpile-wblock"),area).isEmpty()) {
-            new TakeFromPile(new NAlias("block"), 1, new NAlias("block"), area).run(gui);
+            new TakeFromPile(new NAlias("block"), targetSize, new NAlias("block"), area).run(gui);
         }else{
             if(!Finder.findObjectsInArea(new NAlias("log"),area).isEmpty()){
                 new Equip(new NAlias(lumber_tools)).run(gui);
                 if(gui.getInventory ().getItem ( new NAlias ( "block" ) ) == null)
-                    if ( new WorkWithLog ( 1, new NAlias ( "log" ), true, area ).run ( gui ).type !=
+                    if ( new WorkWithLog (targetSize , new NAlias ( "log" ), true, area ).run ( gui ).type !=
                             Results.Types.SUCCESS ) {
                         return new Results ( Results.Types.NO_ITEMS );
                     }
@@ -33,14 +35,16 @@ public class CreateBranch implements Action {
                 return new Results ( Results.Types.NO_FUEL );
             }
         }
-        GItem block = gui.getInventory ().getItem ( new NAlias ( "block" ) );
-        if ( block == null ) {
-            return new Results ( Results.Types.NO_ITEMS );
+        while (gui.getInventory ().getItem ( new NAlias ( "block" ) )!=null || gui.getInventory ().getFreeSpace()>3) {
+            GItem block = gui.getInventory().getItem(new NAlias("block"));
+            if (block == null) {
+                return new Results(Results.Types.NO_ITEMS);
+            }
+            int oldSize = gui.getInventory().getItems(new NAlias("branch")).size();
+            new SelectFlowerAction(block, "Split", SelectFlowerAction.Types.Inventory).run(gui);
+            NUtils.waitEvent(() -> gui.getInventory().getItems(new NAlias("branch")).size() == oldSize+5, 50);
         }
-        new SelectFlowerAction ( block, "Split", SelectFlowerAction.Types.Inventory ).run ( gui );
-        NUtils.waitEvent(()->!gui.getInventory ().getItems ( new NAlias ( "branch" ) ).isEmpty(),50);
-
-        if ( gui.getInventory ().getItems ( new NAlias ( "branch" ) ).size () >= 5 ) {
+        if ( gui.getInventory ().getItems ( new NAlias ( "branch" ) ).size () > 0 ) {
             return new Results ( Results.Types.SUCCESS );
         }
         else {

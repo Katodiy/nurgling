@@ -33,7 +33,7 @@ public class BranchMaker extends Bot {
             throws InterruptedException {
         super.initAction ();
         int y = 0;
-        window.add ( new Button ( window.buttons_size, "Blocks piles" ) {
+        window.add ( new Button ( window.buttons_size, "Piles/Logs" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;
