@@ -77,17 +77,17 @@ public class NGameUI extends GameUI {
     public NGameUI(String chrid, long plid, String genus) {
         super(chrid, plid, genus);
         NUtils.setGameUI(this);
-        extEquipory = add(new NEquipProxy(NEquipory.Slots.HAND_LEFT, NEquipory.Slots.HAND_RIGHT, NEquipory.Slots.BELT), NConfiguration.getInstance().dragWidgets.get("EquipProxy") );
-        t1 = add(new NToolBelt("belt0", 132, 4, NConfiguration.getInstance().toolBelts.get("belt0").toolKeys), NConfiguration.getInstance().dragWidgets.get("belt0").x, NConfiguration.getInstance().dragWidgets.get("belt0").y);
-        t2 = add(new NToolBelt("belt1", 120, 4, NConfiguration.getInstance().toolBelts.get("belt1").toolKeys), NConfiguration.getInstance().dragWidgets.get("belt1").x, NConfiguration.getInstance().dragWidgets.get("belt1").y);
-        t3 = add(new NToolBelt("belt2", 108, 4, NConfiguration.getInstance().toolBelts.get("belt2").toolKeys), NConfiguration.getInstance().dragWidgets.get("belt2").x, NConfiguration.getInstance().dragWidgets.get("belt2").y);
+        extEquipory = add(new NEquipProxy(NEquipory.Slots.HAND_LEFT, NEquipory.Slots.HAND_RIGHT, NEquipory.Slots.BELT), NConfiguration.getInstance().dragWidgets.get("EquipProxy").coord );
+        t1 = add(new NToolBelt("belt0", 132, 4, NConfiguration.getInstance().toolBelts.get("belt0").toolKeys), NConfiguration.getInstance().dragWidgets.get("belt0").coord.x, NConfiguration.getInstance().dragWidgets.get("belt0").coord.y);
+        t2 = add(new NToolBelt("belt1", 120, 4, NConfiguration.getInstance().toolBelts.get("belt1").toolKeys), NConfiguration.getInstance().dragWidgets.get("belt1").coord.x, NConfiguration.getInstance().dragWidgets.get("belt1").coord.y);
+        t3 = add(new NToolBelt("belt2", 108, 4, NConfiguration.getInstance().toolBelts.get("belt2").toolKeys), NConfiguration.getInstance().dragWidgets.get("belt2").coord.x, NConfiguration.getInstance().dragWidgets.get("belt2").coord.y);
         timers = add(new NTimerPanel(), 250, 100);
         timers.hide();
-        chat = add(new NChatUIDrag("ChatUI"),NConfiguration.getInstance().dragWidgets.get("ChatUI"));
+        chat = add(new NChatUIDrag("ChatUI"),NConfiguration.getInstance().dragWidgets.get("ChatUI").coord);
         botsInfo = add ( new NBotsInfo ( this ), new Coord ( 30, 150 ) );
         stats = add(new NQuestsStats(), new Coord ( 30, 150 ));
-        questInfo = add(new NQuestInfo () , NConfiguration.getInstance().dragWidgets.get("NQuestInfo"));
-        chat.resize(NConfiguration.getInstance().resizeWidgets.get("ChatUI").coord);
+        questInfo = add(new NQuestInfo () , NConfiguration.getInstance().dragWidgets.get("NQuestInfo").coord);
+        chat.resize(NConfiguration.getInstance().resizeWidgets.get("ChatUI"));
         syslog = chat.chat.add(new ChatUI.Log("System"));
         NConfiguration.getInstance().disabledCheck = true;
     }
@@ -127,9 +127,9 @@ public class NGameUI extends GameUI {
             if (place.equals("mapview")) {
                 pathQueue = new NPathQueue(map);
                 ((NOCache) ui.sess.glob.oc).paths.path = this.pathQueue;
-                mmapw = add(new NMiniMapWnd("MiniMap", (NMapView) map, mapfile.file), NConfiguration.getInstance().dragWidgets.get("MiniMap"));
+                mmapw = add(new NMiniMapWnd("MiniMap", (NMapView) map, mapfile.file), NConfiguration.getInstance().dragWidgets.get("MiniMap").coord);
                 mmap = mmapw.miniMap;
-                mmapw.resize(NConfiguration.getInstance().resizeWidgets.get("MiniMap").coord);
+                mmapw.resize(NConfiguration.getInstance().resizeWidgets.get("MiniMap"));
             }
         }
     }

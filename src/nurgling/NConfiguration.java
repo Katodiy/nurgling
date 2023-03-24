@@ -256,18 +256,18 @@ public class NConfiguration {
         public boolean mark_target;
     }
     public HashMap<String, ArrowProp> players = new HashMap<>();
-    public HashMap<String, Coord> dragWidgets = new HashMap<>();
-
-    public class ResizeWdg{
+    public HashMap<String, DragWdg> dragWidgets = new HashMap<>();
+    public HashMap<String, Coord>  resizeWidgets = new HashMap<>();
+    public class DragWdg{
         public boolean locked = false;
         public Coord coord;
 
-        public ResizeWdg(boolean locked, Coord coord) {
+        public DragWdg(boolean locked, Coord coord) {
             this.locked = locked;
             this.coord = coord;
         }
     }
-    public HashMap<String, ResizeWdg>  resizeWidgets = new HashMap<>();
+
     public class Farmer{
         public String crop;
         public String paving;
@@ -372,15 +372,15 @@ public class NConfiguration {
         horseSpeed_h.put("Run On", 2);
         horseSpeed_h.put("Sprint On", 3);
 
-        dragWidgets.put("EquipProxy", new Coord(500,30));
-        dragWidgets.put("ChatUI", new Coord(500,30));
-        dragWidgets.put("MiniMap", new Coord(400,400));
-        dragWidgets.put("belt0", new Coord(50,200));
-        dragWidgets.put("belt1", new Coord(50,230));
-        dragWidgets.put("belt2", new Coord(50,250));
-        dragWidgets.put("NQuestInfo", new Coord(200,250));
-        resizeWidgets.put("ChatUI", new ResizeWdg(false,new Coord(700,300)));
-        resizeWidgets.put("MiniMap", new ResizeWdg(false,new Coord(133,133)));
+        dragWidgets.put("EquipProxy", new DragWdg(false,new Coord(500,30)));
+        dragWidgets.put("ChatUI", new DragWdg(false,new Coord(500,30)));
+        dragWidgets.put("MiniMap", new DragWdg(false,new Coord(400,400)));
+        dragWidgets.put("belt0", new DragWdg(false,new Coord(50,200)));
+        dragWidgets.put("belt1", new DragWdg(false,new Coord(50,230)));
+        dragWidgets.put("belt2", new DragWdg(false,new Coord(50,250)));
+        dragWidgets.put("NQuestInfo", new DragWdg(false,new Coord(200,250)));
+        resizeWidgets.put("ChatUI", new Coord(700,300));
+        resizeWidgets.put("MiniMap", new Coord(133,133));
 
         toolBelts.put("belt0", new ToolBelt(false,false,toolKeys1));
         toolBelts.put("belt1", new ToolBelt(false,false,toolKeys2));
@@ -560,8 +560,9 @@ public class NConfiguration {
         for ( String name : dragWidgets.keySet() ) {
             JSONObject coord = new JSONObject();
             coord.put("name", name);
-            coord.put("x", dragWidgets.get(name).x);
-            coord.put("y", dragWidgets.get(name).y);
+            coord.put("x", dragWidgets.get(name).coord.x);
+            coord.put("y", dragWidgets.get(name).coord.y);
+            coord.put("locked", dragWidgets.get(name).locked);
             widgetsPos.add(coord);
         }
         obj.put("widgetsPos",widgetsPos);
@@ -578,9 +579,9 @@ public class NConfiguration {
         for ( String name : resizeWidgets.keySet() ) {
             JSONObject coord = new JSONObject();
             coord.put("name", name);
-            coord.put("x", resizeWidgets.get(name).coord.x);
-            coord.put("y", resizeWidgets.get(name).coord.y);
-            coord.put("locked", resizeWidgets.get(name).locked);
+            coord.put("x", resizeWidgets.get(name).x);
+            coord.put("y", resizeWidgets.get(name).y);
+
             resizePos.add(coord);
         }
         obj.put("resizePos",resizePos);
@@ -821,7 +822,8 @@ public class NConfiguration {
                 Iterator<JSONObject> iterator2 = widgetsPos.iterator();
                 while (iterator2.hasNext()) {
                     JSONObject item = iterator2.next();
-                    dragWidgets.put(item.get("name").toString(), new Coord((int)((long) item.get("x")), (int)((long) item.get("y"))));
+                    if(item.get("locked")!=null)
+                        dragWidgets.put(item.get("name").toString(), new DragWdg((boolean) item.get("locked"),new Coord((int)((long) item.get("x")), (int)((long) item.get("y")))));
                 }
             }
 
@@ -842,7 +844,7 @@ public class NConfiguration {
                     Iterator<JSONObject> iterator2 = resizePos.iterator();
                     while (iterator2.hasNext()) {
                         JSONObject item = iterator2.next();
-                        resizeWidgets.put(item.get("name").toString(), new ResizeWdg((boolean) item.get("locked"), new Coord((int) ((long) item.get("x")), (int) ((long) item.get("y")))));
+                        resizeWidgets.put(item.get("name").toString(), new Coord((int) ((long) item.get("x")), (int) ((long) item.get("y"))));
                     }
                 }
             }

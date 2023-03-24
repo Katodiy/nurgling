@@ -478,11 +478,11 @@ public class NQuestInfo extends NDraggableWidget {
             }
             if (!imgs.isEmpty()) {
                 glowon = new TexI(ncatimgs(1, imgs.toArray(new QuestImage[0])));
-                resize(new Coord(glowon.sz().x, glowon.sz().y + dy));
+                resize(new Coord(glowon.sz().x + btnLock.sz.x, glowon.sz().y + dy));
             }else
             {
                 glowon = null;
-                resize(3*UI.scale(20),dy);
+                resize(3*UI.scale(20) + btnLock.sz.x,dy);
             }
             needUpdate = false;
             mutex.unlock();
@@ -599,7 +599,7 @@ public class NQuestInfo extends NDraggableWidget {
                     if (img.id >= 0) {
                         if (img.area.a.x <= pos.x && pos.x <= img.area.b.x && img.area.a.y <= pos.y && pos.y <= img.area.b.y) {
                             NUtils.getGameUI().chrwdg.wdgmsg("qsel", img.id);
-                            break;
+                            return true;
                         }
                     }
                 }

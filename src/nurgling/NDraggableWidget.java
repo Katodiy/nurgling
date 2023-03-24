@@ -10,9 +10,18 @@ public class NDraggableWidget extends Widget {
     private UI.Grab dm;
     private Coord doff;
     protected boolean draggable = true;
+	protected final NToggleButton btnLock;
+	boolean locked = false;
 
+	boolean over = false;
     public NDraggableWidget(String name) {
-	this.name = name;
+		this.name = name;
+		locked = NConfiguration.getInstance().dragWidgets.get(name).locked;
+		btnLock = add(new NToggleButton("hud/btn-ulock", "", "-d", "-h", "hud/btn-lock", "", "-d", "-h"), new Coord(sz.x, UI.scale(5)));
+		btnLock.action(()->{locked=!locked;draggable=!locked;NConfiguration.getInstance().dragWidgets.get(name).locked = locked;});
+		btnLock.recthit = true;
+		btnLock.state(locked);
+		draggable = !locked;
     }
     
     public void draggable(boolean draggable) {
@@ -24,8 +33,8 @@ public class NDraggableWidget extends Widget {
 	if(dm != null) {
 	    dm.remove();
 	    dm = null;
-		NConfiguration.getInstance().dragWidgets.get(name).x = c.x;
-		NConfiguration.getInstance().dragWidgets.get(name).y = c.y;
+		NConfiguration.getInstance().dragWidgets.get(name).coord.x = c.x;
+		NConfiguration.getInstance().dragWidgets.get(name).coord.y = c.y;
 	}
     }
     
@@ -63,6 +72,7 @@ public class NDraggableWidget extends Widget {
     
     @Override
     public void mousemove(Coord c) {
+	over = c.isect(Coord.z, sz);
 	if(dm != null) {
 	    this.c = this.c.add(c.add(doff.inv()));
 	} else {
@@ -82,6 +92,13 @@ public class NDraggableWidget extends Widget {
 					g.image(bg, bgc, ctl, cbr);
 			}
 		}
+		btnLock.visible = over;
 		super.draw(g);
+	}
+
+	@Override
+	public void resize(Coord sz) {
+		btnLock.move(new Coord(sz.x-btnLock.sz.x, btnLock.sz.y));
+		super.resize(sz);
 	}
 }
