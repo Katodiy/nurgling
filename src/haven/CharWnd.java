@@ -1166,28 +1166,10 @@ public class CharWnd extends Window {
 			}
 			ncond.add(cond);
 		    }
-
-			if(title!= null) {
-				if (!NQuestInfo.condData.containsKey(title))
-					NQuestInfo.condData.put(title, ncond);
-				else {
-					for (Condition c : ncond) {
-						for (Condition qc : NQuestInfo.condData.get(title)) {
-							if (c.desc.contains(qc.desc)) {
-								qc.done = c.done;
-								break;
-							}
-						}
-					}
-				}
-				NQuestInfo.update = true;
-			}
-			if(NQuestInfo.isReady.get()==1) {
-				this.cond = ncond.toArray(new Condition[0]);
-				refresh();
-				if (cqv != null)
-					cqv.update();
-			}
+			this.cond = ncond.toArray(new Condition[0]);
+			refresh();
+			if (cqv != null)
+				cqv.update();
 		} else {
 		    super.uimsg(msg, args);
 		}
@@ -1319,6 +1301,7 @@ public class CharWnd extends Window {
 		this.ccond = cond;
 		this.rcond = rcond;
 		resize();
+		NQuestInfo.selectedQuest();
 	    }
 
 	    void update(Condition c) {
@@ -1330,8 +1313,7 @@ public class CharWnd extends Window {
 		    }
 		}
 		glowt = 0.0;
-		NQuestInfo.update(info.title(),c);
-	    }
+		}
 	}
 
 	public static class DefaultBox extends Box {
@@ -1808,7 +1790,7 @@ public class CharWnd extends Window {
     }
 
     public class QuestList extends Listbox<Quest> {
-	public List<Quest> quests = new ArrayList<Quest>();
+	public final List<Quest> quests = new ArrayList<Quest>();
 	private boolean loading = false;
 	private final Comparator<Quest> comp = new Comparator<Quest>() {
 	    public int compare(Quest a, Quest b) {

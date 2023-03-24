@@ -10,6 +10,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+import static haven.MCache.tilesz;
 import static haven.res.lib.itemtex.ItemTex.made_id;
 
 public class NGob {
@@ -106,7 +107,7 @@ public class NGob {
         wild,
         mammoth,
         stoat,
-        rabbithutch, chickencoop, stalagoomba, kritter_is_ready, winter_stoat
+        rabbithutch, chickencoop, stalagoomba, kritter_is_ready, qbring, qrage, qwave, qlaugh, qgreet, qcompleted, winter_stoat
     }
 
     public final HashSet<Tags> tags = new HashSet<>();
@@ -725,13 +726,14 @@ public class NGob {
             }
             if (gob.status == Status.ready_for_update) {
                 if (gob.isTag(Tags.tree) || gob.isTag(Tags.bumling) || gob.isTag(Tags.quester)) {
-                    for (NQuestInfo.Quester quester : NQuestInfo.questers.values()) {
-                        if (!quester.isFound) {
-                            if (Math.abs(gob.rc.x - quester.coord2d.x) < 10 && Math.abs(gob.rc.y - quester.coord2d.y) < 10) {
-                                if (Finder.findObject(quester.coord2d, new NAlias("tree", "bumling")) == gob) {
-                                    gob.addTag(Tags.quester);
-                                    gob.addcustomol(new NQuesterRing(gob, Color.ORANGE, 20, 0.7f, quester));
-                                }
+                    for (String name : NQuestInfo.getMarkers().keySet()) {
+                        NQuestInfo.QuestGob questGob = NQuestInfo.getMarkers().get(name);
+                        if (!questGob.isFound) {
+                            MiniMap.Location loc = NUtils.getGameUI().mapfile.view.sessloc;
+                            Coord2d tmp = questGob.marker.tc.sub(loc.tc).mul(tilesz).add(6, 6);
+                            if (Math.abs(gob.rc.x - tmp.x) < 10 && Math.abs(gob.rc.y - tmp.y) < 10) {
+                                gob.addTag(Tags.quester);
+                                gob.addcustomol(new NQuesterRing(gob, Color.ORANGE, 20, 0.7f, questGob));
                             }
                         }
                     }

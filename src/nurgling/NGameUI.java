@@ -86,7 +86,7 @@ public class NGameUI extends GameUI {
         chat = add(new NChatUIDrag("ChatUI"),NConfiguration.getInstance().dragWidgets.get("ChatUI"));
         botsInfo = add ( new NBotsInfo ( this ), new Coord ( 30, 150 ) );
         stats = add(new NQuestsStats(), new Coord ( 30, 150 ));
-        questInfo = add ( new NQuestInfo (), new Coord ( 30, 150 ) );
+        questInfo = add(new NQuestInfo () , NConfiguration.getInstance().dragWidgets.get("NQuestInfo"));
         chat.resize(NConfiguration.getInstance().resizeWidgets.get("ChatUI").coord);
         syslog = chat.chat.add(new ChatUI.Log("System"));
         NConfiguration.getInstance().disabledCheck = true;
@@ -109,7 +109,6 @@ public class NGameUI extends GameUI {
     @Override
     public void resize(Coord sz) {
         super.resize(sz);
-        questInfo.change(sz);
     }
     public void addchild(Widget child, Object... args) {
         String place = ((String) args[0]).intern();

@@ -141,7 +141,7 @@ public class Pointer extends Widget implements NMiniMap.IPointer, DTarget {
     }
     
     public void draw(GOut g) {
-		if(NQuestInfo.isReady.get()==1) {
+		if(NQuestInfo.isAvailable()) {
 			this.lc = null;
 			MiniMap.Location curloc = NUtils.getGameUI().mapfile.playerLocation();
 			if (curloc != null && (lastseg != curloc.seg.id || !Objects.equals(lastsegtc, curloc.tc))) {

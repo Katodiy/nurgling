@@ -63,6 +63,7 @@ public class NConfiguration {
     public boolean collectFoodInfo = false;
     public boolean lockStudy = false;
     public boolean alarmGreyseal = false;
+    public boolean isQuestInfoVisible = true;
 
     public static String getCharKey()
     {
@@ -376,6 +377,7 @@ public class NConfiguration {
         dragWidgets.put("belt0", new Coord(50,200));
         dragWidgets.put("belt1", new Coord(50,230));
         dragWidgets.put("belt2", new Coord(50,250));
+        dragWidgets.put("NQuestInfo", new Coord(200,250));
         resizeWidgets.put("ChatUI", new ResizeWdg(false,new Coord(700,300)));
         resizeWidgets.put("MiniMap", new ResizeWdg(false,new Coord(133,133)));
 
@@ -527,6 +529,7 @@ public class NConfiguration {
         obj.put("isMinerCredo" ,isMinerCredo);
         obj.put("lockStudy" ,lockStudy);
         obj.put("alarmGreyseal" ,alarmGreyseal);
+        obj.put("isQuestInfoVisible" ,isQuestInfoVisible);
 
         JSONArray users = new JSONArray ();
         for ( NLoginData user : logins ) {
@@ -902,6 +905,9 @@ public class NConfiguration {
             }
             if(jsonObject.get("alarmGreyseal")!=null){
                 alarmGreyseal = (boolean) jsonObject.get("alarmGreyseal");
+            }
+            if(jsonObject.get("isQuestInfoVisible")!=null){
+                isQuestInfoVisible = (boolean) jsonObject.get("isQuestInfoVisible");
             }
             if(jsonObject.get("white_players")!=null){
                 JSONObject white = (JSONObject)jsonObject.get("white_players");
