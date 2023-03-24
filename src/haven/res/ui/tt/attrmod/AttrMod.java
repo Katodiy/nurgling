@@ -9,8 +9,8 @@ import static haven.PUtils.*;
 import java.util.*;
 import java.awt.image.BufferedImage;
 
-/* >tt: AttrMod$haven.res.ui.tt.slots.Fac */
-@FromResource(name = "ui/tt/attrmod", version = 6)
+/* >tt: AttrMod */
+@haven.FromResource(name = "ui/tt/attrmod", version = 7)
 public class AttrMod extends ItemInfo.Tip {
     public final Collection<Mod> mods;
 
@@ -35,14 +35,12 @@ public class AttrMod extends ItemInfo.Tip {
 		}
     }
 
-    public static class Fac implements InfoFactory {
-	public ItemInfo build(Owner owner, Object... args) {
-	    Resource.Resolver rr = owner.context(Resource.Resolver.class);
-	    Collection<Mod> mods = new ArrayList<Mod>();
-	    for(int a = 1; a < args.length; a += 2)
-		mods.add(new Mod(rr.getres((Integer)args[a]).get(), (Integer)args[a + 1]));
-	    return(new AttrMod(owner, mods));
-	}
+    public static ItemInfo mkinfo(Owner owner, Object... args) {
+	Resource.Resolver rr = owner.context(Resource.Resolver.class);
+	Collection<Mod> mods = new ArrayList<Mod>();
+	for(int a = 1; a < args.length; a += 2)
+	    mods.add(new Mod(rr.getres((Integer)args[a]).get(), (Integer)args[a + 1]));
+	return(new AttrMod(owner, mods));
     }
 
     public static String buff = "128,255,128";

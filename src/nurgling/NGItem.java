@@ -242,7 +242,7 @@ public class NGItem extends GItem {
     static int UNDEFINED = 0x0000;
     static int RAW = 0x0001;
     static int INDIR = 0x0002;
-    static int COMPLETED = 0x0004;
+    public static int COMPLETED = 0x0004;
 
     public int status = UNDEFINED;
 
