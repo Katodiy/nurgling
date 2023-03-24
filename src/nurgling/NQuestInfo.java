@@ -225,13 +225,13 @@ public class NQuestInfo extends NDraggableWidget {
             needUpdate = true;
             isNQvisible = a;
         });
-        add(new NMiniMapWnd.NMenuCheckBox("lbtn-stats", GameUI.kb_vil, "Show stats"), UI.scale(40), 0).changed(a -> {
-                    if (stats.visible())
-                        stats.hide();
-                    else
-                        stats.show();
-                }
-        );
+//        add(new NMiniMapWnd.NMenuCheckBox("lbtn-stats", GameUI.kb_vil, "Show stats"), UI.scale(40), 0).changed(a -> {
+//                    if (stats.visible())
+//                        stats.hide();
+//                    else
+//                        stats.show();
+//                }
+//        );
         dy = Resource.loadtex("hud/lbtn-stats").sz().y;
         pack();
     }
