@@ -62,10 +62,8 @@ public class HarvestSeedAction implements Action {
                         .run ( gui ).type == Results.Types.FULL ) {
                 }
             }
-            else
-            {
-                new TransferToTrough(crop).run(gui);
-            }
+            new TransferToTrough(crop).run(gui);
+
         }
         return new Results ( Results.Types.SUCCESS );
     }

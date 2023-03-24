@@ -7,7 +7,6 @@ import java.awt.*;
 import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static haven.ItemInfo.catimgsh;
@@ -19,13 +18,8 @@ public class NQuestInfo extends NDraggableWidget {
     Text.Furnace active_title = new PUtils.BlurFurn(new Text.Foundry(Text.sans, 18, new Color(217, 127, 59)).aa(true), 2, 1, new Color(94, 56, 56));
     Text.Furnace unactive_title = new PUtils.BlurFurn(new Text.Foundry(Text.sans, 18, new Color(147, 131, 131)).aa(true), 2, 1, new Color(94, 56, 56));
     Text.Furnace credo_title = new PUtils.BlurFurn(new Text.Foundry(Text.sans, 18, new Color(126, 198, 194)).aa(true), 2, 1, new Color(94, 56, 56));
-    public static final RichText.Foundry fnd1_nq = new RichText.Foundry(new ChatUI.ChatParser(TextAttribute.FONT, Text.dfont.deriveFont(UI.scale(18f)), TextAttribute.FOREGROUND, Color.WHITE));
-    public static final RichText.Foundry fnd2 = new RichText.Foundry(new ChatUI.ChatParser(TextAttribute.FONT, Text.dfont.deriveFont(UI.scale(14f)), TextAttribute.FOREGROUND, Color.WHITE));
-    public static final RichText.Foundry fnd2_under = new RichText.Foundry(new ChatUI.ChatParser(TextAttribute.FONT, Text.dfont.deriveFont(UI.scale(14f)), TextAttribute.FOREGROUND, Color.WHITE));
-    public static final RichText.Foundry fndready2 = new RichText.Foundry(new ChatUI.ChatParser(TextAttribute.FONT, Text.dfont.deriveFont(UI.scale(14f)), TextAttribute.FOREGROUND, Color.GREEN));
 
-
-    public static final Tex gear[] = new Tex[]{Resource.loadtex("nurgling/hud/gear"),
+    public static final Tex[] gear = new Tex[]{Resource.loadtex("nurgling/hud/gear"),
             Resource.loadtex("nurgling/hud/gear1"),
             Resource.loadtex("nurgling/hud/gear2"),
             Resource.loadtex("nurgling/hud/gear3"),
@@ -40,39 +34,42 @@ public class NQuestInfo extends NDraggableWidget {
             Resource.loadtex("nurgling/hud/gear12"),
             Resource.loadtex("nurgling/hud/gear13")};
 
-    private int dy = 0;
+    private final int dy;
     public static void selectedQuest() {
-        if ( isAvailable() && !questers.isEmpty()) {
-            mutex.lock();
-            try {
-                NUtils.waitEvent(() -> NUtils.getGameUI().chrwdg.quest != null && ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond != null && ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond.length > 0, 200);
+        if ( isAvailable() && (!questers.isEmpty() || credo!=null)) {
+            synchronized (new_questers) {
+                try {
+                    NUtils.waitEvent(() -> NUtils.getGameUI().chrwdg.quest != null && ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond != null && ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond.length > 0, 200);
 
-                String qtitle = ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).title();
-                if (qtitle != null) {
-                    for (Quester quester : questers.values()) {
-                        for (String name : quester.main_quests.keySet()) {
-                            if (name.contains(qtitle)) {
-                                quester.main_quests.get(name).conditions = ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond;
-                                break;
+                    String qtitle = ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).title;
+                    if (qtitle == null) {
+                        NUtils.waitEvent(() -> ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).title() != null, 50);
+                        qtitle = ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).title();
+                    }
+                    if (qtitle != null) {
+                        for (Quester quester : questers.values()) {
+                            for (String name : quester.main_quests.keySet()) {
+                                if (name.contains(qtitle)) {
+                                    quester.main_quests.get(name).conditions = ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond;
+                                    break;
+                                }
+                            }
+                            for (String name : quester.linked_quests.keySet()) {
+                                if (name != null && name.contains(qtitle)) {
+                                    quester.linked_quests.get(name).conditions = ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond;
+                                    break;
+                                }
                             }
                         }
-                        for (String name : quester.linked_quests.keySet()) {
-                            if (name != null && name.contains(qtitle)) {
-                                quester.linked_quests.get(name).conditions = ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond;
-                                break;
+                        if (credo != null && credo.name != null) {
+                            if (credo.name.contains(qtitle)) {
+                                credo.main_quests.get(qtitle).conditions = ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond;
                             }
                         }
                     }
-                    if (credo != null && credo.name != null) {
-                        if (credo.name.contains(qtitle)) {
-                            credo.main_quests.get(qtitle).conditions = ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond;
-                        }
-                    }
+                    needUpdate = true;
+                } catch (InterruptedException ignored) {
                 }
-                needUpdate = true;
-            } catch (InterruptedException e) {
-            } finally {
-                mutex.unlock();
             }
         }
     }
@@ -93,17 +90,20 @@ public class NQuestInfo extends NDraggableWidget {
 
     public static Set<NGob.Tags> tagsSet(String name){
         if(isAvailable())
-            return markers.get(name).tagsSet;
+            synchronized (markers) {
+                return markers.get(name).tagsSet;
+            }
         return null;
     }
 
-    private static HashMap<String, QuestGob> markers = new HashMap<>();
+    private static final HashMap<String, QuestGob> markers = new HashMap<>();
 
 
-    static Mutex mutex = new Mutex();
 
     public static void setMarker(String name, MapFile.Marker marker) {
-        markers.put(name, new QuestGob(marker));
+        synchronized (markers) {
+            markers.put(name, new QuestGob(marker));
+        }
     }
 
     public static void updateTags(String name){
@@ -111,13 +111,15 @@ public class NQuestInfo extends NDraggableWidget {
         {
             Quester q = questers.get(name);
             if(q!=null){
-                QuestGob gob = markers.get(name);
-                if(gob!=null){
-                    gob.tagsSet.clear();
-                    checkTasks(q.main_quests, gob);
-                    checkTasks(q.linked_quests, gob);
-                    if(q.ended>0)
-                        gob.tagsSet.add(NGob.Tags.qcompleted);
+                synchronized (markers) {
+                    QuestGob gob = markers.get(name);
+                    if (gob != null) {
+                        gob.tagsSet.clear();
+                        checkTasks(q.main_quests, gob);
+                        checkTasks(q.linked_quests, gob);
+                        if (q.ended > 0)
+                            gob.tagsSet.add(NGob.Tags.qcompleted);
+                    }
                 }
             }
         }
@@ -144,12 +146,13 @@ public class NQuestInfo extends NDraggableWidget {
     }
 
     public static HashMap<String, QuestGob> getMarkers() {
-        return markers;
+        synchronized (markers) {
+            return markers;
+        }
     }
 
 
     public static class Quester {
-        public boolean isFound = false;
         public String name;
         int ended = 0;
 
@@ -169,14 +172,14 @@ public class NQuestInfo extends NDraggableWidget {
             }
         }
 
-        HashMap<String, Quest> main_quests = new HashMap();
-        HashMap<String, Quest> linked_quests = new HashMap();
+        HashMap<String, Quest> main_quests = new HashMap<>();
+        HashMap<String, Quest> linked_quests = new HashMap<>();
     }
 
     public static boolean needUpdate = false;
-    boolean isNQvisible = false;
-    boolean isVisible = true;
-    static TreeMap<String, Quester> questers = new TreeMap<>();
+    private boolean isNQvisible = false;
+    private boolean isVisible;
+    private static final TreeMap<String, Quester> questers = new TreeMap<>();
 
     static Quester credo = new Quester(null);
 
@@ -192,14 +195,16 @@ public class NQuestInfo extends NDraggableWidget {
 
     @Override
     public void dispose() {
-        questers.clear();
-        in_work.set(false);
-        updCompleted.set(false);
-        needUpdate = false;
-        items.clear();
-        new_questers.clear();
-        markers.clear();
-        credo = null;
+        synchronized (markers) {
+            questers.clear();
+            in_work.set(false);
+            updCompleted.set(false);
+            needUpdate = false;
+            items.clear();
+            new_questers.clear();
+            markers.clear();
+            credo = null;
+        }
         super.dispose();
     }
 
@@ -235,54 +240,52 @@ public class NQuestInfo extends NDraggableWidget {
     public static AtomicBoolean updCompleted = new AtomicBoolean(false);
     public static AtomicBoolean in_work = new AtomicBoolean(false);
 
-    static TreeMap<String, Quester> new_questers = new TreeMap<>();
+    static final TreeMap<String, Quester> new_questers = new TreeMap<>();
 
-    public class Loader implements Runnable {
+    public static class Loader implements Runnable {
 
         @Override
         public void run() {
             try {
                 in_work.set(true);
-                if(new_questers!=null) {
-                    ArrayList<CharWnd.Quest> qs = new ArrayList<>(NUtils.getGameUI().chrwdg.cqst.quests);
-                    for (CharWnd.Quest q : qs) {
-                        if (q.res != null && !q.title().isEmpty()) {
-                            if (NUtils.getGameUI().chrwdg.quest != null) {
-                                NUtils.getGameUI().chrwdg.wdgmsg("qsel", q.id);
-                                NUtils.waitEvent(() -> NUtils.getGameUI().chrwdg.quest != null && ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).id == q.id && ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond != null && ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond.length > 0, 200);
-                                for (CharWnd.Quest.Condition c : ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond) {
-                                    String qname = null;
-                                    if (c.desc.contains("Tell")) {
-                                        qname = c.desc.substring(5, c.desc.indexOf(" ", 6));
+                ArrayList<CharWnd.Quest> qs = new ArrayList<>(NUtils.getGameUI().chrwdg.cqst.quests);
+                for (CharWnd.Quest q : qs) {
+                    if (q.res != null && !q.title().isEmpty()) {
+                        if (NUtils.getGameUI().chrwdg.quest != null) {
+                            NUtils.getGameUI().chrwdg.wdgmsg("qsel", q.id);
+                            NUtils.waitEvent(() -> NUtils.getGameUI().chrwdg.quest != null && ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).id == q.id && ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond != null && ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond.length > 0, 200);
+                            for (CharWnd.Quest.Condition c : ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond) {
+                                String qname = null;
+                                if (c.desc.contains("Tell")) {
+                                    qname = c.desc.substring(5, c.desc.indexOf(" ", 6));
+                                    if (!new_questers.containsKey(qname)) {
+                                        new_questers.put(qname, new Quester(qname));
+                                    }
+                                    new_questers.get(qname).main_quests.put(q.title, new Quester.Quest(((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond, q.id));
+                                } else {
+                                    if (c.desc.contains("Greet")) {
+                                        qname = c.desc.substring(6);
+                                    } else if (c.desc.contains(" to ")) {
+                                        qname = c.desc.substring(c.desc.indexOf(" to ") + 4);
+                                    } else if (c.desc.contains(" at ")) {
+                                        qname = c.desc.substring(c.desc.indexOf(" at ") + 4);
+                                    }
+                                    if (qname != null) {
                                         if (!new_questers.containsKey(qname)) {
                                             new_questers.put(qname, new Quester(qname));
                                         }
-                                        new_questers.get(qname).main_quests.put(q.title, new Quester.Quest(((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond, q.id));
-                                    } else {
-                                        if (c.desc.contains("Greet")) {
-                                            qname = c.desc.substring(6);
-                                        } else if (c.desc.contains(" to ")) {
-                                            qname = c.desc.substring(c.desc.indexOf(" to ") + 4);
-                                        } else if (c.desc.contains(" at ")) {
-                                            qname = c.desc.substring(c.desc.indexOf(" at ") + 4);
-                                        }
-                                        if (qname != null) {
-                                            if (!new_questers.containsKey(qname)) {
-                                                new_questers.put(qname, new Quester(qname));
-                                            }
-                                            new_questers.get(qname).linked_quests.put(q.title, new Quester.Quest(((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond, q.id));
-                                        }
+                                        new_questers.get(qname).linked_quests.put(q.title, new Quester.Quest(((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond, q.id));
                                     }
                                 }
                             }
                         }
-                        if (q.title == null && q.title() != null) {
-                            String name1 = q.title();
-                            credo = new Quester(name1);
-                            credo.name = name1;
-                            credo.main_quests.clear();
-                            credo.main_quests.put(name1, new Quester.Quest(((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond, q.id));
-                        }
+                    }
+                    if (q.title == null && q.title() != null) {
+                        String name1 = q.title();
+                        credo = new Quester(name1);
+                        credo.name = name1;
+                        credo.main_quests.clear();
+                        credo.main_quests.put(name1, new Quester.Quest(((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond, q.id));
                     }
                 }
             } catch (InterruptedException ignored) {
@@ -366,7 +369,7 @@ public class NQuestInfo extends NDraggableWidget {
 
     Thread th = null;
 
-    class QuestImage {
+    static class QuestImage {
         public Pair<Coord, Coord> area = new Pair<>(new Coord(), new Coord());
         public BufferedImage img;
         public int id;
@@ -385,81 +388,83 @@ public class NQuestInfo extends NDraggableWidget {
         }
         if (updCompleted.get())
             if (!new_questers.isEmpty()) {
-                mutex.lock();
-                questers.clear();
-                if(new_questers!=null) {
-                    questers.putAll(new_questers);
-                    new_questers.clear();
+                synchronized (questers) {
+                    questers.clear();
+                    if (new_questers != null) {
+                        questers.putAll(new_questers);
+                        new_questers.clear();
+                    }
+                    updCompleted.set(false);
+                    needUpdate = true;
                 }
-                updCompleted.set(false);
-                needUpdate = true;
-                mutex.unlock();
             }
         if (isAvailable() && needUpdate) {
-            mutex.lock();
-            items.clear();
-            for(QuestGob gob : markers.values())
-                gob.tagsSet.clear();
-            imgs = new LinkedList<QuestImage>();
-            if(isVisible) {
-                if (credo != null && !credo.main_quests.isEmpty()) {
-                    int id = credo.main_quests.get(credo.name).id;
-                    imgs.add(new QuestImage(credo_title.render(credo.name).img, id));
-                    for (CharWnd.Quest.Condition c : credo.main_quests.get(credo.name).conditions) {
-                        if (c.done != 1) {
-                            imgs.add(new QuestImage(gfnd2_under.render(c.desc).img, id));
-                        }
-                    }
-                }
-                for (String name : questers.keySet()) {
 
-                    Quester quester = questers.get(name);
-                    int qid = -1;
-                    quester.ended = 0;
-                    for (Quester.Quest q : quester.main_quests.values()) {
-                        int completed = 0;
-                        qid = q.id;
-                        for (CharWnd.Quest.Condition c : q.conditions) {
-                            if (c.done == 1)
-                                completed += 1;
-                            else
-                                checkTarget(c.desc);
+            items.clear();
+            synchronized (markers) {
+                for (QuestGob gob : markers.values())
+                    gob.tagsSet.clear();
+                imgs = new LinkedList<>();
+                if (isVisible) {
+                    if (credo != null && !credo.main_quests.isEmpty()) {
+                        int id = credo.main_quests.get(credo.name).id;
+                        imgs.add(new QuestImage(credo_title.render(credo.name).img, id));
+                        for (CharWnd.Quest.Condition c : credo.main_quests.get(credo.name).conditions) {
+                            if (c.done != 1) {
+                                imgs.add(new QuestImage(gfnd2_under.render(c.desc).img, id));
+                            }
                         }
-                        if (completed == q.conditions.length - 1)
-                            quester.ended += 1;
                     }
-                    if (quester.main_quests.size() > 0) {
-                        imgs.add(new QuestImage(catimgsh(5, active_title.render(name).img, fnd1.render(String.format("($col[128,255,128]{%d}|$col[255,128,128]{%d})", quester.ended, quester.main_quests.size() - quester.ended), UI.scale(200)).img), qid));
-                    } else {
-                        if (isNQvisible && quester.linked_quests.size() > 0) {
-                            for (Quester.Quest q : quester.linked_quests.values()) {
-                                boolean need = false;
-                                for (CharWnd.Quest.Condition c : q.conditions) {
-                                    if (c.done == 0 && c.desc.contains(name)) {
-                                        need = true;
+                    for (String name : questers.keySet()) {
+
+                        Quester quester = questers.get(name);
+                        int qid = -1;
+                        quester.ended = 0;
+                        for (Quester.Quest q : quester.main_quests.values()) {
+                            int completed = 0;
+                            qid = q.id;
+                            for (CharWnd.Quest.Condition c : q.conditions) {
+                                if (c.done == 1)
+                                    completed += 1;
+                                else
+                                    checkTarget(c.desc);
+                            }
+                            if (completed == q.conditions.length - 1)
+                                quester.ended += 1;
+                        }
+                        if (quester.main_quests.size() > 0) {
+                            imgs.add(new QuestImage(catimgsh(5, active_title.render(name).img, fnd1.render(String.format("($col[128,255,128]{%d}|$col[255,128,128]{%d})", quester.ended, quester.main_quests.size() - quester.ended), UI.scale(200)).img), qid));
+                        } else {
+                            if (isNQvisible && quester.linked_quests.size() > 0) {
+                                for (Quester.Quest q : quester.linked_quests.values()) {
+                                    boolean need = false;
+                                    for (CharWnd.Quest.Condition c : q.conditions) {
+                                        if (c.done == 0 && c.desc.contains(name)) {
+                                            need = true;
+                                            break;
+                                        }
+                                    }
+                                    if (need) {
+                                        imgs.add(new QuestImage(unactive_title.render(name).img, -1));
                                         break;
                                     }
                                 }
-                                if (need) {
-                                    imgs.add(new QuestImage(unactive_title.render(name).img, -1));
-                                    break;
+                            }
+                        }
+                        updateTags(name);
+                        for (Quester.Quest q : quester.main_quests.values()) {
+                            for (CharWnd.Quest.Condition c : q.conditions) {
+                                if (c.done != 1 && !c.desc.contains("Tell")) {
+                                    imgs.add(new QuestImage(gfnd2_under.render(c.desc).img, q.id));
                                 }
                             }
                         }
-                    }
-                    updateTags(name);
-                    for (Quester.Quest q : quester.main_quests.values()) {
-                        for (CharWnd.Quest.Condition c : q.conditions) {
-                            if (c.done != 1 && !c.desc.contains("Tell")) {
-                                imgs.add(new QuestImage(gfnd2_under.render(c.desc).img, q.id));
-                            }
-                        }
-                    }
-                    if (isNQvisible || quester.main_quests.size() > 0) {
-                        for (Quester.Quest q : quester.linked_quests.values()) {
-                            for (CharWnd.Quest.Condition c : q.conditions) {
-                                if (c.done != 1 && !c.desc.contains("Tell") && c.desc.contains(quester.name)) {
-                                    imgs.add(new QuestImage(gfnd2.render(c.desc).img, q.id));
+                        if (isNQvisible || quester.main_quests.size() > 0) {
+                            for (Quester.Quest q : quester.linked_quests.values()) {
+                                for (CharWnd.Quest.Condition c : q.conditions) {
+                                    if (c.done != 1 && !c.desc.contains("Tell") && c.desc.contains(quester.name)) {
+                                        imgs.add(new QuestImage(gfnd2.render(c.desc).img, q.id));
+                                    }
                                 }
                             }
                         }
@@ -468,14 +473,13 @@ public class NQuestInfo extends NDraggableWidget {
             }
             if (!imgs.isEmpty()) {
                 glowon = new TexI(ncatimgs(1, imgs.toArray(new QuestImage[0])));
-                resize(new Coord(glowon.sz().x, glowon.sz().y + dy));
+                resize(new Coord(glowon.sz().x + btnLock.sz.x, glowon.sz().y + dy));
             }else
             {
                 glowon = null;
-                resize(3*UI.scale(20),dy);
+                resize(3*UI.scale(20) + btnLock.sz.x,dy);
             }
             needUpdate = false;
-            mutex.unlock();
         }
     }
 
@@ -527,15 +531,17 @@ public class NQuestInfo extends NDraggableWidget {
             if (!name.isEmpty()) {
                 if (name.contains("blueberr"))
                     name = "blueberr";
+                else if (name.contains("woodgrouse hen"))
+                    name = "woodgrouse-f";
                 else if (name.contains("lingon"))
                     name = "lingon";
                 else if (name.contains("morel"))
                     name = "lorchel";
                 else if (name.contains("yellowf"))
                     name = "yellowf";
-                else if (name.contains("a hen"))
+                else if (name.contains("hen"))
                     name = "chicken/chicken";
-                else if (name.contains("a cock"))
+                else if (name.contains("cock"))
                     name = "chicken/roast";
                 else if (name.contains("mouflon"))
                     name = "sheep";
@@ -545,10 +551,8 @@ public class NQuestInfo extends NDraggableWidget {
                     name = "herbs/chantrell";
                 else if (name.contains("horse"))
                     name = "horse/horse";
-                else if (name.contains("woodgrouse hen"))
-                    name = "woodgrouse-f";
                 else if (name.contains("rat"))
-                    name = "/rat";
+                    name = "rat/rat";
                 items.add((name.replaceAll("\\s+", "")).replaceAll("'+", ""));
             }
         }
@@ -569,7 +573,7 @@ public class NQuestInfo extends NDraggableWidget {
         String name = gob.getResName();
         if (name != null) {
             for (String item : items) {
-                if (NUtils.checkName(name, new NAlias(new ArrayList<>(Arrays.asList(item)), new ArrayList<>(Arrays.asList("crabapp"))))) {
+                if (NUtils.checkName(name, new NAlias(new ArrayList<>(Collections.singletonList(item)), new ArrayList<>(Collections.singletonList("crabapp"))))) {
                     gob.noteImg = tex;
                     gob.addTag(NGob.Tags.quest);
                     return true;
@@ -589,7 +593,7 @@ public class NQuestInfo extends NDraggableWidget {
                     if (img.id >= 0) {
                         if (img.area.a.x <= pos.x && pos.x <= img.area.b.x && img.area.a.y <= pos.y && pos.y <= img.area.b.y) {
                             NUtils.getGameUI().chrwdg.wdgmsg("qsel", img.id);
-                            break;
+                            return true;
                         }
                     }
                 }

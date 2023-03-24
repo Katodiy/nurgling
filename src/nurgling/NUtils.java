@@ -599,7 +599,7 @@ public class NUtils {
         public void run() {
             while (getGameUI().map==null || !getGameUI ().ui.sess.glob.map.isLoaded()) {
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -625,6 +625,36 @@ public class NUtils {
                     break;
                 case "Clay":
                     new Thread(new CollectClay(gameUI)).start();
+                    break;
+                case "Dryer":
+                    new Thread(new Dryer(gameUI)).start();
+                    break;
+                case "Tanning":
+                    new Thread(new Tanning(gameUI)).start();
+                    break;
+                case "CheeseCellar":
+                    new Thread(new TransferCheeseCellar(gameUI)).start();
+                    break;
+                case "CheeseHome":
+                    new Thread(new TransferCheeseInside(gameUI)).start();
+                    break;
+                case "CheeseOutside":
+                    new Thread(new TransferCheeseOutside(gameUI)).start();
+                    break;
+                case "CheeseMine":
+                    new Thread(new TransferCheeseMine(gameUI)).start();
+                    break;
+                case "CheeseBarters":
+                    new Thread(new TransferCheeseTray(gameUI)).start();
+                    break;
+                case "CowsCurd":
+                    new Thread(new CurdCows(gameUI)).start();
+                    break;
+                case "GoatsCurd":
+                    new Thread(new CurdGoats(gameUI)).start();
+                    break;
+                case "SheepsCurd":
+                    new Thread(new CurdGoats(gameUI)).start();
                     break;
             }
         }

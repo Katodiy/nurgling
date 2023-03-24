@@ -22,8 +22,8 @@ public class LeashAnimal implements Action {
 
         new TakeToHand(gui.getInventory().getItem(new NAlias("rope"))).run(gui);
         NUtils.activateItem(gob);
-        GItem finalRope = rope;
-        NUtils.waitEvent(()-> finalRope.info()!=null && ((NGItem) finalRope).getInfo(Leashed.class)!=null,50);
+        GItem finalRope = gui.vhand.item;
+        NUtils.waitEvent(()-> finalRope!= null && ((NGItem) finalRope).status == NGItem.COMPLETED &&  finalRope.info()!=null && ((NGItem) finalRope).getInfo(Leashed.class)!=null,50);
         NUtils.transferToInventory();
         NUtils.waitEvent(()->gui.getInventory().getItem(new NAlias("rope"), Leashed.class)!=null,20);
         if(gui.getInventory().getItem(new NAlias("rope"), Leashed.class)!=null)

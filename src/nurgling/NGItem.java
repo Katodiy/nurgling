@@ -242,7 +242,7 @@ public class NGItem extends GItem {
     static int UNDEFINED = 0x0000;
     static int RAW = 0x0001;
     static int INDIR = 0x0002;
-    static int COMPLETED = 0x0004;
+    public static int COMPLETED = 0x0004;
 
     public int status = UNDEFINED;
 
@@ -286,7 +286,14 @@ public class NGItem extends GItem {
                     if (tt != null) {
                         if (tt.t.equals("Meat")) {
                             if (ui != null) {
-                                dfname = new Meat(this, null, sdt).name();
+                                try {
+                                    dfname = new Meat(this, null, sdt).name();
+                                }
+                                catch (Exception e)
+                                {
+                                    status = UNDEFINED;
+                                }
+
                             }
                         } else {
                             dfname = tt.t;

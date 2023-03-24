@@ -15,7 +15,7 @@ public class FillSteel extends Bot {
         win_title = "Steel Feel";
         win_sz.y = 100;
         
-        runActions.add ( new FillFuelFromPiles( 17, new NAlias("branch"), new NAlias("steelcrucible"), new NAlias("branch"),
+        runActions.add ( new FillFuelFromPiles( 18, new NAlias("branch"), new NAlias("steelcrucible"), new NAlias("branch"),
                 AreasID.branch, "Steelbox"));
     }
     

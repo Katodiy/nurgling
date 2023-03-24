@@ -23,7 +23,6 @@ public class NToolBelt extends NDraggableWidget implements DTarget, DropTarget {
     private final int group;
     private final int start;
     private final int size;
-    private final NToggleButton btnLock;
     private final IButton btnFlip;
     private boolean vertical = false, over = false, locked = false;
 	Tex[] keys;
@@ -53,7 +52,6 @@ public class NToolBelt extends NDraggableWidget implements DTarget, DropTarget {
 		btnFlip = add(new IButton("hud/btn-flip", "", "-d", "-h"), new Coord(0, 0));
 		btnFlip.action(this::flip);
 		btnFlip.recthit = true;
-		btnLock = add(new NToggleButton("hud/btn-ulock", "", "-d", "-h", "hud/btn-lock", "", "-d", "-h"), new Coord(0, 17));
 		btnLock.action(this::toggle);
 		btnLock.recthit = true;
 		btnLock.state(locked);

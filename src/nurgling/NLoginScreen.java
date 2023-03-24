@@ -25,14 +25,9 @@ public class NLoginScreen extends LoginScreen {
         super.progress ( p );
         if ( !isStarted ) {
             if ( NConfiguration.botmod!=null && NConfiguration.getInstance ().restart ) {
-                for ( NLoginData data : NConfiguration.getInstance ().logins ) {
-                    if ( data.name.equals ( NConfiguration.botmod.user ) ) {
-                        wdgmsg ( "login", new Object[]{ new AuthClient.NativeCred (  NConfiguration.botmod.user, NConfiguration.botmod.password ), false } );
-                        NConfiguration.getInstance ().restart = false;
-                        isStarted = true;
-                        break;
-                    }
-                }
+                wdgmsg("login", new Object[]{new AuthClient.NativeCred(NConfiguration.botmod.user, NConfiguration.botmod.password), false});
+                NConfiguration.getInstance().restart = false;
+                isStarted = true;
             }
         }
     }
