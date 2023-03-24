@@ -211,6 +211,7 @@ public class NConfiguration {
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = (JSONObject) parser.parse(reader);
             botmod = new BotMod((String) jsonObject.get("user"), (String) jsonObject.get("password"), (String) jsonObject.get("character"), (String) jsonObject.get("bot"), (String) jsonObject.get("nomad"));
+            AreasID.read((String) jsonObject.get("config_path"));
         } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
         }
@@ -796,6 +797,7 @@ public class NConfiguration {
 
             JSONArray msg = ( JSONArray ) jsonObject.get ( "users" );
             if(msg!=null) {
+                logins.clear();
                 Iterator<JSONObject> iterator = msg.iterator();
                 while (iterator.hasNext()) {
                     JSONObject item = iterator.next();
