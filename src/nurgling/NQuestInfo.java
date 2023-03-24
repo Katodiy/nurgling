@@ -531,15 +531,17 @@ public class NQuestInfo extends NDraggableWidget {
             if (!name.isEmpty()) {
                 if (name.contains("blueberr"))
                     name = "blueberr";
+                else if (name.contains("woodgrouse hen"))
+                    name = "woodgrouse-f";
                 else if (name.contains("lingon"))
                     name = "lingon";
                 else if (name.contains("morel"))
                     name = "lorchel";
                 else if (name.contains("yellowf"))
                     name = "yellowf";
-                else if (name.contains("a hen"))
+                else if (name.contains("hen"))
                     name = "chicken/chicken";
-                else if (name.contains("a cock"))
+                else if (name.contains("cock"))
                     name = "chicken/roast";
                 else if (name.contains("mouflon"))
                     name = "sheep";
@@ -549,8 +551,6 @@ public class NQuestInfo extends NDraggableWidget {
                     name = "herbs/chantrell";
                 else if (name.contains("horse"))
                     name = "horse/horse";
-                else if (name.contains("woodgrouse hen"))
-                    name = "woodgrouse-f";
                 else if (name.contains("rat"))
                     name = "rat/rat";
                 items.add((name.replaceAll("\\s+", "")).replaceAll("'+", ""));
