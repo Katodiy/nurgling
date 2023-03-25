@@ -4,13 +4,12 @@
 package haven.res.gfx.hud.rosters.cow;
 
 import haven.*;
-import haven.res.gfx.hud.rosters.pig.PigRoster;
 import haven.res.ui.croster.*;
 import nurgling.NConfiguration;
 
 import java.util.*;
 
-@FromResource(name = "gfx/hud/rosters/cow", version = 72)
+@haven.FromResource(name = "gfx/hud/rosters/cow", version = 74)
 public class Ochs extends Entry {
     public int meat, milk;
     public int meatq, milkq, hideq;

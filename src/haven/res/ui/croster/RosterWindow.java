@@ -15,7 +15,7 @@ import haven.res.gfx.hud.rosters.sheep.Sheep;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-@haven.FromResource(name = "ui/croster", version = 73)
+@haven.FromResource(name = "ui/croster", version = 74)
 public class RosterWindow extends Window {
     public static final Map<Glob, RosterWindow> rosters = new HashMap<>();
     public static int rmseq = 0;

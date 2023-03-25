@@ -9,7 +9,7 @@ import haven.MenuGrid.Pagina;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-@haven.FromResource(name = "ui/croster", version = 73)
+@haven.FromResource(name = "ui/croster", version = 74)
 public class TypeButton extends IButton {
     public final int order;
 
@@ -19,10 +19,10 @@ public class TypeButton extends IButton {
     }
 
     protected void depress() {
-	Audio.play(Button.lbtdown.stream());
+	ui.sfx(Button.clbtdown.stream());
     }
 
     protected void unpress() {
-	Audio.play(Button.lbtup.stream());
+	ui.sfx(Button.clbtup.stream());
     }
 }
