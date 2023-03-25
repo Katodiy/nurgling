@@ -962,7 +962,7 @@ public class OptWnd extends Window {
 			oldVis = marks_p;
 			curVis = marks_p;
 			curVis.show();
-			save = add(new Button(200, "Save") {
+			save = add(new Button(UI.scale(200), "Save") {
 				@Override
 				public void click() {
 					if(curVis == is_p){
@@ -972,9 +972,22 @@ public class OptWnd extends Window {
 					NConfiguration.getInstance().install();
 					NGob.updateMarked();
 				}
-			}, curVis.pos("bl").adds(0, 5));
-			back = add(new PButton(UI.scale(200), "Back", 27, prev1));
-			back.move(save.pos("ur").adds(5, 6));
+			}, curVis.pos("bl").adds(0, UI.scale(5)));
+			back = add(new Button(UI.scale(200), "Back")
+			{
+				@Override
+				public void click() {
+					chpanel(prev1);
+				}
+
+				public boolean keydown(KeyEvent ev) {
+				if((ev.getKeyChar() == 27)) {
+					chpanel(prev1);
+					return(true);
+				}
+				return(false);
+			}
+			}, curVis.pos("bl").adds(save.sz.x + UI.scale(5), UI.scale(5)));
 			pack();
 		}
 
@@ -1900,7 +1913,7 @@ public class OptWnd extends Window {
 				}, prev.pos("bl").adds(0, 5));
 				int counter = 0;
 				for (NConfiguration.PickingAction pickingAction : NConfiguration.getInstance().pickingActions) {
-					prev = add(new PickAction(pickingAction, counter), prev.pos("bl").adds(0, 5));
+					prev = add(new PickAction(pickingAction, counter), prev.pos("bl").adds(0, UI.scale(0)));
 					wdgts.put(counter,prev);
 					counter++;
 				}
@@ -1911,8 +1924,8 @@ public class OptWnd extends Window {
 
 		public void draw(GOut g) {
 			if (curVis != oldVis || needUpdate) {
-				save.move(curVis.pos("bl").adds(0, 5));
-				back.move(save.pos("ur").adds(5, 6));
+				save.move(curVis.pos("bl").adds(0, UI.scale(5)));
+				back.move(curVis.pos("bl").adds(save.sz.x + UI.scale(5), UI.scale(5) ));
 				oldVis = curVis;
 				pack();
 			}
