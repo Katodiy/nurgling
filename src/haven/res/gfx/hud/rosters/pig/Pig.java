@@ -9,7 +9,7 @@ import nurgling.NConfiguration;
 
 import java.util.*;
 
-@FromResource(name = "gfx/hud/rosters/pig", version = 60)
+@haven.FromResource(name = "gfx/hud/rosters/pig", version = 62)
 public class Pig extends Entry {
     public int meat, milk;
     public int meatq, milkq, hideq;

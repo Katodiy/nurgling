@@ -4,11 +4,10 @@
 package haven.res.gfx.hud.rosters.sheep;
 
 import haven.*;
-import haven.res.gfx.hud.rosters.cow.Ochs;
 import haven.res.ui.croster.*;
 import java.util.*;
 
-@FromResource(name = "gfx/hud/rosters/sheep", version = 61)
+@haven.FromResource(name = "gfx/hud/rosters/sheep", version = 64)
 public class SheepRoster extends CattleRoster<Sheep> {
     public static List<Column> cols = initcols(
 	new Column<Entry>("Name", Comparator.comparing((Entry e) -> e.name), 200),
@@ -42,7 +41,7 @@ public class SheepRoster extends CattleRoster<Sheep> {
 
     public Sheep parse(Object... args) {
 	int n = 0;
-	long id = (Long)args[n++];
+	long id = ((Number)args[n++]).longValue();
 	String name = (String)args[n++];
 	Sheep ret = new Sheep(id, name);
 	ret.grp = (Integer)args[n++];
