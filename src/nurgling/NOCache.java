@@ -8,6 +8,7 @@ import nurgling.tools.Finder;
 import nurgling.tools.NArea;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class NOCache extends OCache {
@@ -169,7 +170,7 @@ public class NOCache extends OCache {
 
 
 
-    ArrayList<OverlayInfo> overlays = new ArrayList<>();
+    ConcurrentLinkedDeque<OverlayInfo> overlays = new ConcurrentLinkedDeque<>();
     public static void constructOverlay(AreasID id){
         if(id!=null) {
             for (OverlayInfo oi : ((NOCache) NUtils.getGameUI().ui.sess.glob.oc).overlays) {

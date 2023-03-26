@@ -55,7 +55,7 @@ public class NQuestInfo extends NDraggableWidget {
                                 }
                             }
                         }
-                        if (credo != null && credo.credo_id == qid) {
+                        if (credo != null && credo.main_quests.containsKey(qid)) {
                                 credo.main_quests.get(qid).conditions = ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond;
                         }
                     needUpdate = true;
@@ -128,7 +128,7 @@ public class NQuestInfo extends NDraggableWidget {
                         gob.tagsSet.add(NGob.Tags.qwave);
                     } else if (c.desc.contains("laugh")) {
                         gob.tagsSet.add(NGob.Tags.qlaugh);
-                    } else if (c.desc.contains("Greet")) {
+                    } else if (c.desc.contains("Greet") || c.desc.contains("Visit")) {
                         gob.tagsSet.add(NGob.Tags.qgreet);
                     }
                 }
@@ -146,8 +146,6 @@ public class NQuestInfo extends NDraggableWidget {
     public static class Quester {
         public String name;
         int ended = 0;
-
-        int credo_id = -1;
         public Quester(String name) {
             this.name = name;
         }
@@ -238,8 +236,10 @@ public class NQuestInfo extends NDraggableWidget {
 
         @Override
         public void run() {
+            Quester newcredo = new Quester("Credo");
             try {
                 in_work.set(true);
+
                 ArrayList<CharWnd.Quest> qs = new ArrayList<>(NUtils.getGameUI().chrwdg.cqst.quests);
                 for (CharWnd.Quest q : qs) {
                         if (NUtils.getGameUI().chrwdg.quest != null) {
@@ -247,14 +247,14 @@ public class NQuestInfo extends NDraggableWidget {
                             NUtils.waitEvent(() -> NUtils.getGameUI().chrwdg.quest != null && ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).id == q.id && ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond != null && ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond.length > 0, 200);
                             for (CharWnd.Quest.Condition c : ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond) {
                                 String qname = null;
-                                if (c.desc.contains("Tell")) {
-                                    qname = c.desc.substring(5, c.desc.indexOf(" ", 6));
+                                if (c.desc.contains("Tell") || c.desc.contains("Visit")) {
+                                    qname = c.desc.contains("Tell") ? c.desc.substring(5, c.desc.indexOf(" ", 6)) : c.desc.substring(6);
                                     if (!new_questers.containsKey(qname)) {
                                         new_questers.put(qname, new Quester(qname));
                                     }
                                     new_questers.get(qname).main_quests.put(q.id, new Quester.Quest(((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond, q.id));
                                 } else {
-                                    if (c.desc.contains("Greet")) {
+                                    if (c.desc.contains("Greet") || c.desc.contains("Visit")) {
                                         qname = c.desc.substring(6);
                                     } else if (c.desc.contains(" to ")) {
                                         qname = c.desc.substring(c.desc.indexOf(" to ") + 4);
@@ -270,16 +270,14 @@ public class NQuestInfo extends NDraggableWidget {
                                 }
                             }
                     }
-                    if (q.title == null) {
-                        credo = new Quester("Credo");
-                        credo.main_quests.clear();
-                        credo.credo_id = q.id;
-                        credo.main_quests.put(q.id, new Quester.Quest(((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond, q.id));
+                    if (((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest)!=null && q.title == null) {
+                        newcredo.main_quests.put(q.id, new Quester.Quest(((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond, q.id));
                     }
                 }
             } catch (InterruptedException ignored) {
             } finally {
                 updCompleted.set(true);
+                credo = newcredo;
                 in_work.set(false);
             }
         }
@@ -314,7 +312,7 @@ public class NQuestInfo extends NDraggableWidget {
                         break;
                     }
                 }
-                if (credo.credo_id == c.id)
+                if (credo!= null && credo.main_quests.containsKey(c.id))
                     isFind = true;
                 if (c.done == 1)
                     return true;
@@ -371,7 +369,7 @@ public class NQuestInfo extends NDraggableWidget {
             }
         }
         if (updCompleted.get())
-            if (!new_questers.isEmpty()) {
+            if (!(new_questers != null && new_questers.isEmpty()) || (credo!=null && !credo.main_quests.isEmpty())) {
                 synchronized (questers) {
                     questers.clear();
                     if (new_questers != null) {
@@ -381,6 +379,10 @@ public class NQuestInfo extends NDraggableWidget {
                     updCompleted.set(false);
                     needUpdate = true;
                 }
+            }
+            else
+            {
+                return;
             }
         if (isAvailable() && needUpdate) {
             if(asTask)
@@ -408,11 +410,12 @@ public class NQuestInfo extends NDraggableWidget {
             imgs = new LinkedList<>();
             if (isVisible) {
                 if (credo != null && !credo.main_quests.isEmpty()) {
-                    int id = credo.main_quests.get(credo.credo_id).id;
-                    imgs.add(new QuestImage(credo_title.render(credo.name).img, id));
-                    for (CharWnd.Quest.Condition c : credo.main_quests.get(credo.credo_id).conditions) {
-                        if (c.done != 1) {
-                            imgs.add(new QuestImage(gfnd2_under.render(c.desc).img, id));
+                    imgs.add(new QuestImage(credo_title.render(credo.name).img, -1));
+                    for (Quester.Quest q : credo.main_quests.values()) {
+                        for (CharWnd.Quest.Condition c : q.conditions) {
+                            if (c.done != 1) {
+                                imgs.add(new QuestImage(gfnd2_under.render(c.desc).img, q.id));
+                            }
                         }
                     }
                 }
@@ -492,11 +495,12 @@ public class NQuestInfo extends NDraggableWidget {
             imgs = new LinkedList<>();
             if (isVisible) {
                 if (credo != null && !credo.main_quests.isEmpty()) {
-                    int id = credo.main_quests.get(credo.credo_id).id;
-                    imgs.add(new QuestImage(credo_title.render(credo.name).img, id));
-                    for (CharWnd.Quest.Condition c : credo.main_quests.get(credo.credo_id).conditions) {
-                        if (c.done != 1) {
-                            imgs.add(new QuestImage(gfnd2_under.render(c.desc).img, id));
+                    imgs.add(new QuestImage(credo_title.render(credo.name).img, -1));
+                    for(Quester.Quest q : credo.main_quests.values()) {
+                        for (CharWnd.Quest.Condition c : credo.main_quests.get(q.id).conditions) {
+                            if (c.done != 1) {
+                                imgs.add(new QuestImage(gfnd2_under.render(c.desc).img, q.id));
+                            }
                         }
                     }
                 }
@@ -525,7 +529,7 @@ public class NQuestInfo extends NDraggableWidget {
                                     forage_t.add(new Task(qid, c));
                                 else if (c.desc.contains("Kill") || c.desc.contains("Raid") || c.desc.contains("Catch"))
                                     hunting_t.add(new Task(qid, c));
-                                else if (c.desc.contains("Greet") || c.desc.contains("wave") || c.desc.contains("laugh") || c.desc.contains("rage"))
+                                else if (c.desc.contains("Greet") || c.desc.contains("Visit") || c.desc.contains("wave") || c.desc.contains("laugh") || c.desc.contains("rage"))
                                     consult_t.add(new Task(qid, c));
                                 else if (c.desc.contains("Gain"))
                                     stats_t.add(new Task(qid, c));
