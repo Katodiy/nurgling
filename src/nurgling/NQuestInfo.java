@@ -128,7 +128,7 @@ public class NQuestInfo extends NDraggableWidget {
                         gob.tagsSet.add(NGob.Tags.qwave);
                     } else if (c.desc.contains("laugh")) {
                         gob.tagsSet.add(NGob.Tags.qlaugh);
-                    } else if (c.desc.contains("Greet") || c.desc.contains("Visit")) {
+                    } else if (c.desc.contains("Greet") || (c.desc.contains("Visit") && !c.desc.contains("cave"))) {
                         gob.tagsSet.add(NGob.Tags.qgreet);
                     }
                 }
@@ -171,10 +171,16 @@ public class NQuestInfo extends NDraggableWidget {
     private boolean isVisible;
     private static final TreeMap<String, Quester> questers = new TreeMap<>();
 
+    public static TreeMap<String, Quester> getQuesters(){
+        if(isAvailable()){
+            return questers;
+        }
+        return new TreeMap<>();
+    }
     static Quester credo = new Quester(null);
 
 
-    NQuestsStats stats;
+    static NQuestsStats stats;
     private Tex glowon;
 
 
@@ -215,13 +221,12 @@ public class NQuestInfo extends NDraggableWidget {
             asTask = a;
             needUpdate = true;
         });
-        //        add(new NMiniMapWnd.NMenuCheckBox("lbtn-stats", GameUI.kb_vil, "Show stats"), UI.scale(60), 0).changed(a -> {
-//                    if (stats.visible())
-//                        stats.hide();
-//                    else
-//                        stats.show();
-//                }
-//        );
+        add(new NMiniMapWnd.NMenuCheckBox("lbtn-stats", GameUI.kb_vil, "Show stats"), UI.scale(60), 0).changed(a -> {
+            if (stats.visible())
+                stats.hide();
+            else
+                stats.show();
+        });
         dy = Resource.loadtex("hud/lbtn-stats").sz().y;
         pack();
     }
@@ -247,14 +252,14 @@ public class NQuestInfo extends NDraggableWidget {
                             NUtils.waitEvent(() -> NUtils.getGameUI().chrwdg.quest != null && ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).id == q.id && ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond != null && ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond.length > 0, 200);
                             for (CharWnd.Quest.Condition c : ((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond) {
                                 String qname = null;
-                                if (c.desc.contains("Tell") || c.desc.contains("Visit")) {
+                                if (c.desc.contains("Tell") || (c.desc.contains("Visit") && !c.desc.contains("cave"))) {
                                     qname = c.desc.contains("Tell") ? c.desc.substring(5, c.desc.indexOf(" ", 6)) : c.desc.substring(6);
                                     if (!new_questers.containsKey(qname)) {
                                         new_questers.put(qname, new Quester(qname));
                                     }
                                     new_questers.get(qname).main_quests.put(q.id, new Quester.Quest(((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond, q.id));
                                 } else {
-                                    if (c.desc.contains("Greet") || c.desc.contains("Visit")) {
+                                    if (c.desc.contains("Greet") || (c.desc.contains("Visit") && !c.desc.contains("cave"))) {
                                         qname = c.desc.substring(6);
                                     } else if (c.desc.contains(" to ")) {
                                         qname = c.desc.substring(c.desc.indexOf(" to ") + 4);
@@ -529,7 +534,7 @@ public class NQuestInfo extends NDraggableWidget {
                                     forage_t.add(new Task(qid, c));
                                 else if (c.desc.contains("Kill") || c.desc.contains("Raid") || c.desc.contains("Catch"))
                                     hunting_t.add(new Task(qid, c));
-                                else if (c.desc.contains("Greet") || c.desc.contains("Visit") || c.desc.contains("wave") || c.desc.contains("laugh") || c.desc.contains("rage"))
+                                else if (c.desc.contains("Greet") || (c.desc.contains("Visit") && !c.desc.contains("cave") ) || c.desc.contains("wave") || c.desc.contains("laugh") || c.desc.contains("rage"))
                                     consult_t.add(new Task(qid, c));
                                 else if (c.desc.contains("Gain"))
                                     stats_t.add(new Task(qid, c));
