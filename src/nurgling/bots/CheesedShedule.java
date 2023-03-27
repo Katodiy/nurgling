@@ -291,7 +291,7 @@ public class CheesedShedule extends Bot {
         LinkedList<Task> tasks = new LinkedList<>();
         try {
             BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(Files.newInputStream(Paths.get("./cheese_shedule.json")), "cp1251"));
+                    new InputStreamReader(Files.newInputStream(Paths.get("./cheese_shedule.json")), "UTF-8"));
             JSONParser parser = new JSONParser();
             JSONArray jsonArray = (JSONArray) parser.parse(reader);
 

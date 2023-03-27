@@ -159,7 +159,7 @@ public class NCharacterInfo {
 
                         if(new File(path + "/" + NUtils.getGameUI().chrid + "_info.dat").exists()) {
                             BufferedReader reader = new BufferedReader (
-                                    new InputStreamReader (Files.newInputStream(Paths.get(path + "/" + NUtils.getGameUI().chrid + "_info.dat")), "cp1251" ) );
+                                    new InputStreamReader (Files.newInputStream(Paths.get(path + "/" + NUtils.getGameUI().chrid + "_info.dat")), "UTF-8" ) );
                             JSONParser parser = new JSONParser();
                             JSONObject jsonObject = (JSONObject) parser.parse(reader);
 

@@ -206,7 +206,7 @@ public class NConfiguration {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(
-                    new InputStreamReader(new FileInputStream(path), "cp1251"));
+                    new InputStreamReader(new FileInputStream(path), "UTF-8"));
 
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = (JSONObject) parser.parse(reader);
@@ -691,7 +691,7 @@ public class NConfiguration {
         read_drink_data();
         try {
             BufferedReader reader = new BufferedReader (
-                    new InputStreamReader( new FileInputStream( path ), "cp1251" ) );
+                    new InputStreamReader( new FileInputStream( path ), "UTF-8" ) );
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = ( JSONObject ) parser.parse ( reader );
 
@@ -985,7 +985,7 @@ public class NConfiguration {
             if (url != null) {
                 String path = url.toURI().getPath().substring(0, url.toURI().getPath().lastIndexOf("/"));
                 BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(new FileInputStream(path + "/drink_data.json"), "cp1251"));
+                        new InputStreamReader(new FileInputStream(path + "/drink_data.json"), "UTF-8"));
                 JSONParser parser = new JSONParser();
                 JSONObject jsonObject = (JSONObject) parser.parse(reader);
 

@@ -44,7 +44,7 @@ public enum AreasID {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(
-                    new InputStreamReader( new FileInputStream(path), "cp1251" ) );
+                    new InputStreamReader( new FileInputStream(path), "UTF-8" ) );
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = ( JSONObject ) parser.parse ( reader );
             JSONArray widgetsPos = ( JSONArray ) jsonObject.get ( "data" );

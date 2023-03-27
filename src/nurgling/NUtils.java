@@ -64,7 +64,7 @@ public class NUtils {
             if (url != null) {
                 String path = url.toURI().getPath().substring(0, url.toURI().getPath().lastIndexOf("/"));
                 BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(new FileInputStream(path + "/tile_names.json"), "cp1251"));
+                        new InputStreamReader(new FileInputStream(path + "/tile_names.json"), "UTF-8"));
                 JSONParser parser = new JSONParser();
                 JSONObject jsonObject = (JSONObject) parser.parse(reader);
                 for(Object key:jsonObject.keySet())
