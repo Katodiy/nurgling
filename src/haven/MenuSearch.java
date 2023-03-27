@@ -103,9 +103,9 @@ public class MenuSearch extends Window {
 	Pagina root = this.root;
 	List<PagButton> found = new ArrayList<>();
 	{
-	    Collection<Pagina> leaves = new ArrayList<>();
+	    Collection<Pagina> leaves;
 	    synchronized(menu.paginae) {
-		leaves.addAll(menu.paginae);
+		leaves = new ArrayList<>(menu.paginae.keySet());
 	    }
 	    for(Pagina pag : leaves) {
 		try {

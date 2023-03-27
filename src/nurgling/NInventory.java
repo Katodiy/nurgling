@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class NInventory extends Inventory {
 
@@ -13,6 +14,72 @@ public class NInventory extends Inventory {
         super(sz);
     }
 
+    Window wnd = null;
+
+    AtomicBoolean isTogglReady = new AtomicBoolean(false);
+    MenuGrid.PagButton bundle = null;
+    class ToggleChecker implements Runnable
+    {
+        @Override
+        public void run() {
+            try {
+                NUtils.getGameUI().isToogleCheck.set(true);
+                NUtils.waitEvent(()->NUtils.getGameUI().menu!=null,2000);
+                for(MenuGrid.Pagina p : NUtils.getGameUI().menu.paginae.keySet())
+                {
+                    if(p.res!=null) {
+                        String name = ((Session.CachedRes.Ref) (p.res)).getName();
+                        if (name.contains("paginae/act/itemcomb")) {
+                            (bundle = p.button()).use(new MenuGrid.Interaction(1, 0));
+                            break;
+                        }
+                    }
+                }
+                NUtils.waitEvent(()->NUtils.getGameUI().isBundle!=null,2000);
+                if(bundle!=null)
+                {
+                    bundle.use(new MenuGrid.Interaction(1, 0));
+                    NUtils.waitEvent(()->NUtils.getGameUI().isToogleCheck.get(),2000);
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            isTogglReady.set(true);
+        }
+    }
+
+    NMiniMapWnd.NMenuCheckBox mmbundle = null;
+    @Override
+    public void tick(double dt) {
+        super.tick(dt);
+        if(NUtils.getGameUI().getInventory()==this)
+        {
+            if(wnd == null)
+            {
+                if(!NUtils.getGameUI().isToogleCheck.get() && !isTogglReady.get()) {
+                    new Thread(new ToggleChecker()).start();
+                }
+                if(isTogglReady.get()) {
+                    wnd = this.getparent(Window.class);
+                    mmbundle = (NMiniMapWnd.NMenuCheckBox)wnd.add(new NMiniMapWnd.NMenuCheckBox("lbtn-bundle", GameUI.kb_vil, "Enable/disable stack"), sz.x - 2* wnd.cbtn.sz.x, -UI.scale(21)).changed(a -> {
+                        bundle.use(new MenuGrid.Interaction(1, 0));
+                    });
+                    mmbundle.a = NUtils.getGameUI().isBundle.get();
+                }
+            }
+            else
+            {
+                mmbundle.a = NUtils.getGameUI().isBundle.get();
+            }
+        }
+    }
+
+    @Override
+    public void resize(Coord sz) {
+        mmbundle.move(new Coord(sz.x - 2* wnd.cbtn.sz.x, -UI.scale(21)));
+        wnd.cbtn.move(new Coord(sz.x - wnd.cbtn.sz.x, -UI.scale(21)));
+        super.resize(sz);
+    }
 
     /**
      * Получить контейнеры с водой
@@ -361,9 +428,9 @@ public class NInventory extends Inventory {
             for (Widget widget = child; widget != null; widget = widget.next) {
                 if (widget instanceof WItem) {
                     WItem wdg = (WItem) widget;
-                    Coord pos = new Coord(wdg.c.x / (sqsz.x - 1), wdg.c.y / (sqsz.x - 1));
+                    Coord pos = new Coord(wdg.c.x / (sqsz.x  - UI.scale(1)), wdg.c.y / (sqsz.x  - UI.scale(1)));
                     Coord size = ((NGItem) wdg.item).spriteSize;
-                    Coord endPos = new Coord(pos.x + size.x - 1, pos.y + size.y - 1);
+                    Coord endPos = new Coord(pos.x + size.x - UI.scale(1), pos.y + size.y  - UI.scale(1));
                     for (int i = pos.x; i <= endPos.x; i++) {
                         for (int j = pos.y; j <= endPos.y; j++) {
                             inventory[i][j] = true;

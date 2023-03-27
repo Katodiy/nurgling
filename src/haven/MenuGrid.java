@@ -35,13 +35,14 @@ import haven.Resource.AButton;
 import nurgling.NMenuGrid;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class MenuGrid extends Widget implements KeyBinding.Bindable {
     public final static Tex bg = Resource.loadtex("gfx/hud/invsq");
     public final static Coord bgsz = bg.sz().add(-UI.scale(1), -UI.scale(1));
     public final static RichText.Foundry ttfnd = new RichText.Foundry(TextAttribute.FAMILY, "SansSerif", TextAttribute.SIZE, UI.scale(10f));
     protected static Coord gsz = new Coord(4, 4);
-    public final Set<Pagina> paginae = new HashSet<Pagina>();
+    public final ConcurrentHashMap<Pagina,Boolean> paginae = new ConcurrentHashMap<Pagina,Boolean>();
     public Pagina cur;
     private Pagina dragging;
     public Collection<PagButton> curbtns = Collections.emptyList();
@@ -290,7 +291,7 @@ public class MenuGrid extends Widget implements KeyBinding.Bindable {
 	Collection<Pagina> open, close = new HashSet<Pagina>();
 	synchronized(paginae) {
 	    open = new LinkedList<Pagina>();
-	    for(Pagina pag : paginae) {
+	    for(Pagina pag : paginae.keySet()) {
 		if(pag.newp == 2) {
 		    pag.newp = 0;
 		    pag.fstart = 0;
@@ -557,7 +558,7 @@ public class MenuGrid extends Widget implements KeyBinding.Bindable {
 			    pag.rawinfo = (Object[])args[a++];
 			else
 			    pag.rawinfo = new Object[0];
-			paginae.add(pag);
+			paginae.put(pag, Boolean.FALSE);
 		    } else {
 			paginae.remove(pag);
 		    }

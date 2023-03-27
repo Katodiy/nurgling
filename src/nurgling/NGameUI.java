@@ -1,11 +1,15 @@
 package nurgling;
 
 import haven.*;
+import haven.Window;
 import haven.res.ui.barterbox.Shopbox;
 import haven.res.ui.tt.tiplabel.TipLabel;
 import haven.res.ui.tt.relcont.RelCont;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 
@@ -21,6 +25,7 @@ public class NGameUI extends GameUI {
                 map.disol(tag);
         }
     }
+
 
     public NBotsInfo botsInfo;
     public NQuestInfo questInfo;
@@ -39,6 +44,36 @@ public class NGameUI extends GameUI {
         t1.updateButtons(NConfiguration.getInstance().toolBelts.get("belt0").toolKeys);
         t2.updateButtons(NConfiguration.getInstance().toolBelts.get("belt1").toolKeys);
         t3.updateButtons(NConfiguration.getInstance().toolBelts.get("belt2").toolKeys);
+    }
+
+    public AtomicBoolean isToogleCheck = new AtomicBoolean(false);
+
+    public AtomicBoolean isBundle = null;
+
+
+    @Override
+    public void msg(String msg, Color color, Color logcol) {
+        msgtime = Utils.rtime();
+        lastmsg = msgfoundry.render(msg, color);
+        NQuestsStats.checkReward(msg);
+        syslog.append(msg, logcol);
+    }
+    @Override
+    public void msg(String msg) {
+        if (!isToogleCheck.get())
+        {
+            super.msg(msg);
+        }
+        if (msg.contains("Stack")) {
+            if(isBundle == null)
+                isBundle = new AtomicBoolean(!msg.contains("off"));
+            else {
+                isBundle.set(!msg.contains("off"));
+                if (isToogleCheck.get() ) {
+                    isToogleCheck.set(false);
+                }
+            }
+        }
     }
 
     public boolean updated() {

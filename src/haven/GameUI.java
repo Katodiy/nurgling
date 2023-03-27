@@ -49,8 +49,8 @@ public class GameUI extends ConsoleHost implements Console.Directory, UI.Message
     public MiniMap mmap;
     public Fightview fv;
     protected List<Widget> meters = new LinkedList<Widget>();
-    private Text lastmsg;
-    private double msgtime;
+    protected Text lastmsg;
+    protected double msgtime;
     private Window invwnd;
 	public Window equwnd;
 	private Window makewnd;
@@ -1529,7 +1529,7 @@ public class GameUI extends ConsoleHost implements Console.Directory, UI.Message
 	}
     }
 
-    private double lastmsgsfx = 0;
+    protected double lastmsgsfx = 0;
     public void msg(String msg) {
 	msg(msg, Color.WHITE, Color.WHITE);
 	double now = Utils.rtime();
