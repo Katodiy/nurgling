@@ -16,7 +16,7 @@ public class NDraggableWidget extends Widget {
 	boolean over = false;
     public NDraggableWidget(String name) {
 		this.name = name;
-		locked = NConfiguration.getInstance().dragWidgets.get(name).locked;
+		locked = NConfiguration.getInstance().dragWidgets.get(name) != null && NConfiguration.getInstance().dragWidgets.get(name).locked;
 		btnLock = add(new NToggleButton("hud/btn-ulock", "", "-d", "-h", "hud/btn-lock", "", "-d", "-h"), new Coord(sz.x, UI.scale(5)));
 		btnLock.action(()->{locked=!locked;draggable=!locked;NConfiguration.getInstance().dragWidgets.get(name).locked = locked;});
 		btnLock.recthit = true;

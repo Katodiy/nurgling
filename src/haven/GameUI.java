@@ -1511,6 +1511,7 @@ public class GameUI extends ConsoleHost implements Console.Directory, UI.Message
     public void msg(String msg, Color color, Color logcol) {
 	msgtime = Utils.rtime();
 	lastmsg = msgfoundry.render(msg, color);
+	NQuestsStats.checkReward(msg);
 	syslog.append(msg, logcol);
     }
 
