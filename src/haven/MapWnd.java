@@ -250,7 +250,7 @@ public class MapWnd extends Window implements Console.Directory {
 
 	public void resize(int h) {
 	    super.resize(new Coord(sz.x, h));
-	    listf.resize(listf.sz.x, sz.y - UI.scale(210));
+	    listf.resize(listf.sz.x, sz.y - UI.scale(310));
 	    listf.c = new Coord(sz.x - listf.sz.x, 0);
 	    list.resize(listf.inner());
 	    mebtn.c = new Coord(0, sz.y - mebtn.sz.y);
@@ -263,8 +263,8 @@ public class MapWnd extends Window implements Console.Directory {
 		namesel.c = listf.c.add(0, listf.sz.y + UI.scale(10));
 		if(colsel != null) {
 		    colsel.c = namesel.c.add(0, namesel.sz.y + UI.scale(10));
-		    mremove.c = colsel.c.add(0, colsel.sz.y + UI.scale(10));
 		}
+		mremove.c = (colsel != null)?colsel.c.add(0, colsel.sz.y + UI.scale(10)):namesel.c.add(0, namesel.sz.y + UI.scale(10));
 	    }
 	}
     }
@@ -652,13 +652,14 @@ public class MapWnd extends Window implements Console.Directory {
 		tool.namesel.buf.point(mark.nm.length());
 		tool.namesel.commit();
 		if(mark instanceof PMarker) {
-		    PMarker pm = (PMarker)mark;
-		    colsel = tool.add(new GroupSelector(Math.max(0, Utils.index(BuddyWnd.gc, pm.color))) {
-			    public void changed(int group) {
-				pm.color = BuddyWnd.gc[group];
-				view.file.update(mark);
-			    }
+			PMarker pm = (PMarker) mark;
+			colsel = tool.add(new GroupSelector(Math.max(0, Utils.index(BuddyWnd.gc, pm.color))) {
+				public void changed(int group) {
+					pm.color = BuddyWnd.gc[group];
+					view.file.update(mark);
+				}
 			});
+		}
 		    mremove = tool.add(new Button(UI.scale(200), "Remove", false) {
 			    public void click() {
 				view.file.remove(mark);
@@ -668,7 +669,7 @@ public class MapWnd extends Window implements Console.Directory {
 		}
 		MapWnd.this.resize(asz);
 	    }
-	}
+
     }
 
     public void resize(Coord sz) {
