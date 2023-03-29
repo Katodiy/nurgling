@@ -211,7 +211,6 @@ public class NConfiguration {
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = (JSONObject) parser.parse(reader);
             botmod = new BotMod((String) jsonObject.get("user"), (String) jsonObject.get("password"), (String) jsonObject.get("character"), (String) jsonObject.get("bot"), (String) jsonObject.get("nomad"));
-            AreasID.read((String) jsonObject.get("config_path"));
         } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
         }
@@ -674,7 +673,7 @@ public class NConfiguration {
         whitePlayers.put("arrow",players.get("white").arrow);
         obj.put("white_players",whitePlayers);
 
-        try ( FileWriter file = new FileWriter ( "./config.nurgling.json" ) ) {
+        try ( FileWriter file = new FileWriter ( ((HashDirCache)ResCache.global).base +"/../" + "./config.nurgling.json" ) ) {
             file.write ( obj.toJSONString () );
         }
         catch ( IOException e ) {
@@ -684,7 +683,7 @@ public class NConfiguration {
     }
 
     public static void initDefault () {
-            getInstance ().read ( "./config.nurgling.json" );
+            getInstance ().read ( ((HashDirCache)ResCache.global).base +"/../" + "./config.nurgling.json" );
     }
 
     public void read ( String path ) {

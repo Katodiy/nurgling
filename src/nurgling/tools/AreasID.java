@@ -1,5 +1,7 @@
 package nurgling.tools;
 
+import haven.HashDirCache;
+import haven.ResCache;
 import nurgling.json.JSONArray;
 import nurgling.json.JSONObject;
 import nurgling.json.parser.JSONParser;
@@ -37,7 +39,7 @@ public enum AreasID {
     fish1,fish2,fish3,fish4,fish5,fish6,fish7,fish8,fish9,fish10,fish11,fish12,fish13,fish14,fish15,fish16,fish17,fish18,fish19,fish20,fish21,fish22,fish23,fish24,fish25,fish26,fish27,fish28,fish29,fish30,fish31,fish32,fish33,fish34,fish35,fish36,fish37,fish38,fish39,fish40, cheese_final, tobacco_work;
 
     public static void init() {
-        read("calibr.json");
+        read(( ((HashDirCache) ResCache.global).base +"/../" + "./calibr.json" ));
     }
 
     public static void read(String path){

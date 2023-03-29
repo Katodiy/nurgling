@@ -290,8 +290,8 @@ public class CheesedShedule extends Bot {
     public static LinkedList<Task> read(){
         LinkedList<Task> tasks = new LinkedList<>();
         try {
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(Files.newInputStream(Paths.get("./cheese_shedule.json")), "UTF-8"));
+            BufferedReader reader = new BufferedReader (new InputStreamReader(
+                    Files.newInputStream(Paths.get(((HashDirCache) ResCache.global).base + "/../" + "./cheese_shedule.json")), "UTF-8"));
             JSONParser parser = new JSONParser();
             JSONArray jsonArray = (JSONArray) parser.parse(reader);
 
@@ -333,7 +333,7 @@ public class CheesedShedule extends Bot {
             }
         }
 
-        String path = "./cheese_shedule.json";
+        String path = ((HashDirCache) ResCache.global).base + "/../" + "./cheese_shedule.json";
         try (FileWriter file = new FileWriter(path)) {
             //String res = obj.toJSONString();
             file.write(jtasks.toJSONString());

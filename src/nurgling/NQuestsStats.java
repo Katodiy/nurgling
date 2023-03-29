@@ -161,11 +161,11 @@ public class NQuestsStats extends Window {
         URL url = NQuestsStats.class.getProtectionDomain().getCodeSource().getLocation();
         if (url != null) {
             try {
-                String path = url.toURI().getPath().substring(0, url.toURI().getPath().lastIndexOf("/")) + "/quest_stats.json";
+                String path =  ((HashDirCache) ResCache.global).base + "/../"  + "./quest_stats.json";
                 FileWriter file = new FileWriter(path);
                 file.write(obj.toJSONString());
                 file.close();
-            } catch (IOException | URISyntaxException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -174,8 +174,7 @@ public class NQuestsStats extends Window {
 
     private void read (  ) {
         try {
-            URL url = NQuestsStats.class.getProtectionDomain().getCodeSource().getLocation();
-            String path = url.toURI().getPath().substring(0, url.toURI().getPath().lastIndexOf("/")) + "/quest_stats.json";
+            String path = ((HashDirCache) ResCache.global).base + "/../"  + "./quest_stats.json";
             if(!new File(path).exists())
                 return;
             BufferedReader reader = new BufferedReader(
@@ -200,7 +199,7 @@ public class NQuestsStats extends Window {
                 }
             }
         }
-        catch ( IOException | ParseException | URISyntaxException e) {
+        catch ( IOException | ParseException e) {
             throw new RuntimeException(e);
         }
     }
