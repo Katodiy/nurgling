@@ -193,108 +193,6 @@ public class NGob {
         }
     };
 
-//    protected void updateCustom() {
-
-//            switch (status) {
-//                    if (isTag(Tags.iconsign)) {
-//                        if (NConfiguration.getInstance().showAreas) {
-//                            if (NUtils.getGameUI() != null && NUtils.getGameUI().updated()) {
-//                                synchronized (made_id) {
-//                                    for (String name : made_id.keySet()) {
-//                                        if (made_id.get(name) == ((Gob) this).modelAttribute)
-//                                            try {
-//                                                NOCache.constructOverlay(AreasID.find(name));
-//                                            } catch (IllegalArgumentException e) {
-////                                    e.printStackTrace();
-//                                            } catch (Resource.Loading | MCache.LoadingMap e) {
-//                                                status = Status.undefined;
-//                                            }
-//                                    }
-//                                }
-//                            } else {
-//                                status = Status.undefined;
-//                                return;
-//                            }
-//                        }
-//                    }
-//                   else if (isTag(Tags.gardenpot)) {
-//                        if ((modelAttribute & 1) == 0) {
-//                            addTag(Tags.no_water);
-//                        } else if ((modelAttribute & 2) == 0) {
-//                            addTag(Tags.no_soil);
-//                        } else {
-//                            removeTag(Tags.no_water, Tags.no_soil);
-//                        }
-//                        Gob gob = ((Gob) this);
-//                        if (isTag(Tags.no_water))
-//                            gob.setattr(new NGobColor(gob, NConfiguration.getInstance().colors.get("no_water")));
-//                        else if (isTag(Tags.no_soil)) {
-//                            gob.setattr(new NGobColor(gob, NConfiguration.getInstance().colors.get("no_soil")));
-//                        } else if (isTag(Tags.free)) {
-//                            gob.setattr(new NGobColor(gob, NConfiguration.getInstance().colors.get("free")));
-//                        } else if (isTag(Tags.inwork)) {
-//                            gob.setattr(new NGobColor(gob, NConfiguration.getInstance().colors.get("inwork")));
-//                        } else {
-//                            gob.setattr(new NGobColor(gob, NConfiguration.getInstance().colors.get("ready")));
-//                        }
-//                    }
-//                    if (isTag(Tags.knocked)) {
-//                        Gob gob = ((Gob) this);
-//                        gob.removeol(NAreaRad.class);
-//                        gob.removeol(NDmgOverlay.class);
-//                        gob.removeol(NTargetRing.class);
-////                        gob.removeTag(Tags.notmarked);
-//                    } else
-//                        if (isTag(Tags.greyseal)) {
-//                            Audio.play(Resource.local().loadwait("alarm/greyseal"));
-//                        } else if (isTag(Tags.bear)) {
-//                            Audio.play(Resource.local().loadwait("alarm/bear"));
-//                        } else if (isTag(Tags.wolf)) {
-//                            Audio.play(Resource.local().loadwait("alarm/wolf"));
-//                        } else if (isTag(Tags.mammoth)) {
-//      //                      Audio.play(Resource.local().loadwait("alarm/mammoth"));
-//                        } else if (isTag(Tags.winter_stoat)) {
-//                            for (GAttrib a : gob.attr.values())
-//                                if (a instanceof Composite) {
-//                                    Composited comp = ((Composite) a).comp;
-//                                    if (findModeLay(comp.mod, new NAlias(new ArrayList<>(Arrays.asList("winter"))))) {
-//                                        Audio.play(Resource.local().loadwait("alarm/stoat"));
-//                                    }
-//                                }
-//                        }
-//                    }
-//                    }
-//                    }
-
-//
-//
-//                case undefined: {
-//                    i else {
-//                                return;
-//                            }
-//                        } else if (isTag(Tags.gardenpot)) {
-//                            if (((Gob) this).ols.isEmpty() || (((Gob) this).ols.size() == 1 && ((Gob) this).findol(NObjectLabel.class) != null)) {
-//                                addTag(Tags.free);
-//                                removeTag(Tags.inwork, Tags.ready);
-//                            } else if (((Gob) this).ols.size() == 1) {
-//                                addTag(Tags.inwork);
-//                                removeTag(Tags.free, Tags.ready);
-//                            } else {
-//                                addTag(Tags.ready);
-//                                removeTag(Tags.free, Tags.inwork);
-//                            }
-//
-//                        }
-
-//                        status = Status.ready_for_update;
-//                    }
-//                }
-//            }
-
-//        }
-//    }
-
-
     protected void checkattr(Gob gob, Class<? extends GAttrib> ac, GAttrib a, GAttrib prev) {
         if (prev instanceof Following) {
             if (tags.remove(Tags.mounted)) {
@@ -364,7 +262,7 @@ public class NGob {
             return -1;
         }
         long res = calcMarker(rd.sdt);
-        if (res != gob.modelAttribute)
+        if (res != gob.modelAttribute || res == -1)
             gob.status = Status.ready_for_update;
         updateCustom(gob);
         return res;
@@ -673,6 +571,7 @@ public class NGob {
         }
     }
 
+
     protected static void updateCustom(Gob gob) {
         if (gob.status != Status.updated)
             if (gob.getattr(GobIcon.class) == null) {
@@ -685,6 +584,10 @@ public class NGob {
 
 
         if (gob.status == Status.ready_for_update) {
+            NModelBox modelBox = NModelBox.forGob(gob);
+            if (modelBox != null && gob.findol(NModelBox.class) == null) {
+                gob.addcustomol(modelBox);
+            }
             if (NUtils.getGameUI() != null && NUtils.getGameUI().map != null) {
                 if (gob.isTag(Tags.borka)) {
                     if (NUtils.getGameUI().map.player() != null) {
@@ -723,7 +626,8 @@ public class NGob {
                 return;
             }
 
-            if (NConfiguration.getInstance().enablePfBoundingBoxes) {
+            if (NConfiguration.getInstance().enablePfBoundingBoxes)
+            {
                 if (gob.getHitBox() != null && gob.findol(NGobHiteBoxSpr.class) == null) {
                     gob.addcustomol(new NGobHiteBoxSpr(NBoundingBox.getBoundingBox(gob)));
                 }

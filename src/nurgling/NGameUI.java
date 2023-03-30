@@ -94,6 +94,12 @@ public class NGameUI extends GameUI {
                 }
             }
         }
+        else
+        {
+            if (isToogleCheck.get() ) {
+                isToogleCheck.set(false);
+            }
+        }
     }
 
     public boolean updated() {

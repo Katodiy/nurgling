@@ -64,6 +64,8 @@ public class NConfiguration {
     public boolean lockStudy = false;
     public boolean alarmGreyseal = false;
     public boolean isQuestInfoVisible = true;
+    public boolean hideNature = true;
+    public boolean showBB = false;
 
     public static String getCharKey()
     {
@@ -424,11 +426,12 @@ public class NConfiguration {
     }
 
     public void install() {
-        synchronized (NUtils.getGameUI().ui.sess.glob.oc) {
-            for (Gob gob : NUtils.getGameUI().ui.sess.glob.oc) {
-                gob.status = NGob.Status.ready_for_update;
+        if (NUtils.getGameUI() != null && NUtils.getGameUI().ui != null && NUtils.getGameUI().ui.sess != null)
+            synchronized (NUtils.getGameUI().ui.sess.glob.oc) {
+                for (Gob gob : NUtils.getGameUI().ui.sess.glob.oc) {
+                    gob.status = NGob.Status.ready_for_update;
+                }
             }
-        }
     }
 
     public void write () {
@@ -608,6 +611,8 @@ public class NConfiguration {
         obj.put("isGrid",isGrid);
         obj.put("isEye",isEyed);
         obj.put("enablePfBoundingBoxes",enablePfBoundingBoxes);
+        obj.put("showBB",showBB);
+        obj.put("hideNature",hideNature);
         obj.put("enableCollectFoodInfo",collectFoodInfo);
         obj.put("isPaths",isPaths);
         JSONArray pathCandidates = new JSONArray ();
@@ -887,6 +892,12 @@ public class NConfiguration {
             }
             if ( jsonObject.get ( "enablePfBoundingBoxes" ) != null ) {
                 enablePfBoundingBoxes = (boolean)jsonObject.get ( "enablePfBoundingBoxes" );
+            }
+            if ( jsonObject.get ( "showBB" ) != null ) {
+                showBB = (boolean)jsonObject.get ( "showBB" );
+            }
+            if ( jsonObject.get ( "hideNature" ) != null ) {
+                hideNature = (boolean)jsonObject.get ( "hideNature" );
             }
             if ( jsonObject.get ( "enableCollectFoodInfo" ) != null ) {
                 collectFoodInfo = (boolean)jsonObject.get ( "enableCollectFoodInfo" );
