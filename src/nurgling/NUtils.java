@@ -592,6 +592,12 @@ public class NUtils {
         return (gob.getattr(Following.class)!=null && gob.getattr(Following.class).tgt==gameUI.map.player().id);
     }
 
+    public static boolean isCursor(String s) {
+        if(getGameUI().ui.getcurs(Coord.z)!=null && (getGameUI().ui.getcurs(Coord.z).name!=null))
+            return getGameUI().ui.getcurs(Coord.z).name.contains(s);
+        return false;
+    }
+
 
     static class AutoBot implements Runnable{
 

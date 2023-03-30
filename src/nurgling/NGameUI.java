@@ -5,12 +5,15 @@ import haven.Window;
 import haven.res.ui.barterbox.Shopbox;
 import haven.res.ui.tt.tiplabel.TipLabel;
 import haven.res.ui.tt.relcont.RelCont;
+import nurgling.json.parser.ParseException;
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class NGameUI extends GameUI {
@@ -50,12 +53,29 @@ public class NGameUI extends GameUI {
 
     public AtomicBoolean isBundle = null;
 
-
+    private static Pattern GOB_Q = Pattern.compile("Quality: (\\d+)");
     @Override
     public void msg(String msg, Color color, Color logcol) {
         msgtime = Utils.rtime();
         lastmsg = msgfoundry.render(msg, color);
-        NQuestsStats.checkReward(msg);
+        if(msg.contains("increased")) {
+            NQuestsStats.checkReward(msg);
+        }
+        else if (msg.contains("Quality")) {
+            if(detectedGob!=null)
+            {
+                Matcher m = GOB_Q.matcher(msg);
+                if(m.matches()) {
+                    try {
+                        detectedGob.quality = Integer.parseInt(m.group(1));
+                        detectedGob.addTag(NGob.Tags.quality);
+                    } catch (NumberFormatException ignored) {
+                    } finally {
+                        detectedGob = null;
+                    }
+                }
+            }
+        }
         syslog.append(msg, logcol);
     }
     @Override
@@ -82,6 +102,11 @@ public class NGameUI extends GameUI {
 
     public NQuestsStats getStats() {
         return stats;
+    }
+
+    private Gob detectedGob = null;
+    public void setDetectGob(Gob gob) {
+        detectedGob = gob;
     }
 
     public class PaginaBeltSlot extends BeltSlot {

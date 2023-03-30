@@ -17,6 +17,7 @@ public class NGob {
     public Tex noteImg = null;
 
     public int oldModSize = -1;
+    public int quality = -1;
 
     protected NHitBox hitBox = null;
 
@@ -107,7 +108,7 @@ public class NGob {
         wild,
         mammoth,
         stoat,
-        rabbithutch, chickencoop, stalagoomba, kritter_is_ready, qbring, qrage, qwave, qlaugh, qgreet, qcompleted, winter_stoat
+        rabbithutch, chickencoop, stalagoomba, kritter_is_ready, qbring, qrage, qwave, qlaugh, qgreet, qcompleted, quality, winter_stoat
     }
 
     public final HashSet<Tags> tags = new HashSet<>();
@@ -725,6 +726,12 @@ public class NGob {
                 }
             }
             if (gob.status == Status.ready_for_update) {
+                if( gob.isTag(Tags.quality))
+                {
+                    if(gob.quality!=-1) {
+                        gob.addcustomol(new NObjectLabel(gob, String.format("Q: %d", gob.quality), new Color(120, 255, 255)));
+                    }
+                }
                 if (gob.isTag(Tags.tree) || gob.isTag(Tags.bumling) || gob.isTag(Tags.quester)) {
                     for (String name : NQuestInfo.getMarkers().keySet()) {
                         NQuestInfo.QuestGob questGob = NQuestInfo.getMarkers().get(name);
