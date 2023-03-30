@@ -69,7 +69,8 @@ public class NInventory extends Inventory {
             }
             else
             {
-                mmbundle.a = NUtils.getGameUI().isBundle.get();
+                if(NUtils.getGameUI().isBundle!=null)
+                    mmbundle.a = NUtils.getGameUI().isBundle.get();
             }
         }
     }

@@ -1994,9 +1994,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 			args = Utils.extend(args, inf.clickargs());
 			Gob detgob = Gob.from(inf.ci);
 			if(detgob != null) {
-				if (NUtils.isCursor("gfx/hud/curs/study")) {
-					NUtils.getGameUI().setDetectGob(detgob);
-				}
+				NUtils.getGameUI().setDetectGob(detgob);
 			}
 			if (ui.modmeta && clickb == 1) {
 				Gob gob = Gob.from(inf.ci);
