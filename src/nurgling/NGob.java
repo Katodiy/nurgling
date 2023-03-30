@@ -107,6 +107,7 @@ public class NGob {
         wolf,
         wild,
         mammoth,
+        orca,
         stoat,
         rabbithutch, chickencoop, stalagoomba, kritter_is_ready, qbring, qrage, qwave, qlaugh, qgreet, qcompleted, quality, winter_stoat
     }
@@ -540,6 +541,8 @@ public class NGob {
                     gob.addTag(Tags.wolf);
                 else if (NUtils.checkName(name, "mammoth"))
                     gob.addTag(Tags.mammoth);
+                else if (NUtils.checkName(name, "orca"))
+                    gob.addTag(Tags.orca);
                 else if (NUtils.checkName(name, "stoat"))
                     gob.addTag(Tags.stoat);
                 if (NUtils.checkName(name, "horse")) {
@@ -812,6 +815,8 @@ public class NGob {
                 } else if (gob.isTag(Tags.kritter)) {
                     if (gob.isTag(Tags.sheep) || gob.isTag(Tags.goat))
                         gob.addcustomol(new NWoolMarker(gob, 12));
+                    if(gob.isTag(Tags.stalagoomba))
+                        NAlarmManager.play(Tags.stalagoomba);
 
                     if(gob.getattr(Composite.class)!=null && gob.getpose()!=null && !gob.isTag(Tags.knocked) && gob.isTag(Tags.kritter_is_ready)) {
                         for (String ring : NConfiguration.getInstance().rings.keySet()) {
@@ -826,12 +831,12 @@ public class NGob {
                             NAlarmManager.play(Tags.greyseal);
                         else if(gob.isTag(Tags.wolf))
                             NAlarmManager.play(Tags.wolf);
-                        else if(gob.isTag(Tags.stalagoomba))
-                            NAlarmManager.play(Tags.stalagoomba);
                         else if(gob.isTag(Tags.winter_stoat))
                             NAlarmManager.play(Tags.winter_stoat);
                         else if(gob.isTag(Tags.mammoth))
                             NAlarmManager.play(Tags.mammoth);
+                        else if(gob.isTag(Tags.orca))
+                            NAlarmManager.play(Tags.orca);
                     }
 
                 } else if (gob.isTag(Tags.angryhorse)) {

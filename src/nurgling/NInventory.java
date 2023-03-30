@@ -59,7 +59,7 @@ public class NInventory extends Inventory {
                 if(!NUtils.getGameUI().isToogleCheck.get() && !isTogglReady.get()) {
                     new Thread(new ToggleChecker()).start();
                 }
-                if(isTogglReady.get()) {
+                if(isTogglReady.get() && NUtils.getGameUI().isBundle!=null) {
                     wnd = this.getparent(Window.class);
                     mmbundle = (NMiniMapWnd.NMenuCheckBox)wnd.add(new NMiniMapWnd.NMenuCheckBox("lbtn-bundle", GameUI.kb_vil, "Enable/disable stack"), sz.x - 2* wnd.cbtn.sz.x, -UI.scale(21)).changed(a -> {
                         bundle.use(new MenuGrid.Interaction(1, 0));

@@ -22,6 +22,7 @@ public class NAlarmManager {
         alarms.put(NGob.Tags.wolf,"alarm/wolf");
         alarms.put(NGob.Tags.greyseal,"alarm/greyseal");
         alarms.put(NGob.Tags.mammoth,"alarm/mammoth");
+        alarms.put(NGob.Tags.orca,"alarm/orca");
         alarms.put(NGob.Tags.quest,"alarm/quest");
         alarms.put(NGob.Tags.foe,"alarm/white");
         alarms.put(NGob.Tags.unknown,"alarm/white");
