@@ -1465,7 +1465,7 @@ public class Resource implements Serializable {
 		Class<?> ret = findLoadedClass(name);
 		if(ret == null) {
 		    try {
-			ret = getParent().loadClass(name);
+				ret = getParent().loadClass(name);
 			if(findcode(name) != null) {
 			    boolean override = false;
 			    FromResource src = getsource(ret);
@@ -1624,6 +1624,12 @@ public class Resource implements Serializable {
 			return(null);
 		    }
 		    try {
+				try  {
+					String path = "haven.res." + name.replaceAll("/", ".") + "." + clnm;
+					Class.forName(path);
+					clnm = path;
+				}  catch (ClassNotFoundException ignored) {
+				}
 			ret = loader().loadClass(clnm);
 		    } catch(ClassNotFoundException e) {
 			throw(new LoadException(e, Resource.this));

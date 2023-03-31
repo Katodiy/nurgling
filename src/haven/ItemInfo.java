@@ -26,6 +26,9 @@
 
 package haven;
 
+import haven.res.ui.tt.q.quality.Quality;
+import haven.res.ui.tt.wear.Wear;
+
 import java.util.*;
 import java.util.function.*;
 import java.lang.reflect.*;
@@ -351,13 +354,15 @@ public abstract class ItemInfo {
     }
 
     public static List<ItemInfo> buildinfo(Owner owner, Raw raw) {
-	List<ItemInfo> ret = new ArrayList<ItemInfo>();
+	List<ItemInfo> ret = new LinkedList<>();
 	for(Object o : raw.data) {
-	    if(o instanceof Object[]) {
+		boolean isWear = false;
+		if(o instanceof Object[]) {
 		Object[] a = (Object[])o;
 		Resource ttres;
 		if(a[0] instanceof Integer) {
 		    ttres = owner.glob().sess.getres((Integer)a[0]).get();
+			isWear = owner.glob().sess.getResName((Integer)a[0]).equals("ui/tt/wear");
 		} else if(a[0] instanceof Resource) {
 		    ttres = (Resource)a[0];
 		} else if(a[0] instanceof Indir) {
@@ -365,12 +370,18 @@ public abstract class ItemInfo {
 		} else {
 		    throw(new ClassCastException("Unexpected info specification " + a[0].getClass()));
 		}
+
+		ItemInfo inf = null;
 		InfoFactory f = ttres.getcode(InfoFactory.class, true);
-		ItemInfo inf = f.build(owner, raw, a);
+		inf = f.build(owner, raw, a);
 		if(inf != null)
-		    ret.add(inf);
+			if(isWear) {
+				ret.add(0,inf);
+			}else {
+				ret.add(inf);
+			}
 	    } else if(o instanceof String) {
-		ret.add(new AdHoc(owner, (String)o));
+		ret.add(0,new AdHoc(owner, (String)o));
 	    } else {
 		throw(new ClassCastException("Unexpected object type " + o.getClass() + " in item info array."));
 	    }

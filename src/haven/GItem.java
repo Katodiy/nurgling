@@ -26,6 +26,8 @@
 
 package haven;
 
+import nurgling.NGItem;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -40,8 +42,8 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
     public String contentsnm = null;
     public Object contentsid = null;
     public int infoseq;
-    private GSprite spr;
-    private ItemInfo.Raw rawinfo;
+    protected GSprite spr;
+    protected ItemInfo.Raw rawinfo;
     private List<ItemInfo> info = Collections.emptyList();
 
     @RName("item")
@@ -49,7 +51,7 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 	public Widget create(UI ui, Object[] args) {
 	    int res = (Integer)args[0];
 	    Message sdt = (args.length > 1)?new MessageBuf((byte[])args[1]):Message.nil;
-	    return(new GItem(ui.sess.getres(res), sdt));
+	    return(new NGItem(ui.sess.getres(res), sdt));
 	}
     }
 

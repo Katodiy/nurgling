@@ -70,6 +70,16 @@ public class Session implements Resource.Resolver {
     String username;
     byte[] cookie;
     final Map<Integer, CachedRes> rescache = new TreeMap<Integer, CachedRes>();
+    final Map<Integer, String> res_id_cache = new TreeMap<Integer, String>();
+
+	public String getResName(Integer id)
+	{
+		synchronized (res_id_cache)
+		{
+			return res_id_cache.get(id);
+		}
+	}
+
     public final Glob glob;
     public byte[] sesskey;
 
@@ -317,6 +327,9 @@ public class Session implements Resource.Resolver {
 		String resname = msg.string();
 		int resver = msg.uint16();
 		cachedres(resid).set(resname, resver);
+		synchronized (res_id_cache) {
+			res_id_cache.put(resid, resname);
+		}
 	    } else if(msg.type == RMessage.RMSG_SFX) {
 		Indir<Resource> resid = getres(msg.uint16());
 		double vol = ((double)msg.uint16()) / 256.0;
