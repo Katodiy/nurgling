@@ -147,4 +147,38 @@ public class NGItem extends GItem {
     {
         return status;
     }
+
+    @Override
+    public void wdgmsg(String msg, Object... args) {
+        if((status&NAME_IS_READY)==NAME_IS_READY && msg.equals("take"))
+            NUtils.getGameUI().charInfo.setCandidate(defn);
+        super.wdgmsg(msg, args);
+    }
+
+    @Override
+    public void wdgmsg(Widget sender, String msg, Object... args) {
+        super.wdgmsg(sender, msg, args);
+    }
+
+    public boolean needrender() {
+        for (ItemInfo inf : info())
+        {
+            if(inf instanceof NFoodInfo)
+            {
+                return ((NFoodInfo)inf).check();
+            }
+        }
+        return false;
+    }
+
+    public boolean needlongtip() {
+        for (ItemInfo inf : info())
+        {
+            if(inf instanceof NFoodInfo)
+            {
+                return ((NFoodInfo)inf).needToolTip;
+            }
+        }
+        return false;
+    }
 }

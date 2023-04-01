@@ -66,7 +66,7 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 
     public static class InfoOverlay<T> {
 	public final OverlayInfo<T> inf;
-	public final T data;
+	public T data;
 
 	public InfoOverlay(OverlayInfo<T> inf) {
 	    this.inf = inf;

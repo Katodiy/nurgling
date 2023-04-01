@@ -32,6 +32,9 @@ import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.function.*;
 import haven.ItemInfo.AttrCache;
+import nurgling.NFoodInfo;
+import nurgling.NGItem;
+
 import static haven.ItemInfo.find;
 import static haven.Inventory.sqsz;
 
@@ -105,7 +108,7 @@ public class WItem extends Widget implements DTarget {
 		    shorttip = new ShortTip(info);
 		return(shorttip);
 	    } else {
-		if(longtip == null)
+		if(longtip == null || ((NGItem)item).needlongtip())
 		    longtip = new LongTip(info);
 		return(longtip);
 	    }
@@ -114,7 +117,7 @@ public class WItem extends Widget implements DTarget {
 	}
     }
 
-    private List<ItemInfo> info() {return(item.info());}
+	private List<ItemInfo> info() {return(item.info());}
     public final AttrCache<Color> olcol = new AttrCache<>(this::info, info -> {
 	    ArrayList<GItem.ColorInfo> ols = new ArrayList<>();
 	    for(ItemInfo inf : info) {

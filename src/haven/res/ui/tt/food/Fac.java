@@ -3,6 +3,7 @@ package haven.res.ui.tt.food;/* Preprocessed source code */
 import haven.FromResource;
 import haven.ItemInfo;
 import haven.Resource;
+import nurgling.NFoodInfo;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -50,9 +51,9 @@ public class Fac implements ItemInfo.InfoFactory {
 	}
 
 	try {
-	    return(new haven.resutil.FoodInfo(owner, end, glut, cons, evs.toArray(new Event[0]), efs.toArray(new Effect[0]), types));
+	    return(new NFoodInfo(owner, end, glut, cons, evs.toArray(new Event[0]), efs.toArray(new Effect[0]), types));
 	} catch(NoSuchMethodError e) {
-	    return(new haven.resutil.FoodInfo(owner, end, glut, evs.toArray(new Event[0]), efs.toArray(new Effect[0]), types));
+	    return(new NFoodInfo(owner, end, glut, evs.toArray(new Event[0]), efs.toArray(new Effect[0]), types));
 	}
     }
 }

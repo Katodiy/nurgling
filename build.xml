@@ -10,6 +10,7 @@
     <available property="unpacked-lib" file="build/classes-lib" />
   </target>
 
+  <property name="buildinfo.git-rev" value=""/>
   <target name="make-buildinfo" depends="build-env">
     <touch file="build/classes/buildinfo" datetime="01/01/2000 12:00 am" />
     <loadproperties srcFile="build/classes/buildinfo" prefix="buildinfo." />
@@ -23,7 +24,7 @@
 
   <target name="buildinfo" depends="make-buildinfo" unless="buildinfo-unchanged">
     <echo message="Updating buildinfo" />
-    <echo file="build/classes/buildinfo" xml:space="default">
+    <echo file="build/classes/buildinfo">
       git-rev = ${git-rev}
     </echo>
   </target>
@@ -37,15 +38,15 @@
       <local name="@{name}-files" />
       <mkdir dir="@{path}" />
       <loadresource property="@{name}-files">
-	<url url="@{url}/lib-files" />
-	<filterchain>
-	  <prefixlines prefix="@{url}/" />
-	</filterchain>
+        <url url="@{url}/lib-files" />
+        <filterchain>
+          <prefixlines prefix="@{url}/" />
+        </filterchain>
       </loadresource>
       <get dest="@{path}/" usetimestamp="true">
-	<resourcelist>
-	  <propertyresource name="@{name}-files" />
-	</resourcelist>
+        <resourcelist>
+          <propertyresource name="@{name}-files" />
+        </resourcelist>
       </get>
       <touch file="@{path}/has-@{name}" />
     </sequential>
@@ -63,12 +64,12 @@
 
   <target name="hafen-client" depends="build-env, extlib/jogl">
     <javac srcdir="src" destdir="build/classes" debug="on"
-	   source="1.8" target="1.8" includeantruntime="no"
-	   bootclasspath="${boot-classpath}">
+           source="1.8" target="1.8" includeantruntime="no">
       <classpath>
-	<pathelement path="lib/ext/jogl/jogl-all.jar" />
-	<pathelement path="lib/ext/jogl/gluegen-rt.jar" />
-	<pathelement path="lib/jglob.jar" />
+        <pathelement path="lib/ext/jogl/jogl-all.jar" />
+        <pathelement path="lib/ext/jogl/gluegen-rt.jar" />
+        <pathelement path="lib/rxjava-1.1.5.jar" />
+        <pathelement path="lib/jglob.jar" />
       </classpath>
       <compilerarg value="-Xlint:unchecked" />
       <compilerarg value="-Xlint:-options" />
@@ -82,6 +83,8 @@
     <copy todir="build/classes/haven" file="etc/res-preload" />
     <copy todir="build/classes/haven" file="etc/res-bgload" />
     <copy todir="build/classes/haven" file="etc/icon.png" />
+    <copy todir="bin/" file="etc/drink_data.json" />
+    <copy todir="bin/" file="etc/tile_names.json" />
     <copy file="local-boot.properties" tofile="build/classes/haven/boot-props" failonerror="false" quiet="true" />
   </target>
 
@@ -90,15 +93,18 @@
     <unjar src="lib/jglob.jar" dest="build/classes-lib">
       <patternset excludes="META-INF/**" />
     </unjar>
+    <unjar src="lib/rxjava-1.1.5.jar" dest="build/classes-lib">
+      <patternset excludes="META-INF/**" />
+    </unjar>
   </target>
 
-  <target name="jar" depends="hafen-client, buildinfo, lib-classes">
+  <target name="jar" depends="hafen-client, buildinfo, lib-classes , resources">
     <jar destfile="build/hafen.jar" update="true">
       <fileset dir="build/classes" />
       <fileset dir="build/classes-lib" />
       <manifest>
-	<attribute name="Main-Class" value="haven.MainFrame" />
-	<attribute name="Class-Path" value="jogl-all.jar gluegen-rt.jar builtin-res.jar hafen-res.jar" />
+        <attribute name="Main-Class" value="haven.MainFrame" />
+        <attribute name="Class-Path" value="jogl-all.jar gluegen-rt.jar nurgling-res.jar builtin-res.jar hafen-res.jar" />
       </manifest>
     </jar>
     <chmod file="build/hafen.jar" perm="a+x" />
@@ -106,9 +112,9 @@
 
   <target name="res-jar" depends="build-env" unless="has-res-jar">
     <get src="${ext-lib-base}/builtin-res.jar" dest="lib/ext/builtin-res.jar"
-	 usetimestamp="true" />
+         usetimestamp="true" />
     <get src="${ext-lib-base}/hafen-res.jar" dest="lib/ext/hafen-res.jar"
-	 usetimestamp="true" />
+         usetimestamp="true" />
     <available property="lib-res-jar" file="lib/ext/hafen-res.jar" />
     <fail unless="lib-res-jar" message="hafen-res.jar not available" />
     <available property="lib-builtin-jar" file="lib/ext/builtin-res.jar" />
@@ -117,14 +123,12 @@
 
   <target name="jars" depends="build-env, jar, extlib/jogl">
     <copy todir="build" failonerror="false" quiet="true">
-      <fileset dir="lib">
-	<include name="builtin-res.jar" />
-	<include name="hafen-res.jar" />
-      </fileset>
+      <file name="lib/builtin-res.jar" />
+      <file name="lib/hafen-res.jar" />
     </copy>
     <copy todir="build">
       <fileset dir="lib/ext/jogl">
-	<include name="*.jar" />
+        <include name="*.jar" />
       </fileset>
     </copy>
     <copy file="local-config.properties" tofile="build/haven-config.properties" failonerror="false" quiet="true" />
@@ -134,14 +138,14 @@
     <mkdir dir="bin" />
     <copy todir="bin">
       <fileset dir="build">
-	<include name="hafen.jar" />
+        <include name="hafen.jar" />
       </fileset>
       <fileset dir="lib/ext">
-	<include name="hafen-res.jar" />
-	<include name="builtin-res.jar" />
+        <include name="hafen-res.jar" />
+        <include name="builtin-res.jar" />
       </fileset>
       <fileset dir="lib/ext/jogl">
-	<include name="*.jar" />
+        <include name="*.jar" />
       </fileset>
     </copy>
     <copy file="etc/ansgar-config.properties" tofile="bin/haven-config.properties" />
@@ -159,4 +163,15 @@
     <delete dir="lib/ext" />
     <delete dir="bin" />
   </target>
+
+  <target name="resources">
+    <exec executable="java" failifexecutionfails="false">
+      <arg line="-jar etc/LayerUtil.jar -re resources/src resources/compiled/res" />
+    </exec>
+    <jar destfile="build/nurgling-res.jar" update="true">
+      <fileset dir="resources/compiled" />
+    </jar>
+    <copy todir="bin/" file="build/nurgling-res.jar" />
+  </target>
+
 </project>

@@ -35,6 +35,7 @@ import com.jogamp.opengl.awt.*;
 import haven.render.*;
 import haven.render.States;
 import haven.render.gl.*;
+import nurgling.NUI;
 
 public class JOGLPanel extends GLCanvas implements Runnable, UIPanel, Console.Directory, UI.Context {
     private static final boolean dumpbgl = true;
@@ -650,7 +651,7 @@ public class JOGLPanel extends GLCanvas implements Runnable, UIPanel, Console.Di
     }
 
     public UI newui(UI.Runner fun) {
-	UI prevui, newui = new UI(this, new Coord(getSize()), fun);
+	UI prevui, newui = new NUI(this, new Coord(getSize()), fun);
 	newui.env = this.env;
 	if(getParent() instanceof Console.Directory)
 	    newui.cons.add((Console.Directory)getParent());

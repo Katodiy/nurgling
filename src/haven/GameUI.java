@@ -26,6 +26,8 @@
 
 package haven;
 
+import nurgling.NGameUI;
+
 import java.util.*;
 import java.util.function.*;
 import java.awt.Color;
@@ -212,7 +214,7 @@ public class GameUI extends ConsoleHost implements Console.Directory, UI.Message
 	    String genus = "";
 	    if(args.length > 2)
 		genus = (String)args[2];
-	    return(new GameUI(chrid, plid, genus));
+	    return(new NGameUI(chrid, plid, genus));
 	}
     }
     

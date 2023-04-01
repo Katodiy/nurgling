@@ -34,7 +34,7 @@ import java.net.*;
 import static haven.Utils.pj;
 
 public class HashDirCache implements ResCache {
-    private final Path base;
+    public final Path base;
     public final URI id;
     private final long idhash;
 
