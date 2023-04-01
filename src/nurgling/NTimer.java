@@ -42,7 +42,7 @@ public class NTimer {
 	try {
 		timers = new LinkedList<>();
 		BufferedReader reader = new BufferedReader (
-				new InputStreamReader(Files.newInputStream(Paths.get("./timers.json")), "cp1251" ) );
+				new InputStreamReader(Files.newInputStream(Paths.get("./timers.json")), "UTF-8" ) );
 		JSONParser parser = new JSONParser();
 		JSONObject jsonObject = ( JSONObject ) parser.parse ( reader );
 

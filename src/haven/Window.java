@@ -218,7 +218,7 @@ public class Window extends Widget implements DTarget {
 	cptl = new Coord(ctl.x, tlo.y);
 	cpsz = tlo.add(cpo.x + cmw, cm.sz().y).sub(cptl);
 	cmw = cmw - (cl.sz().x - cpo.x) - UI.scale(5);
-	cbtn.c = xlate(tlo.add(wsz.x - cbtn.sz.x - UI.scale(11),  UI.scale(-2)), false);
+	cbtn.c = xlate(tlo.add(wsz.x - cbtn.sz.x - UI.scale(18),  UI.scale(18)), false);
 	for(Widget ch = child; ch != null; ch = ch.next)
 	    ch.presize();
     }

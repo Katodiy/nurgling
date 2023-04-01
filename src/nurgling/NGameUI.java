@@ -1,12 +1,19 @@
 package nurgling;
 
 import haven.*;
+import haven.Window;
 import haven.res.ui.barterbox.Shopbox;
 import haven.res.ui.tt.tiplabel.TipLabel;
 import haven.res.ui.tt.relcont.RelCont;
+import nurgling.json.parser.ParseException;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class NGameUI extends GameUI {
@@ -21,6 +28,7 @@ public class NGameUI extends GameUI {
                 map.disol(tag);
         }
     }
+
 
     public NBotsInfo botsInfo;
     public NQuestInfo questInfo;
@@ -41,12 +49,70 @@ public class NGameUI extends GameUI {
         t3.updateButtons(NConfiguration.getInstance().toolBelts.get("belt2").toolKeys);
     }
 
+    public AtomicBoolean isToogleCheck = new AtomicBoolean(false);
+
+    public AtomicBoolean isBundle = null;
+
+    private static Pattern GOB_Q = Pattern.compile("Quality: (\\d+)");
+    @Override
+    public void msg(String msg, Color color, Color logcol) {
+        msgtime = Utils.rtime();
+        lastmsg = msgfoundry.render(msg, color);
+        if(msg.contains("increased")) {
+            NQuestsStats.checkReward(msg);
+        }
+        else if (msg.contains("Quality")) {
+            if(detectedGob!=null)
+            {
+                Matcher m = GOB_Q.matcher(msg);
+                if(m.matches()) {
+                    try {
+                        detectedGob.quality = Integer.parseInt(m.group(1));
+                        detectedGob.addTag(NGob.Tags.quality);
+                    } catch (NumberFormatException ignored) {
+                    } finally {
+                        detectedGob = null;
+                    }
+                }
+            }
+        }
+        syslog.append(msg, logcol);
+    }
+    @Override
+    public void msg(String msg) {
+        if (!isToogleCheck.get())
+        {
+            super.msg(msg);
+        }
+        if (msg.contains("Stack")) {
+            if(isBundle == null)
+                isBundle = new AtomicBoolean(!msg.contains("off"));
+            else {
+                isBundle.set(!msg.contains("off"));
+                if (isToogleCheck.get() ) {
+                    isToogleCheck.set(false);
+                }
+            }
+        }
+        else
+        {
+            if (isToogleCheck.get() ) {
+                isToogleCheck.set(false);
+            }
+        }
+    }
+
     public boolean updated() {
         return map!=null && map.glob!=null && map.glob.map!=null && map.glob.map.isLoaded() && map.player()!=null;
     }
 
     public NQuestsStats getStats() {
         return stats;
+    }
+
+    private Gob detectedGob = null;
+    public void setDetectGob(Gob gob) {
+        detectedGob = gob;
     }
 
     public class PaginaBeltSlot extends BeltSlot {

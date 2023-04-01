@@ -1991,6 +1991,11 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	protected void hit(Coord pc, Coord2d mc, ClickData inf) {
 		Object[] args = {pc, mc.floor(posres), clickb, ui.modflags()};
 		if (inf != null) {
+			args = Utils.extend(args, inf.clickargs());
+			Gob detgob = Gob.from(inf.ci);
+			if(detgob != null) {
+				NUtils.getGameUI().setDetectGob(detgob);
+			}
 			if (ui.modmeta && clickb == 1) {
 				Gob gob = Gob.from(inf.ci);
 				if (gob != null) {

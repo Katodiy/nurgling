@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-interface NOperationable{
+interface NOper{
 	void addWidget(Widget w);
 }
 public class OptWnd extends Window {
@@ -1492,8 +1492,49 @@ public class OptWnd extends Window {
 					public void set(boolean val) {
 						NConfiguration.getInstance().enablePfBoundingBoxes = val;
 						a = val;
+						NConfiguration.getInstance().install();
 					}
 				}, prev.pos("bl").adds(0, 5));
+
+				prev = add(new CheckBox("Bounding Boxes:") {
+					{
+						a = NConfiguration.getInstance().showBB;
+					}
+
+					public void set(boolean val) {
+						NConfiguration.getInstance().showBB = val;
+						a = val;
+						NConfiguration.getInstance().install();
+					}
+				}, prev.pos("bl").adds(0, 5));
+
+				prev = add(new CheckBox("Hide nature objects:") {
+					{
+						a = NConfiguration.getInstance().hideNature;
+					}
+
+					public void set(boolean val) {
+						NConfiguration.getInstance().hideNature = val;
+						a = val;
+						synchronized (NUtils.getGameUI().ui.sess.glob.oc) {
+							if(!NConfiguration.getInstance().hideNature)
+								for (Gob gob : NUtils.getGameUI().ui.sess.glob.oc) {
+									if (gob.isTag(NGob.Tags.tree) || gob.isTag(NGob.Tags.bumling) || gob.isTag(NGob.Tags.bush)) {
+										gob.hideObject();
+									}
+								}
+							else
+								for (Gob gob : NUtils.getGameUI().ui.sess.glob.oc) {
+									if (gob.isTag(NGob.Tags.tree) || gob.isTag(NGob.Tags.bumling) || gob.isTag(NGob.Tags.bush)) {
+										gob.showObject();
+									}
+								}
+						}
+						NConfiguration.getInstance().install();
+					}
+
+				}, prev.pos("bl").adds(0, 5));
+
 				prev = add(new CheckBox("Collect Food Info:") {
 					{
 						a = NConfiguration.getInstance().collectFoodInfo;
@@ -1793,7 +1834,7 @@ public class OptWnd extends Window {
 				}, prev.pos("bl").add(0,5));
 
 
-				NOperationable l = (w)->{
+				NOper l = (w)->{
 					add(w,prev.pos("bl").add(0,5));
 					settings.add(w);
 					names.add(w.getClass().getName().substring(23));

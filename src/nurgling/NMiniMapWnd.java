@@ -17,6 +17,7 @@ public class NMiniMapWnd extends NResizedWidget{
     }
 
     ACheckBox map_box;
+    Widget toggle_panel;
     public static final KeyBinding kb_eye = KeyBinding.get("ol-eye", KeyMatch.nil);
     public static final KeyBinding kb_grid = KeyBinding.get("ol-mgrid", KeyMatch.nil);
     public static final KeyBinding kb_path = KeyBinding.get("ol-mgrid", KeyMatch.nil);
@@ -44,21 +45,22 @@ public class NMiniMapWnd extends NResizedWidget{
             miniMap = add(new Map(new Coord(UI.scale(133), UI.scale(133)), file, map));
             miniMap.lower();
         }
-        ACheckBox first = add(new NMenuCheckBox("lbtn-claim", GameUI.kb_claim, "Display personal claims"), 0, 0).changed(a -> NUtils.getGameUI().toggleol("cplot", a));
-        add(new NMenuCheckBox("lbtn-vil", GameUI.kb_vil, "Display village claims"), (first.sz.x+UI.scale(3)), 0).changed(a -> NUtils.getGameUI().toggleol("vlg", a));
-        add(new NMenuCheckBox("lbtn-rlm", GameUI.kb_rlm, "Display realms"), (first.sz.x+UI.scale(3))*2, 0).changed(a -> NUtils.getGameUI().toggleol("realm", a));
-        ACheckBox eye = add(new NMenuCheckBox("lbtn-eye", kb_eye, "Display vision area"), (first.sz.x+UI.scale(3))*4, 0).changed(a -> NUtils.getGameUI().mmapw.miniMap.toggleol("eye", a));
+        toggle_panel = new Widget();
+        ACheckBox first = toggle_panel.add(new NMenuCheckBox("lbtn-claim", GameUI.kb_claim, "Display personal claims"), 0, 0).changed(a -> NUtils.getGameUI().toggleol("cplot", a));
+        toggle_panel.add(new NMenuCheckBox("lbtn-vil", GameUI.kb_vil, "Display village claims"), (first.sz.x+UI.scale(3)), 0).changed(a -> NUtils.getGameUI().toggleol("vlg", a));
+        toggle_panel.add(new NMenuCheckBox("lbtn-rlm", GameUI.kb_rlm, "Display realms"), (first.sz.x+UI.scale(3))*2, 0).changed(a -> NUtils.getGameUI().toggleol("realm", a));
+        ACheckBox eye = toggle_panel.add(new NMenuCheckBox("lbtn-eye", kb_eye, "Display vision area"), (first.sz.x+UI.scale(3))*4, 0).changed(a -> NUtils.getGameUI().mmapw.miniMap.toggleol("eye", a));
         eye.a = NConfiguration.getInstance().isEyed;
-        ACheckBox path = add(new NMenuCheckBox("lbtn-path", kb_path, "Display objects paths"), (first.sz.x+UI.scale(3))*5, 0).changed(a -> NUtils.getGameUI().mmapw.miniMap.toggleol("path", a));
+        ACheckBox path = toggle_panel.add(new NMenuCheckBox("lbtn-path", kb_path, "Display objects paths"), (first.sz.x+UI.scale(3))*5, 0).changed(a -> NUtils.getGameUI().mmapw.miniMap.toggleol("path", a));
         path.a = NConfiguration.getInstance().isPaths;
-        ACheckBox grid = add(new NMenuCheckBox("lbtn-grid", kb_grid, "Display grid"), (first.sz.x+UI.scale(3))*6, 0).changed(a -> NUtils.getGameUI().mmapw.miniMap.toggleol("grid", a));
+        ACheckBox grid = toggle_panel.add(new NMenuCheckBox("lbtn-grid", kb_grid, "Display grid"), (first.sz.x+UI.scale(3))*6, 0).changed(a -> NUtils.getGameUI().mmapw.miniMap.toggleol("grid", a));
         grid.a = NConfiguration.getInstance().isGrid;
         map_box = add(new NMenuCheckBox("lbtn-map", GameUI.kb_map, "Map"), miniMap.sz.x-(first.sz.x), 0).state(() -> NUtils.getGameUI().wndstate(NUtils.getGameUI().mapfile)).click(() -> {
             NUtils.getGameUI().togglewnd(NUtils.getGameUI().mapfile);
             if(NUtils.getGameUI().mapfile != null)
                 Utils.setprefb("wndvis-map", NUtils.getGameUI().mapfile.visible());
         });
-        add(new NMenuCheckBox("lbtn-ico", GameUI.kb_ico, "Icon settings"), (first.sz.x+UI.scale(3))*3, 0).state(() -> NUtils.getGameUI().wndstate(NUtils.getGameUI().iconwnd)).click(() -> {
+        toggle_panel.add(new NMenuCheckBox("lbtn-ico", GameUI.kb_ico, "Icon settings"), (first.sz.x+UI.scale(3))*3, 0).state(() -> NUtils.getGameUI().wndstate(NUtils.getGameUI().iconwnd)).click(() -> {
             if(NUtils.getGameUI().iconconf == null)
                 return;
             if(NUtils.getGameUI().iconwnd == null) {
@@ -69,6 +71,8 @@ public class NMiniMapWnd extends NResizedWidget{
                 NUtils.getGameUI().iconwnd = null;
             }
         });
+        toggle_panel.pack();
+        add(toggle_panel);
         pack();
     }
 
@@ -151,5 +155,6 @@ public class NMiniMapWnd extends NResizedWidget{
         super.resize(sz);
         miniMap.resize(sz.x - UI.scale(15), sz.y );
         map_box.move(new Coord(miniMap.sz.x-(map_box.sz.x), 0));
+        toggle_panel.move(new Coord(0, miniMap.sz.y-(map_box.sz.y)));
     }
 }

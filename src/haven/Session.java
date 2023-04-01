@@ -157,6 +157,10 @@ public class Session implements Resource.Resolver {
 		public boolean check() {
 			return res != null;
 		}
+
+		public String getName(){
+			return resnm;
+		}
 	}
 
 	private Ref get() {

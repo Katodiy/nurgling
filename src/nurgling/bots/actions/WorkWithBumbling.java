@@ -1,12 +1,12 @@
 package nurgling.bots.actions;
 
 import haven.Gob;
-import nurgling.NAlias;
-import nurgling.NGameUI;
-import nurgling.NUtils;
-import nurgling.PathFinder;
+import haven.Utils;
+import nurgling.*;
 import nurgling.tools.Finder;
 import nurgling.tools.NArea;
+
+import java.awt.*;
 
 public class WorkWithBumbling implements Action {
     
@@ -61,7 +61,7 @@ public class WorkWithBumbling implements Action {
         this.name = name;
         this.area = area;
     }
-    
+
     int count;
     NAlias name;
     NArea area = null;

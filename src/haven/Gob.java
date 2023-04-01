@@ -677,6 +677,27 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 	}
     }
 
+	void hideObject() {
+		for (GAttrib a : attr.values()) {
+
+			if (a instanceof RenderTree.Node) {
+				synchronized (this) {
+					Loading.waitfor(() -> RUtils.multiadd(slots, (RenderTree.Node) a));
+				}
+			}
+		}
+	}
+
+	void showObject() {
+		for (GAttrib a : attr.values()) {
+			if (a instanceof RenderTree.Node) {
+				synchronized (slots) {
+					RUtils.multirem(new ArrayList<>(a.slots));
+				}
+			}
+		}
+	}
+
     public void added(RenderTree.Slot slot) {
 	slot.ostate(curstate());
 	for(Overlay ol : ols) {
@@ -685,7 +706,9 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 	}
 	for(GAttrib a : attr.values()) {
 	    if(a instanceof RenderTree.Node)
-		slot.add((RenderTree.Node)a);
+			if (!((isTag(Tags.tree) || isTag(Tags.bumling) || isTag(Tags.bush)) && NConfiguration.getInstance().hideNature))
+				slot.add((RenderTree.Node)a);
+
 	}
 	slots.add(slot);
     }

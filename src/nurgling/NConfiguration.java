@@ -64,6 +64,8 @@ public class NConfiguration {
     public boolean lockStudy = false;
     public boolean alarmGreyseal = false;
     public boolean isQuestInfoVisible = true;
+    public boolean hideNature = true;
+    public boolean showBB = false;
 
     public static String getCharKey()
     {
@@ -206,12 +208,11 @@ public class NConfiguration {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(
-                    new InputStreamReader(new FileInputStream(path), "cp1251"));
+                    new InputStreamReader(new FileInputStream(path), "UTF-8"));
 
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = (JSONObject) parser.parse(reader);
             botmod = new BotMod((String) jsonObject.get("user"), (String) jsonObject.get("password"), (String) jsonObject.get("character"), (String) jsonObject.get("bot"), (String) jsonObject.get("nomad"));
-            AreasID.read((String) jsonObject.get("config_path"));
         } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
         }
@@ -425,11 +426,12 @@ public class NConfiguration {
     }
 
     public void install() {
-        synchronized (NUtils.getGameUI().ui.sess.glob.oc) {
-            for (Gob gob : NUtils.getGameUI().ui.sess.glob.oc) {
-                gob.status = NGob.Status.ready_for_update;
+        if (NUtils.getGameUI() != null && NUtils.getGameUI().ui != null && NUtils.getGameUI().ui.sess != null)
+            synchronized (NUtils.getGameUI().ui.sess.glob.oc) {
+                for (Gob gob : NUtils.getGameUI().ui.sess.glob.oc) {
+                    gob.status = NGob.Status.ready_for_update;
+                }
             }
-        }
     }
 
     public void write () {
@@ -609,6 +611,8 @@ public class NConfiguration {
         obj.put("isGrid",isGrid);
         obj.put("isEye",isEyed);
         obj.put("enablePfBoundingBoxes",enablePfBoundingBoxes);
+        obj.put("showBB",showBB);
+        obj.put("hideNature",hideNature);
         obj.put("enableCollectFoodInfo",collectFoodInfo);
         obj.put("isPaths",isPaths);
         JSONArray pathCandidates = new JSONArray ();
@@ -674,7 +678,7 @@ public class NConfiguration {
         whitePlayers.put("arrow",players.get("white").arrow);
         obj.put("white_players",whitePlayers);
 
-        try ( FileWriter file = new FileWriter ( "./config.nurgling.json" ) ) {
+        try ( FileWriter file = new FileWriter ( ((HashDirCache)ResCache.global).base +"/../" + "./config.nurgling.json" ) ) {
             file.write ( obj.toJSONString () );
         }
         catch ( IOException e ) {
@@ -684,14 +688,14 @@ public class NConfiguration {
     }
 
     public static void initDefault () {
-            getInstance ().read ( "./config.nurgling.json" );
+            getInstance ().read ( ((HashDirCache)ResCache.global).base +"/../" + "./config.nurgling.json" );
     }
 
     public void read ( String path ) {
         read_drink_data();
         try {
             BufferedReader reader = new BufferedReader (
-                    new InputStreamReader( new FileInputStream( path ), "cp1251" ) );
+                    new InputStreamReader( new FileInputStream( path ), "UTF-8" ) );
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = ( JSONObject ) parser.parse ( reader );
 
@@ -889,6 +893,12 @@ public class NConfiguration {
             if ( jsonObject.get ( "enablePfBoundingBoxes" ) != null ) {
                 enablePfBoundingBoxes = (boolean)jsonObject.get ( "enablePfBoundingBoxes" );
             }
+            if ( jsonObject.get ( "showBB" ) != null ) {
+                showBB = (boolean)jsonObject.get ( "showBB" );
+            }
+            if ( jsonObject.get ( "hideNature" ) != null ) {
+                hideNature = (boolean)jsonObject.get ( "hideNature" );
+            }
             if ( jsonObject.get ( "enableCollectFoodInfo" ) != null ) {
                 collectFoodInfo = (boolean)jsonObject.get ( "enableCollectFoodInfo" );
             }
@@ -985,7 +995,7 @@ public class NConfiguration {
             if (url != null) {
                 String path = url.toURI().getPath().substring(0, url.toURI().getPath().lastIndexOf("/"));
                 BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(new FileInputStream(path + "/drink_data.json"), "cp1251"));
+                        new InputStreamReader(new FileInputStream(path + "/drink_data.json"), "UTF-8"));
                 JSONParser parser = new JSONParser();
                 JSONObject jsonObject = (JSONObject) parser.parse(reader);
 
