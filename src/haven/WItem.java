@@ -220,10 +220,6 @@ public class WItem extends Widget implements DTarget {
 	    drawmain(g, spr);
 	    g.defstate();
 	    GItem.InfoOverlay<?>[] ols = itemols.get();
-	    if(ols != null) {
-		for(GItem.InfoOverlay<?> ol : ols)
-		    ol.draw(g);
-	    }
 	    Double meter = (item.meter > 0) ? Double.valueOf(item.meter / 100.0) : itemmeter.get();
 	    if((meter != null) && (meter > 0)) {
 		g.chcolor(255, 255, 255, 64);
@@ -231,6 +227,10 @@ public class WItem extends Widget implements DTarget {
 		g.prect(half, half.inv(), half, meter * Math.PI * 2);
 		g.chcolor();
 	    }
+		if(ols != null) {
+			for(GItem.InfoOverlay<?> ol : ols)
+				ol.draw(g);
+		}
 	} else {
 	    g.image(missing.layer(Resource.imgc).tex(), Coord.z, sz);
 	}

@@ -2,6 +2,9 @@ package nurgling;
 
 import haven.*;
 import haven.res.ui.tt.defn.DefName;
+import haven.res.ui.tt.slots.ISlots;
+
+import java.awt.event.KeyEvent;
 
 public class NGItem extends GItem {
     int old_infoseq;
@@ -13,6 +16,8 @@ public class NGItem extends GItem {
 
     private int status = 0;
     private double quality = -1;
+    public long meterUpdated = 0;
+
     public static class NContent{
         private double quality = -1;
         private String name = null;
@@ -161,7 +166,7 @@ public class NGItem extends GItem {
     }
 
     public boolean needrender() {
-        if((status & SPR_IS_READY) == SPR_IS_READY) {
+        if((status & SPR_IS_READY) == SPR_IS_READY && (status & NAME_IS_READY) == NAME_IS_READY) {
             for (ItemInfo inf : info()) {
                 if (inf instanceof NFoodInfo) {
                     return ((NFoodInfo) inf).check();
@@ -171,14 +176,37 @@ public class NGItem extends GItem {
         return false;
     }
 
+    @Override
+    public void uimsg(String name, Object... args) {
+        super.uimsg(name, args);
+        if(name.equals("tt") || name.equals("meter")) {
+            meterUpdated = System.currentTimeMillis();
+        }
+    }
+
     public boolean needlongtip() {
         if((status & SPR_IS_READY) == SPR_IS_READY) {
             for (ItemInfo inf : info()) {
                 if (inf instanceof NFoodInfo) {
                     return ((NFoodInfo) inf).needToolTip;
+                } else if (inf instanceof NCuriosity) {
+                    return ((NCuriosity) inf).needUpdate();
+                }
+                if (inf instanceof ISlots) {
+                    return this.ui.modshift!=((ISlots)inf).isShifted;
                 }
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean keydown(KeyEvent ev) {
+        return super.keydown(ev);
+    }
+
+    @Override
+    public boolean keyup(KeyEvent ev) {
+        return super.keyup(ev);
     }
 }

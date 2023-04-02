@@ -356,13 +356,13 @@ public abstract class ItemInfo {
     public static List<ItemInfo> buildinfo(Owner owner, Raw raw) {
 	List<ItemInfo> ret = new LinkedList<>();
 	for(Object o : raw.data) {
-		boolean isWear = false;
+		boolean isTop = false;
 		if(o instanceof Object[]) {
 		Object[] a = (Object[])o;
 		Resource ttres;
 		if(a[0] instanceof Integer) {
 		    ttres = owner.glob().sess.getres((Integer)a[0]).get();
-			isWear = owner.glob().sess.getResName((Integer)a[0]).equals("ui/tt/wear");
+			isTop = owner.glob().sess.getResName((Integer)a[0]).equals("ui/tt/wear");
 		} else if(a[0] instanceof Resource) {
 		    ttres = (Resource)a[0];
 		} else if(a[0] instanceof Indir) {
@@ -375,7 +375,7 @@ public abstract class ItemInfo {
 		InfoFactory f = ttres.getcode(InfoFactory.class, true);
 		inf = f.build(owner, raw, a);
 		if(inf != null)
-			if(isWear) {
+			if(isTop) {
 				ret.add(0,inf);
 			}else {
 				ret.add(inf);

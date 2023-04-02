@@ -11,7 +11,7 @@ import java.util.LinkedList;
 import static haven.resutil.FoodInfo.Effect;
 import static haven.resutil.FoodInfo.Event;
 
-/* >tt: Fac */
+/* >tt: haven.res.ui.tt.food.Fac */
 @FromResource(name = "ui/tt/food", version = 13)
 public class Fac implements ItemInfo.InfoFactory {
     public ItemInfo build(ItemInfo.Owner owner, ItemInfo.Raw raw, Object... args) {

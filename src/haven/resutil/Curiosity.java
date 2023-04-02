@@ -53,7 +53,7 @@ public class Curiosity extends ItemInfo.Tip implements GItem.ColorInfo {
 
     static String[] units = {"s", "m", "h", "d"};
     static int[] div = {60, 60, 24};
-    static String timefmt(int time) {
+    protected static String timefmt(int time) {
 	int[] vals = new int[units.length];
 	vals[0] = time;
 	for(int i = 0; i < div.length; i++) {
