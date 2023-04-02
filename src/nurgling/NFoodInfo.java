@@ -87,18 +87,19 @@ public class NFoodInfo extends FoodInfo implements GItem.OverlayInfo<Tex> {
 
     public boolean check() {
         if (NUtils.getGameUI().chrwdg != null) {
-            if (NUtils.getGameUI().chrwdg.cons.els.size() > 0) {
-                NCharacterInfo ci = NUtils.getGameUI().getCharInfo();
-                if (ci != null) {
-                    if (name == null) {
-                        name = ((NGItem) owner).name();
-                    }
-                    boolean res = !(isVarity == !ci.varity.contains(name));
-                    if (res) {
-                        needToolTip = true;
-                        return true;
-                    }
+
+            NCharacterInfo ci = NUtils.getGameUI().getCharInfo();
+            if (ci != null) {
+                if (name == null) {
+                    name = ((NGItem) owner).name();
                 }
+                boolean res = !(isVarity == !ci.varity.contains(name));
+                if (res) {
+                    needToolTip = true;
+                    return true;
+                }
+            }
+            if (NUtils.getGameUI().chrwdg.cons.els.size() > 0) {
                 for (int type : types) {
                     CharWnd.Constipations.El c = NUtils.getGameUI().chrwdg.cons.els.get(type);
                     if (efficiency != ((c != null) ? Math.min(100, c.a * 100) : 100)) {
@@ -106,11 +107,11 @@ public class NFoodInfo extends FoodInfo implements GItem.OverlayInfo<Tex> {
                         return true;
                     }
                 }
-                if (expeted_fep != calcExpectedFep() || needed != calcNeededFep()) {
-                    expeted_fep = calcExpectedFep();
-                    needed = calcNeededFep();
-                    needToolTip = true;
-                }
+            }
+            if (expeted_fep != calcExpectedFep() || needed != calcNeededFep()) {
+                expeted_fep = calcExpectedFep();
+                needed = calcNeededFep();
+                needToolTip = true;
             }
         }
         return false;

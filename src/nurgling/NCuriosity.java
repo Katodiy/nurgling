@@ -114,8 +114,6 @@ public class NCuriosity extends Curiosity implements GItem.OverlayInfo<Tex>{
         return (new TexI(bi));
     }
 
-    static long old = 0;
-    static long lold = 0;
 
     @Override
     public void drawoverlay(GOut g, Tex data) {

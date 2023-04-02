@@ -82,12 +82,24 @@ public class Slotted extends ItemInfo.Tip implements GItem.OverlayInfo<Tex> {
 				}
 			}
 		}
+
+		if(imgs.size()>3)
+		{
+			ArrayList<BufferedImage> for_connect = new ArrayList<>(imgs);
+			imgs.clear();
+			for(int i = 0; i < for_connect.size(); i+=2) {
+				if (i + 1 < for_connect.size()) {
+					imgs.add(catimgsh(0, for_connect.get(i), for_connect.get(i+1)));
+				} else
+					imgs.add(for_connect.get(i));
+			}
+		}
 		BufferedImage lay = catimgs(0, imgs.toArray(new BufferedImage[0]));
 		BufferedImage bi = new BufferedImage(lay.getWidth(), lay.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D graphics = bi.createGraphics();
-		Color rgb =  new Color(0,0,0, 161);
-		graphics.setColor (rgb);
-		graphics.fillRect ( 0, 0, bi.getWidth(), bi.getHeight());
+//		Color rgb =  new Color(0,0,0, 161);
+//		graphics.setColor (rgb);
+//		graphics.fillRect ( 0, 0, bi.getWidth(), bi.getHeight());
 		graphics.drawImage(lay, 0, 0, null);
 		return(new TexI(bi));
 	}

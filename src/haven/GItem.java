@@ -27,6 +27,7 @@
 package haven;
 
 import nurgling.NGItem;
+import nurgling.NUtils;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -116,7 +117,26 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 	public int itemnum() {
 	    return(num);
 	}
-    }
+
+	@Override
+	public Tex overlay() {
+		if(owner instanceof NGItem)
+		{
+			if (NUtils.checkName(((GItem) owner).getres().name, "truffle")) {
+				if(num>=5) {
+					return (new TexI(GItem.NumberInfo.numrender(itemnum(), Color.GREEN)));
+				}
+			}
+		}
+		return NumberInfo.super.overlay();
+	}
+
+	@Override
+	public void drawoverlay(GOut g, Tex tex) {
+		if(tex!=null)
+		NumberInfo.super.drawoverlay(g, tex);
+	}
+	}
 
     public GItem(Indir<Resource> res, Message sdt) {
 	this.res = res;

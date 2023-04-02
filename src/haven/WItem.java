@@ -103,15 +103,15 @@ public class WItem extends Widget implements DTarget {
 		shorttip = longtip = null;
 		ttinfo = info;
 	    }
-	    if(now - hoverstart < 1.0) {
-		if(shorttip == null)
-		    shorttip = new ShortTip(info);
-		return(shorttip);
-	    } else {
+//	    if(now - hoverstart < 1.0) {
+//		if(shorttip == null)
+//		    shorttip = new ShortTip(info);
+//		return(shorttip);
+//	    } else {
 		if(longtip == null || ((NGItem)item).needlongtip())
 		    longtip = new LongTip(info);
 		return(longtip);
-	    }
+//	    }
 	} catch(Loading e) {
 	    return("...");
 	}

@@ -28,6 +28,7 @@ package haven;
 
 import haven.res.ui.tt.q.quality.Quality;
 import haven.res.ui.tt.wear.Wear;
+import haven.res.ui.tt.wellmined.WellMined;
 
 import java.util.*;
 import java.util.function.*;
@@ -361,6 +362,10 @@ public abstract class ItemInfo {
 		Object[] a = (Object[])o;
 		Resource ttres;
 		if(a[0] instanceof Integer) {
+			if(owner.glob().sess.rescache.get((Integer)a[0])==null)
+			{
+				return null;
+			}
 		    ttres = owner.glob().sess.getres((Integer)a[0]).get();
 			isTop = owner.glob().sess.getResName((Integer)a[0]).equals("ui/tt/wear");
 		} else if(a[0] instanceof Resource) {
@@ -382,6 +387,10 @@ public abstract class ItemInfo {
 			}
 	    } else if(o instanceof String) {
 		ret.add(0,new AdHoc(owner, (String)o));
+		if(o.equals("Well mined"))
+		{
+			ret.add(0,new WellMined(owner));
+		}
 	    } else {
 		throw(new ClassCastException("Unexpected object type " + o.getClass() + " in item info array."));
 	    }

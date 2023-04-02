@@ -37,7 +37,7 @@ public class NGItem extends GItem {
     }
     private NContent content = null;
     private Coord sprSz = null;
-    private String defn = null;
+    public String defn = null;
 
     public NGItem(Indir<Resource> res, Message sdt) {
         super(res, sdt);
@@ -107,9 +107,11 @@ public class NGItem extends GItem {
                     status |= SPR_IS_READY;
                 }
                 status &= ~NAME_IS_READY;
-                defn = DefName.getname(this);
-                if(defn!=null) {
-                    status |= NAME_IS_READY;
+                if(res.get().layer(Resource.tooltip)!=null) {
+                    defn = DefName.getname(this);
+                    if (defn != null) {
+                        status |= NAME_IS_READY;
+                    }
                 }
             }
             old_infoseq = infoseq;
@@ -167,10 +169,15 @@ public class NGItem extends GItem {
 
     public boolean needrender() {
         if((status & SPR_IS_READY) == SPR_IS_READY && (status & NAME_IS_READY) == NAME_IS_READY) {
-            for (ItemInfo inf : info()) {
-                if (inf instanceof NFoodInfo) {
-                    return ((NFoodInfo) inf).check();
+            try {
+                for (ItemInfo inf : info()) {
+                    if (inf instanceof NFoodInfo) {
+                        return ((NFoodInfo) inf).check();
+                    }
                 }
+            }
+            catch (Loading ignored)
+            {
             }
         }
         return false;
