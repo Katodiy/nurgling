@@ -68,7 +68,6 @@
       <classpath>
         <pathelement path="lib/ext/jogl/jogl-all.jar" />
         <pathelement path="lib/ext/jogl/gluegen-rt.jar" />
-        <pathelement path="lib/rxjava-1.1.5.jar" />
         <pathelement path="lib/jglob.jar" />
       </classpath>
       <compilerarg value="-Xlint:unchecked" />
@@ -91,9 +90,6 @@
   <target name="lib-classes" depends="build-env" unless="unpacked-lib">
     <mkdir dir="build/classes-lib" />
     <unjar src="lib/jglob.jar" dest="build/classes-lib">
-      <patternset excludes="META-INF/**" />
-    </unjar>
-    <unjar src="lib/rxjava-1.1.5.jar" dest="build/classes-lib">
       <patternset excludes="META-INF/**" />
     </unjar>
   </target>

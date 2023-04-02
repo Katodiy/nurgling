@@ -151,7 +151,7 @@ public class NGItem extends GItem {
     @Override
     public void wdgmsg(String msg, Object... args) {
         if((status&NAME_IS_READY)==NAME_IS_READY && msg.equals("take"))
-            NUtils.getGameUI().charInfo.setCandidate(defn);
+            NUtils.getGameUI().getCharInfo().setCandidate(defn);
         super.wdgmsg(msg, args);
     }
 
@@ -161,22 +161,22 @@ public class NGItem extends GItem {
     }
 
     public boolean needrender() {
-        for (ItemInfo inf : info())
-        {
-            if(inf instanceof NFoodInfo)
-            {
-                return ((NFoodInfo)inf).check();
+        if((status & SPR_IS_READY) == SPR_IS_READY) {
+            for (ItemInfo inf : info()) {
+                if (inf instanceof NFoodInfo) {
+                    return ((NFoodInfo) inf).check();
+                }
             }
         }
         return false;
     }
 
     public boolean needlongtip() {
-        for (ItemInfo inf : info())
-        {
-            if(inf instanceof NFoodInfo)
-            {
-                return ((NFoodInfo)inf).needToolTip;
+        if((status & SPR_IS_READY) == SPR_IS_READY) {
+            for (ItemInfo inf : info()) {
+                if (inf instanceof NFoodInfo) {
+                    return ((NFoodInfo) inf).needToolTip;
+                }
             }
         }
         return false;

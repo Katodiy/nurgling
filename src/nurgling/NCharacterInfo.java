@@ -20,11 +20,12 @@ public class NCharacterInfo extends Widget {
     double oldFEPSsize = 0;
     boolean needFEPreset = false;
 
+    boolean isStarted = false;
     String varCand = null;
 
     public NCharacterInfo(String chrid) {
         this.chrid = chrid;
-        path = ((HashDirCache) ResCache.global).base + "\\..\\" + chrid.strip() + ".dat";
+        path = ((HashDirCache) ResCache.global).base + "\\..\\" +NUtils.getUI().sessInfo.username + "_" + chrid.strip() + ".dat";
         read();
     }
 
@@ -93,6 +94,12 @@ public class NCharacterInfo extends Widget {
                     }
                     oldFEPSsize = fepssize;
                 }
+                needFEPreset = true;
+                isStarted = true;
+            }
+            if(varity.size()>0 && oldFEPSsize == 0 && isStarted)
+            {
+                varity.clear();
                 needFEPreset = true;
             }
             if (NUtils.getTickId() - lastWriting > delta && needFEPreset) {
