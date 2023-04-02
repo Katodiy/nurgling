@@ -1,6 +1,7 @@
 package nurgling;
 
 import haven.*;
+import haven.res.ui.tt.wellmined.WellMined;
 
 public class NUI extends UI {
     public NSessInfo sessInfo;
@@ -11,6 +12,7 @@ public class NUI extends UI {
         super(uictx, sz, fun);
         NUtils.setUI(this);
         dataTables = new NDataTables();
+        WellMined.init();
     }
 
     @Override
