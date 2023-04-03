@@ -12,7 +12,7 @@ import static haven.CharWnd.Constipations.tflt;
 import static haven.CharWnd.iconfilter;
 import static haven.PUtils.convolvedown;
 
-public class NFoodInfo extends FoodInfo implements GItem.OverlayInfo<Tex> {
+public class NFoodInfo extends FoodInfo implements GItem.OverlayInfo<Tex>, NSearchable {
     static double coefSubscribe = 1.5;
     static double coefVerif = 1.2;
 
@@ -30,7 +30,8 @@ public class NFoodInfo extends FoodInfo implements GItem.OverlayInfo<Tex> {
     double expeted_fep;
     double needed;
     public boolean needToolTip = false;
-
+    double delta = 0;
+    HashMap<String, Double> searchImage = new HashMap<>();
     public NFoodInfo(Owner owner, double end, double glut, double cons, Event[] evs, Effect[] efs, int[] types) {
         super(owner, end, glut, cons, evs, efs, types);
         s_end = Utils.odformat2(end * 100, 2);
@@ -42,6 +43,7 @@ public class NFoodInfo extends FoodInfo implements GItem.OverlayInfo<Tex> {
         for (Event ev : evs) {
             double probability = ev.a / fepSum;
             fepVis.add(new FepVis(ev.img, ev.ev.nm, String.format("%s (%s%%)", Utils.odformat2(ev.a, 2), Utils.odformat2(probability * 100, 2)), Utils.blendcol(ev.ev.col, Color.WHITE, 0.5)));
+            searchImage.put(fep_map.get(ev.ev.nm),probability*100);
         }
         if (owner instanceof NGItem) {
             name = ((NGItem) owner).name();
@@ -59,7 +61,7 @@ public class NFoodInfo extends FoodInfo implements GItem.OverlayInfo<Tex> {
                     }
                 }
             }
-            expeted_fep = calcExpectedFep();
+            calcData();
         }
     }
 
@@ -113,6 +115,57 @@ public class NFoodInfo extends FoodInfo implements GItem.OverlayInfo<Tex> {
                 needed = calcNeededFep();
                 needToolTip = true;
             }
+        }
+        return false;
+    }
+    final static HashMap<String, String> fep_map = new HashMap<>();
+    static void init()
+    {
+        synchronized (fep_map) {
+            if (fep_map.isEmpty()) {
+                fep_map.put( "Strength +2","str2");
+                fep_map.put("Strength +1","str");
+                fep_map.put( "Agility +2","agi2");
+                fep_map.put("Agility +1","agi");
+                fep_map.put("Constitution +1","con");
+                fep_map.put( "Constitution +2","con2");
+                fep_map.put( "Perception +2","per2");
+                fep_map.put("Perception +1","per");
+                fep_map.put("Will +1","wil");
+                fep_map.put( "Will +2","wil2");
+                fep_map.put("Psyche +1","psy");
+                fep_map.put( "Psyche +2","psy2");
+                fep_map.put("Intelligence +1","int");
+                fep_map.put( "Intelligence +2","int2");
+                fep_map.put("Dexterity +1","dex");
+                fep_map.put( "Dexterity +2","dex2");
+                fep_map.put("Charisma +1","cha");
+                fep_map.put( "Charisma +2","cha2");
+            }
+        }
+    }
+
+
+    @Override
+    public boolean search() {
+        if(name!=null) {
+            calcData();
+            NGameUI.SearchItem si = NUtils.getGameUI().itemsForSearch;
+            if(!si.food.isEmpty()) {
+                for (NGameUI.SearchItem.Fep fep : NUtils.getGameUI().itemsForSearch.food) {
+                    if(searchImage.get(fep.v)==null || searchImage.get(fep.v)<fep.a)
+                        return false;
+                }
+                if (si.fgs)
+                    return (delta > 0);
+                if(!NUtils.getGameUI().itemsForSearch.name.isEmpty())
+                {
+                    return name.toLowerCase().contains(NUtils.getGameUI().itemsForSearch.name.toLowerCase());
+                }
+                return true;
+            }
+            if (si.fgs)
+                return (delta > 0);
         }
         return false;
     }
@@ -195,6 +248,14 @@ public class NFoodInfo extends FoodInfo implements GItem.OverlayInfo<Tex> {
         return consImgs.get(value);
     }
 
+    void calcData()
+    {
+        if(name!=null) {
+            expeted_fep = calcExpectedFep();
+            needed = calcNeededFep();
+            delta = expeted_fep - needed;
+        }
+    }
     @Override
     public BufferedImage tipimg(int w) {
         needToolTip = false;
@@ -213,11 +274,10 @@ public class NFoodInfo extends FoodInfo implements GItem.OverlayInfo<Tex> {
         imgs.add(RichText.render(String.format("FEP Sum: $col[128,255,0]{%s}, FEP/Hunger: $col[128,255,0]{%s}", Utils.odformat2(fepSum, 2), Utils.odformat2(fepSum / (100 * glut), 2)), 0).img);
 
         if (name != null) {
+            calcData();
             imgs.add(RichText.render(String.format("$col[205,125,255]{%s}:", "Calculation"), 0).img);
 
-            expeted_fep = calcExpectedFep();
-            needed = calcNeededFep();
-            double delta = expeted_fep - needed;
+
             double error = expeted_fep*0.005;
             if (delta < 0)
                 imgs.add(RichText.render(String.format("Expected FEP: $col[128,255,0]{%.2f} $col[0,196,255]{(%.2f \u00B1 %.2f)}", expeted_fep, delta, error), 0).img);
@@ -281,6 +341,7 @@ public class NFoodInfo extends FoodInfo implements GItem.OverlayInfo<Tex> {
             if(name==null)
             {
                 name = ((NGItem)owner).name();
+                calcData();
             }
             if(!ci.varity.contains(name))
                 return var_img;

@@ -1,8 +1,6 @@
 package nurgling;
 
 import haven.*;
-import haven.res.ui.tt.defn.DefName;
-import haven.res.ui.tt.highlighting.Highlighting;
 
 public class NWItem extends WItem {
 
@@ -25,29 +23,42 @@ public class NWItem extends WItem {
                 }
             }
         }
+        search();
+    }
+
+    private void search() {
         try {
-            String name = ((NGItem) item).name();
-            if (name != null) {
-                if (NUtils.getGameUI().itemsForSearch != null && !NUtils.getGameUI().itemsForSearch.isEmpty()) {
-                    if (name.contains(NUtils.getGameUI().itemsForSearch)) {
-                        for (ItemInfo inf : item.info()) {
-                            if (inf instanceof Highlighting)
-                                return;
+            if (NUtils.getGameUI().itemsForSearch != null && !NUtils.getGameUI().itemsForSearch.isEmpty()) {
+                String name = ((NGItem) item).name();
+                if (name != null) {
+                    if (NUtils.getGameUI().itemsForSearch.onlyName()) {
+                        if (name.toLowerCase().contains(NUtils.getGameUI().itemsForSearch.name)) {
+                            if (!((NGItem) item).isSeached) {
+                                ((NGItem) item).isSeached = true;
+                                item.info = null;
+                            }
+                            return;
                         }
-                        item.info = null;
-                        return;
                     }
                 }
-
                 for (ItemInfo inf : item.info()) {
-                    if (inf instanceof Highlighting) {
-                        item.info = null;
-                        return;
+                    if (inf instanceof NSearchable) {
+                        if(((NSearchable)inf).search())
+                        {
+                            if (!((NGItem) item).isSeached) {
+                                ((NGItem) item).isSeached = true;
+                                item.info = null;
+                            }
+                            return;
+                        }
                     }
                 }
             }
-
         } catch (Loading e) {
+        }
+        if (((NGItem) item).isSeached) {
+            ((NGItem) item).isSeached = false;
+            item.info = null;
         }
     }
 

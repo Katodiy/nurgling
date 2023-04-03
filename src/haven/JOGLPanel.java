@@ -35,6 +35,7 @@ import com.jogamp.opengl.awt.*;
 import haven.render.*;
 import haven.render.States;
 import haven.render.gl.*;
+import nurgling.NConfiguration;
 import nurgling.NUI;
 
 public class JOGLPanel extends GLCanvas implements Runnable, UIPanel, Console.Directory, UI.Context {
@@ -484,7 +485,7 @@ public class JOGLPanel extends GLCanvas implements Runnable, UIPanel, Console.Di
 	synchronized(ui) {
 	    ui.draw(g);
 	}
-	if(dbtext.get())
+	if(NConfiguration.getInstance().showDebugInfo)
 	    drawstats(ui, g, buf);
 	drawtooltip(ui, g);
 	drawcursor(ui, g);

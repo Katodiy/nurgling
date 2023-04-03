@@ -4,18 +4,113 @@ import haven.*;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 
 public class NGameUI extends GameUI {
-    public String itemsForSearch = null;
+    public SearchItem itemsForSearch = null;
+
+    public class SearchItem
+    {
+        String name ="";
+        public class Fep{
+            public String v;
+            public double a;
+            boolean isMore = false;
+
+            public Fep(String v, double a, boolean isMore) {
+                this.v = v;
+                this.a = a;
+                this.isMore = isMore;
+            }
+
+            public Fep(String v) {
+                this.v = v;
+                a = 0;
+            }
+        }
+        final ArrayList<Fep> food = new ArrayList<>();
+        final ArrayList<String> gilding = new ArrayList<>();
+        boolean fgs = false;
+        private void reset()
+        {
+            food.clear();
+            gilding.clear();
+            fgs = false;
+            name = "";
+        }
+        void install(String value)
+        {
+            synchronized (gilding) {
+                reset();
+                if (value.startsWith("$")) {
+                    String[] items = value.split("\\s*;\\s*");
+                    for (String val : items) {
+                        int pos = val.indexOf(":");
+                        if(val.length()>pos+1 && pos!=-1) {
+                            if (val.startsWith("$name")) {
+                               name = val.substring(pos+1).toLowerCase();
+                            } else if (val.startsWith("$fep")) {
+                                if (val.contains(":"))
+                                {
+                                    int minpos = val.indexOf("<");
+                                    int maxpos = val.indexOf(">");
+                                    if(minpos==maxpos)
+                                    {
+                                        food.add(new Fep (val.substring(pos+1)));
+                                    }
+                                    else{
+                                        int endpos = Math.max(minpos,maxpos);
+                                        if(val.length()>endpos+1)
+                                        {
+                                            try {
+                                                food.add(new Fep(val.substring(pos+1,endpos),Double.parseDouble(val.substring(endpos+1)),maxpos>minpos));
+                                            }catch (NumberFormatException e)
+                                            {
+                                                food.add(new Fep (val.substring(pos+1,endpos)));
+                                            }
+                                        }
+                                        else
+                                        {
+                                            food.add(new Fep (val.substring(pos+1,endpos)));
+                                        }
+                                    }
+                                }
+                            } else if (val.startsWith("$gild")) {
+                                if (val.contains(":"))
+                                    gilding.add(val.substring(pos+1));
+                            }
+                        }
+                        if (val.startsWith("$fgs")) {
+                            fgs = true;
+                        }
+                    }
+                } else {
+                    name = value.toLowerCase();
+                }
+            }
+        }
+
+        public boolean isEmpty() {
+            synchronized (gilding) {
+                return name.isEmpty() && !fgs && gilding.isEmpty() && food.isEmpty();
+            }
+        }
+
+        public boolean onlyName() {
+            synchronized (gilding) {
+                return !name.isEmpty() && !fgs && gilding.isEmpty() && food.isEmpty();
+            }
+        }
+    }
     TextEntry searchF = null;
     public NGameUI(String chrid, long plid, String genus) {
         super(chrid, plid, genus);
         NUtils.getUI().sessInfo.characterInfo = new NCharacterInfo(chrid);
+        itemsForSearch = new SearchItem();
         add(NUtils.getUI().sessInfo.characterInfo);
         pack();
         NUtils.setGameUI(this);
+        NFoodInfo.init();
     }
 
     public NCharacterInfo getCharInfo() {
@@ -34,7 +129,7 @@ public class NGameUI extends GameUI {
                 @Override
                 public boolean keydown(KeyEvent e) {
                     boolean res = super.keydown(e);
-                    NUtils.getGameUI().itemsForSearch = text();
+                    NUtils.getGameUI().itemsForSearch.install(text());
                     return res;
                 }
             };

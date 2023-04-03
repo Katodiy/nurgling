@@ -7,6 +7,7 @@ import haven.res.ui.tt.slots.ISlots;
 import java.awt.event.KeyEvent;
 
 public class NGItem extends GItem {
+    public boolean isSeached = false;
     int old_infoseq;
 
     public static int HAVE_CONTENT = 0x08;

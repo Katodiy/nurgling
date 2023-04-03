@@ -401,10 +401,8 @@ public abstract class ItemInfo {
 	if(owner instanceof NGItem)
 	{
 		NGItem item = (NGItem) owner;
-		if(item.name()!= null && NUtils.getGameUI().itemsForSearch!=null && !NUtils.getGameUI().itemsForSearch.isEmpty()) {
-			if (item.name().contains(NUtils.getGameUI().itemsForSearch)) {
-				ret.add(new Highlighting(owner));
-			}
+		if(item.isSeached) {
+			ret.add(new Highlighting(owner));
 		}
 	}
 	return(ret);
