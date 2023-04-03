@@ -2,12 +2,14 @@ package nurgling;
 
 import haven.*;
 
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
 public class NGameUI extends GameUI {
-
+    public String itemsForSearch = null;
+    TextEntry searchF = null;
     public NGameUI(String chrid, long plid, String genus) {
         super(chrid, plid, genus);
         NUtils.getUI().sessInfo.characterInfo = new NCharacterInfo(chrid);
@@ -25,6 +27,20 @@ public class NGameUI extends GameUI {
         String place = ((String) args[0]).intern();
         if (place.equals("chr") && chrwdg!=null) {
             ((NUI)ui).sessInfo.characterInfo.setCharWnd(chrwdg);
+        }
+        if(maininv!=null && searchF == null)
+        {
+            searchF = new TextEntry(UI.scale(200),""){
+                @Override
+                public boolean keydown(KeyEvent e) {
+                    boolean res = super.keydown(e);
+                    NUtils.getGameUI().itemsForSearch = text();
+                    return res;
+                }
+            };
+            Window window = maininv.getparent(Window.class);
+            window.add(searchF,(new Coord(0,window.sz.y)));
+            window.pack();
         }
     }
 

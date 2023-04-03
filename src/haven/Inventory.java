@@ -26,6 +26,7 @@
 
 package haven;
 
+import nurgling.NInventory;
 import nurgling.NWItem;
 
 import java.util.*;
@@ -61,7 +62,7 @@ public class Inventory extends Widget implements DTarget {
     @RName("inv")
     public static class $_ implements Factory {
 	public Widget create(UI ui, Object[] args) {
-	    return(new Inventory((Coord)args[0]));
+	    return(new NInventory((Coord)args[0]));
 	}
     }
 

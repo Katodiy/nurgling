@@ -26,9 +26,12 @@
 
 package haven;
 
+import haven.res.ui.tt.highlighting.Highlighting;
 import haven.res.ui.tt.q.quality.Quality;
 import haven.res.ui.tt.wear.Wear;
 import haven.res.ui.tt.wellmined.WellMined;
+import nurgling.NGItem;
+import nurgling.NUtils;
 
 import java.util.*;
 import java.util.function.*;
@@ -394,6 +397,15 @@ public abstract class ItemInfo {
 	    } else {
 		throw(new ClassCastException("Unexpected object type " + o.getClass() + " in item info array."));
 	    }
+	}
+	if(owner instanceof NGItem)
+	{
+		NGItem item = (NGItem) owner;
+		if(item.name()!= null && NUtils.getGameUI().itemsForSearch!=null && !NUtils.getGameUI().itemsForSearch.isEmpty()) {
+			if (item.name().contains(NUtils.getGameUI().itemsForSearch)) {
+				ret.add(new Highlighting(owner));
+			}
+		}
 	}
 	return(ret);
     }

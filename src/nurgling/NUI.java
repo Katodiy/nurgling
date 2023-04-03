@@ -1,6 +1,7 @@
 package nurgling;
 
 import haven.*;
+import haven.res.ui.tt.highlighting.Highlighting;
 import haven.res.ui.tt.wellmined.WellMined;
 
 public class NUI extends UI {
@@ -12,7 +13,7 @@ public class NUI extends UI {
         super(uictx, sz, fun);
         NUtils.setUI(this);
         dataTables = new NDataTables();
-        WellMined.init();
+        Highlighting.init();
     }
 
     @Override
