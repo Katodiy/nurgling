@@ -32,13 +32,13 @@ import java.awt.Font;
 import java.awt.image.BufferedImage;
 
 public class Button extends SIWidget {
-    public static final BufferedImage bl = Resource.loadsimg("gfx/hud/buttons/tbtn/left");
-    public static final BufferedImage br = Resource.loadsimg("gfx/hud/buttons/tbtn/right");
-    public static final BufferedImage bt = Resource.loadsimg("gfx/hud/buttons/tbtn/top");
-    public static final BufferedImage bb = Resource.loadsimg("gfx/hud/buttons/tbtn/bottom");
-    public static final BufferedImage dt = Resource.loadsimg("gfx/hud/buttons/tbtn/dtex");
-    public static final BufferedImage ut = Resource.loadsimg("gfx/hud/buttons/tbtn/utex");
-    public static final BufferedImage bm = Resource.loadsimg("gfx/hud/buttons/tbtn/mid");
+    public static final BufferedImage bl = Resource.loadsimg("nurgling/hud/buttons/tbtn/left");
+    public static final BufferedImage br = Resource.loadsimg("nurgling/hud/buttons/tbtn/right");
+    public static final BufferedImage bt = Resource.loadsimg("nurgling/hud/buttons/tbtn/top");
+    public static final BufferedImage bb = Resource.loadsimg("nurgling/hud/buttons/tbtn/bottom");
+    public static final BufferedImage dt = Resource.loadsimg("nurgling/hud/buttons/tbtn/dtex");
+    public static final BufferedImage ut = Resource.loadsimg("nurgling/hud/buttons/tbtn/utex");
+    public static final BufferedImage bm = Resource.loadsimg("nurgling/hud/buttons/tbtn/mid");
     public static final int hs = bl.getHeight(), hl = bm.getHeight();
     public static final Resource click = Loading.waitfor(Resource.local().load("sfx/hud/btn"));
     @Deprecated public static final Resource.Audio lbtdown = Loading.waitfor(Resource.local().load("sfx/hud/lbtn")).layer(Resource.audio, "down");
