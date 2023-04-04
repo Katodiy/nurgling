@@ -139,8 +139,8 @@ public class NFoodInfo extends FoodInfo implements GItem.OverlayInfo<Tex>, NSear
                 fep_map.put( "Intelligence +2","int2");
                 fep_map.put("Dexterity +1","dex");
                 fep_map.put( "Dexterity +2","dex2");
-                fep_map.put("Charisma +1","cha");
-                fep_map.put( "Charisma +2","cha2");
+                fep_map.put("Charisma +1","csm");
+                fep_map.put( "Charisma +2","csm");
             }
         }
     }

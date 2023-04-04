@@ -12,7 +12,7 @@ import static haven.ItemInfo.catimgsh;
 
 public class NSearchWidget extends Widget {
     TextEntry searchF = null;
-
+    public static final Text.Foundry nfnd = new Text.Foundry(Text.dfont, 10);
     Window helpwnd;
     private static final BufferedImage[] searchbi = new BufferedImage[] {
             Resource.loadsimg("nurgling/hud/buttons/searchu"),
@@ -80,9 +80,13 @@ public class NSearchWidget extends Widget {
                     sz = new Coord(helpLayer.sz().x,helpLayer.sz().y);
             }
 
-            public void cdestroy(Widget w) {
-                if(w == helpwnd) {
-                    this.hide();
+            @Override
+            public void wdgmsg(Widget sender, String msg, Object... args) {
+                if ( sender == helpwnd.cbtn ) {
+                    helpwnd.hide();
+                }
+                else {
+                    super.wdgmsg ( sender, msg, args );
                 }
             }
 
@@ -108,8 +112,22 @@ public class NSearchWidget extends Widget {
         ArrayList<BufferedImage> imgs =new ArrayList<>();
         String[] src = Resource.remote().loadwait("nurgling/hud/wnd/search").flayer(Resource.tooltip).t.split("\\|");
         for (String s : src)
-            imgs.add(RichText.render(s,0).img);
+            try {
+                if(s.contains("$") && !s.contains("$col"))
+                {
+                    imgs.add(nfnd.render(s).img);
+                }
+                    else
+                {
+                    imgs.add(RichText.render(s, 0).img);
+                }
+            }catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+
         helpLayer = new TexI(catimgs(5, imgs.toArray(new BufferedImage[0])));
         helpwnd.resize(new Coord(helpLayer.sz()));
     }
+
 }
