@@ -2,6 +2,7 @@ package nurgling;
 
 import haven.*;
 import haven.res.ui.tt.defn.DefName;
+import haven.res.ui.tt.highlighting.Highlighting;
 import haven.res.ui.tt.slots.ISlots;
 
 import java.awt.event.KeyEvent;
@@ -18,6 +19,18 @@ public class NGItem extends GItem {
     private int status = 0;
     private double quality = -1;
     public long meterUpdated = 0;
+
+    boolean isHaveInfo(Class<?> cl)
+    {
+        for ( ItemInfo inf : info)
+        {
+            if (inf.getClass()==cl)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public static class NContent{
         private double quality = -1;
@@ -108,7 +121,7 @@ public class NGItem extends GItem {
                     status |= SPR_IS_READY;
                 }
                 status &= ~NAME_IS_READY;
-                if(res.get().layer(Resource.tooltip)!=null) {
+                if(res.get().layer(Resource.tooltip)!=null || res.get().name.equals("gfx/invobjs/gems/gemstone")) {
                     defn = DefName.getname(this);
                     if (defn != null) {
                         status |= NAME_IS_READY;

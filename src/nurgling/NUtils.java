@@ -53,4 +53,31 @@ public class NUtils {
         return false;
     }
 
+    public static boolean waitEvent(
+            Expression exp,
+            int delay
+    )
+            throws InterruptedException {
+        return waitEvent(exp,delay,50);
+    }
+
+    public static boolean waitEvent(
+            Expression exp,
+            int delay,
+            int tick
+    )
+            throws InterruptedException {
+        long start_id = getUI().getTickId();
+        while ((!exp.isTrue()) && getUI().getTickId() - start_id < delay) {
+            Thread.sleep(tick);
+        }
+        return exp.isTrue();
+    }
+
+
+    public interface Expression {
+        public boolean isTrue()
+                throws InterruptedException;
+    }
+
 }

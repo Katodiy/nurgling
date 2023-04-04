@@ -1,0 +1,3 @@
+#TOOLTIP LAYER FOR RES src/nurgling/wnd/search.res//
+#String tooltip
+Press f to win $col[255,255,65]{Hello} world | OLOLO

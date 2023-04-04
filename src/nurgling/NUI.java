@@ -2,6 +2,7 @@ package nurgling;
 
 import haven.*;
 import haven.res.ui.tt.highlighting.Highlighting;
+import haven.res.ui.tt.slot.Slotted;
 import haven.res.ui.tt.wellmined.WellMined;
 
 public class NUI extends UI {
@@ -14,6 +15,8 @@ public class NUI extends UI {
         NUtils.setUI(this);
         dataTables = new NDataTables();
         Highlighting.init();
+        Slotted.init();
+        NFoodInfo.init();
     }
 
     @Override

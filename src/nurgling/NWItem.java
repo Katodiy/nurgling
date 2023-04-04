@@ -1,6 +1,9 @@
 package nurgling;
 
 import haven.*;
+import haven.res.ui.tt.highlighting.Highlighting;
+
+import java.util.Collection;
 
 public class NWItem extends WItem {
 
@@ -46,6 +49,8 @@ public class NWItem extends WItem {
                         if(((NSearchable)inf).search())
                         {
                             if (!((NGItem) item).isSeached) {
+                                if (!NUtils.getGameUI().itemsForSearch.q.isEmpty() && !searchQuality())
+                                    return;
                                 ((NGItem) item).isSeached = true;
                                 item.info = null;
                             }
@@ -53,14 +58,84 @@ public class NWItem extends WItem {
                         }
                     }
                 }
+                if(!NUtils.getGameUI().itemsForSearch.q.isEmpty() && searchQuality())
+                {
+                    if (!((NGItem) item).isSeached) {
+                        ((NGItem) item).isSeached = true;
+                        item.info = null;
+                    }
+                }
             }
         } catch (Loading e) {
         }
         if (((NGItem) item).isSeached) {
+            if (NUtils.getGameUI().itemsForSearch != null && !NUtils.getGameUI().itemsForSearch.q.isEmpty() && searchQuality())
+                return;
             ((NGItem) item).isSeached = false;
             item.info = null;
         }
     }
 
+    private boolean searchQuality() {
+        for(NGameUI.SearchItem.Quality q : NUtils.getGameUI().itemsForSearch.q)
+        {
+            switch (q.type) {
+                case MORE:
+                    if (((NGItem) item).quality() <= q.val)
+                        return false;
+                    break;
+                case LOW:
+                    if (((NGItem) item).quality() >= q.val)
+                        return false;
+                    break;
+                case EQ:
+                    if (((NGItem) item).quality() != q.val)
+                        return false;
+            }
+        }
 
+            if (!NUtils.getGameUI().itemsForSearch.name.isEmpty()) {
+                String name = ((NGItem) item).name();
+                if(name!=null) {
+                    return name.toLowerCase().contains(NUtils.getGameUI().itemsForSearch.name);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        return true;
+    }
+
+
+    @Override
+    public boolean mousedown(Coord c, int btn) {
+        if (ui.modctrl && ui.modmeta) {
+            if(((NGItem)item).isHaveInfo(Highlighting.class))
+            {
+                if(item.parent instanceof NInventory) {
+                    Collection<NGItem> items = ((NInventory) item.parent).getItems(Highlighting.class);
+                    for(NGItem item : items)
+                    {
+                        item.wdgmsg("drop", c, 1);
+                    }
+                }
+            }
+            return (true);
+        } else if(ui.modshift && ui.modmeta) {
+            Collection<NGItem> items;
+            if (item.parent instanceof NInventory) {
+                if (((NGItem) item).isHaveInfo(Highlighting.class)) {
+                    items = ((NInventory) item.parent).getItems(Highlighting.class);
+                } else {
+                    items = ((NInventory) item.parent).getItems(new NAlias(((NGItem) item).name()));
+                }
+                for(NGItem item : items)
+                {
+                    item.wdgmsg("transfer", c, 1);
+                }
+            }
+        }
+        return super.mousedown(c, btn);
+    }
 }

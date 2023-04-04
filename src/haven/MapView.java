@@ -39,6 +39,7 @@ import haven.render.*;
 import haven.MCache.OverlayInfo;
 import haven.render.sl.Uniform;
 import haven.render.sl.Type;
+import nurgling.NMapView;
 
 public class MapView extends PView implements DTarget, Console.Directory {
     public static boolean clickdb = false;
@@ -489,7 +490,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    long pgob = -1;
 	    if(args.length > 2)
 		pgob = Utils.uint32((Integer)args[2]);
-	    return(new MapView(sz, ui.sess.glob, mc, pgob));
+	    return(new NMapView(sz, ui.sess.glob, mc, pgob));
 	}
     }
     

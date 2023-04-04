@@ -3,38 +3,59 @@ package nurgling;
 import haven.*;
 
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Comparator;
 
 public class NGameUI extends GameUI {
     public SearchItem itemsForSearch = null;
-
-    public class SearchItem
+    public NSearchWidget searchwdg;
+    public static class SearchItem
     {
-        String name ="";
-        public class Fep{
+        public String name ="";
+
+        public static class Quality{
+            public double val;
+            public Type type;
+
+            public Quality(double val, Type type) {
+                this.val = val;
+                this.type = type;
+            }
+
+            public enum Type{
+                MORE,
+                LOW,
+                EQ
+            }
+        }
+
+        public ArrayList<Quality> q= new ArrayList<>();
+        public class Stat{
             public String v;
             public double a;
-            boolean isMore = false;
+            public boolean isMore = false;
 
-            public Fep(String v, double a, boolean isMore) {
+            public Stat(String v, double a, boolean isMore) {
                 this.v = v;
                 this.a = a;
                 this.isMore = isMore;
             }
 
-            public Fep(String v) {
+            public Stat(String v) {
                 this.v = v;
                 a = 0;
             }
         }
-        final ArrayList<Fep> food = new ArrayList<>();
-        final ArrayList<String> gilding = new ArrayList<>();
+
+        public final ArrayList<Stat> food = new ArrayList<>();
+        public final ArrayList<Stat> gilding = new ArrayList<>();
         boolean fgs = false;
         private void reset()
         {
             food.clear();
             gilding.clear();
+            q.clear();
             fgs = false;
             name = "";
         }
@@ -56,32 +77,78 @@ public class NGameUI extends GameUI {
                                     int maxpos = val.indexOf(">");
                                     if(minpos==maxpos)
                                     {
-                                        food.add(new Fep (val.substring(pos+1)));
+                                        food.add(new Stat (val.substring(pos+1)));
                                     }
                                     else{
                                         int endpos = Math.max(minpos,maxpos);
                                         if(val.length()>endpos+1)
                                         {
                                             try {
-                                                food.add(new Fep(val.substring(pos+1,endpos),Double.parseDouble(val.substring(endpos+1)),maxpos>minpos));
+                                                food.add(new Stat(val.substring(pos+1,endpos),Double.parseDouble(val.substring(endpos+1)),maxpos>minpos));
                                             }catch (NumberFormatException e)
                                             {
-                                                food.add(new Fep (val.substring(pos+1,endpos)));
+                                                food.add(new Stat (val.substring(pos+1,endpos)));
                                             }
                                         }
                                         else
                                         {
-                                            food.add(new Fep (val.substring(pos+1,endpos)));
+                                            food.add(new Stat (val.substring(pos+1,endpos)));
                                         }
                                     }
                                 }
                             } else if (val.startsWith("$gild")) {
                                 if (val.contains(":"))
-                                    gilding.add(val.substring(pos+1));
+                                {
+                                    int minpos = val.indexOf("<");
+                                    int maxpos = val.indexOf(">");
+                                    if(minpos==maxpos)
+                                    {
+                                        gilding.add(new Stat (val.substring(pos+1)));
+                                    }
+                                    else{
+                                        int endpos = Math.max(minpos,maxpos);
+                                        if(val.length()>endpos+1)
+                                        {
+                                            try {
+                                                gilding.add(new Stat(val.substring(pos+1,endpos),Double.parseDouble(val.substring(endpos+1)),maxpos>minpos));
+                                            }catch (NumberFormatException e)
+                                            {
+                                                gilding.add(new Stat (val.substring(pos+1,endpos)));
+                                            }
+                                        }
+                                        else
+                                        {
+                                            gilding.add(new Stat (val.substring(pos+1,endpos)));
+                                        }
+                                    }
+                                }
                             }
                         }
                         if (val.startsWith("$fgs")) {
                             fgs = true;
+                        }
+                        else if(val.startsWith("$q"))
+                        {
+                            int minpos = val.indexOf("<");
+                            int maxpos = val.indexOf(">");
+                            int eqpos = val.indexOf("=");
+                            try {
+                            if(minpos!=-1 && val.length()>minpos+1){
+                                    double d = Double.parseDouble(val.substring(minpos+1));
+                                    q.add(new Quality(d, Quality.Type.LOW));
+                            }
+                            else if(maxpos!=-1 && val.length()>maxpos+1){
+                                double d = Double.parseDouble(val.substring(maxpos+1));
+                                q.add(new Quality(d, Quality.Type.MORE));
+                            }
+                            else if(eqpos!=-1 && val.length()>eqpos+1){
+                                double d = Double.parseDouble(val.substring(eqpos+1));
+                                q.add(new Quality(d, Quality.Type.EQ));
+                            }
+                            }
+                            catch (NumberFormatException ignored)
+                            {
+                            }
                         }
                     }
                 } else {
@@ -92,17 +159,17 @@ public class NGameUI extends GameUI {
 
         public boolean isEmpty() {
             synchronized (gilding) {
-                return name.isEmpty() && !fgs && gilding.isEmpty() && food.isEmpty();
+                return name.isEmpty() && !fgs && gilding.isEmpty() && food.isEmpty() && q.isEmpty();
             }
         }
 
         public boolean onlyName() {
             synchronized (gilding) {
-                return !name.isEmpty() && !fgs && gilding.isEmpty() && food.isEmpty();
+                return !name.isEmpty() && !fgs && gilding.isEmpty() && food.isEmpty() && q.isEmpty();
             }
         }
     }
-    TextEntry searchF = null;
+
     public NGameUI(String chrid, long plid, String genus) {
         super(chrid, plid, genus);
         NUtils.getUI().sessInfo.characterInfo = new NCharacterInfo(chrid);
@@ -110,32 +177,31 @@ public class NGameUI extends GameUI {
         add(NUtils.getUI().sessInfo.characterInfo);
         pack();
         NUtils.setGameUI(this);
-        NFoodInfo.init();
     }
 
     public NCharacterInfo getCharInfo() {
         return ((NUI)ui).sessInfo.characterInfo;
     }
 
+    private static final BufferedImage[] searchbi = new BufferedImage[] {
+            Resource.loadsimg("nurgling/hud/buttons/searchu"),
+            Resource.loadsimg("nurgling/hud/buttons/searchd"),
+            Resource.loadsimg("nurgling/hud/buttons/searchh")};
     public void addchild(Widget child, Object... args) {
         super.addchild(child,args);
         String place = ((String) args[0]).intern();
         if (place.equals("chr") && chrwdg!=null) {
             ((NUI)ui).sessInfo.characterInfo.setCharWnd(chrwdg);
         }
-        if(maininv!=null && searchF == null)
+        if(maininv!=null && searchwdg == null)
         {
-            searchF = new TextEntry(UI.scale(200),""){
-                @Override
-                public boolean keydown(KeyEvent e) {
-                    boolean res = super.keydown(e);
-                    NUtils.getGameUI().itemsForSearch.install(text());
-                    return res;
-                }
-            };
-            Window window = maininv.getparent(Window.class);
-            window.add(searchF,(new Coord(0,window.sz.y)));
-            window.pack();
+
+            NInventory window = (NInventory) maininv;
+            searchwdg = new NSearchWidget(new Coord(window.sz));
+            window.searchwdg = searchwdg;
+            searchwdg.resize(window.sz);
+            window.parent.add(searchwdg,(new Coord(0,window.sz.y+UI.scale(10))));
+            window.parent.pack();
         }
     }
 

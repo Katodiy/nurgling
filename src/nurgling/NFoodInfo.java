@@ -152,8 +152,8 @@ public class NFoodInfo extends FoodInfo implements GItem.OverlayInfo<Tex>, NSear
             calcData();
             NGameUI.SearchItem si = NUtils.getGameUI().itemsForSearch;
             if(!si.food.isEmpty()) {
-                for (NGameUI.SearchItem.Fep fep : NUtils.getGameUI().itemsForSearch.food) {
-                    if(searchImage.get(fep.v)==null || searchImage.get(fep.v)<fep.a)
+                for (NGameUI.SearchItem.Stat fep : NUtils.getGameUI().itemsForSearch.food) {
+                    if (searchImage.get(fep.v) == null || (fep.a!=0 && !(fep.isMore == (searchImage.get(fep.v) > fep.a))))
                         return false;
                 }
                 if (si.fgs)
