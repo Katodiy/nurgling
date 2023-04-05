@@ -4,6 +4,7 @@
 package haven.res.gfx.invobjs.gems.gemstone;
 import java.awt.image.*;
 import java.awt.Graphics;
+import java.util.HashMap;
 import java.util.Random;
 import haven.*;
 import static haven.PUtils.*;
@@ -11,9 +12,9 @@ import static haven.PUtils.*;
 /* >ispr: Gemstone */
 @haven.FromResource(name = "gfx/invobjs/gems/gemstone", version = 50)
 public class Gemstone extends GSprite implements GSprite.ImageSprite, haven.res.ui.tt.defn.DynName {
-    public final BufferedImage img;
-    public final Tex tex;
-    public final String name;
+    public  BufferedImage img = null;
+    public  Tex tex = null;
+    public  String name = "";
 
     public Gemstone(Owner owner, Resource res, Message sdt) {
 	super(owner);
@@ -65,6 +66,8 @@ public class Gemstone extends GSprite implements GSprite.ImageSprite, haven.res.
 	return(dst);
     }
 
+	final static HashMap<String, BufferedImage> texCache = new HashMap<>();
+
     public static BufferedImage construct(Resource cut, Resource tex) {
 	Resource.Image outl, body, hili;
 	BufferedImage outli, bodyi, hilii;
@@ -88,8 +91,16 @@ public class Gemstone extends GSprite implements GSprite.ImageSprite, haven.res.
 	    o = new Coord(Utils.clip(o.x, 0, sz.x - hilii.getWidth()), Utils.clip(o.y, 0, sz.y - hilii.getHeight()));
 	    alphablit(buf2, hilii.getRaster(), o);
 	    if(tex != null) {
-		BufferedImage texi = ((TexL)tex.layer(TexR.class).tex()).fill();
-		texi = convolvedown(texi, sz.mul(2), new Lanczos(3));
+		BufferedImage texi;
+		if(texCache.get(tex.name)==null) {
+			texi = ((TexL) tex.layer(TexR.class).tex()).fill();
+			texi = convolvedown(texi, sz.mul(2), new Lanczos(3));
+			texCache.put(tex.name, texi);
+		}
+		else
+		{
+			texi =texCache.get(tex.name);
+		}
 		tilemod(buf2, texi.getRaster(), Coord.z);
 	    }
 	    // alphamod(buf2);
