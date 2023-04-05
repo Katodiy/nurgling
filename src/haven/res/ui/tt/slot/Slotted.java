@@ -18,6 +18,8 @@ import java.util.List;
 /* >tt: Slotted */
 @haven.FromResource(name = "ui/tt/slot", version = 18)
 public class Slotted extends ItemInfo.Tip implements GItem.OverlayInfo<Tex>, NSearchable {
+	public static boolean show = false;
+
 	public static final Coord size = UI.scale(new Coord(33,33));
     public static final Text.Line ch = Text.render("As gilding:");
 	private static final HashMap<String, String> stat_map = new HashMap<>();
@@ -116,7 +118,8 @@ public class Slotted extends ItemInfo.Tip implements GItem.OverlayInfo<Tex>, NSe
 
 	@Override
 	public void drawoverlay(GOut g, Tex data) {
-		g.aimage(data, new Coord(data.sz().x, g.sz().y - data.sz().y), 1, 0);
+		if(show)
+			g.aimage(data, new Coord(data.sz().x, g.sz().y - data.sz().y), 1, 0);
 	}
 
 	public static void init()

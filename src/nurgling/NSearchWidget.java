@@ -14,16 +14,16 @@ public class NSearchWidget extends Widget {
     TextEntry searchF = null;
     public static final Text.Foundry nfnd = new Text.Foundry(Text.dfont, 10);
     Window helpwnd;
-    private static final BufferedImage[] searchbi = new BufferedImage[] {
+    private static final BufferedImage[] searchbi = new BufferedImage[]{
             Resource.loadsimg("nurgling/hud/buttons/searchu"),
             Resource.loadsimg("nurgling/hud/buttons/searchd"),
             Resource.loadsimg("nurgling/hud/buttons/searchh")};
-    private static final BufferedImage[] ssearchbi = new BufferedImage[] {
+    private static final BufferedImage[] ssearchbi = new BufferedImage[]{
             Resource.loadsimg("nurgling/hud/buttons/ssearchu"),
             Resource.loadsimg("nurgling/hud/buttons/ssearchd"),
             Resource.loadsimg("nurgling/hud/buttons/ssearchh")};
 
-    private static final Tex[] lsearchbi = new Tex[] {
+    private static final Tex[] lsearchbi = new Tex[]{
             Resource.loadtex("nurgling/hud/buttons/lsearchu"),
             Resource.loadtex("nurgling/hud/buttons/lsearchd"),
             Resource.loadtex("nurgling/hud/buttons/lsearchh"),
@@ -31,16 +31,16 @@ public class NSearchWidget extends Widget {
 
     IButton help;
     IButton save;
-   ICheckBox list;
+    ICheckBox list;
     int tpos_y;
 
     public Widget create(UI ui, Object[] args) {
-        return(new NSearchWidget((Coord)args[0]));
+        return (new NSearchWidget((Coord) args[0]));
     }
 
     public NSearchWidget(Coord sz) {
         super(sz);
-        searchF = new TextEntry(sz.x,""){
+        searchF = new TextEntry(sz.x, "") {
             @Override
             public boolean keydown(KeyEvent e) {
                 boolean res = super.keydown(e);
@@ -49,7 +49,7 @@ public class NSearchWidget extends Widget {
             }
         };
 
-        help = new IButton(searchbi[0], searchbi[1], searchbi[2]){
+        help = new IButton(searchbi[0], searchbi[1], searchbi[2]) {
             @Override
             public void click() {
                 super.click();
@@ -57,36 +57,34 @@ public class NSearchWidget extends Widget {
             }
         };
         save = new IButton(ssearchbi[0], ssearchbi[1], ssearchbi[2]);
-        list = new ICheckBox(lsearchbi[0], lsearchbi[1], lsearchbi[2],lsearchbi[3]);
-        tpos_y = searchF.sz.y/2-help.sz.y/2;
-        add(help,new Coord(0,tpos_y));
-        add(save,new Coord(0,tpos_y));
-        add(list,new Coord(0,tpos_y));
-        add(searchF,new Coord(help.sz.x+UI.scale(5), 0));
-        helpwnd = new Window(new Coord(UI.scale(200),UI.scale(500)),"Help: search")
-        {
+        list = new ICheckBox(lsearchbi[0], lsearchbi[1], lsearchbi[2], lsearchbi[3]);
+        tpos_y = searchF.sz.y / 2 - help.sz.y / 2;
+        add(help, new Coord(0, tpos_y));
+        add(save, new Coord(0, tpos_y));
+        add(list, new Coord(0, tpos_y));
+        add(searchF, new Coord(help.sz.x + UI.scale(5), 0));
+        helpwnd = new Window(new Coord(UI.scale(200), UI.scale(500)), "Help: search") {
             @Override
             public void draw(GOut g) {
                 super.draw(g);
-                if(helpLayer!=null)
-                    g.aimage(helpLayer,atl, 0,0);
+                if (helpLayer != null)
+                    g.aimage(helpLayer, atl, 0, 0);
 
             }
 
             @Override
             public void resize(Coord sz) {
                 super.resize(sz);
-                if(helpLayer!=null)
-                    sz = new Coord(helpLayer.sz().x,helpLayer.sz().y);
+                if (helpLayer != null)
+                    sz = new Coord(helpLayer.sz().x, helpLayer.sz().y);
             }
 
             @Override
             public void wdgmsg(Widget sender, String msg, Object... args) {
-                if ( sender == helpwnd.cbtn ) {
+                if (sender == helpwnd.cbtn) {
                     helpwnd.hide();
-                }
-                else {
-                    super.wdgmsg ( sender, msg, args );
+                } else {
+                    super.wdgmsg(sender, msg, args);
                 }
             }
 
@@ -99,7 +97,7 @@ public class NSearchWidget extends Widget {
 
     @Override
     public void resize(Coord sz) {
-        searchF.resize(sz.x - UI.scale(5)*3 - help.sz.x*3);
+        searchF.resize(sz.x - UI.scale(5) * 3 - help.sz.x * 3);
         this.sz.y = searchF.sz.y;
         this.sz.x = sz.x;
         save.move(new Coord(sz.x - save.sz.x, tpos_y));
@@ -107,27 +105,19 @@ public class NSearchWidget extends Widget {
     }
 
     TexI helpLayer;
-    void initHelp()
-    {
-        ArrayList<BufferedImage> imgs =new ArrayList<>();
+
+    void initHelp() {
+        ArrayList<BufferedImage> imgs = new ArrayList<>();
         String[] src = Resource.remote().loadwait("nurgling/hud/wnd/search").flayer(Resource.tooltip).t.split("\\|");
         for (String s : src)
-            try {
-                if(s.contains("$") && !s.contains("$col"))
-                {
-                    imgs.add(nfnd.render(s).img);
-                }
-                    else
-                {
-                    imgs.add(RichText.render(s, 0).img);
-                }
-            }catch(Exception e)
-            {
-                e.printStackTrace();
+            if (s.contains("$") && !s.contains("$col")) {
+                imgs.add(nfnd.render(s).img);
+            } else {
+                imgs.add(RichText.render(s, 0).img);
             }
 
         helpLayer = new TexI(catimgs(5, imgs.toArray(new BufferedImage[0])));
         helpwnd.resize(new Coord(helpLayer.sz()));
     }
-
 }
+

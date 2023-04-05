@@ -1,15 +1,19 @@
 package nurgling;
 
 import haven.*;
+import haven.render.Render;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class NInventory extends Inventory {
     public NSearchWidget searchwdg;
+    public NPopUpWidget popup;
     public NInventory(Coord sz) {
         super(sz);
     }
+
+    boolean showPopup = false;
 
     @Override
     public void resize(Coord sz) {
@@ -77,5 +81,20 @@ public class NInventory extends Inventory {
             }
         }
         return true;
+    }
+
+    public void movePopup(Coord c) {
+        if(popup!=null)
+        {
+           popup.move(new Coord(c.x -popup.sz.x +UI.scale(16),c.y - ((Window) parent).ctl.y + popup.atl.y));
+        }
+        super.mousemove(c);
+    }
+
+    @Override
+    public void tick(double dt) {
+        super.tick(dt);
+        if(popup!=null)
+            popup.visible = parent.visible && showPopup;
     }
 }

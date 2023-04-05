@@ -11,10 +11,13 @@ public class NGItem extends GItem {
     public boolean isSeached = false;
     int old_infoseq;
 
+
     public static int HAVE_CONTENT = 0x08;
     public static int SPR_IS_READY = 0x04;
     public static int NAME_IS_READY = 0x02;
     public static int RAWINFO_IS_READY = 0x01;
+
+    public static int READY = SPR_IS_READY|NAME_IS_READY;
 
     private int status = 0;
     private double quality = -1;
@@ -61,7 +64,7 @@ public class NGItem extends GItem {
     @Override
     public void tick(double dt) {
         super.tick(dt);
-        if(infoseq!=old_infoseq)
+        if(infoseq!=old_infoseq || (status&READY)!=READY)
         {
             if(rawinfo!= null) {
                 status &= ~RAWINFO_IS_READY;
@@ -123,7 +126,7 @@ public class NGItem extends GItem {
                 status &= ~NAME_IS_READY;
                 if(res.get().layer(Resource.tooltip)!=null || res.get().name.equals("gfx/invobjs/gems/gemstone")) {
                     defn = DefName.getname(this);
-                    if (defn != null) {
+                    if (defn != null && !defn.isEmpty()) {
                         status |= NAME_IS_READY;
                     }
                 }

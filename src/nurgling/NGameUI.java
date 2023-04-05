@@ -1,6 +1,7 @@
 package nurgling;
 
 import haven.*;
+import haven.res.ui.tt.slot.Slotted;
 
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
@@ -183,25 +184,65 @@ public class NGameUI extends GameUI {
         return ((NUI)ui).sessInfo.characterInfo;
     }
 
-    private static final BufferedImage[] searchbi = new BufferedImage[] {
-            Resource.loadsimg("nurgling/hud/buttons/searchu"),
-            Resource.loadsimg("nurgling/hud/buttons/searchd"),
-            Resource.loadsimg("nurgling/hud/buttons/searchh")};
+    private static final TexI[] collapsei = new TexI[]{
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/itogglecu")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/itogglecd")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/itogglech")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/itogglecdh"))};
+
+    private static final TexI[] gildingi = new TexI[]{
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/gilding/u")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/gilding/d")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/gilding/h")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/gilding/dh"))};
+
+    private static final TexI[] ssearchbi = new TexI[]{
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/ssearchu")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/ssearchd")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/ssearchh"))};
+
     public void addchild(Widget child, Object... args) {
-        super.addchild(child,args);
+        super.addchild(child, args);
         String place = ((String) args[0]).intern();
-        if (place.equals("chr") && chrwdg!=null) {
-            ((NUI)ui).sessInfo.characterInfo.setCharWnd(chrwdg);
+        if (place.equals("chr") && chrwdg != null) {
+            ((NUI) ui).sessInfo.characterInfo.setCharWnd(chrwdg);
         }
-        if(maininv!=null && searchwdg == null)
-        {
+        if (maininv != null && searchwdg == null) {
 
             NInventory window = (NInventory) maininv;
             searchwdg = new NSearchWidget(new Coord(window.sz));
             window.searchwdg = searchwdg;
             searchwdg.resize(window.sz);
-            window.parent.add(searchwdg,(new Coord(0,window.sz.y+UI.scale(10))));
+            window.parent.add(searchwdg, (new Coord(0, window.sz.y + UI.scale(10))));
+            window.parent.add(new ICheckBox(collapsei[0], collapsei[1], collapsei[2], collapsei[3]) {
+                                  @Override
+                                  public void changed(boolean val) {
+                                      super.changed(val);
+                                      window.showPopup = val;
+                                  }
+                              }
+                    , new Coord(-gildingi[0].sz().x + UI.scale(2), UI.scale(27)));
+
             window.parent.pack();
+            NPopUpWidget p = add(new NPopUpWidget(new Coord(UI.scale(50), UI.scale(80))));
+            window.popup = p;
+
+            Widget pw = p.add(new ICheckBox(gildingi[0], gildingi[1], gildingi[2], gildingi[3]) {
+                                  @Override
+                                  public void changed(boolean val) {
+                                      super.changed(val);
+                                      Slotted.show = val;
+                                  }
+                              }
+                    , p.atl);
+            pw = p.add(new IButton(ssearchbi[0].back, ssearchbi[1].back, ssearchbi[2].back), pw.pos("bl").add(UI.scale(new Coord(0, 5))));
+            pw = p.add(new IButton(ssearchbi[0].back, ssearchbi[1].back, ssearchbi[2].back), pw.pos("bl").add(UI.scale(new Coord(0, 5))));
+            pw = p.add(new IButton(ssearchbi[0].back, ssearchbi[1].back, ssearchbi[2].back), pw.pos("bl").add(UI.scale(new Coord(0, 5))));
+            pw = p.add(new IButton(ssearchbi[0].back, ssearchbi[1].back, ssearchbi[2].back), pw.pos("bl").add(UI.scale(new Coord(0, 5))));
+            pw = p.add(new IButton(ssearchbi[0].back, ssearchbi[1].back, ssearchbi[2].back), pw.pos("bl").add(UI.scale(new Coord(0, 5))));
+            window.popup.pack();
+            window.movePopup(window.parent.c);
+            p.pack();
         }
     }
 
