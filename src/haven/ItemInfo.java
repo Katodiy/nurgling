@@ -401,9 +401,7 @@ public abstract class ItemInfo {
 	if(owner instanceof NGItem)
 	{
 		NGItem item = (NGItem) owner;
-		if(item.isSeached) {
-			ret.add(new Highlighting(owner));
-		}
+		ret.add(new Highlighting(owner));
 	}
 	return(ret);
     }

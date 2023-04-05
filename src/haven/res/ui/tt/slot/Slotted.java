@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.image.*;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 /* >tt: Slotted */
 @haven.FromResource(name = "ui/tt/slot", version = 18)
@@ -83,6 +84,7 @@ public class Slotted extends ItemInfo.Tip implements GItem.OverlayInfo<Tex>, NSe
 	return(200);
     }
 
+	static final ConcurrentHashMap<String, BufferedImage> modCache = new ConcurrentHashMap<>();
 	@Override
 	public Tex overlay() {
 		Collection<BufferedImage> imgs = new LinkedList<BufferedImage>();
@@ -91,34 +93,38 @@ public class Slotted extends ItemInfo.Tip implements GItem.OverlayInfo<Tex>, NSe
 			if (info instanceof AttrMod)
 			{
 				AttrMod mod = (AttrMod) info;
-				for ( AttrMod.Mod m: mod.mods)
-				{
-					imgs.add(convolvedown(m.attr.layer(Resource.imgc).img, size.div(2 *  (1 + (mod.mods.size()-1)/4.)), CharWnd.iconfilter));
+				for ( AttrMod.Mod m: mod.mods) {
+					if (modCache.get(m.attr.name) == null) {
+						modCache.put(m.attr.name, convolvedown(m.attr.layer(Resource.imgc).img, size.div(2 * (1 + (mod.mods.size() - 1) / 4.)), CharWnd.iconfilter));
+					}
+					imgs.add(modCache.get(m.attr.name));
 				}
 			}
 		}
 
-		if(imgs.size()>3)
-		{
-			ArrayList<BufferedImage> for_connect = new ArrayList<>(imgs);
-			imgs.clear();
-			for(int i = 0; i < for_connect.size(); i+=2) {
-				if (i + 1 < for_connect.size()) {
-					imgs.add(catimgsh(0, for_connect.get(i), for_connect.get(i+1)));
-				} else
-					imgs.add(for_connect.get(i));
+		if(!imgs.isEmpty()) {
+			if (imgs.size() > 3) {
+				ArrayList<BufferedImage> for_connect = new ArrayList<>(imgs);
+				imgs.clear();
+				for (int i = 0; i < for_connect.size(); i += 2) {
+					if (i + 1 < for_connect.size()) {
+						imgs.add(catimgsh(0, for_connect.get(i), for_connect.get(i + 1)));
+					} else
+						imgs.add(for_connect.get(i));
+				}
 			}
+			BufferedImage lay = catimgs(0, imgs.toArray(new BufferedImage[0]));
+//			BufferedImage bi = new BufferedImage(lay.getWidth(), lay.getHeight(), BufferedImage.TYPE_INT_ARGB);
+//			Graphics2D graphics = bi.createGraphics();
+//			graphics.drawImage(lay, 0, 0, null);
+			return (new TexI(lay));
 		}
-		BufferedImage lay = catimgs(0, imgs.toArray(new BufferedImage[0]));
-		BufferedImage bi = new BufferedImage(lay.getWidth(), lay.getHeight(), BufferedImage.TYPE_INT_ARGB);
-		Graphics2D graphics = bi.createGraphics();
-		graphics.drawImage(lay, 0, 0, null);
-		return(new TexI(bi));
+		return null;
 	}
 
 	@Override
 	public void drawoverlay(GOut g, Tex data) {
-		if(show)
+		if(show && data!=null)
 			g.aimage(data, new Coord(data.sz().x, g.sz().y - data.sz().y), 1, 0);
 	}
 

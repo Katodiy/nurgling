@@ -38,7 +38,6 @@ public class NWItem extends WItem {
                         if (name.toLowerCase().contains(NUtils.getGameUI().itemsForSearch.name)) {
                             if (!((NGItem) item).isSeached) {
                                 ((NGItem) item).isSeached = true;
-                                item.info = null;
                             }
                             return;
                         }
@@ -52,7 +51,6 @@ public class NWItem extends WItem {
                                 if (!NUtils.getGameUI().itemsForSearch.q.isEmpty() && !searchQuality())
                                     return;
                                 ((NGItem) item).isSeached = true;
-                                item.info = null;
                             }
                             return;
                         }
@@ -62,7 +60,6 @@ public class NWItem extends WItem {
                 {
                     if (!((NGItem) item).isSeached) {
                         ((NGItem) item).isSeached = true;
-                        item.info = null;
                     }
                 }
             }
@@ -72,7 +69,6 @@ public class NWItem extends WItem {
             if (NUtils.getGameUI().itemsForSearch != null && !NUtils.getGameUI().itemsForSearch.q.isEmpty() && searchQuality())
                 return;
             ((NGItem) item).isSeached = false;
-            item.info = null;
         }
     }
 
@@ -111,7 +107,7 @@ public class NWItem extends WItem {
     @Override
     public boolean mousedown(Coord c, int btn) {
         if (ui.modctrl && ui.modmeta) {
-            if(((NGItem)item).isHaveInfo(Highlighting.class))
+            if(((NGItem)item).isSeached)
             {
                 if(item.parent instanceof NInventory) {
                     Collection<NGItem> items = ((NInventory) item.parent).getItems(Highlighting.class);
@@ -125,7 +121,7 @@ public class NWItem extends WItem {
         } else if(ui.modshift && ui.modmeta) {
             Collection<NGItem> items;
             if (item.parent instanceof NInventory) {
-                if (((NGItem) item).isHaveInfo(Highlighting.class)) {
+                if (((NGItem) item).isSeached) {
                     items = ((NInventory) item.parent).getItems(Highlighting.class);
                 } else {
                     items = ((NInventory) item.parent).getItems(new NAlias(((NGItem) item).name()));

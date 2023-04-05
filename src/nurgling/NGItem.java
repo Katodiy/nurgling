@@ -23,18 +23,6 @@ public class NGItem extends GItem {
     private double quality = -1;
     public long meterUpdated = 0;
 
-    boolean isHaveInfo(Class<?> cl)
-    {
-        for ( ItemInfo inf : info)
-        {
-            if (inf.getClass()==cl)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public static class NContent{
         private double quality = -1;
         private String name = null;

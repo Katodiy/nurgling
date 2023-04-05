@@ -48,7 +48,7 @@ public class NInventory extends Inventory {
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
                 NGItem wdg = (NGItem) ((WItem) widget).item;
-                if (wdg.isHaveInfo(cl)) {
+                if (wdg.isSeached) {
                     result.add(wdg);
                 }
             }
