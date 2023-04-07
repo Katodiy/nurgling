@@ -13,6 +13,7 @@ import static haven.CharWnd.iconfilter;
 import static haven.PUtils.convolvedown;
 
 public class NFoodInfo extends FoodInfo implements GItem.OverlayInfo<Tex>, NSearchable {
+    public static boolean show = false;
     static double coefSubscribe = 1.5;
     static double coefVerif = 1.2;
 
@@ -352,7 +353,7 @@ public class NFoodInfo extends FoodInfo implements GItem.OverlayInfo<Tex>, NSear
     @Override
     public void drawoverlay(GOut g, Tex data)
     {
-        if(data!=null) {
+        if(show && data!=null) {
             g.aimage(data, data.sz(), 1, 1);
         }
     }

@@ -94,10 +94,12 @@ public class Slotted extends ItemInfo.Tip implements GItem.OverlayInfo<Tex>, NSe
 			{
 				AttrMod mod = (AttrMod) info;
 				for ( AttrMod.Mod m: mod.mods) {
-					if (modCache.get(m.attr.name) == null) {
-						modCache.put(m.attr.name, convolvedown(m.attr.layer(Resource.imgc).img, size.div(2 * (1 + (mod.mods.size() - 1) / 4.)), CharWnd.iconfilter));
+					Coord scale = size.div(2 * (1 + (mod.mods.size() - 1) / 4.));
+					String name = m.attr.name+scale.toString();
+					if (modCache.get(name) == null) {
+						modCache.put(name, convolvedown(m.attr.layer(Resource.imgc).img, scale, CharWnd.iconfilter));
 					}
-					imgs.add(modCache.get(m.attr.name));
+					imgs.add(modCache.get(name));
 				}
 			}
 		}

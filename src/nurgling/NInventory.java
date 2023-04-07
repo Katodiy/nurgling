@@ -2,6 +2,7 @@ package nurgling;
 
 import haven.*;
 import haven.res.ui.tt.slot.Slotted;
+import haven.res.ui.tt.stackn.Stack;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -117,24 +118,29 @@ public class NInventory extends Inventory {
             new TexI(Resource.loadsimg("nurgling/hud/buttons/gilding/h")),
             new TexI(Resource.loadsimg("nurgling/hud/buttons/gilding/dh"))};
 
-    private static final TexI[] ssearchbi = new TexI[]{
-            new TexI(Resource.loadsimg("nurgling/hud/buttons/ssearchu")),
-            new TexI(Resource.loadsimg("nurgling/hud/buttons/ssearchd")),
-            new TexI(Resource.loadsimg("nurgling/hud/buttons/ssearchh"))};
+    private static final TexI[] vari = new TexI[]{
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/var/u")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/var/d")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/var/h")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/var/dh"))};
 
+    private static final TexI[] stacki = new TexI[]{
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/stack/u")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/stack/d")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/stack/h")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/stack/dh"))};
 
-    public void installMainInv()
-    {
+    public void installMainInv() {
         searchwdg = new NSearchWidget(new Coord(sz));
         searchwdg.resize(sz);
         parent.add(searchwdg, (new Coord(0, sz.y + UI.scale(10))));
         parent.add(new ICheckBox(collapsei[0], collapsei[1], collapsei[2], collapsei[3]) {
-                              @Override
-                              public void changed(boolean val) {
-                                  super.changed(val);
-                                  showPopup = val;
-                              }
-                          }
+                       @Override
+                       public void changed(boolean val) {
+                           super.changed(val);
+                           showPopup = val;
+                       }
+                   }
                 , new Coord(-gildingi[0].sz().x + UI.scale(2), UI.scale(27)));
 
         parent.pack();
@@ -142,18 +148,29 @@ public class NInventory extends Inventory {
 
 
         Widget pw = toggles.add(new ICheckBox(gildingi[0], gildingi[1], gildingi[2], gildingi[3]) {
-                              @Override
-                              public void changed(boolean val) {
-                                  super.changed(val);
-                                  Slotted.show = val;
-                              }
-                          }
-                , toggles.atl);
-        pw = toggles.add(new IButton(ssearchbi[0].back, ssearchbi[1].back, ssearchbi[2].back), pw.pos("bl").add(UI.scale(new Coord(0, 5))));
-        pw = toggles.add(new IButton(ssearchbi[0].back, ssearchbi[1].back, ssearchbi[2].back), pw.pos("bl").add(UI.scale(new Coord(0, 5))));
-        pw = toggles.add(new IButton(ssearchbi[0].back, ssearchbi[1].back, ssearchbi[2].back), pw.pos("bl").add(UI.scale(new Coord(0, 5))));
-        pw = toggles.add(new IButton(ssearchbi[0].back, ssearchbi[1].back, ssearchbi[2].back), pw.pos("bl").add(UI.scale(new Coord(0, 5))));
-        pw = toggles.add(new IButton(ssearchbi[0].back, ssearchbi[1].back, ssearchbi[2].back), pw.pos("bl").add(UI.scale(new Coord(0, 5))));
+            @Override
+            public void changed(boolean val) {
+                super.changed(val);
+                Slotted.show = val;
+            }
+        }, toggles.atl);
+        pw.settip(Resource.remote().loadwait("nurgling/hud/buttons/gilding/u").flayer(Resource.tooltip).t);
+        pw = toggles.add(new ICheckBox(vari[0], vari[1], vari[2], vari[3]) {
+            @Override
+            public void changed(boolean val) {
+                super.changed(val);
+                NFoodInfo.show = val;
+            }
+        }, pw.pos("bl").add(UI.scale(new Coord(0, 5))));
+        pw.settip(Resource.remote().loadwait("nurgling/hud/buttons/var/u").flayer(Resource.tooltip).t);
+        pw = toggles.add(new ICheckBox(stacki[0], stacki[1], stacki[2], stacki[3]) {
+            @Override
+            public void changed(boolean val) {
+                super.changed(val);
+                Stack.show = val;
+            }
+        }, pw.pos("bl").add(UI.scale(new Coord(0, 5))));
+        pw.settip(Resource.remote().loadwait("nurgling/hud/buttons/stack/u").flayer(Resource.tooltip).t);
         toggles.pack();
         movePopup(parent.c);
         toggles.pack();

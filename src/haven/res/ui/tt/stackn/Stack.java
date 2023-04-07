@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 /* >tt: Stack */
 @FromResource(name = "ui/tt/stackn", version = 4)
 public class Stack extends ItemInfo.Name implements GItem.OverlayInfo<Tex> {
-
+	public static boolean show = false;
 	public Stack(Owner owner, String str) {
 		super(owner, str);
 
@@ -42,7 +42,8 @@ public class Stack extends ItemInfo.Name implements GItem.OverlayInfo<Tex> {
 	}
 
 	public void drawoverlay(GOut g, Tex ol) {
-		if(ol!=null)
+		if(show && ol!=null) {
 			g.aimage(ol, new Coord(g.sz().x - ol.sz().x, ol.sz().y), 0, 1);
+		}
 	}
 }

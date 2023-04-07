@@ -21,19 +21,19 @@ public class NSearchWidget extends Widget {
     public static final Text.Foundry nfnd = new Text.Foundry(Text.dfont, 10);
     Window helpwnd;
     private static final BufferedImage[] searchbi = new BufferedImage[]{
-            Resource.loadsimg("nurgling/hud/buttons/searchu"),
-            Resource.loadsimg("nurgling/hud/buttons/searchd"),
-            Resource.loadsimg("nurgling/hud/buttons/searchh")};
+            Resource.loadsimg("nurgling/hud/buttons/search/u"),
+            Resource.loadsimg("nurgling/hud/buttons/search/d"),
+            Resource.loadsimg("nurgling/hud/buttons/search/h")};
     private static final BufferedImage[] ssearchbi = new BufferedImage[]{
-            Resource.loadsimg("nurgling/hud/buttons/ssearchu"),
-            Resource.loadsimg("nurgling/hud/buttons/ssearchd"),
-            Resource.loadsimg("nurgling/hud/buttons/ssearchh")};
+            Resource.loadsimg("nurgling/hud/buttons/ssearch/u"),
+            Resource.loadsimg("nurgling/hud/buttons/ssearch/d"),
+            Resource.loadsimg("nurgling/hud/buttons/ssearch/h")};
 
     private static final Tex[] lsearchbi = new Tex[]{
-            Resource.loadtex("nurgling/hud/buttons/lsearchu"),
-            Resource.loadtex("nurgling/hud/buttons/lsearchd"),
-            Resource.loadtex("nurgling/hud/buttons/lsearchh"),
-            Resource.loadtex("nurgling/hud/buttons/lsearchdh")};
+            Resource.loadtex("nurgling/hud/buttons/lsearch/u"),
+            Resource.loadtex("nurgling/hud/buttons/lsearch/d"),
+            Resource.loadtex("nurgling/hud/buttons/lsearch/h"),
+            Resource.loadtex("nurgling/hud/buttons/lsearch/dh")};
 
     IButton help;
     IButton save;
@@ -62,15 +62,21 @@ public class NSearchWidget extends Widget {
                 helpwnd.show();
             }
         };
+        help.settip(Resource.remote().loadwait("nurgling/hud/buttons/search/u").flayer(Resource.tooltip).t);
         save = new IButton(ssearchbi[0], ssearchbi[1], ssearchbi[2])
         {
             @Override
             public void click() {
-                createHistoryItem(searchF.text());
-                write();
-                super.click();
+                if(!searchF.text().isEmpty()) {
+                    createHistoryItem(searchF.text());
+                    write();
+                    super.click();
+                }else {
+                    NUtils.getGameUI().error("Input field is empty");
+                }
             }
         };
+        save.settip(Resource.remote().loadwait("nurgling/hud/buttons/ssearch/u").flayer(Resource.tooltip).t);
         list = new ICheckBox(lsearchbi[0], lsearchbi[1], lsearchbi[2], lsearchbi[3])
         {
             @Override
@@ -78,6 +84,7 @@ public class NSearchWidget extends Widget {
                 super.changed(val);
             }
         };
+        list.settip(Resource.remote().loadwait("nurgling/hud/buttons/lsearch/u").flayer(Resource.tooltip).t);
         tpos_y = searchF.sz.y / 2 - help.sz.y / 2;
         add(help, new Coord(0, tpos_y));
         add(save, new Coord(0, tpos_y));
@@ -208,9 +215,10 @@ public class NSearchWidget extends Widget {
                 @Override
                 public void click() {
                     cmdHistory.remove(text);
+                    write();
                 }
             },this.text.pos("ur").add(UI.scale(5),UI.scale(1) ));
-
+            remove.settip(Resource.remote().loadwait("nurgling/hud/buttons/removeItem/u").flayer(Resource.tooltip).t);
 
             pack();
         }
