@@ -1,11 +1,12 @@
 package nurgling;
 
 import haven.*;
-import haven.res.ui.tt.slot.Slotted;
+import haven.Button;
+import haven.Label;
+import haven.Window;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 
 public class NGameUI extends GameUI {
     public SearchItem itemsForSearch = null;
@@ -280,4 +281,66 @@ public class NGameUI extends GameUI {
             }
         }).get().attr.base;
     }
+
+    @Override
+    public void msg(String msg) {
+        if (toggleStatus == ToggleStatus.COMPLETED) {
+            super.msg(msg);
+            if (msg.contains("Stack")) {
+                ((NInventory) maininv).bundle.a = !msg.contains("off");
+            }
+        } else {
+            if (maininv != null && ((NInventory) maininv).toggles != null &&  ((NInventory) maininv).bundle!=null) {
+                if (msg.contains("Stack")) {
+                    if (toggleStatus == ToggleStatus.FOUND) {
+                        ((NInventory) maininv).bundle.a = msg.contains("off");
+                        toggleStatus = ToggleStatus.CHECKED;
+                    } else if (toggleStatus == ToggleStatus.READY) {
+                        toggleStatus = ToggleStatus.COMPLETED;
+                    }
+                }
+            }
+        }
+    }
+
+
+    enum ToggleStatus
+    {
+        NOTINTI,
+        FOUND,
+        CHECKED,
+        READY,
+        COMPLETED
+    }
+    ToggleStatus toggleStatus = ToggleStatus.NOTINTI;
+
+    @Override
+    public void tick(double dt) {
+        super.tick(dt);
+        if (toggleStatus != ToggleStatus.COMPLETED) {
+            if (maininv != null && menu != null && !menu.paginae.isEmpty()) {
+                if (toggleStatus == ToggleStatus.NOTINTI) {
+                    if (((NInventory) maininv).pagBundle == null) {
+                        try {
+                            for (MenuGrid.Pagina p : NUtils.getGameUI().menu.paginae) {
+                                if (p.res().name.contains("paginae/act/itemcomb")) {
+                                    toggleStatus = ToggleStatus.FOUND;
+                                    (((NInventory) maininv).pagBundle = p).button().use(new MenuGrid.Interaction(1, 0));
+                                    break;
+                                }
+                            }
+                        } catch (Loading ignore) {
+                        }
+                    }
+                } else {
+                    if (toggleStatus == ToggleStatus.CHECKED) {
+                        (((NInventory) maininv).pagBundle.button()).use(new MenuGrid.Interaction(1, 0));
+                        toggleStatus = ToggleStatus.READY;
+                    }
+                }
+            }
+        }
+    }
+
+
 }

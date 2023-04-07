@@ -5,11 +5,14 @@ import haven.res.ui.tt.slot.Slotted;
 import haven.res.ui.tt.stackn.Stack;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class NInventory extends Inventory {
     public NSearchWidget searchwdg;
     public NPopUpWidget toggles;
+    public ICheckBox bundle;
+
+    public MenuGrid.Pagina pagBundle = null;
+
     public NInventory(Coord sz) {
         super(sz);
     }
@@ -90,7 +93,7 @@ public class NInventory extends Inventory {
     public void movePopup(Coord c) {
         if(toggles !=null)
         {
-           toggles.move(new Coord(c.x - toggles.atl.x - UI.scale(5),c.y + UI.scale(25)));
+           toggles.move(new Coord(c.x - toggles.sz.x + toggles.atl.x +UI.scale(10),c.y + UI.scale(25)));
         }
         if(searchwdg.history!=null) {
             searchwdg.history.move(new Coord(c.x  + ((Window)parent).atl.x + UI.scale(7), c.y + parent.sz.y- UI.scale(37)));
@@ -129,6 +132,12 @@ public class NInventory extends Inventory {
             new TexI(Resource.loadsimg("nurgling/hud/buttons/stack/d")),
             new TexI(Resource.loadsimg("nurgling/hud/buttons/stack/h")),
             new TexI(Resource.loadsimg("nurgling/hud/buttons/stack/dh"))};
+
+    private static final TexI[] bundlei = new TexI[]{
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/bundle/u")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/bundle/d")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/bundle/h")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/bundle/dh"))};
 
     public void installMainInv() {
         searchwdg = new NSearchWidget(new Coord(sz));
@@ -171,6 +180,15 @@ public class NInventory extends Inventory {
             }
         }, pw.pos("bl").add(UI.scale(new Coord(0, 5))));
         pw.settip(Resource.remote().loadwait("nurgling/hud/buttons/stack/u").flayer(Resource.tooltip).t);
+
+        bundle = toggles.add(new ICheckBox(bundlei[0], bundlei[1], bundlei[2], bundlei[3]) {
+            @Override
+            public void changed(boolean val) {
+                super.changed(val);
+                pagBundle.button().use(new MenuGrid.Interaction(1, 0));
+            }
+        }, pw.pos("ur").add(UI.scale(new Coord(5, 0))));
+        bundle.settip(Resource.remote().loadwait("nurgling/hud/buttons/bundle/u").flayer(Resource.tooltip).t);
         toggles.pack();
         movePopup(parent.c);
         toggles.pack();
