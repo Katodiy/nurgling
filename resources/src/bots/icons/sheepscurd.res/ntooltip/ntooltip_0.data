@@ -1,0 +1,6 @@
+#name
+Curd to Cheese trays
+#req
+sheeps, curd_out
+#text
+Place curd to trays. Send via barter in curd_out (built inside of SHEEPS zone) to buffer cupboards. Buy stick for filled tray, buy empty tray for stick, stick come back to chest near barter.

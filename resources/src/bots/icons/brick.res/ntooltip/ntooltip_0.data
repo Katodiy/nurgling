@@ -1,0 +1,6 @@
+#name
+Brick Maker
+#req
+candelabrum(optional for ignitions) and branch
+#text
+This bot produces bricks. You need to choose an area with clay. You also need to specify the area for storing bricks. Sticks are used as fuel. In addition, you need the means of ignition of the kiln

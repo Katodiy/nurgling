@@ -1,0 +1,6 @@
+#name
+Dryer fishes
+#req
+seed_in, seed_out
+#text
+This bot hangs and collects seeds(WWW) from drying frames(early game). Select an area with seeds containers and an area for dried seeds. Bot work cycle: first, the bot checks and collects dried seeds, transfers it to containers. Then he takes the www from containers and hangs them on drying frames.

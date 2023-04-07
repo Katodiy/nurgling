@@ -45,7 +45,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
     public static boolean clickdb = false;
     public long plgob = -1;
     public Coord2d cc;
-    private final Glob glob;
+    public final Glob glob;
     private int view = 2;
     private Collection<Delayed> delayed = new LinkedList<Delayed>();
     private Collection<Delayed> delayed2 = new LinkedList<Delayed>();

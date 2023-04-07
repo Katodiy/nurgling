@@ -1,0 +1,6 @@
+#name
+Nomad calibration bot
+#req
+
+#text
+Writes a path of player to a file, for use in whale hunting bots, berry picking, truffle picking, etc. The beginning of the path can be either a road sign or a character's bonfire. The path is stored in a relative coordinate system from the starting point

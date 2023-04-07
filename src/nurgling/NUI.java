@@ -45,4 +45,19 @@ public class NUI extends UI {
         return tickId;
     }
 
+    public Widget findInRoot(Class<?> c)
+    {
+        for(Widget wdg: root.children()){
+            if(wdg.getClass()==c)
+            {
+                return wdg;
+            }
+        }
+        return null;
+    }
+
+    public float getDeltaZ() {
+        return (float)Math.sin(tickId/10.)*1;
+    }
+
 }

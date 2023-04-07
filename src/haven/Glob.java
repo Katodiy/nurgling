@@ -30,9 +30,10 @@ import java.util.*;
 import java.awt.Color;
 import haven.render.*;
 import haven.render.sl.*;
+import nurgling.NOCache;
 
 public class Glob {
-    public final OCache oc = new OCache(this);
+    public final OCache oc = new NOCache(this);
     public final MCache map;
     public final Session sess;
     public final Loader loader = new Loader();

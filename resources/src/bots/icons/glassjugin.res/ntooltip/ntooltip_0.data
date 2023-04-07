@@ -1,0 +1,6 @@
+#name
+Fill glass jugs with water
+#req
+
+#text
+The bot will fill all the glass jugs in the inventory from the closest barrel.

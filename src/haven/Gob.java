@@ -27,10 +27,15 @@
 package haven;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.*;
 import haven.render.*;
+import nurgling.*;
+import nurgling.bots.actions.NGAttrib;
 
-public class Gob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, EquipTarget, Skeleton.HasPose {
+public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, EquipTarget, Skeleton.HasPose {
     public Coord2d rc;
     public double a;
     public boolean virtual = false;
@@ -38,8 +43,8 @@ public class Gob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, Eq
     public long id;
     public boolean removed = false;
     public final Glob glob;
-    Map<Class<? extends GAttrib>, GAttrib> attr = new HashMap<Class<? extends GAttrib>, GAttrib>();
-    public final Collection<Overlay> ols = new ArrayList<Overlay>();
+    public Map<Class<? extends GAttrib>, GAttrib> attr = new ConcurrentHashMap<>();
+    public final Collection<Overlay> ols = new ConcurrentLinkedDeque<>();
     public final Collection<RenderTree.Slot> slots = new ArrayList<>(1);
     public int updateseq = 0;
     private final Collection<SetupMod> setupmods = new ArrayList<>();
@@ -70,6 +75,14 @@ public class Gob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, Eq
 	    this.res = null;
 	    this.sdt = null;
 	    this.spr = spr;
+	}
+
+	public Overlay(Gob gob, Sprite spr, int id) {
+		this.gob = gob;
+		this.id = id;
+		this.res = null;
+		this.sdt = null;
+		this.spr = spr;
 	}
 
 	private void init() {
@@ -348,8 +361,20 @@ public class Gob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, Eq
     }
 
     public void ctick(double dt) {
-	for(GAttrib a : attr.values())
-	    a.ctick(dt);
+		synchronized (this) {
+			for (Class<? extends GAttrib> a : attr.keySet()) {
+				GAttrib v = attr.get(a);
+				if (v instanceof NGAttrib) {
+					if (((NGAttrib) v).tick(dt))
+						delattr(a);
+				}
+
+			}
+		}
+	for (GAttrib a : attr.values())
+		a.ctick(dt);
+
+
 	for(Iterator<Overlay> i = ols.iterator(); i.hasNext();) {
 	    Overlay ol = i.next();
 	    if(ol.slots == null) {
@@ -367,6 +392,7 @@ public class Gob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, Eq
 	updstate();
 	if(virtual && ols.isEmpty() && (getattr(Drawable.class) == null))
 	    glob.oc.remove(this);
+	updateCustom(this);
     }
 
     public void gtick(Render g) {
@@ -421,11 +447,23 @@ public class Gob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, Eq
 	}
 	ol.init();
 	ol.add0();
-	ols.add(ol);
+	if(ols.add(ol)) {
+//		updateOverlays(this);
+	}
     }
     public void addol(Overlay ol) {
 	addol(ol, true);
     }
+
+	public void findoraddol(Overlay ol) {
+		if(findol(ol.spr.getClass())==null)
+			synchronized (ols) {
+				addol(ol, true);
+			}
+	}
+	public void addcustomol(Sprite ol) {
+		findoraddol(new Overlay(this, ol));
+	}
     public void addol(Sprite ol) {
 	addol(new Overlay(this, ol));
     }
@@ -500,6 +538,7 @@ public class Gob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, Eq
 
     private void setattr(Class<? extends GAttrib> ac, GAttrib a) {
 	GAttrib prev = attr.remove(ac);
+	checkattr(this, ac, a, prev);
 	if(prev != null) {
 	    if((prev instanceof RenderTree.Node) && (prev.slots != null))
 		RUtils.multirem(new ArrayList<>(prev.slots));
@@ -531,6 +570,15 @@ public class Gob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, Eq
     public void setattr(GAttrib a) {
 	setattr(attrclass(a.getClass()), a);
     }
+
+	public void addcustomattr(NGAttrib a) {
+		for(GAttrib ex : attr.values()){
+			if(ex.getClass() == a.getClass())
+				return;
+		}
+		setattr(attrclass(a.getClass()), a);
+		a.update();
+	}
 
     public void delattr(Class<? extends GAttrib> c) {
 	setattr(attrclass(c), null);
@@ -629,6 +677,27 @@ public class Gob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, Eq
 	}
     }
 
+	void hideObject() {
+		for (GAttrib a : attr.values()) {
+
+			if (a instanceof RenderTree.Node) {
+				synchronized (this) {
+					Loading.waitfor(() -> RUtils.multiadd(slots, (RenderTree.Node) a));
+				}
+			}
+		}
+	}
+
+	void showObject() {
+		for (GAttrib a : attr.values()) {
+			if (a instanceof RenderTree.Node) {
+				synchronized (slots) {
+					RUtils.multirem(new ArrayList<>(a.slots));
+				}
+			}
+		}
+	}
+
     public void added(RenderTree.Slot slot) {
 	slot.ostate(curstate());
 	for(Overlay ol : ols) {
@@ -637,7 +706,9 @@ public class Gob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, Eq
 	}
 	for(GAttrib a : attr.values()) {
 	    if(a instanceof RenderTree.Node)
-		slot.add((RenderTree.Node)a);
+			if (!((isTag(Tags.tree) || isTag(Tags.bumling) || isTag(Tags.bush)) && NConfiguration.getInstance().hideNature))
+				slot.add((RenderTree.Node)a);
+
 	}
 	slots.add(slot);
     }
@@ -652,6 +723,7 @@ public class Gob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, Eq
 	    updateseq++;
 	    if(updwait != null)
 		updwait.wnotify();
+		NGob.updateRes(this);
 	}
     }
 
@@ -866,4 +938,45 @@ public class Gob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, Eq
 	public TickList.Ticking ticker() {return(this);}
     }
     public final Placed placed = new Placed();
+
+	public String getResName(){
+		if(getres()!=null)
+			return getres().name;
+		return null;
+	}
+
+
+	public void removeol(Class<? extends Sprite> spr ) {
+		synchronized (ols){
+			for (Overlay ol: ols){
+				if(ol.spr.getClass() == spr){
+					if(ol.spr instanceof NSprite){
+						((NSprite)ol.spr).setIsKilled(true);
+					}
+					ol.delign = false;
+				}
+			}
+		}
+	}
+
+	public void removeolIf(Predicate<? super Overlay> filter) {
+		Objects.requireNonNull(filter);
+		final Iterator<Overlay> each = ols.iterator();
+		while (each.hasNext()) {
+			Overlay ol = each.next();
+			if (filter.test(ol)) {
+				ol.delign = false;
+			}
+		}
+	}
+
+
+	public Overlay findol(Class<? extends Sprite> spr ) {
+			for (Overlay ol : ols) {
+				if (ol.spr.getClass() == spr)
+					return (ol);
+			}
+		return(null);
+	}
+
 }

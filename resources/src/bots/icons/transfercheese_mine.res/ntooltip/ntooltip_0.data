@@ -1,0 +1,6 @@
+#name
+Transfer Cheese trays
+#req
+cheese_in, cheese_out
+#text
+Check cheese racks. Transfer trays that are "done", from racks in this location to cheese_out cupboards. Transfer trays from cheese_it to racks too, if they were sent before from cheese_main barter.

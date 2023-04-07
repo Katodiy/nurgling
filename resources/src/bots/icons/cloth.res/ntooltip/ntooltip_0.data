@@ -1,0 +1,6 @@
+#name
+Fabric Maker
+#req
+
+#text
+The bot produces cloth. You will need a loom. Specify the piles with fibers. Specify the area where to fold the resulting fabric. Do not mix fibers of different types. ATTENTION: the bot cannot make wool, silk and leather fabric

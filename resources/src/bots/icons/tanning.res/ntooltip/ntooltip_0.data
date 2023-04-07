@@ -1,0 +1,6 @@
+#name
+Tanning Bot
+#req
+lqhides, leather, tanning_flued
+#text
+This bot tanned hides and scales in tanning tubs. The bot needs a tanning fluid cistern along with a barrel, which are located in the tanning_flued area. Select an area with hides piles, and an area for leather. Bot work cycle: bot pours liquid into tanning tubs, the bot checks and collects leather and transfers it to piles. Then bot takes the hides and scales from lqhides area and place them to tanning tubs.

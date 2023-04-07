@@ -254,4 +254,8 @@ public class Coord implements Comparable<Coord>, java.io.Serializable {
     public Coord min(int x, int y) {
 	return(of(Math.min(this.x, x), Math.min(this.y, y)));
     }
+
+	public int manhattan2(Coord c) {
+		return Math.max(Math.abs(c.x - x), Math.abs(c.y - y));
+	}
 }

@@ -1,0 +1,6 @@
+#name
+Ignite smoke sheds
+#req
+candelabrum or branch(for ignitions)
+#text
+Select the area with smoke sheds that you want to fill with blocks and set on fire. The bot will chop blocks of 5 pieces from the selected logs, after which it will set fire to the smoking sheds

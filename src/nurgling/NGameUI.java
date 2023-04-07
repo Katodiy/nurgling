@@ -7,8 +7,17 @@ import haven.Window;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Optional;
 
 public class NGameUI extends GameUI {
+    public long drives = -1;
+    public boolean nomadMod = false;
+
+    public NPathQueue pathQueue = null;
+    public Optional<NPathQueue> pathQueue() {
+        return (pathQueue != null) ? Optional.of(pathQueue) : Optional.empty();
+    }
+
     public SearchItem itemsForSearch = null;
     public NSearchWidget searchwdg;
     public static class SearchItem
@@ -177,6 +186,11 @@ public class NGameUI extends GameUI {
         add(NUtils.getUI().sessInfo.characterInfo);
         pack();
         NUtils.setGameUI(this);
+    }
+
+    public NMapView getMap()
+    {
+        return (NMapView) map;
     }
 
     public NCharacterInfo getCharInfo() {

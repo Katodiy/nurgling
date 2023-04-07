@@ -32,6 +32,9 @@ import java.lang.reflect.*;
 import haven.render.*;
 import haven.Skeleton.Pose;
 import haven.Skeleton.PoseMod;
+import nurgling.NGob;
+import nurgling.NUtils;
+
 import static haven.Composited.ED;
 import static haven.Composited.MD;
 
@@ -41,8 +44,11 @@ public class Composite extends Drawable implements EquipTarget {
     public final Composited comp;
     public int pseq;
     public List<MD> nmod;
+    public List<MD> oldnmod;
     public List<ED> nequ;
-    private Collection<ResData> nposes = null, tposes = null;
+    public Collection<ResData> nposes = null;
+    public Collection<ResData> oldposes = null;
+	private Collection<ResData> tposes = null;
     private boolean nposesold, retainequ = false;
     private float tptime;
     private WrapMode tpmode;
@@ -106,6 +112,8 @@ public class Composite extends Drawable implements EquipTarget {
 	    try {
 		Composited.Poses np = comp.new Poses(loadposes(nposes, comp.skel, nposesold));
 		np.set(nposesold?0:ipollen);
+		oldposes = nposes;
+		NGob.updatePoses(gob,oldposes);
 		nposes = null;
 		updequ();
 	    } catch(Loading e) {}
@@ -170,6 +178,7 @@ public class Composite extends Drawable implements EquipTarget {
 
     public void chmod(List<MD> mod) {
 	nmod = mod;
+	oldnmod = nmod;
     }
 
     public void chequ(List<ED> equ) {
@@ -237,8 +246,9 @@ public class Composite extends Drawable implements EquipTarget {
 		throw(new RuntimeException(String.format("cmppose on non-composed object: %s %s %s %s", poses, tposes, interp, ttime)));
 	    if(cmp.pseq != pseq) {
 		cmp.pseq = pseq;
-		if(poses != null)
-		    cmp.chposes(poses, interp);
+		if(poses != null) {
+			cmp.chposes(poses, interp);
+		}
 		if(tposes != null)
 		    cmp.tposes(tposes, WrapMode.ONCE, ttime);
 	    }

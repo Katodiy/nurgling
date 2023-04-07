@@ -26,6 +26,9 @@
 
 package haven;
 
+
+import nurgling.NConfiguration;
+
 import java.util.*;
 import java.util.function.*;
 import java.io.*;
@@ -85,6 +88,9 @@ public class GobIcon extends GAttrib {
 	if(this.img == null) {
 	    synchronized(cache) {
 		Image img = cache.get(res);
+		if(res.get().name.contains("tanning")){
+			int a = 0;
+		}
 		if(img == null) {
 		    img = new Image(res.get().layer(Resource.imgc));
 		    cache.put(res, img);
@@ -159,7 +165,7 @@ public class GobIcon extends GAttrib {
 
     public static class Setting implements Serializable {
 	public Resource.Spec res;
-	public boolean show, defshow, notify;
+	public boolean show, defshow, notify, ring;
 	public String resns;
 	public Path filens;
 
@@ -167,7 +173,15 @@ public class GobIcon extends GAttrib {
 	    this.res = res;
 	}
 
-	public Consumer<UI> notification() {
+	public Setting(Resource.Spec res, boolean show, boolean defshow, boolean notify, boolean ring) {
+		this.res = res;
+		this.show = show;
+		this.defshow = defshow;
+		this.notify = notify;
+		this.ring = ring;
+	}
+
+		public Consumer<UI> notification() {
 	    if(resns != null)
 		return(notiflimit(resnotif(resns), resns));
 	    if(filens != null)

@@ -1,0 +1,6 @@
+#name
+Chicken master
+#req
+hens, chicken, inten, entr, lqbone, raw_meat
+#text
+This bot is for chicken coops. The bot needs two areas of chicken coops: the main one (hens) and the incubators (chicken). Chicks live in incubators. When they grow up, the bot transfers the chickens to the main area, replacing the best of the roost or hens, which is worse than the new roost or hen. Then bot butchers the remaining chicken. Butchering is  similar to butchering large animals. The bot transfers all chicks from the main area to the incubators. After that, bot transfers all eggs that are inferior to the quality of the worst hen in the best chicken coop to a container or barter. The recommended ratio of chicken coops in the main area and incubators is 2:1

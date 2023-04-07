@@ -26,6 +26,8 @@
 
 package haven;
 
+import nurgling.NUtils;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.annotation.*;
@@ -54,7 +56,7 @@ public class Resource implements Serializable {
     public static Class<AButton> action = AButton.class;
     public static Class<Audio> audio = Audio.class;
     public static Class<Tooltip> tooltip = Tooltip.class;
-    
+
     private Collection<Layer> layers = new LinkedList<Layer>();
     public final String name;
     public int ver;
@@ -964,7 +966,7 @@ public class Resource implements Serializable {
 	for(Class<?> cl : dolda.jglob.Loader.get(LayerName.class).classes()) {
 	    String nm = cl.getAnnotation(LayerName.class).value();
 	    if(LayerFactory.class.isAssignableFrom(cl)) {
-		addltype(nm, Utils.construct(cl.asSubclass(LayerFactory.class)));
+		addltype(nm, (LayerFactory<?>) Utils.construct(cl.asSubclass(LayerFactory.class)));
 	    } else if(Layer.class.isAssignableFrom(cl)) {
 		addltype(nm, cl.asSubclass(Layer.class));
 	    } else {
@@ -1145,11 +1147,14 @@ public class Resource implements Serializable {
     @LayerName("neg")
     public class Neg extends Layer {
 	public Coord cc;
+	public Coord ac, bc;
 	public Coord[][] ep;
 		
 	public Neg(Message buf) {
 	    cc = cdec(buf);
-	    buf.skip(12);
+		ac = cdec(buf);
+		bc = cdec(buf);
+	    buf.skip(4);
 	    ep = new Coord[8][0];
 	    int en = buf.uint8();
 	    for(int i = 0; i < en; i++) {
