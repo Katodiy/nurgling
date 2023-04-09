@@ -110,8 +110,6 @@ public class NSearchWidget extends Widget {
             public void wdgmsg(Widget sender, String msg, Object... args) {
                 if (sender == helpwnd.cbtn) {
                     helpwnd.hide();
-                } else {
-                    super.wdgmsg(sender, msg, args);
                 }
             }
 

@@ -4,6 +4,7 @@ import haven.GItem;
 import haven.Gob;
 import haven.WItem;
 import nurgling.NAlias;
+import nurgling.NGItem;
 import nurgling.NGameUI;
 import nurgling.NUtils;
 import nurgling.bots.tools.AItem;

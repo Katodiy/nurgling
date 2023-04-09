@@ -24,6 +24,11 @@ import java.util.Comparator;
 public class NGameUI extends GameUI {
     public SearchItem itemsForSearch = null;
     public NSearchWidget searchwdg;
+
+    public NQuestInfo getQuestInfo() {
+        return questInfo;
+    }
+
     public static class SearchItem
     {
         public String name ="";
@@ -223,10 +228,8 @@ public class NGameUI extends GameUI {
     public void msg(String msg, Color color, Color logcol) {
         msgtime = Utils.rtime();
         lastmsg = msgfoundry.render(msg, color);
-        if(msg.contains("increased")) {
-            NQuestsStats.checkReward(msg);
-        }
-        else if (msg.contains("Quality")) {
+        NQuestsStats.checkReward(msg);
+        if (msg.contains("Quality")) {
             if(detectedGob!=null)
             {
                 Matcher m = GOB_Q.matcher(msg);
@@ -304,6 +307,9 @@ public class NGameUI extends GameUI {
     public long drives = -1;
     public NGameUI(String chrid, long plid, String genus) {
         super(chrid, plid, genus);
+        NUtils.getUI().sessInfo.characterInfo = new NCharacterInfo(chrid);
+        itemsForSearch = new SearchItem();
+        add(NUtils.getUI().sessInfo.characterInfo);
         NUtils.setGameUI(this);
         extEquipory = add(new NEquipProxy(NEquipory.Slots.HAND_LEFT, NEquipory.Slots.HAND_RIGHT, NEquipory.Slots.BELT), NConfiguration.getInstance().dragWidgets.get("EquipProxy").coord );
         t1 = add(new NToolBelt("belt0", 132, 4, NConfiguration.getInstance().toolBelts.get("belt0").toolKeys), NConfiguration.getInstance().dragWidgets.get("belt0").coord.x, NConfiguration.getInstance().dragWidgets.get("belt0").coord.y);
@@ -327,6 +333,9 @@ public class NGameUI extends GameUI {
         return ((NUI)ui).inspectMode;
     }
 
+    public NCharacterInfo getCharInfo() {
+        return ((NUI)ui).sessInfo.characterInfo;
+    }
 
     @Override
     public void tick(double dt) {

@@ -418,8 +418,8 @@ public class NUtils {
                 res = item.item.getres();
                 if (res != null) {
                     /// Проверяем имя на соответствие
-                    if(((NGItem)item.item).dfname!=null)
-                        return checkName(res.name, regEx) || checkName(((NGItem)item.item).dfname, regEx);
+                    if(((NGItem)item.item).name()!=null)
+                        return checkName(res.name, regEx) || checkName(((NGItem)item.item).name(), regEx);
                     else
                         return checkName(res.name, regEx);
                 }
@@ -1112,7 +1112,7 @@ public class NUtils {
             final NAlias regEx
     ) {
         if (item != null) {
-            return checkName(((NGItem)item).dfname, regEx);
+            return checkName(((NGItem)item).name(), regEx);
         }
         return false;
     }

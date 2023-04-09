@@ -10,6 +10,9 @@ import java.net.URL;
 import java.util.*;
 import java.util.List;
 
+import haven.res.ui.tt.highlighting.Highlighting;
+import haven.res.ui.tt.slot.Slotted;
+import haven.res.ui.tt.stackn.Stack;
 import nurgling.bots.settings.IngredientSettings;
 import nurgling.bots.tools.AItem;
 import nurgling.json.*;
@@ -610,6 +613,9 @@ public class NConfiguration {
         }
         obj.put("colors",colorsarr);
         obj.put("isGrid",isGrid);
+        obj.put("isShowGild", Slotted.show);
+        obj.put("isShowVar",NFoodInfo.show);
+        obj.put("isShowStackQ", Stack.show);
         obj.put("isEye",isEyed);
         obj.put("enablePfBoundingBoxes",enablePfBoundingBoxes);
         obj.put("showBB",showBB);
@@ -971,6 +977,13 @@ public class NConfiguration {
                 isEyed = ( Boolean ) jsonObject.get ( "isEye" );
             if(jsonObject.get ( "isPaths" )!=null)
                 isPaths = ( Boolean ) jsonObject.get ( "isPaths" );
+            if(jsonObject.get ( "isShowGild" )!=null)
+                Slotted.show = ( Boolean ) jsonObject.get ( "isShowGild" );
+            if(jsonObject.get ( "isShowVar" )!=null)
+                NFoodInfo.show = ( Boolean ) jsonObject.get ( "isShowVar" );
+            if(jsonObject.get ( "isShowStackQ" )!=null)
+                Stack.show = ( Boolean ) jsonObject.get ( "isShowStackQ" );
+
             if(jsonObject.get ( "isGrid" )!=null)
                 isGrid = ( Boolean ) jsonObject.get ( "isGrid" );
             JSONArray pathCategories = ( JSONArray ) jsonObject.get ( "pathCategories" );

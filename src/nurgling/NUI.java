@@ -1,6 +1,8 @@
 package nurgling;
 
 import haven.*;
+import haven.res.ui.tt.highlighting.Highlighting;
+import haven.res.ui.tt.slot.Slotted;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +18,7 @@ public class NUI extends UI {
     public NUI(Context uictx, Coord sz, Runner fun) {
         super(uictx, sz, fun);
         Thread writeConfigHook = new Thread(() -> {
-            NFoodWriter.instance.write();
+//            NFoodWriter.instance.write();
             NConfiguration.getInstance().write();});
         Runtime.getRuntime().addShutdownHook(writeConfigHook);
         NUtils.setUI(this);

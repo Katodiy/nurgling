@@ -105,7 +105,7 @@ public class MenuSearch extends Window {
 	{
 	    Collection<Pagina> leaves;
 	    synchronized(menu.paginae) {
-		leaves = new ArrayList<>(menu.paginae.keySet());
+		leaves = new ArrayList<>(menu.paginae);
 	    }
 	    for(Pagina pag : leaves) {
 		try {

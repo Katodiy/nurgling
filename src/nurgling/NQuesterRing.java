@@ -34,7 +34,7 @@ public class NQuesterRing extends NTargetRing implements PView.Render2D {
 		this.quester.isFound = true;
 		this.gob = (Gob) owner;
 		this.name = quester.name;
-		this.tagsSet = NQuestInfo.tagsSet(name);
+		this.tagsSet = NUtils.getGameUI().getQuestInfo().tagsSet(name);
 		allTags = new HashSet<NGob.Tags>();
 		allTags.add(NGob.Tags.qgreet);
 		allTags.add(NGob.Tags.qrage);
@@ -52,7 +52,7 @@ public class NQuesterRing extends NTargetRing implements PView.Render2D {
 
 	@Override
 	public boolean tick(double dt) {
-		Set<NGob.Tags> remote = NQuestInfo.tagsSet(name);
+		Set<NGob.Tags> remote = NUtils.getGameUI().getQuestInfo().tagsSet(name);
 
 		if(remote!=null) {
 			for (NGob.Tags tag : allTags)

@@ -43,7 +43,7 @@ public class UI {
     public static int MOD_SHIFT = KeyMatch.S, MOD_CTRL = KeyMatch.C, MOD_META = KeyMatch.M, MOD_SUPER = KeyMatch.SUPER;
     public RootWidget root;
     public final LinkedList<Grab> keygrab = new LinkedList<Grab>(), mousegrab = new LinkedList<Grab>();
-    private final Map<Integer, Widget> widgets = new TreeMap<Integer, Widget>();
+    protected final Map<Integer, Widget> widgets = new TreeMap<Integer, Widget>();
     public final Map<Widget, Integer> rwidgets = new HashMap<Widget, Integer>();
     public Environment env;
     public Receiver rcvr;

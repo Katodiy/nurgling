@@ -43,9 +43,6 @@ import static haven.Inventory.sqsz;
 public class WItem extends Widget implements DTarget {
     public static final Resource missing = Resource.local().loadwait("gfx/invobjs/missing");
     public final GItem item;
-    public Contents contents;
-    public Window contentswnd;
-    private boolean hovering = false;
     private Resource cspr = null;
     private Message csdt = Message.nil;
 
@@ -150,7 +147,7 @@ public class WItem extends Widget implements DTarget {
 	    GItem.InfoOverlay<?>[] ret = buf.toArray(new GItem.InfoOverlay<?>[0]);
 	    return(() -> ret);
 	});
-    public final AttrCache<Double> itemmeter = new AttrCache<>(this::info, AttrCache.map1(GItem.MeterInfo.class, minf -> minf::meter));
+    public final AttrCache<Double> itemmeter = new AttrCache<Double>(this::info, AttrCache.map1(GItem.MeterInfo.class, minf -> minf::meter));
 
     private Widget contparent() {
 	/* XXX: This is a bit weird, but I'm not sure what the alternative is... */
@@ -174,42 +171,6 @@ public class WItem extends Widget implements DTarget {
 	    resize(sz);
 	    lspr = spr;
 	}
-	if(lcont != item.contents) {
-	    if((item.contents != null) && (item.contentsid != null) && (contents == null) && (contentswnd == null)) {
-		Coord c = Utils.getprefc(String.format("cont-wndc/%s", item.contentsid), null);
-		if(c != null) {
-		    item.contents.unlink();
-		    contentswnd = contparent().add(new ContentsWindow(this, item.contents), c);
-		}
-	    }
-	    lcont = item.contents;
-	}
-	if(hovering) {
-	    if(contents == null) {
-		if((item.contents != null) && (contentswnd == null)) {
-		    Widget cont = contparent();
-		    ckparent: for(Widget prev : cont.children()) {
-			if(prev instanceof Contents) {
-			    for(Widget p = parent; p != null; p = p.parent) {
-				if(p == prev)
-				    break ckparent;
-				if(p instanceof Contents)
-				    break;
-			    }
-			    return;
-			}
-		    }
-		    item.contents.unlink();
-		    contents = cont.add(new Contents(this, item.contents), parentpos(cont, sz.sub(5, 5).sub(Contents.hovermarg)));
-		}
-	    }
-	} else {
-	    if((contents != null) && !contents.hovering && !contents.hasmore()) {
-		contents.reqdestroy();
-		contents = null;
-	    }
-	}
-	hovering = false;
     }
 
     public void draw(GOut g) {

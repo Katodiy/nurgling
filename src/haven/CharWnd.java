@@ -1301,7 +1301,7 @@ public class CharWnd extends Window {
 		this.ccond = cond;
 		this.rcond = rcond;
 		resize();
-		NQuestInfo.selectedQuest();
+		NUtils.getGameUI().getQuestInfo().selectedQuest();
 	    }
 
 	    void update(Condition c) {
@@ -2247,7 +2247,7 @@ public class CharWnd extends Window {
 		if(args[a] instanceof byte[])
 		    t.sdt = new MessageBuf((byte[])args[a++]);
 		double m = ((Number)args[a++]).doubleValue();
-		ui.sess.character.constipation.update(t, m);
+//		ui.sess.character.constipation.update(t, m);
 		cons.update(t, m);
 	    }
 	} else if(nm == "csk") {

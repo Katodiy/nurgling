@@ -16,7 +16,7 @@ public class AttrMod extends ItemInfo.Tip {
 
     public static class Mod {
 	public final Resource attr;
-	public final int mod;
+	public int mod;
 
 	public Mod(Resource attr, int mod) {this.attr = attr; this.mod = mod;}
     }
@@ -42,7 +42,8 @@ public class AttrMod extends ItemInfo.Tip {
 
 	public static final ConcurrentHashMap<Resource, BufferedImage> attrResCache = new ConcurrentHashMap<>();
 
-    private static String buff = "128,255,128", debuff = "255,128,128";
+    public static String buff = "128,255,128";
+	public static String debuff = "255,128,128";
     public static BufferedImage modimg(Collection<Mod> mods) {
 	Collection<BufferedImage> lines = new ArrayList<BufferedImage>(mods.size());
 	for(Mod mod : mods) {

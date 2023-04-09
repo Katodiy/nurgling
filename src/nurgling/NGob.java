@@ -418,7 +418,7 @@ public class NGob {
     protected boolean isReady = false;
 
     public static void updateRes(Gob gob) {
-        if (gob.getres() != null) {
+        if (gob.getres() != null && NUtils.getGameUI()!=null) {
             gob.isReady = true;
             String name = gob.getResName();
             if (NUtils.checkName(name, new NAlias(new ArrayList<>(Arrays.asList("tree")), new ArrayList<>(Arrays.asList("log"))))) {
@@ -640,8 +640,8 @@ public class NGob {
                     }
                 }
                 if (gob.isTag(Tags.tree) || gob.isTag(Tags.bumling) || gob.isTag(Tags.quester)) {
-                    for (String name : NQuestInfo.getMarkers().keySet()) {
-                        NQuestInfo.QuestGob questGob = NQuestInfo.getMarkers().get(name);
+                    for (String name : NUtils.getGameUI().getQuestInfo().getMarkers().keySet()) {
+                        NQuestInfo.QuestGob questGob = NUtils.getGameUI().getQuestInfo().getMarkers().get(name);
                         if (!questGob.isFound) {
                             MiniMap.Location loc = NUtils.getGameUI().mapfile.view.sessloc;
                             Coord2d tmp = questGob.marker.tc.sub(loc.tc).mul(tilesz).add(6, 6);

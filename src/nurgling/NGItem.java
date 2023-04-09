@@ -19,7 +19,7 @@ public class NGItem extends GItem {
 
     public static int READY = SPR_IS_READY|NAME_IS_READY;
 
-    private int status = 0;
+    public int status = 0;
     private double quality = -1;
     public long meterUpdated = 0;
 
@@ -220,5 +220,14 @@ public class NGItem extends GItem {
     @Override
     public boolean keyup(KeyEvent ev) {
         return super.keyup(ev);
+    }
+
+    public ItemInfo getInfo(Class<? extends ItemInfo> candidate) {
+        for (ItemInfo inf : info) {
+            if (inf.getClass() == candidate) {
+                return inf;
+            }
+        }
+        return null;
     }
 }

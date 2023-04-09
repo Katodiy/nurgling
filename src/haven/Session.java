@@ -71,7 +71,7 @@ public class Session implements Resource.Resolver {
     Map<Long, ObjAck> objacks = new TreeMap<Long, ObjAck>();
     public String username;
     byte[] cookie;
-    final Map<Integer, CachedRes> rescache = new TreeMap<Integer, CachedRes>();
+    public final Map<Integer, CachedRes> rescache = new TreeMap<Integer, CachedRes>();
     final Map<Integer, String> res_id_cache = new TreeMap<Integer, String>();
 
 	public String getResName(Integer id)
@@ -84,8 +84,6 @@ public class Session implements Resource.Resolver {
 
     public final Glob glob;
     public byte[] sesskey;
-
-	public final NCharacterInfo character;
 
     @SuppressWarnings("serial")
     public static class MessageException extends RuntimeException {
@@ -666,7 +664,6 @@ public class Session implements Resource.Resolver {
 	this.cookie = cookie;
 	this.args = args;
 	glob = new Glob(this);
-	character = new NCharacterInfo();
 	try {
 	    sk = new DatagramSocket();
 	} catch(SocketException e) {

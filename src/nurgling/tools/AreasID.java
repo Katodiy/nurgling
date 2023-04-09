@@ -80,7 +80,7 @@ public enum AreasID {
             is.add(is_obj);
         }
         obj.put("data",is);
-        try ( FileWriter file = new FileWriter ("calibr.json") ) {
+        try ( FileWriter file = new FileWriter ((((HashDirCache) ResCache.global).base +"/../" + "./calibr.json" ))) {
             file.write ( obj.toJSONString () );
         }
         catch ( IOException e ) {

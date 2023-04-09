@@ -51,9 +51,4 @@ public class NAlias {
     public String getDefault () {
         return keys.get ( 0 );
     }
-
-    public String getDefault () {
-        return keys.get ( 0 );
-    }
-
 }

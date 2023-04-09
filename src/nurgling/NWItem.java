@@ -11,6 +11,7 @@ public class NWItem extends WItem {
         super(item);
     }
 
+//    public static NWItem selectedItem = null;
     @Override
     public void tick(double dt) {
         super.tick(dt);
@@ -106,12 +107,15 @@ public class NWItem extends WItem {
 
     @Override
     public boolean mousedown(Coord c, int btn) {
+//        if(btn == 3) {
+//            selectedItem = this;
+//        }
         if (ui.modctrl && ui.modmeta) {
             if(((NGItem)item).isSeached)
             {
                 if(item.parent instanceof NInventory) {
-                    Collection<NGItem> items = ((NInventory) item.parent).getItems(Highlighting.class);
-                    for(NGItem item : items)
+                    Collection<GItem> items = ((NInventory) item.parent).getItems(Highlighting.class);
+                    for(GItem item : items)
                     {
                         item.wdgmsg("drop", c, 1);
                     }
@@ -119,14 +123,14 @@ public class NWItem extends WItem {
             }
             return (true);
         } else if(ui.modshift && ui.modmeta) {
-            Collection<NGItem> items;
+            Collection<GItem> items;
             if (item.parent instanceof NInventory) {
                 if (((NGItem) item).isSeached) {
                     items = ((NInventory) item.parent).getItems(Highlighting.class);
                 } else {
                     items = ((NInventory) item.parent).getItems(new NAlias(((NGItem) item).name()));
                 }
-                for(NGItem item : items)
+                for(GItem item : items)
                 {
                     item.wdgmsg("transfer", c, 1);
                 }
