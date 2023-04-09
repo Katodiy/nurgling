@@ -256,10 +256,6 @@ public class MCache implements MapSource {
 		this.a = a;
 	    }
 	}
-
-	@Deprecated public void update(Coord c1, Coord c2) {
-	    update(new Area(c1, c2.add(1, 1)));
-	}
     }
 
 	public class AreaOverlay extends Overlay{
@@ -439,22 +435,22 @@ public class MCache implements MapSource {
 
 	public MapMesh getcut(Coord cc) {
 	    Cut cut = geticut(cc);
-	    if(cut.dmesh != null) {
+	    MapMesh ret = cut.mesh;
+	    if((ret == null) || (cut.dmesh != null)) {
 		synchronized(cut) {
-		    if(cut.dmesh != null) {
-			if(cut.dmesh.done() || (cut.mesh == null)) {
-			    MapMesh old = cut.mesh;
-			    cut.mesh = cut.dmesh.get();
-			    cut.dmesh = null;
-			    cut.ols.clear();
-			    cut.olols.clear();
-			    if(old != null)
-				old.dispose();
-			}
+		    ret = cut.mesh;
+		    if((ret == null) || ((cut.dmesh != null) && cut.dmesh.done())) {
+			MapMesh old = cut.mesh;
+			cut.mesh = ret = cut.dmesh.get();
+			cut.dmesh = null;
+			cut.ols.clear();
+			cut.olols.clear();
+			if(old != null)
+			    old.dispose();
 		    }
 		}
 	    }
-	    return(cut.mesh);
+	    return(ret);
 	}
 	
 	public RenderTree.Node getolcut(OverlayInfo id, Coord cc) {
@@ -816,11 +812,6 @@ public class MCache implements MapSource {
 	return(g.getz(tc.sub(g.ul)));
     }
 
-    @Deprecated
-    public int getz(Coord tc) {
-	return((int)Math.round(getfz(tc)));
-    }
-
     public double getcz(double px, double py) {
 	double tw = tilesz.x, th = tilesz.y;
 	Coord ul = Coord.of(Utils.floordiv(px, tw), Utils.floordiv(py, th));
@@ -864,7 +855,8 @@ public class MCache implements MapSource {
 	Grid g = getgridt(tc);
 	MapMesh cut = g.getcut(tc.sub(g.ul).div(cutsz));
 	Tiler t = tiler(g.gettile(tc.sub(g.ul)));
-	return(cut.getsurf(id, t).getz(pc));
+	ZSurface surf = cut.getsurf(id, t);
+	return(surf.getz(pc));
     }
 
     public Coord3f getzp(SurfaceID id, Coord2d pc) {

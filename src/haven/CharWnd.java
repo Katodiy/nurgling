@@ -1053,8 +1053,6 @@ public class CharWnd extends Window {
 	    public Text text;
 
 	    public DefaultCond(Condition cond) {super(cond);}
-	    @Deprecated
-	    public DefaultCond(Widget parent, Condition cond) {super(cond);}
 
 	    protected void added() {
 		super.added();
@@ -1351,7 +1349,7 @@ public class CharWnd extends Window {
 			Indir<Resource> wres = ui.sess.getres((Integer)cond[i].wdata[0]);
 			nw[i] = (CondWidget)wres.get().getcode(Factory.class, true).create(ui, new Object[] {cond[i]});
 		    } else {
-			nw[i] = new DefaultCond(cont, cond[i]);
+			nw[i] = new DefaultCond(cond[i]);
 		    }
 		    y += cont.add(nw[i], new Coord(0, y)).sz.y;
 		}

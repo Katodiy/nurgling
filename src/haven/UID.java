@@ -26,32 +26,30 @@
 
 package haven;
 
-import java.awt.Color;
-import java.util.*;
+public class UID extends Number {
+    public final long bits;
 
-public class VMeter extends LayerMeter {
-    public static final Tex bg = Resource.loadtex("gfx/hud/vm-frame");
-    public static final Tex fg = Resource.loadtex("gfx/hud/vm-tex");
+    private UID(long bits) {
+	this.bits = bits;
+    }
+    public static UID of(long bits) {return(new UID(bits));}
 
-    @RName("vm")
-    public static class $_ implements Factory {
-	public Widget create(UI ui, Object[] args) {
-	    return(new VMeter(decmeters(args, 0)));
-	}
+    public long longValue() {return(bits);}
+
+    public byte byteValue() {return((byte)bits);}
+    public short shortValue() {return((short)bits);}
+    public int intValue() {return((int)bits);}
+    public float floatValue() {return((float)bits);}
+    public double doubleValue() {return((double)bits);}
+
+    public int hashCode() {
+	return(Long.hashCode(bits));
+    }
+    public boolean equals(Object x) {
+	return((x instanceof UID) && (((UID)x).bits == bits));
     }
 
-    public VMeter(List<Meter> meters) {
-	super(bg.sz());
-	set(meters);
-    }
-
-    public void draw(GOut g) {
-	g.image(bg, Coord.z);
-	int h = (sz.y - UI.scale(6));
-	for(Meter m : meters) {
-	    g.chcolor(m.c);
-	    int mh = (int)Math.round(h * m.a);
-	    g.image(fg, new Coord(0, 0), new Coord(0, sz.y - UI.scale(3) - mh), sz.add(0, mh));
-	}
+    public String toString() {
+	return(Long.toUnsignedString(bits, 16));
     }
 }
