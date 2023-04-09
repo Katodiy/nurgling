@@ -61,7 +61,7 @@ public class NGItem extends GItem {
                     if (o instanceof Object[]) {
                         Object[] a = (Object[]) o;
                         if (a[0] instanceof Integer) {
-                            String resName = glob().sess.getResName((Integer) a[0]);
+                            String resName = NUtils.getUI().sess.getResName((Integer) a[0]);
                             if (resName != null) {
                                 if ( resName.equals("ui/tt/q/quality")) {
                                     quality = (Float)a[1];
@@ -76,7 +76,7 @@ public class NGItem extends GItem {
                                                 if (sso instanceof Object[]) {
                                                     Object[] b = (Object[]) sso;
                                                     if (b[0] instanceof Integer) {
-                                                        String resName2 = glob().sess.getResName((Integer) b[0]);
+                                                        String resName2 = NUtils.getUI().sess.getResName((Integer) b[0]);
                                                         if (resName2 != null) {
                                                             if (resName2.equals("ui/tt/cn")) {
                                                                 name = (String) b[1];

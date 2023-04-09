@@ -66,12 +66,13 @@ public class NQuestInfo extends NDraggableWidget {
     }
 
     public class QuestGob {
-        public boolean isFound = false;
         public String name;
+        long id;
 
-        public QuestGob(MapFile.Marker marker) {
+        public QuestGob(MapFile.Marker marker, long id) {
             this.marker = marker;
             name = marker.name();
+            this.id = id;
         }
 
         public MapFile.Marker marker;
@@ -91,9 +92,9 @@ public class NQuestInfo extends NDraggableWidget {
 
 
 
-    public void setMarker(String name, MapFile.Marker marker) {
+    public void setMarker(String name, MapFile.Marker marker, long id) {
         synchronized (markers) {
-            markers.put(name, new QuestGob(marker));
+            markers.put(name, new QuestGob(marker, id));
         }
     }
 

@@ -47,7 +47,7 @@ public class NWindow extends Window {
             String msg,
             Object... args
     ) {
-        if ( sender == cbtn ) {
+        if ( sender == deco ) {
             bot.close ();
         }
         else {

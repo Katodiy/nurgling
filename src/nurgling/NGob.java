@@ -642,13 +642,11 @@ public class NGob {
                 if (gob.isTag(Tags.tree) || gob.isTag(Tags.bumling) || gob.isTag(Tags.quester)) {
                     for (String name : NUtils.getGameUI().getQuestInfo().getMarkers().keySet()) {
                         NQuestInfo.QuestGob questGob = NUtils.getGameUI().getQuestInfo().getMarkers().get(name);
-                        if (!questGob.isFound) {
-                            MiniMap.Location loc = NUtils.getGameUI().mapfile.view.sessloc;
-                            Coord2d tmp = questGob.marker.tc.sub(loc.tc).mul(tilesz).add(6, 6);
-                            if (Math.abs(gob.rc.x - tmp.x) < 10 && Math.abs(gob.rc.y - tmp.y) < 10) {
-                                gob.addTag(Tags.quester);
-                                gob.addcustomol(new NQuesterRing(gob, Color.ORANGE, 20, 0.7f, questGob));
-                            }
+                        MiniMap.Location loc = NUtils.getGameUI().mapfile.view.sessloc;
+                        Coord2d tmp = questGob.marker.tc.sub(loc.tc).mul(tilesz).add(6, 6);
+                        if (Math.abs(gob.rc.x - tmp.x) < 10 && Math.abs(gob.rc.y - tmp.y) < 10) {
+                            gob.addTag(Tags.quester);
+                            gob.addcustomol(new NQuesterRing(gob, Color.ORANGE, 20, 0.7f, questGob));
                         }
                     }
                 }

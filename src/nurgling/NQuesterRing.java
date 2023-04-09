@@ -31,7 +31,6 @@ public class NQuesterRing extends NTargetRing implements PView.Render2D {
 		super(owner, color, range, alpha);
 		this.img = RichText.renderstroked(quester.name,Color.white).tex();
 		this.quester = quester;
-		this.quester.isFound = true;
 		this.gob = (Gob) owner;
 		this.name = quester.name;
 		this.tagsSet = NUtils.getGameUI().getQuestInfo().tagsSet(name);
@@ -46,7 +45,6 @@ public class NQuesterRing extends NTargetRing implements PView.Render2D {
 
 	@Override
 	public void removed(RenderTree.Slot slot) {
-		quester.isFound = false;
 		super.removed(slot);
 	}
 

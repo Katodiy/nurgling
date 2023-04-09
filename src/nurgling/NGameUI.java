@@ -412,7 +412,7 @@ public class NGameUI extends GameUI {
         for ( Widget w = lchild ; w != null ; w = w.prev ) {
             if ( w instanceof Window ) {
                 Window wnd = ( Window ) w;
-                if ( ( wnd.cap != null && NUtils.checkName ( wnd.cap.text,
+                if ( ( wnd.cap != null && NUtils.checkName ( wnd.cap,
                         new NAlias ( new ArrayList<>( Arrays.asList ( cap ) ),
                                 new ArrayList<> ( Arrays.asList ( "Crafte" ) ) ) ) ) ) {
                     return ( Window ) w;
@@ -426,7 +426,7 @@ public class NGameUI extends GameUI {
         for ( Widget w = lchild ; w != null ; w = w.prev ) {
             if ( w instanceof Window ) {
                 Window wnd = ( Window ) w;
-                if ( wnd.cap != null && wnd.cap.text.equals(cap)) {
+                if ( wnd.cap != null && wnd.cap.equals(cap)) {
                     for(Widget w2 = wnd.lchild ; w2 !=null ; w2= w2.prev )
                     {
                         if ( w2 instanceof Button ) {

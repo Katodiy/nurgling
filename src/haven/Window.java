@@ -199,7 +199,7 @@ public class Window extends Widget implements DTarget {
 	    resize(wsz);
 	    ca = Area.sized(tlm, csz);
 	    aa = Area.sized(ca.ul.add(mrgn), asz);
-	    cbtn.c = Coord.of(sz.x - cbtn.sz.x, 0);
+	    cbtn.c = Coord.of(sz.x - cbtn.sz.x-UI.scale(15), UI.scale(18));
 	}
 
 	public Area contarea() {

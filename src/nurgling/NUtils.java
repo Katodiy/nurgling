@@ -1000,13 +1000,13 @@ public class NUtils {
             if (o instanceof Object[]) {
                 Object[] a = (Object[]) o;
                 if (a[0] instanceof Integer) {
-                    if (NUtils.checkName("ui/tt/cont", ((Session.CachedRes) item.glob().sess.rescache.get((Integer) a[0])).resnm)) {
+                    if (NUtils.checkName("ui/tt/cont", ((Session.CachedRes) NUtils.getUI().sess.rescache.get((Integer) a[0])).resnm)) {
                         for(Object o1 : (Object[])a[1])
                         {
                             if ( o1 instanceof Object[]) {
                                 Object[] b = (Object[]) o1;
                                 if (b[0] instanceof Integer) {
-                                    if (NUtils.checkName("ui/tt/cn", ((Session.CachedRes) item.glob().sess.rescache.get((Integer) b[0])).resnm)) {
+                                    if (NUtils.checkName("ui/tt/cn", ((Session.CachedRes) NUtils.getUI().sess.rescache.get((Integer) b[0])).resnm)) {
                                         return (String) b[1];
                                     }
                                 }
@@ -1026,12 +1026,12 @@ public class NUtils {
             if (o instanceof Object[]) {
                 Object[] a = (Object[]) o;
                 if (a[0] instanceof Integer) {
-                    if (NUtils.checkName("ui/tt/cont", ((Session.CachedRes) item.glob().sess.rescache.get((Integer) a[0])).resnm)) {
+                    if (NUtils.checkName("ui/tt/cont", ((Session.CachedRes) NUtils.getUI().sess.rescache.get((Integer) a[0])).resnm)) {
                         for(Object o1 : (Object[])a[1]) {
                             if (o1 instanceof Object[]) {
                                 Object[] b = (Object[]) o1;
                                 if (b[0] instanceof Integer) {
-                                    if (NUtils.checkName("ui/tt/q/quality", ((Session.CachedRes) item.glob().sess.rescache.get((Integer) b[0])).resnm)) {
+                                    if (NUtils.checkName("ui/tt/q/quality", ((Session.CachedRes) NUtils.getUI().sess.rescache.get((Integer) b[0])).resnm)) {
                                         return (double) (float) b[1];
                                     }
                                 }
@@ -1051,7 +1051,7 @@ public class NUtils {
             if (o instanceof Object[]) {
                 Object[] a = (Object[]) o;
                 if (a[0] instanceof Integer) {
-                    if (NUtils.checkName("ui/tt/q/quality", ((Session.CachedRes) item.glob().sess.rescache.get((Integer) a[0])).resnm)) {
+                    if (NUtils.checkName("ui/tt/q/quality", ((Session.CachedRes) NUtils.getUI().sess.rescache.get((Integer) a[0])).resnm)) {
                         return (float)a[1];
                     }
                 }
@@ -1065,7 +1065,7 @@ public class NUtils {
             if (o instanceof Object[]) {
                 Object[] a = (Object[]) o;
                 if (a[0] instanceof Integer) {
-                    if (NUtils.checkName("ui/tt/defn", ((Session.CachedRes) item.glob().sess.rescache.get((Integer) a[0])).resnm)) {
+                    if (NUtils.checkName("ui/tt/defn", ((Session.CachedRes) NUtils.getUI().sess.rescache.get((Integer) a[0])).resnm)) {
                         return DefName.getname(item);
                     }
                 }

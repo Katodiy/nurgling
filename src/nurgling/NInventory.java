@@ -632,10 +632,10 @@ public class NInventory extends Inventory {
     public void movePopup(Coord c) {
         if(toggles !=null)
         {
-           toggles.move(new Coord(c.x - toggles.sz.x + toggles.atl.x +UI.scale(10),c.y + UI.scale(25)));
+           toggles.move(new Coord(c.x - toggles.sz.x + toggles.atl.x +UI.scale(10),c.y + UI.scale(35)));
         }
         if(searchwdg.history!=null) {
-            searchwdg.history.move(new Coord(c.x  + ((Window)parent).atl.x + UI.scale(7), c.y + parent.sz.y- UI.scale(37)));
+            searchwdg.history.move(new Coord(c.x  + ((Window)parent).ca().ul.x + UI.scale(7), c.y + parent.sz.y- UI.scale(37)));
         }
         super.mousemove(c);
     }

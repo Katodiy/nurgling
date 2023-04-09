@@ -44,21 +44,7 @@ public class NEquipProxy extends NDraggableWidget implements NDTarget2 {
 	return super.mousedown(c, button);
     }
 
-
-	@Override
-	public boolean mousehover(Coord c) {
-		Equipory e = NUtils.getEquipment();
-		if(e != null) {
-			NWItem w = (NWItem) NUtils.getEquipment().quickslots[slot(c).idx];
-			if (w != null) {
-				w.mousehover(Coord.z);
-				return true;
-			}
-		}
-		return false;
-	}
-
-
+	
 	@Override
     public void draw(GOut g) {
 	Equipory equipory = NUtils.getEquipment();
