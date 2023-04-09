@@ -26,12 +26,12 @@
 
 package haven;
 
+import haven.res.ui.tt.highlighting.Highlighting;
 import haven.res.ui.tt.q.quality.Quality;
-import haven.resutil.Curiosity;
-import haven.resutil.FoodInfo;
-import nurgling.NCuriosity;
-import nurgling.NFoodInfo;
+import haven.res.ui.tt.wear.Wear;
+import haven.res.ui.tt.wellmined.WellMined;
 import nurgling.NGItem;
+import nurgling.NUtils;
 
 import java.util.*;
 import java.util.function.*;
@@ -192,11 +192,7 @@ public abstract class ItemInfo {
 	}
 
 	public Name(Owner owner, String str) {
-				this(owner, Text.render(str));
-		if(str.contains("kg of")){
-			if(owner instanceof GItem)
-				((NGItem)owner).quantity = Double.parseDouble(str.substring(0,str.indexOf("kg")));
-		}
+	    this(owner, Text.render(str));
 	}
 
 	public BufferedImage tipimg() {
@@ -258,16 +254,7 @@ public abstract class ItemInfo {
     public static class Contents extends Tip {
 	public final List<ItemInfo> sub;
 	private static final Text.Line ch = Text.render("Contents:");
-
-	public double getQuality(){
-		for(ItemInfo inf : sub){
-			if(inf instanceof Quality){
-				return ((Quality)inf).q;
-			}
-		}
-		return -1;
-	}
-
+	
 	public Contents(Owner owner, List<ItemInfo> sub) {
 	    super(owner);
 	    this.sub = sub;
@@ -371,45 +358,53 @@ public abstract class ItemInfo {
     }
 
     public static List<ItemInfo> buildinfo(Owner owner, Raw raw) {
-		List<ItemInfo> ret = new ArrayList<ItemInfo>();
-		for (Object o : raw.data) {
-			if (o instanceof Object[]) {
-				Object[] a = (Object[]) o;
-				Resource ttres;
-				if (a[0] instanceof Integer) {
-					ttres = owner.glob().sess.getres((Integer) a[0]).get();
-				} else if (a[0] instanceof Resource) {
-					ttres = (Resource) a[0];
-				} else if (a[0] instanceof Indir) {
-					ttres = (Resource) ((Indir) a[0]).get();
-				} else {
-					throw (new ClassCastException("Unexpected info specification " + a[0].getClass()));
-				}
-				InfoFactory f = ttres.getcode(InfoFactory.class, true);
-				ItemInfo inf = null;
-
-				inf = f.build(owner, raw, a);
-				if (inf instanceof Name) {
-					if (inf.owner instanceof NGItem) {
-						if (((NGItem) inf.owner).quantity != -1)
-							ret.add(new NGItem.Quantity(owner, ((NGItem) inf.owner).quantity));
-					}
-				}
-				if (inf instanceof FoodInfo) {
-					inf = new NFoodInfo((FoodInfo) inf);
-				} else if (inf instanceof Curiosity) {
-					inf = new NCuriosity((Curiosity) inf);
-				}
-				if (inf != null)
-					ret.add(inf);
-			} else if (o instanceof String) {
-				ret.add(new AdHoc(owner, (String) o));
-			} else {
-				throw (new ClassCastException("Unexpected object type " + o.getClass() + " in item info array."));
+	List<ItemInfo> ret = new LinkedList<>();
+	for(Object o : raw.data) {
+		boolean isTop = false;
+		if(o instanceof Object[]) {
+		Object[] a = (Object[])o;
+		Resource ttres;
+		if(a[0] instanceof Integer) {
+			if(owner.glob().sess.rescache.get((Integer)a[0])==null)
+			{
+				return null;
 			}
+		    ttres = owner.glob().sess.getres((Integer)a[0]).get();
+			isTop = owner.glob().sess.getResName((Integer)a[0]).equals("ui/tt/wear");
+		} else if(a[0] instanceof Resource) {
+		    ttres = (Resource)a[0];
+		} else if(a[0] instanceof Indir) {
+		    ttres = (Resource)((Indir)a[0]).get();
+		} else {
+		    throw(new ClassCastException("Unexpected info specification " + a[0].getClass()));
 		}
-		return (ret);
+
+		ItemInfo inf = null;
+		InfoFactory f = ttres.getcode(InfoFactory.class, true);
+		inf = f.build(owner, raw, a);
+		if(inf != null)
+			if(isTop) {
+				ret.add(0,inf);
+			}else {
+				ret.add(inf);
+			}
+	    } else if(o instanceof String) {
+		ret.add(0,new AdHoc(owner, (String)o));
+		if(o.equals("Well mined"))
+		{
+			ret.add(0,new WellMined(owner));
+		}
+	    } else {
+		throw(new ClassCastException("Unexpected object type " + o.getClass() + " in item info array."));
+	    }
 	}
+	if(owner instanceof NGItem)
+	{
+		NGItem item = (NGItem) owner;
+		ret.add(new Highlighting(owner));
+	}
+	return(ret);
+    }
 
     public static List<ItemInfo> buildinfo(Owner owner, Object[] rawinfo) {
 	return(buildinfo(owner, new Raw(rawinfo)));

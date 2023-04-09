@@ -117,7 +117,7 @@ public class Resource implements Serializable {
 	    return(get(0));
 	}
 
-	public static Resource loadsaved(Pool pool, Spec spec) {
+	public static Resource loadsaved(Resource.Pool pool, Resource.Spec spec) {
 	    try {
 		if(spec.pool == null)
 		    return(pool.load(spec.name, spec.ver).get());
@@ -129,7 +129,7 @@ public class Resource implements Serializable {
 	    }
 	}
 
-	public Resource loadsaved(Pool pool) {
+	public Resource loadsaved(Resource.Pool pool) {
 	    return(loadsaved(pool, this));
 	}
 
@@ -141,20 +141,20 @@ public class Resource implements Serializable {
     public static interface Resolver {
 	public Indir<Resource> getres(int id);
 
-	public class ResourceMap implements Resolver {
-	    public final Resolver bk;
+	public class ResourceMap implements Resource.Resolver {
+	    public final Resource.Resolver bk;
 	    public final Map<Integer, Integer> map;
 
-	    public ResourceMap(Resolver bk, Map<Integer, Integer> map) {
+	    public ResourceMap(Resource.Resolver bk, Map<Integer, Integer> map) {
 		this.bk = bk;
 		this.map = map;
 	    }
 
-	    public ResourceMap(Resolver bk, Message data) {
+	    public ResourceMap(Resource.Resolver bk, Message data) {
 		this(bk, decode(data));
 	    }
 
-	    public ResourceMap(Resolver bk, Object[] args) {
+	    public ResourceMap(Resource.Resolver bk, Object[] args) {
 		this(bk, decode(args));
 	    }
 
@@ -386,8 +386,7 @@ public class Resource implements Serializable {
 	}
     }
 
-
-	public static class Loading extends haven.Loading {
+    public static class Loading extends haven.Loading {
 	private final Pool.Queued res;
 
 	private Loading(Pool.Queued res) {
@@ -399,10 +398,10 @@ public class Resource implements Serializable {
 	    return("#<Resource " + res.name + ">");
 	}
 
-	public void waitfor(Runnable callback, Consumer<Waiting> reg) {
+	public void waitfor(Runnable callback, Consumer<Waitable.Waiting> reg) {
 	    synchronized(res) {
 		if(res.done) {
-		    reg.accept(Waiting.dummy);
+		    reg.accept(Waitable.Waiting.dummy);
 		    callback.run();
 		} else {
 		    reg.accept(res.wq.add(callback));
@@ -977,7 +976,7 @@ public class Resource implements Serializable {
 	for(Class<?> cl : dolda.jglob.Loader.get(LayerName.class).classes()) {
 	    String nm = cl.getAnnotation(LayerName.class).value();
 	    if(LayerFactory.class.isAssignableFrom(cl)) {
-		addltype(nm, (LayerFactory<?>) Utils.construct(cl.asSubclass(LayerFactory.class)));
+		addltype(nm, Utils.construct(cl.asSubclass(LayerFactory.class)));
 	    } else if(Layer.class.isAssignableFrom(cl)) {
 		addltype(nm, cl.asSubclass(Layer.class));
 	    } else {
@@ -1464,7 +1463,7 @@ public class Resource implements Serializable {
 	/* Please make sure you have read and understood
 	 * doc/resource-code if you feel tempted to change
 	 * OVERRIDE_ALL to true. */
-	public static final boolean OVERRIDE_ALL = true;
+	public static final boolean OVERRIDE_ALL = false;
 	public final CodeEntry entry;
 
 	public ResClassLoader(ClassLoader parent, CodeEntry entry) {
@@ -1497,24 +1496,7 @@ public class Resource implements Serializable {
 		Class<?> ret = findLoadedClass(name);
 		if(ret == null) {
 		    try {
-			if(NUtils.checkName(name,"Pointer")){
-				ret =  getParent().loadClass("nurgling." + name);
-			}
-			else if(NUtils.checkName(name,"Leashed", "Armor", "Gast", "Level", "TipLabel", "RelCont") && !NUtils.checkName(name,"haven.res.ui.tt"))
-			{
-				ret = getParent().loadClass("haven.res.ui.tt." + name.toLowerCase() + "." + name);
-			}
-			else if(NUtils.checkName(name,"haven.res.gfx.terobjs.items.gridiron.Roastspit") && !NUtils.checkName(name,"haven.res.gfx.terobjs"))
-			{
-				ret = getParent().loadClass("haven.res.gfx.terobjs." + name.toLowerCase() + "." + name);
-			}
-			else if(NUtils.checkName(name,"IconSign") && !NUtils.checkName(name,"haven.res.gfx.terobjs"))
-			{
-				ret = getParent().loadClass("haven.res.gfx.terobjs." + name.toLowerCase() + "." + name);
-			}
-			else {
-				ret = getParent().loadClass(name);
-			}
+			ret = getParent().loadClass(name);
 			if(findcode(name) != null) {
 			    boolean override = false;
 			    FromResource src = getsource(ret);
@@ -1673,6 +1655,12 @@ public class Resource implements Serializable {
 			return(null);
 		    }
 		    try {
+				try  {
+					String path = "haven.res." + name.replaceAll("/", ".") + "." + clnm;
+					Class.forName(path);
+					clnm = path;
+				}  catch (ClassNotFoundException ignored) {
+				}
 			ret = loader().loadClass(clnm);
 		    } catch(ClassNotFoundException e) {
 			throw(new LoadException(e, Resource.this));
@@ -1790,7 +1778,7 @@ public class Resource implements Serializable {
     }
 
     @LayerName("midi")
-    public class Music extends Layer {
+    public class Music extends Resource.Layer {
 	transient javax.sound.midi.Sequence seq;
 
 	public Music(Message buf) {

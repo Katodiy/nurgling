@@ -51,11 +51,7 @@ public class GameUI extends ConsoleHost implements Console.Directory, UI.Message
     protected List<Widget> meters = new LinkedList<Widget>();
     protected Text lastmsg;
     protected double msgtime;
-    private Window invwnd;
-	public Window equwnd;
-	private Window makewnd;
-	private Window srchwnd;
-	public Window iconwnd;
+	public Window invwnd, equwnd, makewnd, srchwnd, iconwnd;
     private Coord makewndc = Utils.getprefc("makewndc", new Coord(400, 200));
     public Inventory maininv;
     public CharWnd chrwdg;

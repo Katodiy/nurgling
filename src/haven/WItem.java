@@ -34,6 +34,8 @@ import java.util.function.*;
 import haven.ItemInfo.AttrCache;
 import haven.res.ui.tt.leashed.Leashed;
 import haven.res.ui.tt.q.quality.Quality;
+import nurgling.NFoodInfo;
+import nurgling.NGItem;
 
 import static haven.ItemInfo.find;
 import static haven.Inventory.sqsz;
@@ -41,6 +43,9 @@ import static haven.Inventory.sqsz;
 public class WItem extends Widget implements DTarget {
     public static final Resource missing = Resource.local().loadwait("gfx/invobjs/missing");
     public final GItem item;
+    public Contents contents;
+    public Window contentswnd;
+    private boolean hovering = false;
     private Resource cspr = null;
     private Message csdt = Message.nil;
 
@@ -100,15 +105,15 @@ public class WItem extends Widget implements DTarget {
 		shorttip = longtip = null;
 		ttinfo = info;
 	    }
-	    if(now - hoverstart < 1.0) {
-		if(shorttip == null)
-		    shorttip = new ShortTip(info);
-		return(shorttip);
-	    } else {
-		if(longtip == null)
+//	    if(now - hoverstart < 1.0) {
+//		if(shorttip == null)
+//		    shorttip = new ShortTip(info);
+//		return(shorttip);
+//	    } else {
+		if(longtip == null || ((NGItem)item).needlongtip())
 		    longtip = new LongTip(info);
 		return(longtip);
-	    }
+//	    }
 	} catch(Loading e) {
 	    return("...");
 	}
@@ -142,17 +147,6 @@ public class WItem extends Widget implements DTarget {
 		if(inf instanceof GItem.OverlayInfo)
 		    buf.add(GItem.InfoOverlay.create((GItem.OverlayInfo<?>)inf));
 	    }
-		buf.sort(new Comparator<GItem.InfoOverlay<?>>() {
-			@Override
-			public int compare(GItem.InfoOverlay<?> o1, GItem.InfoOverlay<?> o2) {
-				if(o2.inf instanceof Quality)
-					return -1;
-				else if(o1.inf instanceof Quality)
-					return 1;
-				else
-					return 0;
-			}
-		});
 	    GItem.InfoOverlay<?>[] ret = buf.toArray(new GItem.InfoOverlay<?>[0]);
 	    return(() -> ret);
 	});
@@ -180,6 +174,42 @@ public class WItem extends Widget implements DTarget {
 	    resize(sz);
 	    lspr = spr;
 	}
+	if(lcont != item.contents) {
+	    if((item.contents != null) && (item.contentsid != null) && (contents == null) && (contentswnd == null)) {
+		Coord c = Utils.getprefc(String.format("cont-wndc/%s", item.contentsid), null);
+		if(c != null) {
+		    item.contents.unlink();
+		    contentswnd = contparent().add(new ContentsWindow(this, item.contents), c);
+		}
+	    }
+	    lcont = item.contents;
+	}
+	if(hovering) {
+	    if(contents == null) {
+		if((item.contents != null) && (contentswnd == null)) {
+		    Widget cont = contparent();
+		    ckparent: for(Widget prev : cont.children()) {
+			if(prev instanceof Contents) {
+			    for(Widget p = parent; p != null; p = p.parent) {
+				if(p == prev)
+				    break ckparent;
+				if(p instanceof Contents)
+				    break;
+			    }
+			    return;
+			}
+		    }
+		    item.contents.unlink();
+		    contents = cont.add(new Contents(this, item.contents), parentpos(cont, sz.sub(5, 5).sub(Contents.hovermarg)));
+		}
+	    }
+	} else {
+	    if((contents != null) && !contents.hovering && !contents.hasmore()) {
+		contents.reqdestroy();
+		contents = null;
+	    }
+	}
+	hovering = false;
     }
 
     public void draw(GOut g) {
@@ -192,10 +222,6 @@ public class WItem extends Widget implements DTarget {
 	    drawmain(g, spr);
 	    g.defstate();
 	    GItem.InfoOverlay<?>[] ols = itemols.get();
-	    if(ols != null) {
-		for(GItem.InfoOverlay<?> ol : ols)
-		    ol.draw(g);
-	    }
 	    Double meter = (item.meter > 0) ? Double.valueOf(item.meter / 100.0) : itemmeter.get();
 	    if((meter != null) && (meter > 0)) {
 		g.chcolor(255, 255, 255, 64);
@@ -203,6 +229,10 @@ public class WItem extends Widget implements DTarget {
 		g.prect(half, half.inv(), half, meter * Math.PI * 2);
 		g.chcolor();
 	    }
+		if(ols != null) {
+			for(GItem.InfoOverlay<?> ol : ols)
+				ol.draw(g);
+		}
 	} else {
 	    g.image(missing.layer(Resource.imgc).tex(), Coord.z, sz);
 	}

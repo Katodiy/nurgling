@@ -30,7 +30,7 @@ import java.awt.Color;
 
 public class Label extends Widget {
     Text.Foundry f;
-    Text text;
+    public Text text;
     public String texts;
     Color col = Color.WHITE;
 	

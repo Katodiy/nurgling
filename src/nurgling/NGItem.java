@@ -1,340 +1,224 @@
 package nurgling;
 
 import haven.*;
-import haven.res.gfx.invobjs.meat.Meat;
 import haven.res.ui.tt.defn.DefName;
-import haven.res.ui.tt.q.qbuff.QBuff;
-import haven.res.ui.tt.q.quality.Quality;
-import haven.resutil.FoodInfo;
+import haven.res.ui.tt.highlighting.Highlighting;
+import haven.res.ui.tt.slots.ISlots;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.awt.event.KeyEvent;
 
 public class NGItem extends GItem {
-    public double quantity = -1;
-    public double wear;
-    public int d;
-    public int m;
+    public boolean isSeached = false;
+    int old_infoseq;
+
+
+    public static int HAVE_CONTENT = 0x08;
+    public static int SPR_IS_READY = 0x04;
+    public static int NAME_IS_READY = 0x02;
+    public static int RAWINFO_IS_READY = 0x01;
+
+    public static int READY = SPR_IS_READY|NAME_IS_READY;
+
+    private int status = 0;
+    private double quality = -1;
+    public long meterUpdated = 0;
+
+    public static class NContent{
+        private double quality = -1;
+        private String name = null;
+
+        public NContent(double quality, String name) {
+            this.quality = quality;
+            this.name = name;
+        }
+
+        public double quality() {
+            return quality;
+        }
+
+        public String name() {
+            return name;
+        }
+    }
+    private NContent content = null;
+    private Coord sprSz = null;
+    public String defn = null;
 
     public NGItem(Indir<Resource> res, Message sdt) {
         super(res, sdt);
-        checkStatus();
+        old_infoseq = infoseq;
     }
 
-    public ItemInfo getInfo(Class<? extends ItemInfo> candidate) {
-        for (ItemInfo inf : info) {
-            if (inf.getClass() == candidate) {
-                return inf;
+    @Override
+    public void tick(double dt) {
+        super.tick(dt);
+        if(infoseq!=old_infoseq || (status&READY)!=READY)
+        {
+            if(rawinfo!= null) {
+                status &= ~RAWINFO_IS_READY;
+                status &= ~HAVE_CONTENT;
+                for (Object o : rawinfo.data) {
+                    if (o instanceof Object[]) {
+                        Object[] a = (Object[]) o;
+                        if (a[0] instanceof Integer) {
+                            String resName = glob().sess.getResName((Integer) a[0]);
+                            if (resName != null) {
+                                if ( resName.equals("ui/tt/q/quality")) {
+                                    quality = (Float)a[1];
+                                }
+                                else if(resName.equals("ui/tt/cont")) {
+                                    double q = -1;
+                                    String name = null;
+                                    for (Object so : a) {
+                                        if (so instanceof Object[]) {
+                                            Object[] cont = (Object[]) so;
+                                            for (Object sso : cont) {
+                                                if (sso instanceof Object[]) {
+                                                    Object[] b = (Object[]) sso;
+                                                    if (b[0] instanceof Integer) {
+                                                        String resName2 = glob().sess.getResName((Integer) b[0]);
+                                                        if (resName2 != null) {
+                                                            if (resName2.equals("ui/tt/cn")) {
+                                                                name = (String) b[1];
+                                                            } else if (resName2.equals("ui/tt/q/quality")) {
+                                                                q = (Float) b[1];
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if(name!=null && q!=-1) {
+                                        content = new NContent(q, name);
+                                        status |= HAVE_CONTENT;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                return;
+                            }
+                        }
+
+                    }
+                }
+                status |= RAWINFO_IS_READY;
             }
+            if(spr!=null)
+            {
+                if(sprSz == null) {
+                    sprSz = spr.sz();
+                    status |= SPR_IS_READY;
+                }
+                status &= ~NAME_IS_READY;
+                if(res.get().layer(Resource.tooltip)!=null || res.get().name.equals("gfx/invobjs/gems/gemstone")) {
+                    defn = DefName.getname(this);
+                    if (defn != null && !defn.isEmpty()) {
+                        status |= NAME_IS_READY;
+                    }
+                }
+            }
+            old_infoseq = infoseq;
+        }
+    }
+
+    public String name(){
+        if((status & NAME_IS_READY) == NAME_IS_READY)
+        {
+            return defn;
         }
         return null;
     }
 
+    public double quality(){
+        if((status & RAWINFO_IS_READY) == RAWINFO_IS_READY)
+        {
+            return quality;
+        }
+        return -1.;
+    }
+
+    public Coord sprSz(){
+        if((status & SPR_IS_READY) == SPR_IS_READY)
+        {
+            return sprSz;
+        }
+        return null;
+    }
+
+    public NContent content(){
+        if((status & HAVE_CONTENT) == HAVE_CONTENT)
+        {
+            return content;
+        }
+        return null;
+    }
+
+    public int getStatus()
+    {
+        return status;
+    }
+
     @Override
-    public List<ItemInfo> info() {
-        super.info();
-        checkFood(info, getres().name);
-        return (info);
+    public void wdgmsg(String msg, Object... args) {
+        if((status&NAME_IS_READY)==NAME_IS_READY && msg.equals("take"))
+            NUtils.getGameUI().getCharInfo().setCandidate(defn);
+        super.wdgmsg(msg, args);
     }
 
-    private static double round2Dig(double value) {
-        return Math.round(value * 1000.0) / 1000.0;
+    @Override
+    public void wdgmsg(Widget sender, String msg, Object... args) {
+        super.wdgmsg(sender, msg, args);
     }
 
-    public static class FoodIngredient {
-        private String name;
-        private Integer percentage;
-
-        public FoodIngredient(String name, Integer percentage) {
-            this.name = name;
-            this.percentage = percentage;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(name, percentage);
-        }
-
-        public Integer getPercentage() {
-            return percentage;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
-
-    public static class FoodFEP {
-        private String name;
-        private Double value;
-
-        public FoodFEP(String name, Double value) {
-            this.name = name;
-            this.value = value;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(name, value);
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public Double getValue() {
-            return value;
-        }
-    }
-
-    public static class ParsedFoodInfo {
-        public String itemName;
-        public String resourceName;
-        public Integer energy;
-        public double hunger;
-        public ArrayList<FoodIngredient> ingredients;
-        public ArrayList<FoodFEP> feps;
-
-        public ParsedFoodInfo() {
-            this.itemName = "";
-            this.resourceName = "";
-            this.ingredients = new ArrayList<>();
-            this.feps = new ArrayList<>();
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(itemName, resourceName, ingredients);
-        }
-
-        public ArrayList<FoodFEP> getFeps() {
-            return feps;
-        }
-
-        public ArrayList<FoodIngredient> getIngredients() {
-            return ingredients;
-        }
-
-        public String getItemName() {
-            return itemName;
-        }
-
-        public String getResourceName() {
-            return resourceName;
-        }
-
-        public double getHunger() {
-            return hunger;
-        }
-
-        public Integer getEnergy() {
-            return energy;
-        }
-    }
-
-    public static void checkFood(List<ItemInfo> infoList, String resName) {
-        try {
-            FoodInfo foodInfo = ItemInfo.find(FoodInfo.class, infoList);
-            if (foodInfo != null) {
-                QBuff qBuff = ItemInfo.find(QBuff.class, infoList);
-                double quality = qBuff != null ? qBuff.q : 10.0;
-                double multiplier = Math.sqrt(quality / 10.0);
-
-                ParsedFoodInfo parsedFoodInfo = new ParsedFoodInfo();
-                parsedFoodInfo.resourceName = resName;
-                parsedFoodInfo.energy = (int) (Math.round(foodInfo.end * 100));
-                parsedFoodInfo.hunger = round2Dig(foodInfo.glut * 100);
-
-                for (int i = 0; i < foodInfo.evs.length; i++) {
-                    parsedFoodInfo.feps.add(new FoodFEP(foodInfo.evs[i].ev.nm, round2Dig(foodInfo.evs[i].a / multiplier)));
-                }
-
-                for (ItemInfo info : infoList) {
-                    if (info instanceof ItemInfo.AdHoc) {
-                        String text = ((ItemInfo.AdHoc) info).str.text;
-                        // Skip food which base FEP's cannot be calculated
-                        if (text.equals("White-truffled")
-                                || text.equals("Black-truffled")
-                                || text.equals("Peppered")) {
-                            return;
-                        }
-                    }
-                    if (info instanceof ItemInfo.Name) {
-                        parsedFoodInfo.itemName = ((ItemInfo.Name) info).str.text;
-                    }
-                    if (info.getClass().getName().equals("Ingredient")) {
-                        String name = (String) info.getClass().getField("name").get(info);
-                        Double value = (Double) info.getClass().getField("val").get(info);
-                        parsedFoodInfo.ingredients.add(new FoodIngredient(name, (int) (value * 100)));
-                    } else if (info.getClass().getName().equals("Smoke")) {
-                        String name = (String) info.getClass().getField("name").get(info);
-                        Double value = (Double) info.getClass().getField("val").get(info);
-                        parsedFoodInfo.ingredients.add(new FoodIngredient(name, (int) (value * 100)));
+    public boolean needrender() {
+        if((status & SPR_IS_READY) == SPR_IS_READY && (status & NAME_IS_READY) == NAME_IS_READY) {
+            try {
+                for (ItemInfo inf : info()) {
+                    if (inf instanceof NFoodInfo) {
+                        return ((NFoodInfo) inf).check();
                     }
                 }
-                if (NConfiguration.getInstance().collectFoodInfo)
-                    NFoodWriter.add(parsedFoodInfo);
             }
-        } catch (Exception ex) {
-            System.out.println("Cannot create food info: " + ex.getMessage());
+            catch (Loading ignored)
+            {
+            }
         }
+        return false;
     }
 
-    public interface DoubleInfo extends OverlayInfo<Tex> {
-
-
-        public double value();
-
-        public default Tex overlay() {
-            return (new TexI(RichText.render(String.format("$col[225,255,125]{%.2f}", value()), 0).img));
-        }
-
-        public default void drawoverlay(GOut g, Tex tex) {
-            g.aimage(tex, g.sz(), 1, 1);
-        }
-
-        public static BufferedImage doublerender(double value, Color col) {
-            return (Utils.outline2(Text.render(Double.toString(value), col).img, Utils.contrast(col)));
-        }
-    }
-
-    public static class Quantity extends ItemInfo implements DoubleInfo {
-        private final double quantity;
-
-        public Quantity(Owner owner, double quantity) {
-            super(owner);
-            this.quantity = quantity;
-        }
-
-        @Override
-        public double value() {
-            return quantity;
-        }
-
-        @Override
-        public Tex overlay() {
-            return DoubleInfo.super.overlay();
-        }
-
-        @Override
-        public void drawoverlay(GOut g, Tex tex) {
-            g.chcolor(new Color(0, 0, 0, 75));
-            g.frect(g.sz().sub(tex.sz().x + 2, tex.sz().y), tex.sz());
-            g.chcolor();
-            g.aimage(tex, g.sz(), 1, 1);
-        }
-    }
-
-    public double quality() {
-        return quality;
-    }
-
-    public Coord spriteSize = null;
-    public Double quality = -1.;
-    public String content = null;
-    public String dfname = null;
-
-    static int UNDEFINED = 0x0000;
-    static int RAW = 0x0001;
-    static int INDIR = 0x0002;
-    public static int COMPLETED = 0x0004;
-
-    public int status = UNDEFINED;
-
+    @Override
     public void uimsg(String name, Object... args) {
-        if (name == "chres") {
-            Indir<Resource> res = ui.sess.getres((Integer) args[0]);
-            if(res!=null)
-                status |= INDIR;
-            if(res instanceof Resource.Pool.Queued) {
-                if (((Resource.Pool.Queued) res).check())
-                    if (resource().name.contains("meat")) {
-                        dfname = new Meat(this, resource(), sdt).name;
-                    } else if (resource().name.contains("defn")) {
-                        dfname = DefName.getname(this);
-                    }
-                status |= COMPLETED;
-            }
-        } else if (name == "tt") {
-            rawinfo = new ItemInfo.Raw(args);
-            content = NUtils.getContent(this);
-            quality = (double)NUtils.getQuality(this);
-
-            status |= RAW;
-        }
         super.uimsg(name, args);
+        if(name.equals("tt") || name.equals("meter")) {
+            meterUpdated = System.currentTimeMillis();
+        }
     }
 
-    void checkStatus(){
-        if(rawinfo!=null)
-            status |= RAW;
-        if(res!=null) {
-            status |= INDIR;
-            if (res instanceof Session.CachedRes.Ref) {
-                if ((((Session.CachedRes.Ref) res).check())) {
-                    Resource.Image img = res.get().layer(Resource.imgc);
-                    if (img != null) {
-                        Coord sz = img.ssz;
-                        spriteSize = sz.div(32);
-                    }
-                    Resource.Tooltip tt = res.get().layer(Resource.tooltip);
-                    if (tt != null) {
-                        if (tt.t.equals("Meat")) {
-                            if (ui != null) {
-                                try {
-                                    dfname = new Meat(this, null, sdt).name();
-                                }
-                                catch (Exception e)
-                                {
-                                    status = UNDEFINED;
-                                }
-
-                            }
-                        } else {
-                            dfname = tt.t;
-                        }
-                    }
-                    if (dfname != null)
-                        status |= COMPLETED;
+    public boolean needlongtip() {
+        if((status & SPR_IS_READY) == SPR_IS_READY) {
+            for (ItemInfo inf : info()) {
+                if (inf instanceof NFoodInfo) {
+                    return ((NFoodInfo) inf).needToolTip;
+                } else if (inf instanceof NCuriosity) {
+                    return ((NCuriosity) inf).needUpdate();
+                }
+                if (inf instanceof ISlots) {
+                    return this.ui.modshift!=((ISlots)inf).isShifted;
                 }
             }
         }
+        return false;
     }
 
-   // static void debug() {
-   //     int undefined = 0;
-   //     int raw = 0;
-   //     int indir = 0;
-   //     int compited = 0;
-   //     for (GItem item : allItems) {
-   //         if (((NGItem) item).status == undefined)
-   //             undefined++;
-   //         if ((((NGItem) item).status & RAW) != 0)
-   //             raw++;
-   //         if ((((NGItem) item).status & INDIR) != 0)
-   //             indir++;
-   //         if ((((NGItem) item).status & COMPLETED) != 0) {
-   //             compited++;
-   //         }
-   //     }
-   //     System.out.println(undefined);
-   //     System.out.println(raw);
-   //     System.out.println(indir);
-   //     System.out.println(compited);
-   // }
+    @Override
+    public boolean keydown(KeyEvent ev) {
+        return super.keydown(ev);
+    }
 
     @Override
-    public void tick(double dt) {
-        if ((status & COMPLETED) == 0) {
-            checkStatus();
-        }
-        super.tick(dt);
+    public boolean keyup(KeyEvent ev) {
+        return super.keyup(ev);
     }
 }
-
-

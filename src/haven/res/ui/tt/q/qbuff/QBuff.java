@@ -5,7 +5,7 @@ import haven.*;
 import java.util.*;
 import java.awt.image.BufferedImage;
 
-@FromResource(name = "ui/tt/q/qbuff", version = 6)
+@haven.FromResource(name = "ui/tt/q/qbuff", version = 6)
 public class QBuff extends ItemInfo.Tip {
     public BufferedImage icon;
     public String name;

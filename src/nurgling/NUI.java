@@ -9,6 +9,8 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class NUI extends UI {
+    public NSessInfo sessInfo;
+    public NDataTables dataTables;
     public boolean inspectMode = false;
     long tickId = 0;
     public NUI(Context uictx, Coord sz, Runner fun) {
@@ -18,15 +20,31 @@ public class NUI extends UI {
             NConfiguration.getInstance().write();});
         Runtime.getRuntime().addShutdownHook(writeConfigHook);
         NUtils.setUI(this);
+        dataTables = new NDataTables();
+        Highlighting.init();
+        Slotted.init();
+        NFoodInfo.init();
     }
 
     @Override
     public void tick() {
-        try {
-            super.tick();
-            tickId+=1;
-        }catch (Exception e){
-            e.printStackTrace();
+        super.tick();
+        tickId += 1;
+        if (sessInfo == null && sess != null) {
+            sessInfo = new NSessInfo(sess.username);
+        }
+        if (NUtils.getGameUI() == null && sessInfo != null) {
+            for (Widget wdg : widgets.values()) {
+                if (wdg instanceof Img) {
+                    Img img = (Img) wdg;
+                    if (img.tooltip instanceof Widget.KeyboundTip) {
+                        if (!sessInfo.isVerified && ((Widget.KeyboundTip) img.tooltip).base.contains("Verif"))
+                            sessInfo.isVerified = true;
+                        else if (!sessInfo.isSubscribed && ((Widget.KeyboundTip) img.tooltip).base.contains("Subsc"))
+                            sessInfo.isSubscribed = true;
+                    }
+                }
+            }
         }
         if(NConfiguration.getInstance().showAreas && NUtils.getGameUI()!=null ) {
             ArrayList<NOCache.OverlayInfo> forRemove = new ArrayList<>();
