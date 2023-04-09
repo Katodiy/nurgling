@@ -573,7 +573,10 @@ public class NGob {
 
 
     protected static void updateCustom(Gob gob) {
-        if (gob.status != Status.updated)
+        if (gob.status != Status.updated) {
+            if (gob.status == Status.undefined) {
+                updateRes(gob);
+            }
             if (gob.getattr(GobIcon.class) == null) {
                 GobIcon icon = NUtils.getIcon(gob);
                 if (icon != null) {
@@ -581,208 +584,199 @@ public class NGob {
                     gob.setattr(icon);
                 }
             }
+            if (gob.status == Status.ready_for_update) {
+                NModelBox modelBox = NModelBox.forGob(gob);
+                if (modelBox != null && gob.findol(NModelBox.class) == null) {
+                    gob.addcustomol(modelBox);
+                }
+                if (NUtils.getGameUI() != null && NUtils.getGameUI().map != null) {
+                    if (gob.isTag(Tags.borka)) {
+                        if (NUtils.getGameUI().map.player() != null) {
+                            if (gob.id == NUtils.getGameUI().map.player().id) {
 
-
-        if (gob.status == Status.ready_for_update) {
-            NModelBox modelBox = NModelBox.forGob(gob);
-            if (modelBox != null && gob.findol(NModelBox.class) == null) {
-                gob.addcustomol(modelBox);
-            }
-            if (NUtils.getGameUI() != null && NUtils.getGameUI().map != null) {
-                if (gob.isTag(Tags.borka)) {
-                    if (NUtils.getGameUI().map.player() != null) {
-                        if (gob.id == NUtils.getGameUI().map.player().id) {
-
-                            Following following;
-                            if ((following = gob.getattr(Following.class)) != null) {
-                                if (following.tgt() != null) {
+                                Following following;
+                                if ((following = gob.getattr(Following.class)) != null) {
+                                    if (following.tgt() != null) {
+                                        gob.removeTag(Tags.borka);
+                                        gob.addTag(Tags.player);
+                                        if (NUtils.getGameUI().drives != -1) {
+                                            gob.installFollowing(gob, following);
+                                        } else {
+                                            gob.installFollowing(gob, following);
+                                            if (NUtils.isIt(NUtils.getGob(NUtils.getGameUI().drives), "horse"))
+                                                NUtils.setSpeed(NConfiguration.getInstance().horseSpeed);
+                                        }
+                                    }
+                                } else {
                                     gob.removeTag(Tags.borka);
                                     gob.addTag(Tags.player);
-                                    if (NUtils.getGameUI().drives != -1) {
-                                        gob.installFollowing(gob, following);
-                                    } else {
-                                        gob.installFollowing(gob, following);
-                                        if (NUtils.isIt(NUtils.getGob(NUtils.getGameUI().drives), "horse"))
-                                            NUtils.setSpeed(NConfiguration.getInstance().horseSpeed);
-                                    }
                                 }
+                                gob.addcustomol(new NPlayerArrow(gob, 10));
                             } else {
                                 gob.removeTag(Tags.borka);
-                                gob.addTag(Tags.player);
-                            }
-                            gob.addcustomol(new NPlayerArrow(gob, 10));
-                        } else {
-                            gob.removeTag(Tags.borka);
-                            gob.addTag(Tags.notplayer);
-                        }
-                    }
-                }
-                if (gob.isTag(Tags.notplayer)) {
-                    if (!gob.isTag(Tags.knocked)) {
-                        gob.addcustomol(new NPlayerMarker(gob, 10));
-                    }
-                }
-            }else if(gob.isTag(Tags.borka)) {
-                return;
-            }
-
-            if (NConfiguration.getInstance().enablePfBoundingBoxes)
-            {
-                if (gob.getHitBox() != null && gob.findol(NGobHiteBoxSpr.class) == null) {
-                    gob.addcustomol(new NGobHiteBoxSpr(NBoundingBox.getBoundingBox(gob)));
-                }
-            }
-            if (gob.status == Status.ready_for_update) {
-                if( gob.isTag(Tags.quality))
-                {
-                    if(gob.quality!=-1) {
-                        gob.addcustomol(new NObjectLabel(gob, String.format("Q: %d", gob.quality), new Color(120, 255, 255)));
-                    }
-                }
-                if (gob.isTag(Tags.tree) || gob.isTag(Tags.bumling) || gob.isTag(Tags.quester)) {
-                    for (String name : NUtils.getGameUI().getQuestInfo().getMarkers().keySet()) {
-                        NQuestInfo.QuestGob questGob = NUtils.getGameUI().getQuestInfo().getMarkers().get(name);
-                        MiniMap.Location loc = NUtils.getGameUI().mapfile.view.sessloc;
-                        Coord2d tmp = questGob.marker.tc.sub(loc.tc).mul(tilesz).add(6, 6);
-                        if (Math.abs(gob.rc.x - tmp.x) < 10 && Math.abs(gob.rc.y - tmp.y) < 10) {
-                            gob.addTag(Tags.quester);
-                            gob.addcustomol(new NQuesterRing(gob, Color.ORANGE, 20, 0.7f, questGob));
-                        }
-                    }
-                }
-                if (gob.isTag(Tags.highlighted)) {
-                    gob.addcustomol(new NHighlightRing(gob));
-                    gob.addcustomattr(new NGobHighlight(gob));
-
-                } else if ((gob.isTag(Tags.quest) && !gob.isTag(Tags.knocked)) /*|| (gob.getResName()!=null && gob.getResName().contains("woodensign"))*/) {
-                    NAlarmManager.play(Tags.quest);
-                    gob.addcustomol(new NNotifiedRing(gob, Color.CYAN, 30, 0.7f, gob.noteImg));
-                } else if (gob.isTag(Tags.notified)) {
-                    gob.addcustomol(new NNotifiedRing(gob, Color.GREEN, 20, 0.7f, gob.noteImg));
-                }
-                if (gob.isTag(Tags.plant)) {
-                    NProperties.Crop crop = gob.getCrop();
-                    crop.currentStage = gob.modelAttribute;
-                    gob.addcustomol(new NCropMarker(gob, crop));
-                } else if (gob.isTag(Tags.item)) {
-                    if (gob.isTag(Tags.gem)) {
-                        gob.addcustomol(new NTexMarker(gob, 5, Tags.gem));
-                    } else if (gob.isTag(Tags.truffle)) {
-                        gob.addcustomol(new NTexMarker(gob, 10, Tags.truffle));
-                    }
-                } else if (gob.isTag(Tags.container, Tags.properties)) {
-                    NProperties.Container cont = gob.getContainer();
-                    if (cont != null) {
-                        gob.addcustomattr(new NContainerColor(gob, cont));
-                    }
-                } else if (gob.isTag(Tags.barrel)) {
-                    gob.addcustomattr(new NBarrelColor(gob));
-                } else if (gob.isTag(Tags.minesupport)) {
-                    if (NConfiguration.getInstance().rings.get("minesup").isEnable && gob.findol(NAreaRad.class) == null) {
-                        if (NUtils.checkName(gob.getResName(), new NAlias(new ArrayList<>(Arrays.asList("natural"))))) {
-                            gob.addcustomol(new NAreaRange(gob, "minesup", 93.5f, new Color(128, 128, 128, 128), new Color(0, 192, 192, 255)));
-                        } else if (NUtils.checkName(gob.getResName(), new NAlias(new ArrayList<>(Arrays.asList("ladder", "minesupport", "towercap"))))) {
-                            if(gob.isTag(Tags.growth))
-                            {
-                                TreeScale ts = gob.getattr(TreeScale.class);
-                                int scale = (int) Math.round(100 * (ts.scale - 0.1) / 0.9);
-                                gob.addcustomol(new NAreaRange(gob, "minesup", scale, new Color(128, 128, 128, 128), new Color(0, 192, 192, 255)));
-                            }
-                            else
-                            {
-                                gob.addcustomol(new NAreaRange(gob, "minesup", 100, new Color(128, 128, 128, 128), new Color(0, 192, 192, 255)));
-                            }
-                        } else if (NUtils.checkName(gob.getResName(), new NAlias("minebeam"))) {
-                            gob.addcustomol(new NAreaRange(gob, "minesup", 150, new Color(128, 128, 128, 128), new Color(0, 192, 192, 255)));
-                        } else if (NUtils.checkName(gob.getResName(), new NAlias("column"))) {
-                            gob.addcustomol(new NAreaRange(gob, "minesup", 125, new Color(128, 128, 128, 128), new Color(0, 192, 192, 255)));
-                        }
-                    }
-                } else if (gob.isTag(Tags.dframe)) {
-                    gob.addcustomattr(new NDframeColor(gob));
-                } else if (gob.isTag(Tags.ttub)) {
-                    gob.addcustomattr(new NTubColor(gob));
-                } else if (gob.isTag(Tags.chickencoop) || gob.isTag(Tags.rabbithutch)) {
-                    gob.addcustomattr(new NIncubatorColor(gob));
-                } else if (gob.isTag(Tags.cheeserack)) {
-                    gob.addcustomattr(new NCheeseColor(gob));
-                } else if (gob.isTag(Tags.barterhand)) {
-                    gob.addcustomol(new NAreaRange(gob, "barterhand", (float) NConfiguration.getInstance().rings.get("barterhand").size, new Color(163, 0, 192, 128), new Color(0, 0, 192, 255)));
-                } else if (gob.isTag(Tags.trough)) {
-                    gob.addcustomol(new NAreaRange(gob, "trough", (float) NConfiguration.getInstance().rings.get("trough").size, new Color(192, 192, 0, 128), new Color(0, 164, 192, 255)));
-                    gob.addcustomattr(new NTroughColor(gob));
-                } else if (gob.isTag(Tags.beeskep)) {
-                    gob.addcustomol(new NAreaRange(gob, "beeskep", (float) NConfiguration.getInstance().rings.get("beeskep").size, new Color(0, 163, 192, 128), new Color(0, 192, 0, 255)));
-                    gob.addcustomol(new NBeeMarker(gob));
-                } else if (gob.isTag(Tags.kritter)) {
-                    if (gob.isTag(Tags.sheep) || gob.isTag(Tags.goat))
-                        gob.addcustomol(new NWoolMarker(gob, 12));
-                    if(gob.isTag(Tags.stalagoomba))
-                        NAlarmManager.play(Tags.stalagoomba);
-
-                    if(gob.getattr(Composite.class)!=null && gob.getpose()!=null && !gob.isTag(Tags.knocked) && gob.isTag(Tags.kritter_is_ready)) {
-                        for (String ring : NConfiguration.getInstance().rings.keySet()) {
-                            if (gob.getResName().contains(ring)) {
-                                NConfiguration.Ring ringprop = NConfiguration.getInstance().rings.get(ring);
-                                gob.addcustomol(new NKritterRange(gob, ringprop, new Color(192, 0, 0, 128), new Color(0, 164, 192, 255)));
+                                gob.addTag(Tags.notplayer);
                             }
                         }
-                        if(gob.isTag(Tags.bear))
-                            NAlarmManager.play(Tags.bear);
-                        else if(gob.isTag(Tags.greyseal))
-                            NAlarmManager.play(Tags.greyseal);
-                        else if(gob.isTag(Tags.wolf))
-                            NAlarmManager.play(Tags.wolf);
-                        else if(gob.isTag(Tags.winter_stoat))
-                            NAlarmManager.play(Tags.winter_stoat);
-                        else if(gob.isTag(Tags.mammoth))
-                            NAlarmManager.play(Tags.mammoth);
-                        else if(gob.isTag(Tags.orca))
-                            NAlarmManager.play(Tags.orca);
                     }
-
-                } else if (gob.isTag(Tags.angryhorse)) {
-                    gob.addcustomol(new NTexMarker(gob, 20, Tags.angryhorse));
+                    if (gob.isTag(Tags.notplayer)) {
+                        if (!gob.isTag(Tags.knocked)) {
+                            gob.addcustomol(new NPlayerMarker(gob, 10));
+                        }
+                    }
+                } else if (gob.isTag(Tags.borka)) {
+                    return;
                 }
-            }
 
-            if (gob.isTag(Tags.growth)) {
-                double scale = 0;
-                TreeScale ts = gob.getattr(TreeScale.class);
-                if (gob.isTag(Tags.tree)) {
-                    scale = Math.round(100 * (ts.scale - 0.1) / 0.9);
-                } else if (gob.isTag(Tags.bush)) {
-                    scale = Math.round(100 * (ts.scale - 0.3) / 0.7);
+                if (NConfiguration.getInstance().enablePfBoundingBoxes) {
+                    if (gob.getHitBox() != null && gob.findol(NGobHiteBoxSpr.class) == null) {
+                        gob.addcustomol(new NGobHiteBoxSpr(NBoundingBox.getBoundingBox(gob)));
+                    }
                 }
-                gob.addcustomol(new NObjectLabel(gob, String.format("%.0f %%", (float) scale), Color.WHITE));
-            }
+                if (gob.status == Status.ready_for_update) {
+                    if (gob.isTag(Tags.quality)) {
+                        if (gob.quality != -1) {
+                            gob.addcustomol(new NObjectLabel(gob, String.format("Q: %d", gob.quality), new Color(120, 255, 255)));
+                        }
+                    }
+                    if (gob.isTag(Tags.tree) || gob.isTag(Tags.bumling) || gob.isTag(Tags.quester)) {
+                        for (String name : NUtils.getGameUI().getQuestInfo().getMarkers().keySet()) {
+                            NQuestInfo.QuestGob questGob = NUtils.getGameUI().getQuestInfo().getMarkers().get(name);
+                            MiniMap.Location loc = NUtils.getGameUI().mapfile.view.sessloc;
+                            Coord2d tmp = questGob.marker.tc.sub(loc.tc).mul(tilesz).add(6, 6);
+                            if (Math.abs(gob.rc.x - tmp.x) < 10 && Math.abs(gob.rc.y - tmp.y) < 10) {
+                                gob.addTag(Tags.quester);
+                                gob.addcustomol(new NQuesterRing(gob, Color.ORANGE, 20, 0.7f, questGob));
+                            }
+                        }
+                    }
+                    if (gob.isTag(Tags.highlighted)) {
+                        gob.addcustomol(new NHighlightRing(gob));
+                        gob.addcustomattr(new NGobHighlight(gob));
 
-            if (gob.isTag(Tags.iconsign)) {
-                if(NConfiguration.getInstance().showAreas) {
-                    if ( NUtils.getGameUI()!=null && NUtils.getGameUI().updated()) {
-                        for (String name : made_id.keySet()) {
-                            if (made_id.get(name) == gob.modelAttribute)
-                                try {
-                                    NOCache.constructOverlay(AreasID.find(name));
-                                } catch (IllegalArgumentException e) {
-//                                    e.printStackTrace();
-                                } catch (Resource.Loading | MCache.LoadingMap e) {
-                                    gob.status = Status.ready_for_update;
+                    } else if ((gob.isTag(Tags.quest) && !gob.isTag(Tags.knocked)) /*|| (gob.getResName()!=null && gob.getResName().contains("woodensign"))*/) {
+                        NAlarmManager.play(Tags.quest);
+                        gob.addcustomol(new NNotifiedRing(gob, Color.CYAN, 30, 0.7f, gob.noteImg));
+                    } else if (gob.isTag(Tags.notified)) {
+                        gob.addcustomol(new NNotifiedRing(gob, Color.GREEN, 20, 0.7f, gob.noteImg));
+                    }
+                    if (gob.isTag(Tags.plant)) {
+                        NProperties.Crop crop = gob.getCrop();
+                        crop.currentStage = gob.modelAttribute;
+                        gob.addcustomol(new NCropMarker(gob, crop));
+                    } else if (gob.isTag(Tags.item)) {
+                        if (gob.isTag(Tags.gem)) {
+                            gob.addcustomol(new NTexMarker(gob, 5, Tags.gem));
+                        } else if (gob.isTag(Tags.truffle)) {
+                            gob.addcustomol(new NTexMarker(gob, 10, Tags.truffle));
+                        }
+                    } else if (gob.isTag(Tags.container, Tags.properties)) {
+                        NProperties.Container cont = gob.getContainer();
+                        if (cont != null) {
+                            gob.addcustomattr(new NContainerColor(gob, cont));
+                        }
+                    } else if (gob.isTag(Tags.barrel)) {
+                        gob.addcustomattr(new NBarrelColor(gob));
+                    } else if (gob.isTag(Tags.minesupport)) {
+                        if (NConfiguration.getInstance().rings.get("minesup").isEnable && gob.findol(NAreaRad.class) == null) {
+                            if (NUtils.checkName(gob.getResName(), new NAlias(new ArrayList<>(Arrays.asList("natural"))))) {
+                                gob.addcustomol(new NAreaRange(gob, "minesup", 93.5f, new Color(128, 128, 128, 128), new Color(0, 192, 192, 255)));
+                            } else if (NUtils.checkName(gob.getResName(), new NAlias(new ArrayList<>(Arrays.asList("ladder", "minesupport", "towercap"))))) {
+                                if (gob.isTag(Tags.growth)) {
+                                    TreeScale ts = gob.getattr(TreeScale.class);
+                                    int scale = (int) Math.round(100 * (ts.scale - 0.1) / 0.9);
+                                    gob.addcustomol(new NAreaRange(gob, "minesup", scale, new Color(128, 128, 128, 128), new Color(0, 192, 192, 255)));
+                                } else {
+                                    gob.addcustomol(new NAreaRange(gob, "minesup", 100, new Color(128, 128, 128, 128), new Color(0, 192, 192, 255)));
                                 }
+                            } else if (NUtils.checkName(gob.getResName(), new NAlias("minebeam"))) {
+                                gob.addcustomol(new NAreaRange(gob, "minesup", 150, new Color(128, 128, 128, 128), new Color(0, 192, 192, 255)));
+                            } else if (NUtils.checkName(gob.getResName(), new NAlias("column"))) {
+                                gob.addcustomol(new NAreaRange(gob, "minesup", 125, new Color(128, 128, 128, 128), new Color(0, 192, 192, 255)));
+                            }
                         }
-                    }
-                    else
-                    {
-                        gob.status = Status.ready_for_update;
-                        return;
+                    } else if (gob.isTag(Tags.dframe)) {
+                        gob.addcustomattr(new NDframeColor(gob));
+                    } else if (gob.isTag(Tags.ttub)) {
+                        gob.addcustomattr(new NTubColor(gob));
+                    } else if (gob.isTag(Tags.chickencoop) || gob.isTag(Tags.rabbithutch)) {
+                        gob.addcustomattr(new NIncubatorColor(gob));
+                    } else if (gob.isTag(Tags.cheeserack)) {
+                        gob.addcustomattr(new NCheeseColor(gob));
+                    } else if (gob.isTag(Tags.barterhand)) {
+                        gob.addcustomol(new NAreaRange(gob, "barterhand", (float) NConfiguration.getInstance().rings.get("barterhand").size, new Color(163, 0, 192, 128), new Color(0, 0, 192, 255)));
+                    } else if (gob.isTag(Tags.trough)) {
+                        gob.addcustomol(new NAreaRange(gob, "trough", (float) NConfiguration.getInstance().rings.get("trough").size, new Color(192, 192, 0, 128), new Color(0, 164, 192, 255)));
+                        gob.addcustomattr(new NTroughColor(gob));
+                    } else if (gob.isTag(Tags.beeskep)) {
+                        gob.addcustomol(new NAreaRange(gob, "beeskep", (float) NConfiguration.getInstance().rings.get("beeskep").size, new Color(0, 163, 192, 128), new Color(0, 192, 0, 255)));
+                        gob.addcustomol(new NBeeMarker(gob));
+                    } else if (gob.isTag(Tags.kritter)) {
+                        if (gob.isTag(Tags.sheep) || gob.isTag(Tags.goat))
+                            gob.addcustomol(new NWoolMarker(gob, 12));
+                        if (gob.isTag(Tags.stalagoomba))
+                            NAlarmManager.play(Tags.stalagoomba);
+
+                        if (gob.getattr(Composite.class) != null && gob.getpose() != null && !gob.isTag(Tags.knocked) && gob.isTag(Tags.kritter_is_ready)) {
+                            for (String ring : NConfiguration.getInstance().rings.keySet()) {
+                                if (gob.getResName().contains(ring)) {
+                                    NConfiguration.Ring ringprop = NConfiguration.getInstance().rings.get(ring);
+                                    gob.addcustomol(new NKritterRange(gob, ringprop, new Color(192, 0, 0, 128), new Color(0, 164, 192, 255)));
+                                }
+                            }
+                            if (gob.isTag(Tags.bear))
+                                NAlarmManager.play(Tags.bear);
+                            else if (gob.isTag(Tags.greyseal))
+                                NAlarmManager.play(Tags.greyseal);
+                            else if (gob.isTag(Tags.wolf))
+                                NAlarmManager.play(Tags.wolf);
+                            else if (gob.isTag(Tags.winter_stoat))
+                                NAlarmManager.play(Tags.winter_stoat);
+                            else if (gob.isTag(Tags.mammoth))
+                                NAlarmManager.play(Tags.mammoth);
+                            else if (gob.isTag(Tags.orca))
+                                NAlarmManager.play(Tags.orca);
+                        }
+
+                    } else if (gob.isTag(Tags.angryhorse)) {
+                        gob.addcustomol(new NTexMarker(gob, 20, Tags.angryhorse));
                     }
                 }
+
+                if (gob.isTag(Tags.growth)) {
+                    double scale = 0;
+                    TreeScale ts = gob.getattr(TreeScale.class);
+                    if (gob.isTag(Tags.tree)) {
+                        scale = Math.round(100 * (ts.scale - 0.1) / 0.9);
+                    } else if (gob.isTag(Tags.bush)) {
+                        scale = Math.round(100 * (ts.scale - 0.3) / 0.7);
+                    }
+                    gob.addcustomol(new NObjectLabel(gob, String.format("%.0f %%", (float) scale), Color.WHITE));
+                }
+
+                if (gob.isTag(Tags.iconsign)) {
+                    if (NConfiguration.getInstance().showAreas) {
+                        if (NUtils.getGameUI() != null && NUtils.getGameUI().updated()) {
+                            for (String name : made_id.keySet()) {
+                                if (made_id.get(name) == gob.modelAttribute)
+                                    try {
+                                        NOCache.constructOverlay(AreasID.find(name));
+                                    } catch (IllegalArgumentException e) {
+//                                    e.printStackTrace();
+                                    } catch (Resource.Loading | MCache.LoadingMap e) {
+                                        gob.status = Status.ready_for_update;
+                                    }
+                            }
+                        } else {
+                            gob.status = Status.ready_for_update;
+                            return;
+                        }
+                    }
+                }
+
+                gob.status = Status.updated;
             }
 
-            gob.status = Status.updated;
         }
-
-
     }
 
 }

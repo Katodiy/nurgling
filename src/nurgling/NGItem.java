@@ -112,7 +112,7 @@ public class NGItem extends GItem {
                     status |= SPR_IS_READY;
                 }
                 status &= ~NAME_IS_READY;
-                if(res.get().layer(Resource.tooltip)!=null || res.get().name.equals("gfx/invobjs/gems/gemstone")) {
+                if(res.get().layer(Resource.tooltip)!=null || res.get().name.equals("gfx/invobjs/gems/gemstone") || res.get().name.equals("lib/layspr")) {
                     defn = DefName.getname(this);
                     if (defn != null && !defn.isEmpty()) {
                         status |= NAME_IS_READY;

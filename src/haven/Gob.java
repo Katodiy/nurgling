@@ -370,6 +370,7 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 				}
 
 			}
+			updateCustom(this);
 		}
 	for (GAttrib a : attr.values())
 		a.ctick(dt);
@@ -394,6 +395,7 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 	    glob.oc.remove(this);
 	updateCustom(this);
     }
+
 
     public void gtick(Render g) {
 	Drawable d = getattr(Drawable.class);
