@@ -26,6 +26,9 @@
 
 package haven;
 
+import nurgling.NConfiguration;
+import nurgling.NLoginData;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -314,6 +317,26 @@ public class AuthClient implements Closeable {
 	    this.acctname = acctname;
 	    if((this.token = token).length != 32)
 		throw(new IllegalArgumentException("Token must be 32 bytes"));
+		boolean isFound = false;
+		for(NLoginData logdata : NConfiguration.getInstance().logins)
+		{
+			if (logdata.name.equals(acctname))
+			{
+				logdata.token = Arrays.copyOf(token, token.length);
+				logdata.isTokenUsed = true;
+				isFound = true;
+				NConfiguration.getInstance().write();
+				break;
+			}
+		}
+		if(!isFound)
+		{
+			NLoginData logdata = new NLoginData(this.acctname,"");
+			logdata.token = Arrays.copyOf(token, token.length);
+			logdata.isTokenUsed = true;
+			NConfiguration.getInstance().logins.add(logdata);
+			NConfiguration.getInstance().write();
+		}
 	    clean = Finalizer.finalize(this, () -> Arrays.fill(token, (byte)0));
 	}
 	

@@ -1,7 +1,6 @@
 package nurgling;
 
 import haven.*;
-import haven.render.sl.InstancedUniform;
 import nurgling.tools.Finder;
 
 

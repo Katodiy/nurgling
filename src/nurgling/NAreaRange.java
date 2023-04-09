@@ -1,15 +1,9 @@
 package nurgling;
 
 import haven.Gob;
-import haven.Loading;
-import haven.RUtils;
-import haven.WeakList;
 import haven.render.Render;
-import haven.render.RenderTree;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
 
 public class NAreaRange extends NAreaRad{
     boolean oldState = false;

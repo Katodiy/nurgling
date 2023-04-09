@@ -26,6 +26,9 @@
 
 package haven;
 
+import nurgling.NConfiguration;
+import nurgling.NUtils;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -432,6 +435,7 @@ public class MainFrame extends java.awt.Frame implements Console.Directory {
     }
     
     public static void main(final String[] args) {
+	NConfiguration.initDefault();
 	/* Set up the error handler as early as humanly possible. */
 	ThreadGroup g = new ThreadGroup("Haven main group");
 	String ed;

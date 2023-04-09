@@ -1,12 +1,9 @@
 package nurgling;
 
 import haven.Audio;
-import haven.HashedMap;
 import haven.Resource;
 
 import java.util.HashMap;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class NAlarmManager {
     static NGob.Tags last;

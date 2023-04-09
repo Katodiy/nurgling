@@ -27,10 +27,10 @@ public class NAreaRad extends NSprite {
 		for(int i = 0; i < n; i++) {
 			float s = (float)Math.sin(2 * Math.PI * i / n);
 			float c = (float)Math.cos(2 * Math.PI * i / n);
-			posb.put(     i  * 3 + 0, c * r).put(     i  * 3 + 1, s * r).put(     i  * 3 + 2,  10);
-			posb.put((n + i) * 3 + 0, c * r).put((n + i) * 3 + 1, s * r).put((n + i) * 3 + 2, -10);
-			nrmb.put(     i  * 3 + 0, c).put(     i  * 3 + 1, s).put(     i  * 3 + 2, 0);
-			nrmb.put((n + i) * 3 + 0, c).put((n + i) * 3 + 1, s).put((n + i) * 3 + 2, 0);
+			posb.put(i * 3, c * r).put(     i  * 3 + 1, s * r).put(     i  * 3 + 2,  10);
+			posb.put((n + i) * 3, c * r).put((n + i) * 3 + 1, s * r).put((n + i) * 3 + 2, -10);
+			nrmb.put(i * 3, c).put(     i  * 3 + 1, s).put(     i  * 3 + 2, 0);
+			nrmb.put((n + i) * 3, c).put((n + i) * 3 + 1, s).put((n + i) * 3 + 2, 0);
 		}
 		VertexBuf.VertexData posa = new VertexBuf.VertexData(posb);
 		VertexBuf.NormalData nrma = new VertexBuf.NormalData(nrmb);
@@ -88,8 +88,8 @@ public class NAreaRad extends NSprite {
 		for(int i = 0; i < n; i++) {
 			float s = (float)Math.sin(2 * Math.PI * i / n);
 			float c = (float)Math.cos(2 * Math.PI * i / n);
-			posb.put(     i  * 3 + 0, c * r).put(     i  * 3 + 1, s * r).put(     i  * 3 + 2,  10);
-			posb.put((n + i) * 3 + 0, c * r).put((n + i) * 3 + 1, s * r).put((n + i) * 3 + 2, -10);
+			posb.put(i * 3, c * r).put(     i  * 3 + 1, s * r).put(     i  * 3 + 2,  10);
+			posb.put((n + i) * 3, c * r).put((n + i) * 3 + 1, s * r).put((n + i) * 3 + 2, -10);
 		}
 		this.vbuf.update(g);
 	}
