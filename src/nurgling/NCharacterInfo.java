@@ -49,7 +49,7 @@ public class NCharacterInfo extends Widget {
     }
 
     void write() {
-        try (FileWriter file = new FileWriter(path)) {
+        try (FileWriter file = new FileWriter(path, StandardCharsets.UTF_8)) {
             if (!varity.isEmpty()) {
                 file.write("varity\t" + String.valueOf(varity.size()) +"\n");
                 for (String var : varity) {

@@ -12,23 +12,23 @@ import java.util.HashMap;
 /**
  * Класс виджета управления ботами
  */
-public class NBotsInfo extends Widget implements KeyBinding.Bindable {
+public class NBotsInfo extends NDraggableWidget implements KeyBinding.Bindable {
     NSButton back;
 
-    @Override
-    public void draw(GOut g) {
-        super.draw(g);
-        if(NUtils.getGameUI().map!=null) {
-            if (NUtils.getUI().dragged != null) {
-                Tex dt = new TexI(NUtils.getUI().dragged.cont);
-                ui.drawafter(new UI.AfterDraw() {
-                    public void draw(GOut g) {
-                        g.image(dt, ui.mc.add(dt.sz().div(2).inv()));
-                    }
-                });
-            }
-        }
-    }
+//    @Override
+//    public void draw(GOut g) {
+//        super.draw(g);
+//        if(NUtils.getGameUI().map!=null) {
+//            if (NUtils.getUI().dragged != null) {
+//                Tex dt = new TexI(NUtils.getUI().dragged.cont);
+//                ui.drawafter(new UI.AfterDraw() {
+//                    public void draw(GOut g) {
+//                        g.image(dt, ui.mc.add(dt.sz().div(2).inv()));
+//                    }
+//                });
+//            }
+//        }
+//    }
 
     /**
      * Конструктор
@@ -37,13 +37,13 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
      */
     public NBotsInfo(NGameUI gui ) {
         /// Устанавливаем размеры виджета
-        super ( new Coord ( 150, 800 ) );
+        super ( "NBotsInfo" );
         
         /// Положение элементов по вертикали
         int y = 0;
         
         try {
-            back = add(new NSButton(32, 32, Resource.local().load("bots/icons/back")){
+            back = add(new NSButton(UI.scale(32), UI.scale(32), Resource.local().load("bots/icons/back")){
                 @Override
                 public void click () {
                     super.click ();
@@ -337,7 +337,7 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
             
             for ( HashMap.Entry<Integer, Layout> entry : layouts.entrySet () ) {
                 add ( entry.getValue (), new Coord ( 0, y ) );
-                y += 34;
+                y += UI.scale(34);
                 for ( Layout.ButtonPos buttonPos : entry.getValue ().buttons ) {
                     add ( buttonPos.button, buttonPos.coord );
                     buttonPos.button.hide ();
@@ -390,6 +390,7 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
         //        add ( new NButton ( 80, "Snow Cleaner", new SnowCleaner ( gui ) ), new Coord ( 0, y += 32 ) );
         //        add ( new NButton ( 80, "Farmer", new Farmer ( gui ) ), new Coord ( 0, y += 32 ) );
         //        add ( new NButton ( 80, "Backer", new Backer ( gui ) ), new Coord ( 0, y += 32 ) );
+        pack();
     }
     
     public void showLayouts(){
@@ -400,6 +401,8 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
             entry.getValue ().show ();
             back.hide();
         }
+        NUtils.getGameUI().botsInfo.pack();
+        NUtils.getGameUI().botsInfo.resize(new Coord(UI.scale(50),NUtils.getGameUI().botsInfo.sz.y));
     }
     
     public void hideLayouts(){
@@ -457,7 +460,7 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
                 String path
         )
                 throws IOException {
-            super ( 32, 32, Resource.local().load(path) );
+            super ( UI.scale(32), UI.scale(32), Resource.local().load(path) );
 //            custom[i] = ui.gui.new PaginaBeltSlot(i, p);
             /// Текст отображается как на кнопке, так и служит ключем в таблице
             name = path;
@@ -478,12 +481,16 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
         @Override
         public void click () {
             super.click ();
+            Coord end = new Coord(Coord.z);
             for ( ButtonPos buttonPos : buttons ) {
                 buttonPos.button.show ();
+                end.x = Math.max(buttonPos.coord.x + UI.scale(32), end.x);
+                end.y = Math.max(buttonPos.coord.y + UI.scale(32), end.y);
             }
-
             parent.hideLayouts ();
             back.show();
+            end.x+=UI.scale(15);
+            NUtils.getGameUI().botsInfo.resize(end);
         }
         
         private class ButtonPos {
@@ -504,12 +511,12 @@ public class NBotsInfo extends Widget implements KeyBinding.Bindable {
                 String path
         )
                 throws IOException {
-            super ( 32, 32, Resource.loadsimg(path));
+            super ( UI.scale(32), UI.scale(32), Resource.loadsimg(path));
             this.parent = parent;
         }
         
         void add ( NButton button ) {
-            ButtonPos bp = new ButtonPos ( button, new Coord ( w * 34, h * 34 ) );
+            ButtonPos bp = new ButtonPos ( button, new Coord ( w * UI.scale(34), h * UI.scale(34) ) );
             bp.button.parent = this;
             buttons.add ( bp );
             if ( h > 8 ) {

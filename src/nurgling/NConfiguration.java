@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.List;
 
@@ -384,6 +385,7 @@ public class NConfiguration {
         dragWidgets.put("belt1", new DragWdg(false,new Coord(50,230)));
         dragWidgets.put("belt2", new DragWdg(false,new Coord(50,250)));
         dragWidgets.put("NQuestInfo", new DragWdg(false,new Coord(200,250)));
+        dragWidgets.put("NBotsInfo", new DragWdg(false,new Coord ( 200, 250 )));
         resizeWidgets.put("ChatUI", new Coord(700,300));
         resizeWidgets.put("MiniMap", new Coord(133,133));
 
@@ -685,7 +687,7 @@ public class NConfiguration {
         whitePlayers.put("arrow",players.get("white").arrow);
         obj.put("white_players",whitePlayers);
 
-        try ( FileWriter file = new FileWriter ( ((HashDirCache)ResCache.global).base +"/../" + "./config.nurgling.json" ) ) {
+        try ( FileWriter file = new FileWriter ( ((HashDirCache)ResCache.global).base +"/../" + "./config.nurgling.json", StandardCharsets.UTF_8 ) ) {
             file.write ( obj.toJSONString () );
         }
         catch ( IOException e ) {

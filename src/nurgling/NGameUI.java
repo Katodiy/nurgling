@@ -318,7 +318,8 @@ public class NGameUI extends GameUI {
         timers = add(new NTimerPanel(), 250, 100);
         timers.hide();
         chat = add(new NChatUIDrag("ChatUI"),NConfiguration.getInstance().dragWidgets.get("ChatUI").coord);
-        botsInfo = add ( new NBotsInfo ( this ), new Coord ( 30, 150 ) );
+        add ( (botsInfo = new NBotsInfo ( this )), NConfiguration.getInstance().dragWidgets.get("NBotsInfo").coord );
+        botsInfo.resize(botsInfo.sz.x+UI.scale(15), botsInfo.sz.y);
         stats = add(new NQuestsStats(), new Coord ( 30, 150 ));
         questInfo = add(new NQuestInfo () , NConfiguration.getInstance().dragWidgets.get("NQuestInfo").coord);
         chat.resize(NConfiguration.getInstance().resizeWidgets.get("ChatUI"));

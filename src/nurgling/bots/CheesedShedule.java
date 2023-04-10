@@ -21,6 +21,7 @@ import nurgling.json.parser.ParseException;
 import nurgling.tools.AreasID;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -291,7 +292,7 @@ public class CheesedShedule extends Bot {
         LinkedList<Task> tasks = new LinkedList<>();
         try {
             BufferedReader reader = new BufferedReader (new InputStreamReader(
-                    Files.newInputStream(Paths.get(((HashDirCache) ResCache.global).base + "/../" + "./cheese_shedule.json")), "UTF-8"));
+                    Files.newInputStream(Paths.get(((HashDirCache) ResCache.global).base + "/../" + "./cheese_shedule.json")), StandardCharsets.UTF_8));
             JSONParser parser = new JSONParser();
             JSONArray jsonArray = (JSONArray) parser.parse(reader);
 
@@ -334,7 +335,7 @@ public class CheesedShedule extends Bot {
         }
 
         String path = ((HashDirCache) ResCache.global).base + "/../" + "./cheese_shedule.json";
-        try (FileWriter file = new FileWriter(path)) {
+        try (FileWriter file = new FileWriter(path, StandardCharsets.UTF_8)) {
             //String res = obj.toJSONString();
             file.write(jtasks.toJSONString());
         } catch (IOException e) {
