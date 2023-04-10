@@ -111,14 +111,16 @@ public class NWItem extends WItem {
 //            selectedItem = this;
 //        }
         if (ui.modctrl && ui.modmeta) {
-            if(((NGItem)item).isSeached)
-            {
-                if(item.parent instanceof NInventory) {
-                    Collection<GItem> items = ((NInventory) item.parent).getItems(Highlighting.class);
-                    for(GItem item : items)
-                    {
-                        item.wdgmsg("drop", c, 1);
-                    }
+            if(item.parent instanceof NInventory) {
+                Collection<GItem> items;
+                if (((NGItem) item).isSeached) {
+                    items = ((NInventory) item.parent).getItems(Highlighting.class);
+                } else {
+                    items = ((NInventory) item.parent).getItems(new NAlias(((NGItem) item).name()));
+                }
+                for(GItem item : items)
+                {
+                    item.wdgmsg("drop", c, 1);
                 }
             }
             return (true);

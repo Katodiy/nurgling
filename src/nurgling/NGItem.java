@@ -7,6 +7,8 @@ import haven.res.ui.tt.slots.ISlots;
 
 import java.awt.event.KeyEvent;
 
+import static haven.Inventory.sqsz;
+
 public class NGItem extends GItem {
     public boolean isSeached = false;
     int old_infoseq;
@@ -108,7 +110,7 @@ public class NGItem extends GItem {
             if(spr!=null)
             {
                 if(sprSz == null) {
-                    sprSz = spr.sz();
+                    sprSz = spr.sz().div(new Coord(sqsz.x - UI.scale(1), sqsz.y - UI.scale(1)));
                     status |= SPR_IS_READY;
                 }
                 status &= ~NAME_IS_READY;

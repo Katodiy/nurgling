@@ -365,24 +365,7 @@ public class NInventory extends Inventory {
         int freespace = 0;
         if(parent instanceof NGameUI || parent instanceof Window) {
             boolean[][] inventory = new boolean[isz.x][isz.y];
-            for (int i = 0; i < isz.x; i++) {
-                for (int j = 0; j < isz.y; j++) {
-                    inventory[i][j] = false;
-                }
-            }
-            for (Widget widget = child; widget != null; widget = widget.next) {
-                if (widget instanceof WItem) {
-                    WItem wdg = (WItem) widget;
-                    Coord pos = new Coord(wdg.c.x / (sqsz.x  - UI.scale(1)), wdg.c.y / (sqsz.x  - UI.scale(1)));
-                    Coord size = ((NGItem) wdg.item).sprSz();
-                    Coord endPos = new Coord(pos.x + size.x - UI.scale(1), pos.y + size.y  - UI.scale(1));
-                    for (int i = pos.x; i <= endPos.x; i++) {
-                        for (int j = pos.y; j <= endPos.y; j++) {
-                            inventory[i][j] = true;
-                        }
-                    }
-                }
-            }
+            fillInventorySpace(inventory);
             for (int i = 0; i < isz.x; i++) {
                 for (int j = 0; j < isz.y; j++) {
                     if (!inventory[i][j])
@@ -401,10 +384,7 @@ public class NInventory extends Inventory {
         return freespace;
     }
 
-    public Coord getFreeCoord(WItem item) throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
-        int freespace = isz.x * isz.y;
-        boolean[][] inventory = new boolean[isz.x][isz.y];
+    private void fillInventorySpace(boolean[][] inventory) {
         for (int i = 0; i < isz.x; i++) {
             for (int j = 0; j < isz.y; j++) {
                 inventory[i][j] = false;
@@ -413,25 +393,31 @@ public class NInventory extends Inventory {
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
                 WItem wdg = (WItem) widget;
-                Coord pos = new Coord(wdg.c.x / (sqsz.x - 1), wdg.c.y / (sqsz.x - 1));
+                Coord pos = new Coord(wdg.c.x / (sqsz.x  - UI.scale(1)), wdg.c.y / (sqsz.x  - UI.scale(1)));
                 Coord size = ((NGItem) wdg.item).sprSz();
-                Coord endPos = new Coord(pos.x + size.x - 1, pos.y + size.y - 1);
-                for (int i = pos.x; i <= endPos.x; i++) {
-                    for (int j = pos.y; j <= endPos.y; j++) {
+                Coord endPos = new Coord(pos.x + size.x, pos.y + size.y );
+                for (int i = pos.x; i < endPos.x; i++) {
+                    for (int j = pos.y; j < endPos.y; j++) {
                         inventory[i][j] = true;
                     }
                 }
             }
         }
+    }
 
-        Coord size = new Coord(item.sz.x / sqsz.x, item.sz.y / sqsz.y);
+    public Coord getFreeCoord(WItem item) throws InterruptedException {
+        NUtils.waitEvent(this::isLoaded,50);
+        boolean[][] inventory = new boolean[isz.x][isz.y];
+        fillInventorySpace(inventory);
+
+        Coord size = new Coord(((NGItem)item.item).sprSz());
         for (int i = 0; i < isz.x; i++) {
             for (int j = 0; j < isz.y; j++) {
                 if (!inventory[i][j]) {
-                    if (i + size.x - 1 < isz.x && j + size.y - 1 < isz.y) {
+                    if (i + size.x - UI.scale(1) < isz.x && j + size.y - UI.scale(1) < isz.y) {
                         boolean isFree = true;
-                        for (int k = i; k <= i + size.x - 1; k++) {
-                            for (int n = j; n <= j + size.y - 1; n++) {
+                        for (int k = i; k < i + size.x; k++) {
+                            for (int n = j; n < j + size.y; n++) {
                                 if (inventory[k][n]) {
                                     isFree = false;
                                     break;
@@ -452,26 +438,9 @@ public class NInventory extends Inventory {
         NUtils.waitEvent(this::isLoaded,50);
         if (item != null) {
             boolean[][] inventory = new boolean[isz.x][isz.y];
-            for (int i = 0; i < isz.x; i++) {
-                for (int j = 0; j < isz.y; j++) {
-                    inventory[i][j] = false;
-                }
-            }
-            for (Widget widget = child; widget != null; widget = widget.next) {
-                if (widget instanceof WItem) {
-                    WItem wdg = (WItem) widget;
-                    Coord pos = new Coord((wdg.c.x - 1) / sqsz.x, (wdg.c.y - 1) / sqsz.y);
-                    Coord size = ((NGItem) wdg.item).sprSz();
-                    Coord endPos = new Coord(pos.x + size.x - 1, pos.y + size.y - 1);
-                    for (int i = pos.x; i <= endPos.x; i++) {
-                        for (int j = pos.y; j <= endPos.y; j++) {
-                            inventory[i][j] = true;
-                        }
-                    }
-                }
-            }
+            fillInventorySpace(inventory);
             int count = 0;
-            Coord size = new Coord(item.sz.x / sqsz.x, item.sz.y / sqsz.y);
+            Coord size = ((NGItem)item).sprSz();
             if (NUtils
                     .isIt(item, new NAlias(new ArrayList<String>(Arrays.asList("pickaxe", "bough"))))) {
                 size.y = 2;
@@ -479,10 +448,10 @@ public class NInventory extends Inventory {
             for (int i = 0; i < isz.x; i++) {
                 for (int j = 0; j < isz.y; j++) {
                     if (!inventory[i][j]) {
-                        if (i + size.x - 1 < isz.x && j + size.y - 1 < isz.y) {
+                        if (i + size.x - UI.scale(1) < isz.x && j + size.y - UI.scale(1) < isz.y) {
                             boolean isFree = true;
-                            for (int k = i; k <= i + size.x - 1; k++) {
-                                for (int n = j; n <= j + size.y - 1; n++) {
+                            for (int k = i; k < i + size.x; k++) {
+                                for (int n = j; n < j + size.y; n++) {
                                     if (inventory[k][n]) {
                                         isFree = false;
                                         break;
@@ -507,32 +476,14 @@ public class NInventory extends Inventory {
         int count = 0;
         /// Вычисляем свободные слоты в инвентаре
         boolean[][] inventory = new boolean[isz.x][isz.y];
-        for (int i = 0; i < isz.x; i++) {
-            for (int j = 0; j < isz.y; j++) {
-                inventory[i][j] = false;
-            }
-        }
-        for (Widget widget = child; widget != null; widget = widget.next) {
-            if (widget instanceof WItem) {
-                WItem wdg = (WItem) widget;
-                Coord pos = new Coord((wdg.c.x - 1) / sqsz.x, (wdg.c.y - 1) / sqsz.y);
-                Coord size = UI.unscale(((NGItem) wdg.item).sprSz());
-                Coord endPos = new Coord(pos.x + size.x - 1, pos.y + size.y - 1);
-                for (int i = pos.x; i <= endPos.x; i++) {
-                    for (int j = pos.y; j <= endPos.y; j++) {
-                        inventory[i][j] = true;
-                    }
-                }
-            }
-        }
-
+        fillInventorySpace(inventory);
         for (int i = 0; i < isz.x; i++) {
             for (int j = 0; j < isz.y; j++) {
                 if (!inventory[i][j]) {
                     if (i + target_size.x - 1 < isz.x && j + target_size.y - 1 < isz.y) {
                         boolean isFree = true;
-                        for (int k = i; k <= i + target_size.x - 1; k++) {
-                            for (int n = j; n <= j + target_size.y - 1; n++) {
+                        for (int k = i; k < i + target_size.x; k++) {
+                            for (int n = j; n < j + target_size.y; n++) {
                                 if (inventory[k][n]) {
                                     isFree = false;
                                     break;
@@ -541,8 +492,8 @@ public class NInventory extends Inventory {
                         }
                         if (isFree) {
                             count += 1;
-                            for (int k = i; k <= i + target_size.x - 1; k++) {
-                                for (int n = j; n <= j + target_size.y - 1; n++) {
+                            for (int k = i; k < i + target_size.x; k++) {
+                                for (int n = j; n < j + target_size.y; n++) {
                                     inventory[k][n] = true;
                                 }
                             }
@@ -552,18 +503,6 @@ public class NInventory extends Inventory {
             }
         }
         return count;
-    }
-
-
-    public WItem getNew() {
-        for (Widget wdg = child; wdg != null; wdg = wdg.next) {
-            if (wdg instanceof WItem) {
-                if (wdg.next == null) {
-                    return (WItem) wdg;
-                }
-            }
-        }
-        return null;
     }
 
     public static final Comparator<NGItem> ITEM_COMPARATOR_ASC = new Comparator<NGItem>() {

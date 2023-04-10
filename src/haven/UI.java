@@ -336,7 +336,7 @@ public class UI {
     public void wdgmsg(Widget sender, String msg, Object... args) {
 	int id = widgetid(sender);
 	if(id < 0) {
-	    new Warning("wdgmsg sender (%s) is not in rwidgets, message is %s", sender.getClass().getName(), msg).issue();
+//	    new Warning("wdgmsg sender (%s) is not in rwidgets, message is %s", sender.getClass().getName(), msg).issue();
 	    return;
 	}
 	if(rcvr != null)
