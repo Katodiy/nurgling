@@ -95,7 +95,7 @@ public class NSearchWidget extends Widget {
             public void draw(GOut g) {
                 super.draw(g);
                 if (helpLayer != null)
-                    g.aimage(helpLayer, csz(), 0, 0);
+                    g.aimage(helpLayer, ca().ul, 0, 0);
 
             }
 
@@ -108,7 +108,7 @@ public class NSearchWidget extends Widget {
 
             @Override
             public void wdgmsg(Widget sender, String msg, Object... args) {
-                if (sender == helpwnd.deco) {
+                if (sender == helpwnd) {
                     helpwnd.hide();
                 }
             }
