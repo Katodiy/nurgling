@@ -84,6 +84,19 @@ public class NEquipProxy extends NDraggableWidget implements NDTarget2 {
 	return super.tooltip(c, prev);
     }
 
+	public boolean mousehover(Coord c, boolean on) {
+		boolean ret = super.mousehover(c, on);
+		NEquipory.Slots slot = slot(c);
+		if(NUtils.getEquipment()!=null) {
+			WItem w = NUtils.getEquipment().quickslots[slot.idx];
+			if (w!=null && on && (w.item.contents != null)) {
+				w.item.hovering(this);
+				return (true);
+			}
+		}
+		return(ret);
+	}
+
     @Override
     public boolean drop(WItem target, Coord cc, Coord ul) {
 	Equipory e = NUtils.getEquipment();
