@@ -27,8 +27,9 @@
 package haven;
 
 import nurgling.NDTarget2;
+import nurgling.NWItem;
 
-public class ItemDrag extends WItem {
+public class ItemDrag extends NWItem {
     public Coord doff;
     
     public ItemDrag(Coord dc, GItem item) {

@@ -3,6 +3,7 @@ package nurgling;
 import haven.*;
 import haven.res.ui.tt.defn.DefName;
 import haven.res.ui.tt.highlighting.Highlighting;
+import haven.res.ui.tt.q.quality.Quality;
 import haven.res.ui.tt.slots.ISlots;
 
 import java.awt.event.KeyEvent;
@@ -179,7 +180,12 @@ public class NGItem extends GItem {
             try {
                 for (ItemInfo inf : info()) {
                     if (inf instanceof NFoodInfo) {
-                        return ((NFoodInfo) inf).check();
+                        if(((NFoodInfo) inf).check())
+                            return true;
+                    }
+                    else if (inf instanceof Quality) {
+                        if (((Quality) inf).check())
+                            return true;
                     }
                 }
             }

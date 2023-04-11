@@ -161,36 +161,37 @@ public class NEquipory extends Equipory {
                 for ( int i = 0 ; i < quickslots.length ; i++ ) {
                     if ( quickslots[i] != null ) {
                         GItem itm = quickslots[i].item;
-                        if ( itm == null ) {
+                        if (itm == null) {
                             continue;
                         }
-                        if ( i != 0 && quickslots[0] != null &&
-                                quickslots[0].item.getres ().name.equals ( itm.getres ().name ) ) {
+                        if (i != 0 && quickslots[0] != null &&
+                                quickslots[0].item.getres().name.equals(itm.getres().name)) {
                             continue;
                         }
-                        for ( ItemInfo info : itm.info () ) {
-                            if ( info instanceof Armor) {
-                                aHard += ( (Armor) info ).hard;
-                                aSoft += ( ( Armor ) info ).soft;
-                            }
-                            else if ( info instanceof AttrMod ) {
-                                for ( AttrMod.Mod mod : ( ( AttrMod ) info ).mods ) {
-                                    String attributeName = mod.attr.layer ( Resource.tooltip ).t;
-                                    gildBuffs.putIfAbsent ( attributeName, new AttrMod.Mod ( mod.attr, 0 ) );
-                                    gildBuffs.get ( attributeName ).mod += mod.mod;
+                        try {
+                            for (ItemInfo info : itm.info()) {
+                                if (info instanceof Armor) {
+                                    aHard += ((Armor) info).hard;
+                                    aSoft += ((Armor) info).soft;
+                                } else if (info instanceof AttrMod) {
+                                    for (AttrMod.Mod mod : ((AttrMod) info).mods) {
+                                        String attributeName = mod.attr.layer(Resource.tooltip).t;
+                                        gildBuffs.putIfAbsent(attributeName, new AttrMod.Mod(mod.attr, 0));
+                                        gildBuffs.get(attributeName).mod += mod.mod;
+                                    }
+                                } else if (info instanceof ISlots) {
+                                    ((ISlots) info).s.forEach((sitem) -> {
+                                        sitem.info.forEach(info2 -> {
+                                            for (AttrMod.Mod mod : ((AttrMod) info2).mods) {
+                                                String attributeName = mod.attr.layer(Resource.tooltip).t;
+                                                gildBuffs.putIfAbsent(attributeName, new AttrMod.Mod(mod.attr, 0));
+                                                gildBuffs.get(attributeName).mod += mod.mod;
+                                            }
+                                        });
+                                    });
                                 }
                             }
-                            else if ( info instanceof ISlots) {
-                                ( (ISlots) info ).s.forEach ( (sitem ) -> {
-                                    sitem.info.forEach ( info2 -> {
-                                        for ( AttrMod.Mod mod : ( ( AttrMod ) info2 ).mods ) {
-                                            String attributeName = mod.attr.layer ( Resource.tooltip ).t;
-                                            gildBuffs.putIfAbsent ( attributeName, new AttrMod.Mod ( mod.attr, 0 ) );
-                                            gildBuffs.get ( attributeName ).mod += mod.mod;
-                                        }
-                                    } );
-                                } );
-                            }
+                        } catch (Loading ignore) {
                         }
                     }
                     gildBufimgs = new LinkedList<> ();

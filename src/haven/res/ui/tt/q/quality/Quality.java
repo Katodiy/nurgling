@@ -9,11 +9,13 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 import nurgling.NGItem;
+import nurgling.NSearchable;
 
 /* >tt: Quality */
 @haven.FromResource(name = "ui/tt/q/quality", version = 25)
 public class Quality extends QBuff implements GItem.OverlayInfo<Tex> {
     NGItem ownitem = null;
+    boolean withContent = false;
     private static final BufferedImage icon = Resource.remote().loadwait("ui/tt/q/quality").layer(Resource.imgc, 0).scaled();
     public Quality(Owner owner, double q) {
 	super(owner, icon, "Quality", q);
@@ -29,8 +31,10 @@ public class Quality extends QBuff implements GItem.OverlayInfo<Tex> {
     public Tex overlay() {
         BufferedImage text = null;
         if (ownitem != null && (ownitem.getStatus() & NGItem.HAVE_CONTENT) != 0) {
+            withContent = true;
             text = GItem.NumberInfo.numrender((int) Math.round(ownitem.content().quality()), new Color(97, 121, 227, 255));
         } else {
+            withContent = false;
             text = GItem.NumberInfo.numrender((int) Math.round(q), new Color(35, 245, 245, 255));
         }
         BufferedImage bi = new BufferedImage(text.getWidth(), text.getHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -44,5 +48,9 @@ public class Quality extends QBuff implements GItem.OverlayInfo<Tex> {
 
     public void drawoverlay(GOut g, Tex ol) {
         g.aimage(ol, new Coord(g.sz().x - ol.sz().x, ol.sz().y), 0, 1);
+    }
+
+    public boolean check() {
+        return !(ownitem != null && (withContent == ((ownitem.getStatus() & NGItem.HAVE_CONTENT) == NGItem.HAVE_CONTENT)));
     }
 }

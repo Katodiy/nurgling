@@ -2,6 +2,7 @@ package nurgling;
 
 import haven.*;
 import haven.res.ui.tt.highlighting.Highlighting;
+import haven.res.ui.tt.q.quality.Quality;
 
 import java.util.Collection;
 
@@ -20,8 +21,10 @@ public class NWItem extends WItem {
                 GItem.InfoOverlay<?>[] ols = itemols.get();
                 if (ols != null) {
                     for (GItem.InfoOverlay<Tex> ol : (GItem.InfoOverlay<Tex>[]) ols) {
-                        if (ol.inf instanceof NFoodInfo) {
+                        if (ol.inf instanceof NFoodInfo && ((NFoodInfo) ol.inf).check()) {
                             ol.data = ((NFoodInfo) ol.inf).overlay();
+                        } else if (ol.inf instanceof Quality && ((Quality) ol.inf).check()) {
+                            ol.data = ((Quality) ol.inf).overlay();
                         }
                     }
                 }
