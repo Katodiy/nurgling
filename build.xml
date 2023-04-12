@@ -184,11 +184,13 @@
         <include name="*.jar" />
       </fileset>
     </copy>
-    <copy file="local-config.properties" tofile="build/haven-config.properties" failonerror="false" quiet="true" />
+    <copy file="etc/ansgar-config.properties" tofile="release/haven-config.properties" failonerror="false" quiet="true" />
     <copy todir="release/" file="build/nurgler-res.jar" />
     <copy todir="release/" file="etc/drink_data.json" />
     <copy todir="release/" file="etc/tile_names.json" />
     <copy todir="release/" file="build/hafen.jar" />
+    <copy todir="release/" file="etc/run.bat" />
+    <copy todir="release/" file="etc/run-updater.bat" />
   </target>
 
   <property name="version.num" value="0.043"/>

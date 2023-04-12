@@ -1,0 +1,2 @@
+java -jar nurgling_launcher.jar update https://raw.githubusercontent.com/Katodiy/nurgling-release/master/ -Djava.util.logging.config.file=logging.properties --add-exports=java.desktop/sun.awt=ALL-UNNAMED -jar ./hafen.jar
+pause

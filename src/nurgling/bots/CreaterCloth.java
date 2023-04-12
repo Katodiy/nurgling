@@ -2,6 +2,7 @@ package nurgling.bots;
 
 import haven.Button;
 import haven.Coord;
+import haven.UI;
 import nurgling.NAlias;
 import nurgling.NGameUI;
 import nurgling.bots.actions.Action;
@@ -22,7 +23,7 @@ public class CreaterCloth extends Bot {
     public CreaterCloth(NGameUI gameUI ) {
         super ( gameUI );
         win_title = "Crafter Cloth";
-        win_sz.y = 100;
+        win_sz.y = UI.scale(100);
 
         
        ArrayList<Action> loop = new ArrayList<> ();
@@ -49,7 +50,7 @@ public class CreaterCloth extends Bot {
             }
         }, new Coord ( 0, y ) );
 
-        y += 25;
+        y += UI.scale(35);
         window.add ( new Button ( window.buttons_size, "Fibres" ) {
             @Override
             public void click () {
