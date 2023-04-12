@@ -96,6 +96,10 @@ public class NGItem extends GItem {
                                         content = new NContent(q, name);
                                         status |= HAVE_CONTENT;
                                     }
+                                } else if(resName.equals("ui/tt/coin"))
+                                {
+                                    defn = (String) a[1];
+                                    status |= NAME_IS_READY;
                                 }
                             }
                             else
@@ -114,11 +118,13 @@ public class NGItem extends GItem {
                     sprSz = spr.sz().div(new Coord(sqsz.x - UI.scale(1), sqsz.y - UI.scale(1)));
                     status |= SPR_IS_READY;
                 }
-                status &= ~NAME_IS_READY;
-                if(res.get().layer(Resource.tooltip)!=null || res.get().name.equals("gfx/invobjs/gems/gemstone") || res.get().name.equals("lib/layspr")) {
-                    defn = DefName.getname(this);
-                    if (defn != null && !defn.isEmpty()) {
-                        status |= NAME_IS_READY;
+                if(!res.get().name.contains("coin")) {
+                    status &= ~NAME_IS_READY;
+                    if (res.get() != null) {
+                        defn = DefName.getname(this);
+                        if (defn != null && !defn.isEmpty()) {
+                            status |= NAME_IS_READY;
+                        }
                     }
                 }
             }

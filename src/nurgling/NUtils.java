@@ -101,9 +101,9 @@ public class NUtils {
     ) { if (regEx!=null) {
         /// Проверяем имя на соответствие
         for (String key : regEx.keys) {
-            if (name.contains(key)) {
+            if (name.toLowerCase().contains(key.toLowerCase())) {
                 for (String ex : regEx.exceptions) {
-                    if (name.contains(ex)) {
+                    if (name.toLowerCase().contains(ex.toLowerCase())) {
                         return false;
                     }
                 }

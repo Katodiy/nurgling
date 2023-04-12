@@ -37,7 +37,7 @@ public class NInventory extends Inventory {
      * @return Предмет из инвентаря
      */
     public GItem getItem(NAlias key) throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof GItem) {
@@ -52,7 +52,7 @@ public class NInventory extends Inventory {
     }
 
     public WItem getItem(GItem item) throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
@@ -67,7 +67,7 @@ public class NInventory extends Inventory {
     }
 
     public GItem getItem(NAlias key, Class <? extends ItemInfo> candidate) throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
@@ -86,6 +86,7 @@ public class NInventory extends Inventory {
     }
 
     public boolean findItem(GItem item) {
+        waitLoading();
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
                 /// Для каждого найденго в компонентах предмета осуществляется проверка на его соответствие ключу
@@ -113,7 +114,7 @@ public class NInventory extends Inventory {
             QualityType type
     )
             throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         double quality = (type == QualityType.High) ? -1 : 10000;
         WItem res = null;
         /// Рзбираются компоненты инвентаря
@@ -138,7 +139,7 @@ public class NInventory extends Inventory {
             NAlias name
     )
             throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
@@ -165,7 +166,7 @@ public class NInventory extends Inventory {
             double q
     )
             throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
@@ -189,7 +190,7 @@ public class NInventory extends Inventory {
             int freeSpace
     )
             throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
@@ -211,7 +212,7 @@ public class NInventory extends Inventory {
     }
 
     public boolean isInInventory(GItem item) throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
@@ -228,6 +229,7 @@ public class NInventory extends Inventory {
             final NAlias names,
             double q
     ) {
+        waitLoading();
         ArrayList<GItem> result = new ArrayList<>();
             for (Widget widget = child; widget != null; widget = widget.next) {
                 if (widget instanceof WItem) {
@@ -245,6 +247,7 @@ public class NInventory extends Inventory {
     public ArrayList<GItem> getItems(
             Class<?> cl
     ) {
+        waitLoading();
         ArrayList<GItem> result = new ArrayList<>();
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
@@ -263,7 +266,7 @@ public class NInventory extends Inventory {
             boolean isMore
     )
             throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         ArrayList<GItem> result = new ArrayList<>();
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
@@ -288,7 +291,7 @@ public class NInventory extends Inventory {
 
     public ArrayList<GItem> getItems(
     ) throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         ArrayList<GItem> result = new ArrayList<>();
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
@@ -302,7 +305,7 @@ public class NInventory extends Inventory {
 
     public ArrayList<WItem> getAll()
             throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         ArrayList<WItem> result = new ArrayList<>();
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
@@ -324,6 +327,7 @@ public class NInventory extends Inventory {
      * @return Количество
      */
     public int getNumberItem(NAlias key) {
+        waitLoading();
         int result = 0;
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
@@ -343,6 +347,7 @@ public class NInventory extends Inventory {
     public ArrayList<GItem> getItems(
             NAlias name
     ) {
+        waitLoading();
         ArrayList<GItem> result = new ArrayList<>();
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
@@ -361,7 +366,7 @@ public class NInventory extends Inventory {
      * @return свободное место
      */
     public int getFreeSpace() throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         int freespace = 0;
         if(parent instanceof NGameUI || parent instanceof Window) {
             boolean[][] inventory = new boolean[isz.x][isz.y];
@@ -406,7 +411,7 @@ public class NInventory extends Inventory {
     }
 
     public Coord getFreeCoord(WItem item) throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         boolean[][] inventory = new boolean[isz.x][isz.y];
         fillInventorySpace(inventory);
 
@@ -435,7 +440,7 @@ public class NInventory extends Inventory {
     }
 
     public int getNumberFreeCoord(GItem item) throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         if (item != null) {
             boolean[][] inventory = new boolean[isz.x][isz.y];
             fillInventorySpace(inventory);
@@ -472,7 +477,7 @@ public class NInventory extends Inventory {
     }
 
     public int getNumberFreeCoord(Coord target_size) throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         int count = 0;
         /// Вычисляем свободные слоты в инвентаре
         boolean[][] inventory = new boolean[isz.x][isz.y];
@@ -519,6 +524,7 @@ public class NInventory extends Inventory {
     };
 
     private List<NGItem> getSame(GItem item, Boolean ascending) {
+        waitLoading();
         List<NGItem> items = new ArrayList<>();
         if (item != null && item.res != null) {
             boolean isMeat = (NUtils.isIt(item,"meat"));
@@ -696,5 +702,12 @@ public class NInventory extends Inventory {
         movePopup(parent.c);
         toggles.pack();
 
+    }
+
+    void waitLoading(){
+        try {
+            NUtils.waitEvent(this::isLoaded,50);
+        } catch (InterruptedException ignored) {
+        }
     }
 }
