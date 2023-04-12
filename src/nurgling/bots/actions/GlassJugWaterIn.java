@@ -2,17 +2,15 @@ package nurgling.bots.actions;
 
 import haven.GItem;
 import haven.Gob;
-import haven.WItem;
 import nurgling.NAlias;
 import nurgling.NGameUI;
 import nurgling.NUtils;
-import nurgling.PathFinder;
 import nurgling.tools.Finder;
 
 
 public class GlassJugWaterIn implements Action {
     private boolean allFull(NGameUI gui) throws InterruptedException {
-        for(GItem item :  gui.getInventory().getItems(new NAlias("jug")))
+        for(GItem item :  gui.getInventory().getWItems(new NAlias("jug")))
             if(!NUtils.isContentWater(item))
                 return false;
         return true;
@@ -29,7 +27,7 @@ public class GlassJugWaterIn implements Action {
             }
 
 //            new PathFinder(gui, gob).run();
-            for (GItem item : gui.getInventory().getItems(new NAlias("jug"))) {
+            for (GItem item : gui.getInventory().getWItems(new NAlias("jug"))) {
                 if (!gui.hand.isEmpty()) {
                     NUtils.transferToInventory();
                     NUtils.waitEvent(() -> gui.hand.isEmpty(), 50);

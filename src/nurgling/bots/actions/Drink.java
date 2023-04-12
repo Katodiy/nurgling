@@ -51,7 +51,7 @@ public class Drink implements Action {
                 WItem wbelt = Finder.findDressedItem ( new NAlias ("belt") );
                 if(wbelt!=null) {
                     NInventory belt = ((NInventory)wbelt.item.contents);
-                    ArrayList<GItem> wskins = belt.getItems ( new NAlias ( "waterskin" ) );
+                    ArrayList<GItem> wskins = belt.getWItems( new NAlias ( "waterskin" ) );
                     for ( GItem witem : wskins ) {
                         if ( NUtils.isContentWater ( witem ) ) {
                             if ( new SelectFlowerAction ( witem, "Drink", SelectFlowerAction.Types.Inventory )

@@ -11,7 +11,6 @@ import nurgling.tools.Finder;
 import nurgling.tools.NArea;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class HarvestSeedAction implements Action {
 
@@ -24,7 +23,7 @@ public class HarvestSeedAction implements Action {
         ArrayList<Gob> plants = Finder.findObjectsInArea ( crop, input );
         Gob barrel = Finder.findObjectInArea ( new NAlias("barrel"),2000,input );
         new OpenBarrelAndTransfer ( 9000,  crop, harvest_area, barrel ).run ( gui );
-        if ( !gui.getInventory ().getItems ( crop ).isEmpty () ) {
+        if ( !gui.getInventory ().getWItems( crop ).isEmpty () ) {
             new TransferToTrough ( crop ).run ( gui );
         }
         boolean isFull=false;
@@ -40,7 +39,7 @@ public class HarvestSeedAction implements Action {
                                 isFull = true;
                             }
                         }
-                        if ( !gui.getInventory ().getItems ( crop ).isEmpty () ) {
+                        if ( !gui.getInventory ().getWItems( crop ).isEmpty () ) {
                             new TransferToTrough ( crop ).run ( gui );
                         }
                     }
@@ -55,7 +54,7 @@ public class HarvestSeedAction implements Action {
                 }
             
         }
-        if ( !gui.getInventory ().getItems ( crop ).isEmpty () ) {
+        if ( !gui.getInventory ().getWItems( crop ).isEmpty () ) {
             if(!isFull) {
                 if ( new OpenBarrelAndTransfer ( 9000, crop ,
                         harvest_area,barrel )

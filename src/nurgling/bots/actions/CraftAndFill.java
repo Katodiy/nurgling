@@ -2,7 +2,6 @@ package nurgling.bots.actions;
 
 import haven.GItem;
 import haven.Gob;
-import haven.WItem;
 import haven.Window;
 import nurgling.*;
 import nurgling.bots.tools.CraftCommand;
@@ -12,7 +11,6 @@ import nurgling.tools.Finder;
 import nurgling.tools.NArea;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class CraftAndFill implements Action {
     @Override
@@ -77,7 +75,7 @@ public class CraftAndFill implements Action {
                                 return new Results ( Results.Types.NO_FREE_SPACE );
                             }
                             Thread.sleep ( 500 );
-                            int current =  gui.getInventory ().getItems ( data.item ).size ();
+                            int current =  gui.getInventory ().getWItems( data.item ).size ();
                             needed = data.count - current;
 //                            System.out.println ( "neded" + data.item.keys.get ( 0 ) + needed );
                             if ( needed <= 0 ) {
@@ -97,7 +95,7 @@ public class CraftAndFill implements Action {
                     if ( needed > 0 ) {
                         for ( Ingredient datarev : command.ingredients ) {
                             NUtils.ContainerProp irevcontainer = NUtils.getContainerType ( datarev.area_out);
-                            if ( !gui.getInventory ().getItems ( datarev.item ).isEmpty () ) {
+                            if ( !gui.getInventory ().getWItems( datarev.item ).isEmpty () ) {
                                 if ( !irevcontainer.cap.contains ( "Stockpile" ) ) {
                                     new TransferItemsToContainers ( fullMark, datarev.area_out, irevcontainer.name,
                                             irevcontainer.cap, datarev.item ).run ( gui );

@@ -225,7 +225,7 @@ public class NInventory extends Inventory {
         return false;
     }
 
-    public ArrayList<GItem> getItems(
+    public ArrayList<GItem> getWItems(
             final NAlias names,
             double q
     ) {
@@ -244,7 +244,7 @@ public class NInventory extends Inventory {
         return result;
     }
 
-    public ArrayList<GItem> getItems(
+    public ArrayList<GItem> getWItems(
             Class<?> cl
     ) {
         waitLoading();
@@ -260,7 +260,7 @@ public class NInventory extends Inventory {
         return result;
     }
 
-    public ArrayList<GItem> getItems(
+    public ArrayList<GItem> getWItems(
             final NAlias names,
             double q,
             boolean isMore
@@ -272,7 +272,7 @@ public class NInventory extends Inventory {
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
                 /// Для каждого найденго в компонентах предмета осуществляется проверка на его соответствие ключу
-                if (NUtils.isIt((WItem) widget, names) || (NUtils.isItInfo(((WItem) widget).item, names)))
+                if (NUtils.isIt((WItem) widget, names))
                 {
                     if (isMore) {
                         if ((((NGItem)((WItem) widget).item).quality()) >= q) {
@@ -289,7 +289,36 @@ public class NInventory extends Inventory {
         return result;
     }
 
-    public ArrayList<GItem> getItems(
+    public ArrayList<GItem> getGItems(
+            final NAlias names,
+            double q,
+            boolean isMore
+    )
+            throws InterruptedException {
+        waitLoading();
+        ArrayList<GItem> result = new ArrayList<>();
+        /// Рзбираются компоненты инвентаря
+        for (Widget widget = child; widget != null; widget = widget.next) {
+            if (widget instanceof WItem) {
+                /// Для каждого найденго в компонентах предмета осуществляется проверка на его соответствие ключу
+                if (NUtils.checkName(((NGItem)((NWItem) widget).item).name(), names))
+                {
+                    if (isMore) {
+                        if ((((NGItem)((WItem) widget).item).quality()) >= q) {
+                            result.add(((WItem) widget).item);
+                        }
+                    } else {
+                        if  ((((NGItem)((WItem) widget).item).quality()) <= q) {
+                            result.add(((WItem) widget).item);
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public ArrayList<GItem> getWItems(
     ) throws InterruptedException {
         waitLoading();
         ArrayList<GItem> result = new ArrayList<>();
@@ -344,7 +373,23 @@ public class NInventory extends Inventory {
         return result;
     }
 
-    public ArrayList<GItem> getItems(
+    public ArrayList<GItem> getWItems(
+            NAlias name
+    ) {
+        waitLoading();
+        ArrayList<GItem> result = new ArrayList<>();
+        for (Widget widget = child; widget != null; widget = widget.next) {
+            if (widget instanceof WItem) {
+                NGItem wdg = (NGItem) ((WItem) widget).item;
+                if (NUtils.checkName(wdg.res.get().name, name)) {
+                    result.add(wdg);
+                }
+            }
+        }
+        return result;
+    }
+
+    public ArrayList<GItem> getGItems(
             NAlias name
     ) {
         waitLoading();

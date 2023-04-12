@@ -1,7 +1,6 @@
 package nurgling.bots.actions;
 
 import haven.GItem;
-import haven.WItem;
 
 import nurgling.*;
 import nurgling.bots.tools.InContainer;
@@ -67,7 +66,7 @@ public class TakeMaxFromContainers implements Action {
                 if (!NUtils.checkName(cap, "Stockpile")) {
                     if (new OpenTargetContainer(in.gob, cap).run(gui).type == Results.Types.SUCCESS) {
 
-                        ArrayList<GItem> witems = gui.getInventory(cap).getItems(items);
+                        ArrayList<GItem> witems = gui.getInventory(cap).getWItems(items);
                         for(GItem item : witems) {
                             if (!NUtils.transferItem(gui.getInventory(cap), item, gui.getInventory())) {
                                 return new Results(Results.Types.SUCCESS);

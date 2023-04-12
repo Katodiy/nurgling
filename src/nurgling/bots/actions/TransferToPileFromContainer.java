@@ -38,7 +38,7 @@ public class TransferToPileFromContainer implements Action {
                 while (res.type == Results.Types.FULL);
             }
         }
-        if ( !gui.getInventory ().getItems ( items ).isEmpty () ) {
+        if ( !gui.getInventory ().getWItems( items ).isEmpty () ) {
             if(out==null) {
                 new TransferToPile(output, NHitBox.getByName(oname.keys.get(0)), oname, items).run(gui);
             }else {

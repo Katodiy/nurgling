@@ -2,7 +2,6 @@ package nurgling.bots.actions;
 
 import haven.GItem;
 import haven.Gob;
-import haven.WItem;
 import nurgling.*;
 import nurgling.NExceptions.NoFreeSpace;
 import nurgling.tools.AreasID;
@@ -37,7 +36,7 @@ public class TransferToPile implements Action {
         {
             name = new NAlias("gfx/terobjs/stockpile-leaf");
         }
-        if (!gui.getInventory().getItems(items).isEmpty()) {
+        if (!gui.getInventory().getWItems(items).isEmpty()) {
             if (area == null)
                 area = Finder.findNearestMark(id);
             if (area != null) {
@@ -57,7 +56,7 @@ public class TransferToPile implements Action {
                         break;
                     }
                 }
-                ArrayList<GItem> witems = gui.getInventory().getItems(items);
+                ArrayList<GItem> witems = gui.getInventory().getWItems(items);
                 boolean qIsFind = false;
                 for (GItem witem : witems) {
                     if (((NGItem)witem).quality() >= q) {
@@ -82,7 +81,7 @@ public class TransferToPile implements Action {
                     }
                 }
                 NUtils.transferAlltoStockPile(items, q);
-                if (!gui.getInventory().getItems(items, q).isEmpty()) {
+                if (!gui.getInventory().getWItems(items, q).isEmpty()) {
                     run(gui);
                 }
             }

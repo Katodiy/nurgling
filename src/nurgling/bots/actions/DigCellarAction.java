@@ -2,7 +2,6 @@ package nurgling.bots.actions;
 
 import haven.GItem;
 import haven.Gob;
-import haven.WItem;
 
 import nurgling.NAlias;
 import nurgling.NGameUI;
@@ -19,7 +18,7 @@ public class DigCellarAction implements Action {
             throws InterruptedException {
         
         Gob cellar = Finder.findObject ( new NAlias( "cellar" ) );
-        ArrayList<GItem> saved = gui.getInventory ().getItems ();
+        ArrayList<GItem> saved = gui.getInventory ().getWItems();
         while ( Finder.findObject ( new NAlias ( "cellar" ) ) != null ) {
             if ( NUtils.getStamina() <= 0.35 ) {
                 new Drink ( 0.9, false ).run ( gui );
@@ -39,8 +38,8 @@ public class DigCellarAction implements Action {
                         SelectFlowerAction.Types.Gob ).run ( gui );
                 NUtils.waitEvent ( () -> NUtils.getProg() >= 0, 120 );
                 
-                while ( NUtils.getProg() >= 0 || gui.getInventory ().getItems ().size () != saved.size () ) {
-                    for ( GItem item : gui.getInventory ().getItems () ) {
+                while ( NUtils.getProg() >= 0 || gui.getInventory ().getWItems().size () != saved.size () ) {
+                    for ( GItem item : gui.getInventory ().getWItems() ) {
                         if ( !saved.contains ( item ) ) {
                             NUtils.drop ( item );
                         }
@@ -48,7 +47,7 @@ public class DigCellarAction implements Action {
                 }
             }
             while ( Finder.findObject ( new NAlias ( "bumlings" ) ) != null );
-            for ( GItem item : gui.getInventory ().getItems () ) {
+            for ( GItem item : gui.getInventory ().getWItems() ) {
                 if ( !saved.contains ( item ) ) {
                     NUtils.drop ( item );
                 }

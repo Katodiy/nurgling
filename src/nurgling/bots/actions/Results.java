@@ -3,7 +3,7 @@ package nurgling.bots.actions;
 import nurgling.NUtils;
 
 public class Results {
-    Results(Types type ) {
+    public Results(Types type) {
         if ( type != Types.SUCCESS ) {
             NUtils.getGameUI ().msg ( type.toString () );
         }

@@ -45,7 +45,7 @@ public class TakeItemsFromBarter implements Action {
                                 for ( int i = 0 ; i < count ; i++ ) {
                                     sb.bbtn.click ();
                                     int finalI = i + 1;
-                                    NUtils.waitEvent ( () -> gui.getInventory ().getItems ( items ).size () >= ( finalI ),
+                                    NUtils.waitEvent ( () -> gui.getInventory ().getWItems( items ).size () >= ( finalI ),
                                             60 );
                                 }
                             }
@@ -90,7 +90,7 @@ public class TakeItemsFromBarter implements Action {
                                 sb.bbtn.click ();
                                 int finalI = i + 1;
                                 NUtils.waitEvent (
-                                        () -> gui.getInventory ().getItems ( items ).size () >= ( finalI ),
+                                        () -> gui.getInventory ().getWItems( items ).size () >= ( finalI ),
                                         60 );
                             }
                         }
@@ -99,7 +99,7 @@ public class TakeItemsFromBarter implements Action {
             }
         }
     
-        if (  gui.getInventory ().getItems ( items ).size () >= count  ) {
+        if (  gui.getInventory ().getWItems( items ).size () >= count  ) {
             return new Results ( Results.Types.SUCCESS );
         }
         else {

@@ -1,7 +1,6 @@
 package nurgling.bots.actions;
 
 import haven.GItem;
-import haven.WItem;
 import haven.Window;
 import nurgling.NAlias;
 import nurgling.NGameUI;
@@ -22,9 +21,9 @@ public class TakeMaxFromContainer implements Action {
             if(!NUtils.checkName(cap,"Stockpile")) {
                 ArrayList<GItem> items;
                 if (qMode) {
-                    items = gui.getInventory(cap).getItems(names, q, isMore);
+                    items = gui.getInventory(cap).getWItems(names, q, isMore);
                 } else {
-                    items = gui.getInventory(cap).getItems(names);
+                    items = gui.getInventory(cap).getWItems(names);
                 }
 
                 /// Переносим предметы в инвентарь

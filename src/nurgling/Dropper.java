@@ -1,7 +1,6 @@
 package nurgling;
 
 import haven.GItem;
-import haven.WItem;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -11,7 +10,7 @@ public class Dropper implements Runnable {
     public Dropper(NGameUI gui, NAlias regEx )
             throws InterruptedException {
         this.gui = gui;
-        saved = gui.getInventory ().getItems ();
+        saved = gui.getInventory ().getWItems();
         this.regEx = regEx;
     }
     
@@ -20,7 +19,7 @@ public class Dropper implements Runnable {
         try {
             while ( isAlive.get () ) {
                 Thread.sleep ( 500 );
-                ArrayList<GItem> items = gui.getInventory ().getItems ();
+                ArrayList<GItem> items = gui.getInventory ().getWItems();
                 for(GItem item:items){
                     if(!saved.contains ( item ))
                         if(!NUtils.isIt ( item,regEx ))

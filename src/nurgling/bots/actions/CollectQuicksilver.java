@@ -60,7 +60,7 @@ public class CollectQuicksilver implements Action {
                 /// Собираем ртуть
                 new PathFinder( gui, gob ).run ();
                 new OpenTargetContainer ( gob, cap ).run ( gui );
-                ArrayList<GItem> items = gui.getInventory ( cap ).getItems ( new NAlias ( "mercury" ) );
+                ArrayList<GItem> items = gui.getInventory ( cap ).getWItems( new NAlias ( "mercury" ) );
                 for ( GItem item : items ) {
                     item.wdgmsg ( "itemact", 0 );
                     while ( gui.getInventory ( cap ).findItem ( item ) ) {

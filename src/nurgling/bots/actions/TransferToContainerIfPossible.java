@@ -1,7 +1,6 @@
 package nurgling.bots.actions;
 
 import haven.GItem;
-import haven.WItem;
 import haven.Window;
 
 import nurgling.NAlias;
@@ -22,7 +21,7 @@ public class TransferToContainerIfPossible implements Action {
         if ( spwnd != null ) {
             /// Находим все необходимые предметы в инвентаре
             ArrayList<GItem> items;
-            items = gui.getInventory ().getItems ( names );
+            items = gui.getInventory ().getWItems( names );
             if(aFreeSpace==-1) {
                 /// Переносим предметы в контейнер
                 for ( GItem item : items ) {

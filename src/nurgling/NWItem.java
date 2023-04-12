@@ -117,9 +117,9 @@ public class NWItem extends WItem {
             if(item.parent instanceof NInventory) {
                 Collection<GItem> items;
                 if (((NGItem) item).isSeached) {
-                    items = ((NInventory) item.parent).getItems(Highlighting.class);
+                    items = ((NInventory) item.parent).getWItems(Highlighting.class);
                 } else {
-                    items = ((NInventory) item.parent).getItems(new NAlias(((NGItem) item).name()));
+                    items = ((NInventory) item.parent).getWItems(new NAlias(((NGItem) item).name()));
                 }
                 for(GItem item : items)
                 {
@@ -131,9 +131,9 @@ public class NWItem extends WItem {
             Collection<GItem> items;
             if (item.parent instanceof NInventory) {
                 if (((NGItem) item).isSeached) {
-                    items = ((NInventory) item.parent).getItems(Highlighting.class);
+                    items = ((NInventory) item.parent).getWItems(Highlighting.class);
                 } else {
-                    items = ((NInventory) item.parent).getItems(new NAlias(((NGItem) item).name()));
+                    items = ((NInventory) item.parent).getWItems(new NAlias(((NGItem) item).name()));
                 }
                 for(GItem item : items)
                 {

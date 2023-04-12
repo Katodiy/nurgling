@@ -1,7 +1,6 @@
 package nurgling.bots.actions;
 
 import haven.GItem;
-import haven.WItem;
 import nurgling.NAlias;
 import nurgling.NGameUI;
 import nurgling.NUtils;
@@ -48,7 +47,7 @@ public class RestoreRod implements Action {
             }
             new UseItemOnItem ( bait_item, rod ).run ( gui );
         }
-        if ( gui.getInventory ().getItems ( bait_item ).size () < target_count ) {
+        if ( gui.getInventory ().getWItems( bait_item ).size () < target_count ) {
             if ( !Finder.findObjectsInArea (
                     new NAlias ( new ArrayList<> ( Arrays.asList ( "stockpile-soil", "stockpile" + "-trash" ) ) ),
                     baits ).isEmpty () ) {
@@ -60,7 +59,7 @@ public class RestoreRod implements Action {
                 new TakeFromContainers ( fishline_prop.name, bait_item, target_count, baits, fishline_prop.cap ).run ( gui );
             }
         }
-        if ( gui.getInventory ().getItems ( bait_item ).size () < target_count ) {
+        if ( gui.getInventory ().getWItems( bait_item ).size () < target_count ) {
             return new Results ( Results.Types.NO_ITEMS );
         }
         return ( NUtils.checkContent ( rod, new NAlias ( "Fishline" ) ) &&

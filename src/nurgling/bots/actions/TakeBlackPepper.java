@@ -13,7 +13,7 @@ public class TakeBlackPepper implements Action {
     public Results run ( NGameUI gui )
             throws InterruptedException {
         
-        if ( gui.getInventory ().getItems ( new NAlias ( new ArrayList<> ( Arrays.asList ( "pepper" ) ) ) )
+        if ( gui.getInventory ().getWItems( new NAlias ( new ArrayList<> ( Arrays.asList ( "pepper" ) ) ) )
                 .isEmpty () ) {
             new TakeFromBarrels ( AreasID.barrels, 1, new NAlias( new ArrayList<> ( Arrays.asList ( "pepper" ) ) ) )
                     .run ( gui );

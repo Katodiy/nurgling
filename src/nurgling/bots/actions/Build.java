@@ -107,7 +107,7 @@ public class Build implements Action {
                                 Results.Types.SUCCESS ) {
                             return new Results ( Results.Types.NO_ITEMS );
                         }
-                        int current = gui.getInventory ().getItems ( data.item ).size ();
+                        int current = gui.getInventory ().getWItems( data.item ).size ();
                         taked = taked - current;
                     }
                     else if ( NUtils.checkName ( "board", data.item ) &&
@@ -119,7 +119,7 @@ public class Build implements Action {
                                     Results.Types.SUCCESS ) {
                                 return new Results ( Results.Types.NO_ITEMS );
                             }
-                        int current = gui.getInventory ().getItems ( data.item ).size ();
+                        int current = gui.getInventory ().getWItems( data.item ).size ();
                         taked = taked - current;
                     }
                     else if ( NUtils.checkName ( "block", data.item ) &&
@@ -131,7 +131,7 @@ public class Build implements Action {
                                     Results.Types.SUCCESS ) {
                                 return new Results ( Results.Types.NO_ITEMS );
                             }
-                        int current = gui.getInventory ().getItems ( data.item ).size ();
+                        int current = gui.getInventory ().getWItems( data.item ).size ();
                         taked = taked - current;
                     }
                     else if ( NUtils.checkName ( "stone", data.item ) &&
@@ -171,7 +171,7 @@ public class Build implements Action {
                                         Results.Types.FULL) {
                                     return new Results(Results.Types.NO_FREE_SPACE);
                                 }
-                                int current = (NUtils.checkName("stone", data.item)) ? fs - gui.getInventory().getFreeSpace() : gui.getInventory().getItems(data.item).size();
+                                int current = (NUtils.checkName("stone", data.item)) ? fs - gui.getInventory().getFreeSpace() : gui.getInventory().getWItems(data.item).size();
                                 taked = taked - current;
                                 if (taked <= 0) {
                                     Window wnd = gui.getWindow(icontainer.cap);
@@ -188,7 +188,7 @@ public class Build implements Action {
                         for ( Ingredient datarev : command.ingredients ) {
                             NUtils.ContainerProp irevcontainer = NUtils.getContainerType ( datarev.inarea );
                             if ( irevcontainer.name != null ) {
-                                if ( !gui.getInventory ().getItems ( datarev.item ).isEmpty () ) {
+                                if ( !gui.getInventory ().getWItems( datarev.item ).isEmpty () ) {
                                     if ( !irevcontainer.cap.contains ( "Stockpile" ) ) {
                                         new TransferItemsToContainers ( 1024, datarev.inarea, irevcontainer.name,
                                                 irevcontainer.cap, datarev.item ).run ( gui );
@@ -205,7 +205,7 @@ public class Build implements Action {
                     }
                     else {
                         if ( !NUtils.checkName ( "stone", data.item ) ) {
-                            needed[num] -= gui.getInventory ().getItems ( data.item ).size ();
+                            needed[num] -= gui.getInventory ().getWItems( data.item ).size ();
                         }
                     }
                 }

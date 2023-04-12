@@ -1,7 +1,6 @@
 package nurgling.bots.actions;
 
 import haven.GItem;
-import haven.WItem;
 import nurgling.NAlias;
 import nurgling.NGameUI;
 import nurgling.bots.tools.AItem;
@@ -18,7 +17,7 @@ public class TransferCheese implements Action {
     public Results run ( NGameUI gui )
             throws InterruptedException {
         new CollectQuicksilver ().run ( gui );
-        ArrayList<GItem> items = gui.getInventory().getItems(cheese);
+        ArrayList<GItem> items = gui.getInventory().getWItems(cheese);
         for(GItem item : items){
             AItem ingredient = Ingredient.get(item);
             NAlias name = new NAlias(item.res.get().name);

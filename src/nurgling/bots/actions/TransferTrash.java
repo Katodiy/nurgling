@@ -1,7 +1,6 @@
 package nurgling.bots.actions;
 
 import haven.GItem;
-import haven.WItem;
 import nurgling.NAlias;
 import nurgling.NGameUI;
 import nurgling.NHitBox;
@@ -17,14 +16,14 @@ public class TransferTrash implements Action {
             throws InterruptedException {
     
         ArrayList<GItem> items = gui.getInventory ()
-                                    .getItems ( new NAlias( new ArrayList<String> ( Arrays.asList ( "entrails" ) ) ),
+                                    .getWItems( new NAlias( new ArrayList<String> ( Arrays.asList ( "entrails" ) ) ),
                                             AreasID.getTh(AreasID.entr), false );
         /// Переносим предметы в инвентарь
         for ( GItem item : items ) {
             NUtils.drop ( item );
         }
 
-        ArrayList<GItem> items2 = gui.getInventory ().getItems (
+        ArrayList<GItem> items2 = gui.getInventory ().getWItems(
                 new NAlias ( new ArrayList<String> ( Arrays.asList ( "intestines" ) ) ), AreasID.getTh(AreasID.inten), false );
         /// Переносим предметы в инвентарь
         
@@ -40,7 +39,7 @@ public class TransferTrash implements Action {
         new TransferToPile ( AreasID.entr, NHitBox.getByName ( "stockpile" ), new NAlias ( "stockpile" ),
                 new NAlias ( new ArrayList<> ( Arrays.asList ( "entrails" ) ) ) ).run ( gui );
         NUtils.waitEvent (
-                () -> !gui.getInventory ().getItems ( new NAlias ( new ArrayList<> ( Arrays.asList ( "entrails" ) ) ) )
+                () -> !gui.getInventory ().getWItems( new NAlias ( new ArrayList<> ( Arrays.asList ( "entrails" ) ) ) )
                           .isEmpty (), 5 );
         
         return new Results ( Results.Types.SUCCESS );

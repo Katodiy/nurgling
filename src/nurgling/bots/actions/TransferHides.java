@@ -1,14 +1,11 @@
 package nurgling.bots.actions;
 
 import haven.GItem;
-import haven.Gob;
 
-import haven.WItem;
 import nurgling.*;
 import nurgling.bots.tools.AItem;
 import nurgling.bots.tools.Ingredient;
 import nurgling.tools.AreasID;
-import nurgling.tools.Finder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,7 +18,7 @@ public class TransferHides implements Action {
     public Results run ( NGameUI gui )
             throws InterruptedException {
 
-        ArrayList<GItem> items = gui.getInventory().getItems(hides);
+        ArrayList<GItem> items = gui.getInventory().getWItems(hides);
         for(GItem item : items){
             AItem ingredient = Ingredient.get(item);
             NAlias name = new NAlias(NUtils.getInfo(item));

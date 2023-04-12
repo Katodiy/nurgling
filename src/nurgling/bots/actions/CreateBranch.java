@@ -2,7 +2,6 @@ package nurgling.bots.actions;
 
 import haven.Coord;
 import haven.GItem;
-import haven.WItem;
 
 import nurgling.NAlias;
 import nurgling.NGameUI;
@@ -10,7 +9,6 @@ import nurgling.NUtils;
 import nurgling.tools.Finder;
 import nurgling.tools.NArea;
 
-import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -40,11 +38,11 @@ public class CreateBranch implements Action {
             if (block == null) {
                 return new Results(Results.Types.NO_ITEMS);
             }
-            int oldSize = gui.getInventory().getItems(new NAlias("branch")).size();
+            int oldSize = gui.getInventory().getWItems(new NAlias("branch")).size();
             new SelectFlowerAction(block, "Split", SelectFlowerAction.Types.Inventory).run(gui);
-            NUtils.waitEvent(() -> gui.getInventory().getItems(new NAlias("branch")).size() == oldSize+5, 50);
+            NUtils.waitEvent(() -> gui.getInventory().getWItems(new NAlias("branch")).size() == oldSize+5, 50);
         }
-        if ( gui.getInventory ().getItems ( new NAlias ( "branch" ) ).size () > 0 ) {
+        if ( gui.getInventory ().getWItems( new NAlias ( "branch" ) ).size () > 0 ) {
             return new Results ( Results.Types.SUCCESS );
         }
         else {

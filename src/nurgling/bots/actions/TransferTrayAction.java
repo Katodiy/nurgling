@@ -13,7 +13,6 @@ import nurgling.tools.Finder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.Objects;
 
 import static nurgling.bots.CheesedShedule.read;
 import static nurgling.bots.CheesedShedule.write;
@@ -92,7 +91,7 @@ public class TransferTrayAction implements Action {
         int num = Math.min(status.left,gui.getInventory().getNumberFreeCoord(new Coord(2,1))-((status.name.contains(task.target))?3:1));
         new TakeFromContainers(new NAlias("chest"), new NAlias(new ArrayList<>(Arrays.asList("branch"))),num
                 , id, "Chest").run(gui);
-        num = Math.min(num, gui.getInventory().getItems(new NAlias("branch")).size());
+        num = Math.min(num, gui.getInventory().getWItems(new NAlias("branch")).size());
         new PathFinder(gui, gob).run();
         new OpenTargetContainer(gob, "Barter Stand").run(gui);
         Window spwnd = gui.getWindow("Barter Stand");
@@ -104,10 +103,10 @@ public class TransferTrayAction implements Action {
                     NUtils.waitEvent(()->sb.price != null && sb.spr != null, 10);
                     if (sb.price != null && sb.spr != null && NUtils.isIt(sb.res, new NAlias("cheesetray")) && status.name.contains(NUtils.getContentName(sb.info()))) {
                         while (sb.spr != null && NUtils.getContentName(sb.info()) != null && status.name.contains(NUtils.getContentName(sb.info())) && transfered < num) {
-                            int count = gui.getInventory().getItems(new NAlias("cheesetray")).size();
+                            int count = gui.getInventory().getWItems(new NAlias("cheesetray")).size();
                             sb.bbtn.click();
-                            NUtils.waitEvent(() -> gui.getInventory().getItems(new NAlias("cheesetray")).size() == count + 1, 60);
-                            if (gui.getInventory().getItems(new NAlias("cheesetray")).size() == count + 1)
+                            NUtils.waitEvent(() -> gui.getInventory().getWItems(new NAlias("cheesetray")).size() == count + 1, 60);
+                            if (gui.getInventory().getWItems(new NAlias("cheesetray")).size() == count + 1)
                                 transfered++;
                             NUtils.waitEvent(()->sb.price != null && sb.spr != null, 10);
                         }
@@ -124,7 +123,7 @@ public class TransferTrayAction implements Action {
         else
         {
             int count = 0;
-            for(GItem item: gui.getInventory().getItems(new NAlias("cheesetray")))  {
+            for(GItem item: gui.getInventory().getWItems(new NAlias("cheesetray")))  {
                 if(NUtils.checkName(NUtils.getContentName(item.info()),task.target)) {
                     new SelectFlowerAction(item, "Slice up", SelectFlowerAction.Types.Inventory).run(gui);
                     NUtils.waitEvent(()->NUtils.getContent(item)==null,50);

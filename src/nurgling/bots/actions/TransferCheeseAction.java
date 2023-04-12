@@ -1,7 +1,6 @@
 package nurgling.bots.actions;
 
 import haven.*;
-import haven.res.ui.barterbox.Shopbox;
 import nurgling.*;
 import nurgling.bots.CheesedShedule;
 import nurgling.bots.tools.OutContainer;
@@ -9,9 +8,6 @@ import nurgling.tools.AreasID;
 import nurgling.tools.Finder;
 
 import java.util.*;
-
-import static nurgling.bots.CheesedShedule.read;
-import static nurgling.bots.CheesedShedule.write;
 
 public class TransferCheeseAction implements Action {
     @Override
@@ -39,7 +35,7 @@ public class TransferCheeseAction implements Action {
                 }
                 if (spwnd != null) {
                     /// Находим все необходимые предметы в контейнере
-                    for (GItem item : gui.getInventory("Rack").getItems()) {
+                    for (GItem item : gui.getInventory("Rack").getWItems()) {
                         NUtils.waitEvent(()->item.spr!=null,10);
                         if (candidates.contains(NUtils.getContentName(item.info()))) {
                             if (!NUtils.transferItem(gui.getInventory("Rack"), item, gui.getInventory())) {

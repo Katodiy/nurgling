@@ -10,8 +10,6 @@ import haven.res.ui.croster.CattleId;
 import haven.res.ui.croster.Entry;
 import haven.res.ui.croster.RosterWindow;
 import haven.res.ui.tt.defn.DefName;
-import haven.res.ui.tt.q.qbuff.QBuff;
-import haven.res.ui.tt.q.quality.Quality;
 import nurgling.bots.*;
 import nurgling.bots.actions.UseItemOnItem;
 import nurgling.bots.actions.WaitAction;
@@ -417,11 +415,7 @@ public class NUtils {
                 Resource res = null;
                 res = item.item.getres();
                 if (res != null) {
-                    /// Проверяем имя на соответствие
-                    if(((NGItem)item.item).name()!=null)
-                        return checkName(res.name, regEx) || checkName(((NGItem)item.item).name(), regEx);
-                    else
-                        return checkName(res.name, regEx);
+                    return checkName(res.name, regEx);
                 }
             } catch (Loading e) {
             }
@@ -908,18 +902,7 @@ public class NUtils {
     public static String getInfo(
             final GItem item
     ) {
-        if (item != null) {
-            try {
-                /// Запрашиваем информацию по предмету
-                for (ItemInfo info : item.info()) {
-                    if (info instanceof ItemInfo.Name) {
-                        return ((ItemInfo.Name) info).str.text;
-                    }
-                }
-            } catch (Loading e) {
-            }
-        }
-        return null;
+        return ((NGItem)item).defn;
     }
 
     public static String getInfo(
@@ -1423,7 +1406,7 @@ public class NUtils {
             if (sp instanceof NISBox) {
                 /// Для каждого элемента из списка кандидатов выполняем процедуру переноса
                 /// Находим предмет в инвентаре
-                ArrayList<GItem> wItems = gameUI.getInventory().getItems(names);
+                ArrayList<GItem> wItems = gameUI.getInventory().getWItems(names);
                 /// Вычисляем оставшееся свободное место в пайле
                 for (GItem wItem : wItems) {
                     if(((NGItem)wItem).quality()>=q) {
@@ -1550,7 +1533,7 @@ public class NUtils {
     }
 
     static boolean findBundle() throws InterruptedException {
-        for(GItem item : gameUI.getInventory().getItems()) {
+        for(GItem item : gameUI.getInventory().getWItems()) {
             if (item.contents != null) {
                 return true;
             }
@@ -1559,7 +1542,7 @@ public class NUtils {
     }
 
     static void destroyAllBundle() throws InterruptedException {
-        for(GItem item : gameUI.getInventory().getItems()) {
+        for(GItem item : gameUI.getInventory().getWItems()) {
             if (item.contents != null) {
                 item.wdgmsg("iact", item.sz, 3);
                 NUtils.waitEvent(()->NUtils.getGameUI().getInventory().wmap.get(item)==null,50,10);

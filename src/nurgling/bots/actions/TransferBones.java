@@ -1,7 +1,6 @@
 package nurgling.bots.actions;
 
 import haven.GItem;
-import haven.WItem;
 
 import nurgling.NAlias;
 import nurgling.NGameUI;
@@ -13,7 +12,6 @@ import nurgling.tools.AreasID;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
 
 public class TransferBones implements Action {
     @Override
@@ -26,7 +24,7 @@ public class TransferBones implements Action {
                         "antlers" + "-reddeer", "tusk" ) ),
                 new ArrayList<> ( Arrays.asList ( "saw", "finebonering", "borewormbeak","glue" ) ) );
         
-        ArrayList<GItem> ditems = gui.getInventory ().getItems ( bones, AreasID.getTh(AreasID.lqbone), false );
+        ArrayList<GItem> ditems = gui.getInventory ().getWItems( bones, AreasID.getTh(AreasID.lqbone), false );
         /// Переносим предметы в инвентарь
         
         for ( GItem item : ditems ) {
@@ -34,7 +32,7 @@ public class TransferBones implements Action {
         }
 
 
-        ArrayList<GItem> items = gui.getInventory().getItems(bones);
+        ArrayList<GItem> items = gui.getInventory().getWItems(bones);
         for (GItem item : items) {
             AItem ingredient = Ingredient.get(item);
             NAlias name = new NAlias(NUtils.getInfo(item));
@@ -48,7 +46,7 @@ public class TransferBones implements Action {
         if(AreasID.get(AreasID.hqbone)!=null) {
             /// Высокое качество
             double th = AreasID.getTh(AreasID.hqbone);
-            if (gui.getInventory().getItems(bones, th, true).size() > 0) {
+            if (gui.getInventory().getWItems(bones, th, true).size() > 0) {
 
                 new TransferItemsToBarter(AreasID.hqbone, bones, false, th).run(gui);
 

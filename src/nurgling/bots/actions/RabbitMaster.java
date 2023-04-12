@@ -3,7 +3,6 @@ package nurgling.bots.actions;
 import haven.Coord;
 import haven.GItem;
 import haven.Gob;
-import haven.WItem;
 import nurgling.*;
 import nurgling.tools.AreasID;
 import nurgling.tools.Finder;
@@ -79,7 +78,7 @@ public class RabbitMaster implements Action {
             RabbitCoop curRabbitHutch = new RabbitCoop ( gob, ((NGItem)buck).quality() );
             
             /// Получаем инфо по зайчихам
-            ArrayList<GItem> curdoes = gui.getInventory ( "Rabbit Hutch" ).getItems ( new NAlias ( "rabbit-doe" ) );
+            ArrayList<GItem> curdoes = gui.getInventory ( "Rabbit Hutch" ).getWItems( new NAlias ( "rabbit-doe" ) );
             for ( GItem hen : curdoes ) {
                 curRabbitHutch.bunnies.add ( ((NGItem)hen).quality() );
             }
@@ -97,12 +96,12 @@ public class RabbitMaster implements Action {
                 return new Results ( Results.Types.OPEN_FAIL );
             }
             /// Получаем инфо по зайчихам
-            ArrayList<GItem> curdoes = gui.getInventory ( "Rabbit Hutch" ).getItems ( new NAlias ( "rabbit-doe" ) );
+            ArrayList<GItem> curdoes = gui.getInventory ( "Rabbit Hutch" ).getWItems( new NAlias ( "rabbit-doe" ) );
             for ( GItem hen : curdoes ) {
                 qdoes.add ( ((NGItem)hen).quality() );
             }
             /// Получаем инфо по зайцам
-            ArrayList<GItem> curbucks = gui.getInventory ( "Rabbit Hutch" ).getItems ( new NAlias ( "rabbit-buck" ) );
+            ArrayList<GItem> curbucks = gui.getInventory ( "Rabbit Hutch" ).getWItems( new NAlias ( "rabbit-buck" ) );
             for ( GItem roost : curbucks ) {
                 qbucks.add ( ((NGItem)roost).quality() );
             }
@@ -217,7 +216,7 @@ public class RabbitMaster implements Action {
                             current_quality = ((NGItem)lqhen).quality();
                             /// Обновляем данные по зайчихам
                             Thread.sleep ( 300 );
-                            ArrayList<GItem> newcurhens = gui.getInventory ( "Rabbit Hutch" ).getItems ( new NAlias ( "rabbit-doe" ) );
+                            ArrayList<GItem> newcurhens = gui.getInventory ( "Rabbit Hutch" ).getWItems( new NAlias ( "rabbit-doe" ) );
                             does.get ( j ).bunnies = new ArrayList<> ();
                             for ( GItem hen : newcurhens ) {
                                 does.get ( j ).bunnies.add ( ((NGItem)hen).quality() );
