@@ -190,10 +190,10 @@
     <copy todir="release/" file="etc/tile_names.json" />
     <copy todir="release/" file="build/hafen.jar" />
     <copy todir="release/" file="etc/run.bat" />
-    <copy todir="release/" file="etc/run-updater.bat" />
+    <copy todir="release/" file="etc/run_updater.bat" />
   </target>
 
-  <property name="version.num" value="0.043"/>
+  <property name="version.num" value="0.044"/>
   <target name="version" depends="pre-release">
     <buildnumber file="build.num"/>
     <exec executable="java" failifexecutionfails="false">

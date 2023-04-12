@@ -22,7 +22,7 @@ import nurgling.json.parser.ParseException;
 import nurgling.tools.AreasID;
 
 public class NConfiguration {
-    public boolean showDebugInfo = true;
+    public boolean showDebugInfo = false;
     public static final Text.Foundry fnd = new Text.Foundry(Text.sans, 14);
     public boolean isVerified = false;
     public boolean isSubscribed = false;
