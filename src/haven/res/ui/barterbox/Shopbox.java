@@ -88,7 +88,7 @@ public class Shopbox extends Widget implements ItemInfo.SpriteOwner, GSprite.Own
 	}
     };
 
-    public void draw(GOut g) {
+	public void draw(GOut g) {
 	g.image(bg, Coord.z);
 	sprite: {
 	    ResData res = this.res;

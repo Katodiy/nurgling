@@ -612,7 +612,7 @@ public class NInventory extends Inventory {
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
                 NGItem item = ((NGItem) ((WItem) widget).item);
-                if ( (item.getStatus() & NGItem.NAME_IS_READY) == 0)
+                if ( (item.getStatus() & NGItem.NAME_IS_READY) == 0 || (item.getStatus() & NGItem.SPR_IS_READY) == 0)
                     return false;
             }
         }
@@ -751,7 +751,7 @@ public class NInventory extends Inventory {
 
     void waitLoading(){
         try {
-            NUtils.waitEvent(this::isLoaded,50);
+            NUtils.waitEvent(this::isLoaded,500);
         } catch (InterruptedException ignored) {
         }
     }

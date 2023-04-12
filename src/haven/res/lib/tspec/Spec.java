@@ -60,7 +60,8 @@ public class Spec implements GSprite.Owner, ItemInfo.SpriteOwner {
     }
 
     public String name() {
-	GSprite spr = spr();
+	GSprite spr;
+    spr = spr();
 	ItemInfo.Name nm = ItemInfo.find(ItemInfo.Name.class, info());
 	if(nm == null)
 	    return(null);

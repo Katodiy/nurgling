@@ -30,7 +30,7 @@ import nurgling.NCharlist;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class RemoteUI implements UI.Receiver, UI.Runner {
+public class  RemoteUI implements UI.Receiver, UI.Runner {
     public final Session sess;
     private Session ret;
 	

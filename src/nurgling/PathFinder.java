@@ -394,12 +394,14 @@ public class PathFinder {
     }
 
     private Edge setStartAndEnd() throws InterruptedException {
+        int i_f, j_f;
         Edge result = new Edge();
         Coord2d start = gui.map.player().rc;
         for (int i = 0; i < map.array.length; i += 1) {
             for (int j = 0; j < map.array.length; j += 1) {
 
                 if (NMap.checkIn(map.array[i][j], start)) {
+                    i_f = i; j_f = j;
                     if (!map.array[i][j].isFree) {
                         if((horseMode && map.array[i][j].id.contains(horse.id))){
                             result.start = map.array.length * i + j;
@@ -436,6 +438,36 @@ public class PathFinder {
                                 if(count==11) {
                                     if(cell_half == 1.375 && cell_num >=cell_max)
                                     {
+                                        boolean isFound = false;
+                                        for(int k = 1; k <7; k++)
+                                        {
+                                            for(int ii = i_f - k; ii <i_f+k; ii++) {
+                                                if (checkVertex(map.array[ii][j_f - k].center, i, j, result)) {
+                                                    isFound = true;
+                                                    break;
+                                                }
+                                                if (checkVertex(map.array[ii][j_f + k].center, i, j, result)) {
+                                                    isFound = true;
+                                                    break;
+                                                }
+                                            }
+                                            if(isFound)
+                                                break;
+                                            for(int jj = i_f - k + 1; jj <j_f+k -1; jj++) {
+                                                if (checkVertex(map.array[i_f - k][jj].center, i, j, result)) {
+                                                    isFound = true;
+                                                    break;
+                                                }
+                                                if (checkVertex(map.array[i_f + k][jj].center, i, j, result)) {
+                                                    isFound = true;
+                                                    break;
+                                                }
+                                            }
+                                            if(isFound)
+                                                break;
+                                            }
+                                        if(isFound)
+                                            break;
                                         map.print();
                                         gui.msg("PF FAIL");
                                         throw new InterruptedException();

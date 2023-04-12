@@ -39,7 +39,7 @@ public class TransferItemsToBarter implements Action {
                         if ( sp instanceof Shopbox ) {
                             Shopbox sb = ( Shopbox ) sp;
                             if ( sb.price != null ) {
-                                NUtils.waitEvent(()-> sb.price.name()!=null,50);
+                                NUtils.waitEvent(()-> sb.spr!=null,50);
                                 NAlias alias = (!(isInfo)?new NAlias ( ( String ) sb.price.res.res.get ().name ): new NAlias(DefName.getname(sb.price)));
                                 try {
                                     String name = ( String ) sb.price.spr ().getClass ().getField ( "name" )
