@@ -3,20 +3,16 @@ package nurgling;
 import haven.*;
 import haven.Window;
 import haven.res.ui.barterbox.Shopbox;
-import haven.res.ui.tt.tiplabel.TipLabel;
-import haven.res.ui.tt.relcont.RelCont;
-import nurgling.json.parser.ParseException;
+import haven.res.ui.relcnt.RelCont;
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import haven.Button;
 import haven.Label;
-import haven.Window;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -578,9 +574,7 @@ public class NGameUI extends GameUI {
             for (Widget sp = spwnd.lchild; sp != null; sp = sp.prev) {
                 /// Выбираем внутренний контейнер
                 if (sp instanceof RelCont) {
-                    for(Pair<Widget, Supplier<Coord>> pair:((RelCont) sp).childpos)
-                        if(pair.a instanceof TipLabel)
-                            return true;
+                    return true;
                 }
             }
         }
@@ -594,18 +588,23 @@ public class NGameUI extends GameUI {
                 /// Выбираем внутренний контейнер
                 if (sp instanceof RelCont) {
                     for(Pair<Widget, Supplier<Coord>> pair:((RelCont) sp).childpos)
-                        if(pair.a instanceof TipLabel)
-                            for(ItemInfo inf : ((TipLabel)pair.a).info) {
-                                if(inf instanceof ItemInfo.Name) {
-                                    String name = ((ItemInfo.Name) inf).str.text;
-                                    if (NUtils.checkName(name.toLowerCase(), content))
-                                        return Double.parseDouble(name.substring(0, name.indexOf(' ')));
-                                }else if(inf instanceof ItemInfo.AdHoc){
-                                    if (NUtils.checkName(((ItemInfo.AdHoc)inf).str.text, "Empty")) {
-                                        return 0;
+                        if(pair.a.getClass().getName().contains("TipLabel")) {
+                            try {
+                                for(ItemInfo inf : (Collection<ItemInfo>) (pair.a.getClass().getField("info").get(pair.a))) {
+                                    if(inf instanceof ItemInfo.Name) {
+                                        String name = ((ItemInfo.Name) inf).str.text;
+                                        if (NUtils.checkName(name.toLowerCase(), content))
+                                            return Double.parseDouble(name.substring(0, name.indexOf(' ')));
+                                    }else if(inf instanceof ItemInfo.AdHoc){
+                                        if (NUtils.checkName(((ItemInfo.AdHoc)inf).str.text, "Empty")) {
+                                            return 0;
+                                        }
                                     }
                                 }
+                            } catch (NoSuchFieldException | IllegalAccessException e) {
+                                throw new RuntimeException(e);
                             }
+                        }
                 }
             }
         }

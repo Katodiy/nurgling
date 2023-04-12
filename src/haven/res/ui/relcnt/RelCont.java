@@ -1,4 +1,4 @@
-package haven.res.ui.tt.relcont;/* Preprocessed source code */
+package haven.res.ui.relcnt;/* Preprocessed source code */
 import haven.*;
 import java.util.*;
 import java.util.function.*;
