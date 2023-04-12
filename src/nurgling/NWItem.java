@@ -1,10 +1,14 @@
 package nurgling;
 
 import haven.*;
+import haven.res.gfx.hud.rosters.pig.Pig;
+import haven.res.ui.croster.CattleId;
 import haven.res.ui.tt.highlighting.Highlighting;
 import haven.res.ui.tt.q.quality.Quality;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 
 public class NWItem extends WItem {
 
@@ -107,6 +111,19 @@ public class NWItem extends WItem {
         return true;
     }
 
+    Comparator<GItem> cm = new Comparator<GItem>() {
+        @Override
+        public int compare(GItem o1, GItem o2) {
+            return Double.compare(((NGItem)o1).quality(),((NGItem)o2).quality());
+        }
+    };
+    Comparator<GItem> cl = new Comparator<GItem>() {
+        @Override
+        public int compare(GItem o1, GItem o2) {
+            return -Double.compare(((NGItem)o1).quality(),((NGItem)o2).quality());
+        }
+    };
+
 
     @Override
     public boolean mousedown(Coord c, int btn) {
@@ -128,12 +145,16 @@ public class NWItem extends WItem {
             }
             return (true);
         } else if(ui.modshift && ui.modmeta) {
-            Collection<GItem> items;
+            ArrayList<GItem> items;
             if (item.parent instanceof NInventory) {
                 if (((NGItem) item).isSeached) {
                     items = ((NInventory) item.parent).getWItems(Highlighting.class);
                 } else {
                     items = ((NInventory) item.parent).getGItems(new NAlias(((NGItem) item).name()));
+                    if (btn == 1)
+                        items.sort(cl);
+                    else if (btn == 3)
+                        items.sort(cm);
                 }
                 for(GItem item : items)
                 {
