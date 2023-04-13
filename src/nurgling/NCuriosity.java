@@ -104,14 +104,17 @@ public class NCuriosity extends Curiosity implements GItem.OverlayInfo<Tex>{
     public static final Text.Foundry ntimefnd = new Text.Foundry(Text.sans, 9, new java.awt.Color(255, 255, 50));
     @Override
     public Tex overlay() {
-        BufferedImage text = ntimefnd.render(shorttime((int) (remaining() / server_ratio))).img;
-        BufferedImage bi = new BufferedImage(text.getWidth(), text.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D graphics = bi.createGraphics();
-        Color rgb = new Color(0, 0, 0, 115);
-        graphics.setColor(rgb);
-        graphics.fillRect(0, 0, bi.getWidth(), bi.getHeight());
-        graphics.drawImage(text, 0, 0, null);
-        return (new TexI(bi));
+        if(((NGItem)owner).parent!= null && (((NGItem)owner).parent).parent!=null && (((NGItem)owner).parent).parent instanceof Tabs.Tab) {
+            BufferedImage text = ntimefnd.render(shorttime((int) (remaining() / server_ratio))).img;
+            BufferedImage bi = new BufferedImage(text.getWidth(), text.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            Graphics2D graphics = bi.createGraphics();
+            Color rgb = new Color(0, 0, 0, 115);
+            graphics.setColor(rgb);
+            graphics.fillRect(0, 0, bi.getWidth(), bi.getHeight());
+            graphics.drawImage(text, 0, 0, null);
+            return (new TexI(bi));
+        }
+        return null;
     }
 
 

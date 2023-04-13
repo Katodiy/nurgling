@@ -5,6 +5,7 @@ import nurgling.bots.*;
 import nurgling.bots.build.*;
 
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -424,11 +425,34 @@ public class NBotsInfo extends NDraggableWidget implements KeyBinding.Bindable {
      * Класс кнопки активации бота
      */
     class NButton extends NSButton {
-
+        UI.Grab dm = null;
         @Override
         public boolean mousedown(Coord c, int button) {
             NUtils.getUI().pressed = this;
+            dm = ui.grabmouse(this);
             return super.mousedown(c, button);
+        }
+
+        @Override
+        public boolean mouseup(Coord c, int button) {
+            if(dm!=null) {
+                dm.remove();
+                dm = null;
+            }
+            return super.mouseup(c, button);
+        }
+
+        @Override
+        public void draw(GOut g) {
+            super.draw(g);
+            if(NUtils.getUI().dragged == this) {
+                Tex dt = new TexI(cont);
+                ui.drawafter(new UI.AfterDraw() {
+                    public void draw(GOut g) {
+                        g.image(dt, ui.mc.add(dt.sz().div(2).inv()));
+                    }
+                });
+            }
         }
 
         @Override
