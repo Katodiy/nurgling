@@ -85,6 +85,7 @@ public enum AreasID {
         obj.put("data",is);
         try (OutputStreamWriter file = new OutputStreamWriter(Files.newOutputStream(Paths.get((((HashDirCache) ResCache.global).base +"/../" + "./calibr.json" ))), StandardCharsets.UTF_8)) {
             file.write ( obj.toJSONString () );
+            file.close();
         }
         catch ( IOException e ) {
             e.printStackTrace ();

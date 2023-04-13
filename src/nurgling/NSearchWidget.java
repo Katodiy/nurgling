@@ -6,6 +6,8 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -172,7 +174,7 @@ public class NSearchWidget extends Widget {
     }
 
     void write() {
-        try (FileWriter file = new FileWriter(path)) {
+        try (OutputStreamWriter file = new OutputStreamWriter(Files.newOutputStream(Paths.get(path)), StandardCharsets.UTF_8)) {
             for(String key : cmdHistory.keySet())
                 file.write(key+"\n");
             file.close();

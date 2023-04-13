@@ -339,6 +339,7 @@ public class CheesedShedule extends Bot {
         try ( OutputStreamWriter file = new OutputStreamWriter(Files.newOutputStream(Paths.get(path)), StandardCharsets.UTF_8)) {
             //String res = obj.toJSONString();
             file.write(jtasks.toJSONString());
+            file.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

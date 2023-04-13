@@ -59,6 +59,7 @@ public class NCharacterInfo extends Widget {
                 for (String var : varity) {
                     file.write(var+"\n");
                 }
+                file.close();
             }
         }  catch (IOException e) {
             e.printStackTrace();

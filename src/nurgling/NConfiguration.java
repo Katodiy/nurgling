@@ -691,15 +691,17 @@ public class NConfiguration {
         OutputStreamWriter file = null;
 
         try  {
-            file = new OutputStreamWriter(Files.newOutputStream(Paths.get(((HashDirCache) ResCache.global).base + "/../" + "./config.nurgling.json")), StandardCharsets.UTF_8);
+            String path = ((HashDirCache) ResCache.global).base + "\\..\\" + "config.nurgling.json";
+            file = new OutputStreamWriter(Files.newOutputStream(Paths.get(path)), StandardCharsets.UTF_8);
             file.write ( obj.toJSONString () );
+            file.close();
         }  catch (IOException e) {
             System.out.println("No config. config.nurgling.json not found");
         }
     }
 
     public static void initDefault () {
-            getInstance ().read ( ((HashDirCache)ResCache.global).base +"/../" + "./config.nurgling.json" );
+            getInstance ().read ( ((HashDirCache)ResCache.global).base +"\\..\\" + "config.nurgling.json" );
     }
 
     public void read ( String path ) {
