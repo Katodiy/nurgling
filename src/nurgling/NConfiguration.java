@@ -8,6 +8,8 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
 
@@ -686,14 +688,14 @@ public class NConfiguration {
         whitePlayers.put("ring",players.get("white").ring);
         whitePlayers.put("arrow",players.get("white").arrow);
         obj.put("white_players",whitePlayers);
+        OutputStreamWriter file = null;
 
-        try ( FileWriter file = new FileWriter ( ((HashDirCache)ResCache.global).base +"/../" + "./config.nurgling.json", StandardCharsets.UTF_8 ) ) {
+        try  {
+            file = new OutputStreamWriter(Files.newOutputStream(Paths.get(((HashDirCache) ResCache.global).base + "/../" + "./config.nurgling.json")), StandardCharsets.UTF_8);
             file.write ( obj.toJSONString () );
-        }
-        catch ( IOException e ) {
+        }  catch (IOException e) {
             System.out.println("No config. config.nurgling.json not found");
         }
-
     }
 
     public static void initDefault () {

@@ -13,6 +13,8 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 import static haven.ItemInfo.catimgs;
@@ -162,8 +164,8 @@ public class NQuestsStats extends Window {
         URL url = NQuestsStats.class.getProtectionDomain().getCodeSource().getLocation();
         if (url != null) {
             try {
-                String path =  ((HashDirCache) ResCache.global).base + "/../"  + "./quest_stats.json";
-                FileWriter file = new FileWriter(path, StandardCharsets.UTF_8);
+                String path = ((HashDirCache) ResCache.global).base + "/../" + "./quest_stats.json";
+                OutputStreamWriter file = new OutputStreamWriter(Files.newOutputStream(Paths.get(path)), StandardCharsets.UTF_8);
                 file.write(obj.toJSONString());
                 file.close();
             } catch (IOException e) {

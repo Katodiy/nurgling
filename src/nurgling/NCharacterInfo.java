@@ -4,6 +4,8 @@ import haven.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class NCharacterInfo extends Widget {
@@ -25,14 +27,14 @@ public class NCharacterInfo extends Widget {
 
     public NCharacterInfo(String chrid) {
         this.chrid = chrid;
-        path = ((HashDirCache) ResCache.global).base + "\\..\\" +NUtils.getUI().sessInfo.username + "_" + chrid.strip() + ".dat";
+        path = ((HashDirCache) ResCache.global).base + "\\..\\" +NUtils.getUI().sessInfo.username + "_" + chrid.trim() + ".dat";
         read();
     }
 
     void read() {
 
         try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(new FileInputStream(path), StandardCharsets.UTF_8))) {
+                new InputStreamReader(Files.newInputStream(Paths.get(path)), StandardCharsets.UTF_8))) {
             while (reader.ready()) {
                 String line = reader.readLine();
                 if (line.contains("varity")) {
@@ -49,15 +51,16 @@ public class NCharacterInfo extends Widget {
     }
 
     void write() {
-        try (FileWriter file = new FileWriter(path, StandardCharsets.UTF_8)) {
+        OutputStreamWriter file;
+        try  {
+            file = new OutputStreamWriter(Files.newOutputStream(Paths.get(path)), StandardCharsets.UTF_8);
             if (!varity.isEmpty()) {
                 file.write("varity\t" + String.valueOf(varity.size()) +"\n");
                 for (String var : varity) {
                     file.write(var+"\n");
                 }
             }
-            file.close();
-        } catch (IOException e) {
+        }  catch (IOException e) {
             e.printStackTrace();
         }
     }

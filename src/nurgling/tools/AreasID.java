@@ -9,6 +9,8 @@ import nurgling.json.parser.ParseException;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -81,7 +83,7 @@ public enum AreasID {
             is.add(is_obj);
         }
         obj.put("data",is);
-        try ( FileWriter file = new FileWriter ((((HashDirCache) ResCache.global).base +"/../" + "./calibr.json" ), StandardCharsets.UTF_8)) {
+        try (OutputStreamWriter file = new OutputStreamWriter(Files.newOutputStream(Paths.get((((HashDirCache) ResCache.global).base +"/../" + "./calibr.json" ))), StandardCharsets.UTF_8)) {
             file.write ( obj.toJSONString () );
         }
         catch ( IOException e ) {

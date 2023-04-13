@@ -335,7 +335,8 @@ public class CheesedShedule extends Bot {
         }
 
         String path = ((HashDirCache) ResCache.global).base + "/../" + "./cheese_shedule.json";
-        try (FileWriter file = new FileWriter(path, StandardCharsets.UTF_8)) {
+
+        try ( OutputStreamWriter file = new OutputStreamWriter(Files.newOutputStream(Paths.get(path)), StandardCharsets.UTF_8)) {
             //String res = obj.toJSONString();
             file.write(jtasks.toJSONString());
         } catch (IOException e) {
