@@ -56,8 +56,8 @@ public class Material implements Pipe.Op {
 	}
     }
 
-    @ResName("vcol")
-    public static class $vcol implements ResCons {
+    @Material.ResName("vcol")
+    public static class $vcol implements Material.ResCons {
 	public Pipe.Op cons(Resource res, Object... args) {
 	    return(new BaseColor((Color)args[0]));
 	}
@@ -183,7 +183,7 @@ public class Material implements Pipe.Op {
 	if(f != null) {
 	    return(f.create(owner, res, sdt));
 	}
-	Res mat = res.layer(Res.class);
+	Res mat = res.layer(Material.Res.class);
 	if(mat == null)
 	    return(null);
 	return(mat.get());

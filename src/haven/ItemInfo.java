@@ -363,7 +363,7 @@ public abstract class ItemInfo {
 				return null;
 			}
 		    ttres = rr.getres((Integer)a[0]).get();
-			isTop = NUtils.getUI().sess.getResName((Integer)a[0]).equals("ui/tt/wear");
+			isTop = NUtils.getUI().sess.rescache.get((Integer)a[0]).resnm.equals("ui/tt/wear");
 		} else if(a[0] instanceof Resource) {
 		    ttres = (Resource)a[0];
 		} else if(a[0] instanceof Indir) {

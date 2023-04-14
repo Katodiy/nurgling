@@ -113,7 +113,7 @@ public class Text implements Disposable {
 	    font = f;
 	    this.defcol = defcol;
 	    BufferedImage junk = TexI.mkbuf(new Coord(10, 10));
-	    Graphics tmpl = junk.getGraphics();
+	    java.awt.Graphics tmpl = junk.getGraphics();
 	    tmpl.setFont(f);
 	    m = tmpl.getFontMetrics();
 	}

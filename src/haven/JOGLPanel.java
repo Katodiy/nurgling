@@ -488,7 +488,7 @@ public class JOGLPanel extends GLCanvas implements Runnable, UIPanel, Console.Di
 	synchronized(ui) {
 	    ui.draw(g);
 	}
-//	if(NConfiguration.getInstance().showDebugInfo)
+	if(NConfiguration.getInstance().showDebugInfo)
 	    drawstats(ui, g, buf);
 	drawtooltip(ui, g);
 	drawcursor(ui, g);

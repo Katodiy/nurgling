@@ -142,7 +142,7 @@ public class BaseFileCache implements ResCache {
     private static URI mkurn(String id) {
 	try {
 	    return(new URI("urn:haven-cache:" + id));
-	} catch(URISyntaxException e) {
+	} catch(java.net.URISyntaxException e) {
 	    throw(new IllegalArgumentException(id));
 	}
     }

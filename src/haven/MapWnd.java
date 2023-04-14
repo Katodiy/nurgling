@@ -652,12 +652,12 @@ public class MapWnd extends Window implements Console.Directory {
 		tool.namesel.buf.point(mark.nm.length());
 		tool.namesel.commit();
 		if(mark instanceof PMarker) {
-			PMarker pm = (PMarker) mark;
-			colsel = tool.add(new GroupSelector(Math.max(0, Utils.index(BuddyWnd.gc, pm.color))) {
-				public void changed(int group) {
-					pm.color = BuddyWnd.gc[group];
-					view.file.update(mark);
-				}
+		    PMarker pm = (PMarker)mark;
+		    colsel = tool.add(new GroupSelector(Math.max(0, Utils.index(BuddyWnd.gc, pm.color))) {
+			    public void changed(int group) {
+				pm.color = BuddyWnd.gc[group];
+				view.file.update(mark);
+			    }
 			});
 		}
 		    mremove = tool.add(new Button(UI.scale(200), "Remove", false) {

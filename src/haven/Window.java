@@ -372,9 +372,7 @@ public class Window extends Widget implements DTarget {
     }
 
     public void uimsg(String msg, Object... args) {
-	if(msg == "pack") {
-		pack();
-	}else if(msg == "dt") {
+	if(msg == "dt") {
 	    dt = (Integer)args[0] != 0;
 	} else if(msg == "cap") {
 	    String cap = (String)args[0];
@@ -441,11 +439,6 @@ public class Window extends Widget implements DTarget {
 	super.mousehover(c, hovering);
 	return(hovering);
     }
-
-	public boolean justclose = false;
-	public void close(){
-		ui.destroy(this);
-	}
 
     public boolean keydown(java.awt.event.KeyEvent ev) {
 	if(super.keydown(ev))

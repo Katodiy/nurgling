@@ -72,7 +72,7 @@ public class GameUI extends ConsoleHost implements Console.Directory, UI.Message
 //    public Belt beltwdg;
     public final Map<Integer, String> polowners = new HashMap<Integer, String>();
     public Bufflist buffs;
-	public NMiniMapWnd mmapw;
+
     private static final OwnerContext.ClassResolver<BeltSlot> beltctxr = new OwnerContext.ClassResolver<BeltSlot>()
 	.add(GameUI.class, slot -> slot.wdg())
 	.add(Glob.class, slot -> slot.wdg().ui.sess.glob)
@@ -849,11 +849,9 @@ public class GameUI extends ConsoleHost implements Console.Directory, UI.Message
 	    Polity p = (Polity)child;
 	    polities.add(p);
 	    zerg.addpol(p);
-	}
-//	else if(place == "chat") {
+	} else if(place == "chat") {
 //	    chat.addchild(child);
-//	}
-	else if(place == "party") {
+	} else if(place == "party") {
 	    add(child, portrait.pos("bl").adds(0, 10));
 	} else if(place == "meter") {
 	    int x = (meters.size() % 3) * (IMeter.fsz.x + UI.scale(5));
@@ -1112,7 +1110,7 @@ public class GameUI extends ConsoleHost implements Console.Directory, UI.Message
 	{
 	    cmdmap.put("rmseg", new Console.Command() {
 		    public void run(Console cons, String[] args) {
-			Location loc = curloc;
+			MiniMap.Location loc = curloc;
 			if(loc != null) {
 			    try(Locked lk = new Locked(file.lock.writeLock())) {
 				file.segments.remove(loc.seg.id);
@@ -1128,8 +1126,6 @@ public class GameUI extends ConsoleHost implements Console.Directory, UI.Message
 
     private Coord lastsavegrid = null;
     private int lastsaveseq = -1;
-
-	public boolean updated = false;
     private void mapfiletick() {
 	MapView map = this.map;
 	MiniMap mmap = this.mmap;
@@ -1144,12 +1140,9 @@ public class GameUI extends ConsoleHost implements Console.Directory, UI.Message
 	try {
 	    MCache.Grid grid = ui.sess.glob.map.getgrid(gc);
 	    if((grid != null) && (!Utils.eq(gc, lastsavegrid) || (lastsaveseq != grid.seq))) {
-		updated = false;
 		mmap.file.update(ui.sess.glob.map, gc);
-//		mapfile.file.update(ui.sess.glob.map, gc);
 		lastsavegrid = gc;
 		lastsaveseq = grid.seq;
-		updated = true;
 	    }
 	} catch(Loading l) {
 	}

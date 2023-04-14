@@ -74,12 +74,8 @@ public class NConfiguration {
     public boolean hideNature = true;
     public boolean showBB = false;
 
-    public static String getCharKey()
-    {
-        return NUtils.getUI().sess.username + "/" + NUtils.getGameUI().chrid;
-    }
     public static void saveButtons(String name, NGameUI.NButtonBeltSlot[] custom) {
-        String key = getCharKey();
+        String key = NUtils.getUI().sessInfo.characterInfo.chrid;
         HashMap<String, HashMap<Integer, String>> customKeys  = (instance.allKeys.get(key)==null)?instance.allKeys.put(key, new HashMap<>()):instance.allKeys.get(key);
 
         if(customKeys!=null) {

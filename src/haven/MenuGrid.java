@@ -248,7 +248,7 @@ public class MenuGrid extends Widget implements KeyBinding.Bindable {
 	    return(res.get());
 	}
 
-	public AButton act() {
+	public Resource.AButton act() {
 	    return(res().layer(Resource.action));
 	}
 

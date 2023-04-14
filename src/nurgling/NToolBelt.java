@@ -62,8 +62,8 @@ public class NToolBelt extends NDraggableWidget implements DTarget, DropTarget {
 	}
 
 	private void loadBelt() {
-		if(NConfiguration.getInstance().allKeys.get(NConfiguration.getCharKey())!=null) {
-			Map<Integer, String> keys = NConfiguration.getInstance().allKeys.get(NConfiguration.getCharKey()).get(name);
+		if(NConfiguration.getInstance().allKeys.get(NUtils.getUI().sessInfo.characterInfo.chrid)!=null) {
+			Map<Integer, String> keys = NConfiguration.getInstance().allKeys.get(NUtils.getUI().sessInfo.characterInfo.chrid).get(name);
 			if (keys != null) {
 				for (Integer idx : keys.keySet()) {
 					usercfg.put(idx, keys.get(idx));

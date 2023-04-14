@@ -35,7 +35,7 @@ public class Defer extends ThreadGroup {
     private static final Map<ThreadGroup, Defer> groups = new WeakHashMap<ThreadGroup, Defer>();
     private final Queue<Future<?>> queue = new PrioQueue<Future<?>>();
     private final Collection<Thread> pool = new LinkedList<Thread>();
-    private final int maxthreads = Math.max(2, Math.min(6, Runtime.getRuntime().availableProcessors() / 2));
+    private final int maxthreads = Math.max(2, Runtime.getRuntime().availableProcessors() - 1);
     private final AtomicInteger busy = new AtomicInteger(0);
     
     public interface Callable<T> {
@@ -88,16 +88,16 @@ public class Defer extends ThreadGroup {
 	    return(msg);
 	}
 
-	public void waitfor(Runnable callback, Consumer<Waiting> reg) {
+	public void waitfor(Runnable callback, Consumer<Waitable.Waiting> reg) {
 	    synchronized(future) {
 		if(future.done()) {
-		    reg.accept(Waiting.dummy);
+		    reg.accept(Waitable.Waiting.dummy);
 		    callback.run();
 		} else {
-		    reg.accept(new Checker(callback) {
+		    reg.accept(new Waitable.Checker(callback) {
 			    protected Object monitor() {return(future);}
 			    protected boolean check() {return(future.done());}
-			    protected Waiting add() {return(future.wq.add(this));}
+			    protected Waitable.Waiting add() {return(future.wq.add(this));}
 			}.addi());
 		}
 	    }
@@ -244,7 +244,7 @@ public class Defer extends ThreadGroup {
 	public void run() {
 	    try {
 		while(true) {
-			Future<?> f;
+		    Future<?> f;
 		    try {
 			long start = System.currentTimeMillis();
 			synchronized(queue) {

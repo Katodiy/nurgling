@@ -9,7 +9,6 @@ public class NTimerPanel extends Window {
     
     public NTimerPanel() {
 	super(Coord.z, "Timers");
-	justclose = true;
 	btnnew = add(new Button(100, "Add timer"));
 	
 	for (NTimer timer : NTimer.timers()) {
@@ -28,7 +27,6 @@ public class NTimerPanel extends Window {
 	    str = String.format("Timer \"%s\" just finished", name);
 	}
 	wnd.add(new Label(str));
-	wnd.justclose = true;
 	wnd.pack();
     }
     
@@ -56,13 +54,7 @@ public class NTimerPanel extends Window {
 	    super.wdgmsg(sender, msg, args);
 	}
     }
-    
-    @Override
-    public void close() {
-		NUtils.getGameUI().timers = null;
-	super.close();
-    }
-    
+
     static class TimerAddWdg extends Window {
 	public NTimerWdg edited = null;
 	final TextEntry name;
@@ -75,7 +67,6 @@ public class NTimerPanel extends Window {
 	
 	public TimerAddWdg(NTimerPanel panel) {
 	    super(Coord.z, "Add timer");
-	    justclose = true;
 	    this.panel = panel;
 	    name = add(new TextEntry(UI.scale(150), "timer"));
 	    add(new Label("hours"), UI.scale(0, 25));
@@ -88,9 +79,9 @@ public class NTimerPanel extends Window {
 	    btnadd = add(new Button(UI.scale(100), "Add"), UI.scale(0, 60));
 		btnedit = add(new Button(UI.scale(100), "Edit"), UI.scale(0, 60));
 	    btnedit.hide();
-	    hours.onFocused(TimerAddWdg::clear);
-	    minutes.onFocused(TimerAddWdg::clear);
-	    seconds.onFocused(TimerAddWdg::clear);
+//	    hours.onFocused(TimerAddWdg::clear);
+//	    minutes.onFocused(TimerAddWdg::clear);
+//	    seconds.onFocused(TimerAddWdg::clear);
 	    
 	    pack();
 	}

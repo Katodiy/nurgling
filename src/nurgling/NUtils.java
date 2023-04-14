@@ -38,9 +38,6 @@ import static nurgling.tools.Finder.findNearestObject;
 
 public class NUtils {
     static HashMap<String,String> data_titles;
-
-
-
     private static NFightView fightView;
     public static void setFightView(NFightView fightView) {
         NUtils.fightView = fightView;

@@ -104,12 +104,7 @@ public class Resource implements Serializable {
 	    this(pool, name, -1);
 	}
 
-		public Spec(Named load) {
-			super(load.name, load.ver);
-			pool = local();
-		}
-
-		public Resource get(int prio) {
+	public Resource get(int prio) {
 	    return(pool.load(name, ver, prio).get());
 	}
 	
@@ -532,10 +527,6 @@ public class Resource implements Serializable {
 		}
 		return(res);
 	    }
-
-		public boolean check(){
-			return done;
-		}
 
 	    private void done() {
 		synchronized(this) {
@@ -2250,16 +2241,6 @@ public class Resource implements Serializable {
 	    }
 	}
     }
-
-	public static Resource loadsaved(Pool pool, Spec spec) {
-		try {
-			return (spec.get());
-		} catch (haven.Loading l) {
-			throw (l);
-		} catch (Exception e) {
-			return (pool.load(spec.name).get());
-		}
-	}
 
     public static void main(String[] args) throws Exception {
 	String cmd = args[0].intern();

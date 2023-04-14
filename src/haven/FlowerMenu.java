@@ -32,7 +32,6 @@ import nurgling.NUtils;
 import java.awt.Color;
 import java.awt.Font;
 import static java.lang.Math.PI;
-//import static nurgling.NWItem.selectedItem;
 
 public class FlowerMenu extends Widget {
     public static final Color pink = new Color(255, 0, 128);
@@ -268,9 +267,6 @@ public class FlowerMenu extends Widget {
 	if(option == null) {
 	    wdgmsg("cl", -1);
 	} else {
-//		if(option.name.contains("Eat"))
-//			NUtils.getGameUI().getCharInfo().constipation.lastItem = selectedItem;
-//		selectedItem = null;
 	    wdgmsg("cl", option.num, ui.modflags());
 	}
     }

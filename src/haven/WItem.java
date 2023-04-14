@@ -32,9 +32,6 @@ import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.function.*;
 import haven.ItemInfo.AttrCache;
-import haven.res.ui.tt.leashed.Leashed;
-import haven.res.ui.tt.q.quality.Quality;
-import nurgling.NFoodInfo;
 import nurgling.NGItem;
 
 import static haven.ItemInfo.find;

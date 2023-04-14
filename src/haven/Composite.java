@@ -236,9 +236,8 @@ public class Composite extends Drawable implements EquipTarget {
 		throw(new RuntimeException(String.format("cmppose on non-composed object: %s %s %s %s", poses, tposes, interp, ttime)));
 	    if(cmp.pseq != pseq) {
 		cmp.pseq = pseq;
-		if(poses != null) {
-			cmp.chposes(poses, interp);
-		}
+		if(poses != null)
+		    cmp.chposes(poses, interp);
 		if(tposes != null)
 		    cmp.tposes(tposes, WrapMode.ONCE, ttime);
 	    }
