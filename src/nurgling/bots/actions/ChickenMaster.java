@@ -218,7 +218,7 @@ public class ChickenMaster implements Action {
 
             ArrayList<GItem> items = gui.getInventory()
                     .getWItems(new NAlias(new ArrayList<String>(Arrays.asList("feather"))),
-                            AreasID.getTh(AreasID.feather));
+                            AreasID.getTh(AreasID.feather), false);
             /// Переносим предметы в инвентарь
 
             for (GItem item : items) {
@@ -316,7 +316,7 @@ public class ChickenMaster implements Action {
             /// Сбрасываем перья
             ArrayList<GItem> items = gui.getInventory()
                     .getWItems(new NAlias(new ArrayList<String>(Arrays.asList("feather"))),
-                            AreasID.getTh(AreasID.feather));
+                            AreasID.getTh(AreasID.feather), false);
             /// Переносим предметы в инвентарь
 
             for (GItem item : items) {

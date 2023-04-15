@@ -9,6 +9,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static haven.ItemInfo.catimgsh;
+import static haven.MCache.tilesz;
 
 public class NQuestInfo extends NDraggableWidget {
     Text.Furnace gfnd2 = new PUtils.BlurFurn(new Text.Foundry(Text.sans, 14, Color.white).aa(true), 2, 1, Color.BLACK);
@@ -90,8 +91,6 @@ public class NQuestInfo extends NDraggableWidget {
 
     private final HashMap<String, QuestGob> markers = new HashMap<>();
 
-
-
     public void setMarker(String name, MapFile.Marker marker, long id) {
         synchronized (markers) {
             markers.put(name, new QuestGob(marker, id));
@@ -137,10 +136,18 @@ public class NQuestInfo extends NDraggableWidget {
         }
     }
 
-    public HashMap<String, QuestGob> getMarkers() {
+    public QuestGob getMark(Gob gob) {
         synchronized (markers) {
-            return markers;
+            for (String name : markers.keySet()) {
+                NQuestInfo.QuestGob questGob = markers.get(name);
+                MiniMap.Location loc = NUtils.getGameUI().mapfile.view.sessloc;
+                Coord2d tmp = questGob.marker.tc.sub(loc.tc).mul(tilesz).add(6, 6);
+                if (Math.abs(gob.rc.x - tmp.x) < 10 && Math.abs(gob.rc.y - tmp.y) < 10) {
+                    return questGob;
+                }
+            }
         }
+        return null;
     }
 
 
@@ -149,6 +156,8 @@ public class NQuestInfo extends NDraggableWidget {
         int ended = 0;
         public Quester(String name) {
             this.name = name;
+            main_quests = new HashMap<>();
+            linked_quests = new HashMap<>();
         }
 
         public static class Quest {
@@ -160,26 +169,20 @@ public class NQuestInfo extends NDraggableWidget {
             public Quest(CharWnd.Quest.Condition[] cond, int id) {
                 conditions = cond;
                 this.id = id;
+
             }
         }
 
-        HashMap<Integer, Quest> main_quests = new HashMap<>();
-        HashMap<Integer, Quest> linked_quests = new HashMap<>();
+        HashMap<Integer, Quest> main_quests;
+        HashMap<Integer, Quest> linked_quests;
     }
 
-    public boolean needUpdate = false;
+    private boolean needUpdate = false;
     private boolean isNQvisible = false;
     private boolean isVisible;
-    private final TreeMap<String, Quester> questers = new TreeMap<>();
+    private final TreeMap<String, Quester> questers;
 
-    public TreeMap<String, Quester> getQuesters(){
-        if(isAvailable()){
-            return questers;
-        }
-        return new TreeMap<>();
-    }
-    Quester credo = new Quester(null);
-
+    private Quester credo = new Quester(null);
 
     NQuestsStats stats;
     private Tex glowon;
@@ -204,6 +207,8 @@ public class NQuestInfo extends NDraggableWidget {
 
     public NQuestInfo() {
         super("NQuestInfo");
+        new_questers = new TreeMap<>();
+        questers = new TreeMap<>();
         stats = NUtils.getGameUI().getStats();
         stats.hide();
         isVisible = NConfiguration.getInstance().isQuestInfoVisible;
@@ -233,12 +238,11 @@ public class NQuestInfo extends NDraggableWidget {
     }
 
     private Collection<QuestImage> imgs = null;
-    public static AtomicBoolean updCompleted = new AtomicBoolean(false);
-    public static AtomicBoolean in_work = new AtomicBoolean(false);
+    private final AtomicBoolean updCompleted = new AtomicBoolean(false);
+    private final AtomicBoolean in_work = new AtomicBoolean(false);
+    private final TreeMap<String, Quester> new_questers;
 
-    final TreeMap<String, Quester> new_questers = new TreeMap<>();
-
-    public static class Loader implements Runnable {
+    public class Loader implements Runnable {
 
         @Override
         public void run() {
@@ -255,10 +259,10 @@ public class NQuestInfo extends NDraggableWidget {
                                 String qname = null;
                                 if (c.desc.contains("Tell") || (c.desc.contains("Visit") && !c.desc.contains("cave"))) {
                                     qname = c.desc.contains("Tell") ? c.desc.substring(5, c.desc.indexOf(" ", 6)) : c.desc.substring(6);
-                                    if (!NUtils.getGameUI().getQuestInfo().new_questers.containsKey(qname)) {
-                                        NUtils.getGameUI().getQuestInfo().new_questers.put(qname, new Quester(qname));
+                                    if (!new_questers.containsKey(qname)) {
+                                        new_questers.put(qname, new Quester(qname));
                                     }
-                                    NUtils.getGameUI().getQuestInfo().new_questers.get(qname).main_quests.put(q.id, new Quester.Quest(((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond, q.id));
+                                    new_questers.get(qname).main_quests.put(q.id, new Quester.Quest(((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond, q.id));
                                 } else {
                                     if (c.desc.contains("Greet") || (c.desc.contains("Visit") && !c.desc.contains("cave"))) {
                                         qname = c.desc.substring(6);
@@ -268,10 +272,10 @@ public class NQuestInfo extends NDraggableWidget {
                                         qname = c.desc.substring(c.desc.indexOf(" at ") + 4);
                                     }
                                     if (qname != null) {
-                                        if (!NUtils.getGameUI().getQuestInfo().new_questers.containsKey(qname)) {
-                                            NUtils.getGameUI().getQuestInfo().new_questers.put(qname, new Quester(qname));
+                                        if (!new_questers.containsKey(qname)) {
+                                           new_questers.put(qname, new Quester(qname));
                                         }
-                                        NUtils.getGameUI().getQuestInfo().new_questers.get(qname).linked_quests.put(q.id, new Quester.Quest(((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond, q.id));
+                                        new_questers.get(qname).linked_quests.put(q.id, new Quester.Quest(((CharWnd.Quest.DefaultBox) NUtils.getGameUI().chrwdg.quest).cond, q.id));
                                     }
                                 }
                             }
@@ -283,7 +287,7 @@ public class NQuestInfo extends NDraggableWidget {
             } catch (InterruptedException ignored) {
             } finally {
                 updCompleted.set(true);
-                NUtils.getGameUI().getQuestInfo().credo = newcredo;
+                credo = newcredo;
                 in_work.set(false);
             }
         }
@@ -599,7 +603,7 @@ public class NQuestInfo extends NDraggableWidget {
     }
 
 
-    public static BufferedImage ncatimgs(int margin, QuestImage... imgs) {
+    private BufferedImage ncatimgs(int margin, QuestImage... imgs) {
         int w = 0, h = -margin;
         for (QuestImage img : imgs) {
             if (img == null)
@@ -625,13 +629,13 @@ public class NQuestInfo extends NDraggableWidget {
         return (ret);
     }
 
-    public static boolean isAvailable() {
+    public boolean isAvailable() {
         return !in_work.get() && !updCompleted.get();
     }
 
-    public static Set<String> items = new HashSet<>();
+    private final Set<String> items = new HashSet<>();
 
-    void checkTarget(String info) {
+    private void checkTarget(String info) {
         if (info.contains("Defeat ") || info.contains("Pick ") || info.contains("Catch ")) {
             String name;
             int ind = info.indexOf(" a ");
@@ -685,7 +689,7 @@ public class NQuestInfo extends NDraggableWidget {
         }
     }
 
-    public static boolean isQuested(Gob gob, Tex tex) {
+    public boolean isQuested(Gob gob, Tex tex) {
         String name = gob.getResName();
         if (name != null) {
             for (String item : items) {

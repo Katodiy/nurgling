@@ -4,13 +4,11 @@ import haven.*;
 import haven.Composite;
 import haven.res.lib.tree.TreeScale;
 import nurgling.tools.AreasID;
-import nurgling.tools.Finder;
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-import static haven.MCache.tilesz;
 import static haven.res.lib.itemtex.ItemTex.made_id;
 
 public class NGob {
@@ -639,15 +637,12 @@ public class NGob {
                         }
                     }
                     if (gob.isTag(Tags.tree) || gob.isTag(Tags.bumling) || gob.isTag(Tags.quester)) {
-                        for (String name : NUtils.getGameUI().getQuestInfo().getMarkers().keySet()) {
-                            NQuestInfo.QuestGob questGob = NUtils.getGameUI().getQuestInfo().getMarkers().get(name);
-                            MiniMap.Location loc = NUtils.getGameUI().mapfile.view.sessloc;
-                            Coord2d tmp = questGob.marker.tc.sub(loc.tc).mul(tilesz).add(6, 6);
-                            if (Math.abs(gob.rc.x - tmp.x) < 10 && Math.abs(gob.rc.y - tmp.y) < 10) {
+                        NQuestInfo.QuestGob qg;
+                           if ((qg = NUtils.getGameUI().questInfo.getMark(gob))!=null) {
                                 gob.addTag(Tags.quester);
-                                gob.addcustomol(new NQuesterRing(gob, Color.ORANGE, 20, 0.7f, questGob));
+                                gob.addcustomol(new NQuesterRing(gob, Color.ORANGE, 20, 0.7f, qg));
                             }
-                        }
+
                     }
                     if (gob.isTag(Tags.highlighted)) {
                         gob.addcustomol(new NHighlightRing(gob));
