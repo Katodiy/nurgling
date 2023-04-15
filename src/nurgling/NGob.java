@@ -638,7 +638,7 @@ public class NGob {
                     }
                     if (gob.isTag(Tags.tree) || gob.isTag(Tags.bumling) || gob.isTag(Tags.quester)) {
                         NQuestInfo.QuestGob qg;
-                           if ((qg = NUtils.getGameUI().questInfo.getMark(gob))!=null) {
+                           if (NUtils.getGameUI()!= null && NUtils.getGameUI().questInfo!= null && (qg = NUtils.getGameUI().questInfo.getMark(gob))!=null) {
                                 gob.addTag(Tags.quester);
                                 gob.addcustomol(new NQuesterRing(gob, Color.ORANGE, 20, 0.7f, qg));
                             }

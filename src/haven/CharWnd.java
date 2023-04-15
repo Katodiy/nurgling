@@ -1299,7 +1299,8 @@ public class CharWnd extends Window {
 		this.ccond = cond;
 		this.rcond = rcond;
 		resize();
-		NUtils.getGameUI().getQuestInfo().selectedQuest();
+		if(NUtils.getGameUI()!= null && NUtils.getGameUI().getQuestInfo()!=null)
+			NUtils.getGameUI().getQuestInfo().selectedQuest();
 	    }
 
 	    void update(Condition c) {

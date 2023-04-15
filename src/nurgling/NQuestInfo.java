@@ -382,7 +382,7 @@ public class NQuestInfo extends NDraggableWidget {
             if (!(new_questers != null && new_questers.isEmpty()) || (credo!=null && !credo.main_quests.isEmpty())) {
                 synchronized (questers) {
                     questers.clear();
-                    if (new_questers != null) {
+                    if (new_questers != null && !new_questers.isEmpty()) {
                         questers.putAll(new_questers);
                         new_questers.clear();
                     }

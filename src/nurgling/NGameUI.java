@@ -201,7 +201,7 @@ public class NGameUI extends GameUI {
 
 
     public NBotsInfo botsInfo;
-    public NQuestInfo questInfo;
+    public NQuestInfo questInfo = null;
     public NQuestsStats stats;
     public NPathQueue pathQueue = null;
     public Optional<NPathQueue> pathQueue() {
@@ -317,7 +317,6 @@ public class NGameUI extends GameUI {
         add ( (botsInfo = new NBotsInfo ( this )), NConfiguration.getInstance().dragWidgets.get("NBotsInfo").coord );
         botsInfo.resize(botsInfo.sz.x+UI.scale(15), botsInfo.sz.y);
         stats = add(new NQuestsStats(), new Coord ( 30, 150 ));
-        questInfo = add(new NQuestInfo () , NConfiguration.getInstance().dragWidgets.get("NQuestInfo").coord);
         chat.resize(NConfiguration.getInstance().resizeWidgets.get("ChatUI"));
         syslog = chat.chat.add(new ChatUI.Log("System"));
         NConfiguration.getInstance().disabledCheck = true;
@@ -337,7 +336,6 @@ public class NGameUI extends GameUI {
     @Override
     public void tick(double dt) {
         super.tick(dt);
-        questInfo.tick(dt);
         if (toggleStatus != ToggleStatus.COMPLETED) {
             if (maininv != null && menu != null && !menu.paginae.isEmpty()) {
                 if (toggleStatus == ToggleStatus.NOTINTI) {
@@ -395,6 +393,10 @@ public class NGameUI extends GameUI {
         if (maininv != null && searchwdg == null) {
             ((NInventory)maininv).installMainInv();
             searchwdg = ((NInventory)maininv).searchwdg;
+        }
+        if ( questInfo == null)
+        {
+            questInfo = add(new NQuestInfo () , NConfiguration.getInstance().dragWidgets.get("NQuestInfo").coord);
         }
     }
 
