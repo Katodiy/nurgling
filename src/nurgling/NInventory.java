@@ -464,10 +464,38 @@ public class NInventory extends Inventory {
         for (int i = 0; i < isz.x; i++) {
             for (int j = 0; j < isz.y; j++) {
                 if (!inventory[i][j]) {
-                    if (i + size.x - UI.scale(1) < isz.x && j + size.y - UI.scale(1) < isz.y) {
+                    if (i + size.x < isz.x && j + size.y< isz.y) {
                         boolean isFree = true;
                         for (int k = i; k < i + size.x; k++) {
                             for (int n = j; n < j + size.y; n++) {
+                                if (inventory[k][n]) {
+                                    isFree = false;
+                                    break;
+                                }
+                            }
+                        }
+                        if (isFree) {
+                            return new Coord(i, j);
+                        }
+                    }
+                }
+            }
+        }
+        return new Coord(-1, -1);
+    }
+
+    public Coord getFreeCoord(Coord coord) throws InterruptedException {
+        waitLoading();
+        boolean[][] inventory = new boolean[isz.x][isz.y];
+        fillInventorySpace(inventory);
+
+        for (int i = 0; i < isz.x; i++) {
+            for (int j = 0; j < isz.y; j++) {
+                if (!inventory[i][j]) {
+                    if (i + coord.x <= isz.x && j + coord.y <= isz.y) {
+                        boolean isFree = true;
+                        for (int k = i; k < i + coord.x; k++) {
+                            for (int n = j; n < j + coord.y; n++) {
                                 if (inventory[k][n]) {
                                     isFree = false;
                                     break;

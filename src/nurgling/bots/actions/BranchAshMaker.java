@@ -11,6 +11,8 @@ import nurgling.PathFinder;
 import nurgling.tools.Finder;
 import nurgling.tools.NArea;
 
+import static haven.Inventory.sqsz;
+
 
 public class BranchAshMaker implements Action {
     @Override
@@ -53,7 +55,7 @@ public class BranchAshMaker implements Action {
                         NUtils.activateItem(brazier);
                         NUtils.waitEvent(() -> NUtils.getProg() >= 0, 100);
                         NUtils.waitEvent(() -> !gui.hand.isEmpty() && !NUtils.isIt(gui.vhand, new NAlias("branch")), 200);
-                        NUtils.transferToInventory();
+                        NUtils.transferToInventory(new Coord(1,1));
                         NUtils.waitEvent(() -> gui.hand.isEmpty(), 100);
                     }
                     new TransferToBarrel(barrel, new NAlias("ash")).run(gui);
@@ -67,7 +69,7 @@ public class BranchAshMaker implements Action {
                     NUtils.activateItem(brazier);
                     NUtils.waitEvent(() -> NUtils.getProg() >= 0, 100);
                     NUtils.waitEvent(() -> !gui.hand.isEmpty() && !NUtils.isIt(gui.vhand, new NAlias("branch")), 200);
-                    NUtils.transferToInventory();
+                    NUtils.transferToInventory(new Coord(1,1));
                 }
                 new TransferToBarrel(barrel, new NAlias("ash")).run(gui);
             }
@@ -85,7 +87,7 @@ public class BranchAshMaker implements Action {
                         NUtils.activateItem(brazier);
                         NUtils.waitEvent(() -> NUtils.getProg() >= 0, 100);
                         NUtils.waitEvent(() -> !gui.hand.isEmpty() && !NUtils.isIt(gui.vhand, new NAlias("branch")), 200);
-                        NUtils.transferToInventory();
+                        NUtils.transferToInventory(new Coord(1,1));
                     }
                     new TransferToBarrel(barrel, new NAlias("ash")).run(gui);
                     block = gui.getInventory().getItem(new NAlias("block"));
@@ -98,7 +100,7 @@ public class BranchAshMaker implements Action {
                     NUtils.activateItem(brazier);
                     NUtils.waitEvent(() -> NUtils.getProg() >= 0, 100);
                     NUtils.waitEvent(() -> !gui.hand.isEmpty() && !NUtils.isIt(gui.vhand, new NAlias("branch")), 200);
-                    NUtils.transferToInventory();
+                    NUtils.transferToInventory(new Coord(1,1));
                 }
                 new TransferToBarrel(barrel, new NAlias("ash")).run(gui);
             }
