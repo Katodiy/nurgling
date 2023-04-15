@@ -233,10 +233,10 @@ public class NInventory extends Inventory {
         ArrayList<GItem> result = new ArrayList<>();
             for (Widget widget = child; widget != null; widget = widget.next) {
                 if (widget instanceof WItem) {
-                    NGItem wdg = (NGItem) ((WItem) widget).item;
-                    if (NUtils.checkName(wdg.name(), names)) {
-                        if ((wdg.quality()) >= q) {
-                            result.add(wdg);
+                    NWItem wdg = ((NWItem) widget);
+                    if (NUtils.isIt(wdg, names)) {
+                        if (((NGItem)wdg.item).quality() >= q) {
+                            result.add(wdg.item);
                         }
                     }
                 }
