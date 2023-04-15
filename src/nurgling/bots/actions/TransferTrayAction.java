@@ -2,10 +2,7 @@ package nurgling.bots.actions;
 
 import haven.*;
 import haven.res.ui.barterbox.Shopbox;
-import nurgling.NAlias;
-import nurgling.NGameUI;
-import nurgling.NUtils;
-import nurgling.PathFinder;
+import nurgling.*;
 import nurgling.bots.CheesedShedule;
 import nurgling.tools.AreasID;
 import nurgling.tools.Finder;
@@ -125,7 +122,7 @@ public class TransferTrayAction implements Action {
             int count = 0;
             for(GItem item: gui.getInventory().getWItems(new NAlias("cheesetray")))  {
                 if(NUtils.checkName(NUtils.getContentName(item.info()),task.target)) {
-                    new SelectFlowerAction(item, "Slice up", SelectFlowerAction.Types.Inventory).run(gui);
+                    new SelectFlowerAction((NGItem)item, "Slice up", SelectFlowerAction.Types.Item).run(gui);
                     NUtils.waitEvent(()->NUtils.getContent(item)==null,50);
                     count++;
                     if(gui.getInventory().getFreeSpace()<4) {

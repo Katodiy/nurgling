@@ -36,7 +36,7 @@ public class TransferToPile implements Action {
         {
             name = new NAlias("gfx/terobjs/stockpile-leaf");
         }
-        if (!gui.getInventory().getWItems(items).isEmpty()) {
+        if (!gui.getInventory().getWItems(items).isEmpty() ) {
             if (area == null)
                 area = Finder.findNearestMark(id);
             if (area != null) {

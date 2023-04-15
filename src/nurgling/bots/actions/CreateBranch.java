@@ -4,6 +4,7 @@ import haven.Coord;
 import haven.GItem;
 
 import nurgling.NAlias;
+import nurgling.NGItem;
 import nurgling.NGameUI;
 import nurgling.NUtils;
 import nurgling.tools.Finder;
@@ -39,7 +40,7 @@ public class CreateBranch implements Action {
                 return new Results(Results.Types.NO_ITEMS);
             }
             int oldSize = gui.getInventory().getWItems(new NAlias("branch")).size();
-            new SelectFlowerAction(block, "Split", SelectFlowerAction.Types.Inventory).run(gui);
+            new SelectFlowerAction((NGItem) block, "Split", SelectFlowerAction.Types.Item).run(gui);
             NUtils.waitEvent(() -> gui.getInventory().getWItems(new NAlias("branch")).size() == oldSize+5, 50);
         }
         if ( gui.getInventory ().getWItems( new NAlias ( "branch" ) ).size () > 0 ) {

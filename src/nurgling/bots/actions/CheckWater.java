@@ -5,6 +5,7 @@ import haven.GItem;
 import haven.WItem;
 
 import nurgling.NAlias;
+import nurgling.NGItem;
 import nurgling.NGameUI;
 import nurgling.NUtils;
 
@@ -23,8 +24,8 @@ public class CheckWater implements Action {
         gui.msg ( "Water q =" +String.valueOf ( NUtils.getContentQuality ( gui.getInventory ().getItem ( new NAlias ( "woodencup" )) ) ) );
         gui.map.wdgmsg ( "click", Coord.z, gui.getMap ().player ().rc.floor ( posres ), 3, 0, 0);
         NUtils.waitEvent ( () -> gui.getInventory ().getItem ( new NAlias ( "woodencup" ) ) != null, 60 );
-        new SelectFlowerAction ( gui.getInventory ().getItem ( new NAlias ( "woodencup" )), "Empty",
-                SelectFlowerAction.Types.Inventory ).run ( gui );
+        new SelectFlowerAction ( (NGItem) gui.getInventory ().getItem ( new NAlias ( "woodencup" )), "Empty",
+                SelectFlowerAction.Types.Item ).run ( gui );
         NUtils.waitEvent ( () -> NUtils.getContent (gui.getInventory ().getItem ( new NAlias ( "woodencup" )) ) == null, 10 );
         return new Results ( Results.Types.SUCCESS );
     }

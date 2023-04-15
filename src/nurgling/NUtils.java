@@ -1448,28 +1448,6 @@ public class NUtils {
         return false;
     }
 
-    public static boolean checkGobFlower(
-            NAlias name,
-            Gob gob
-    )
-            throws InterruptedException {
-        while (NFlowerMenu.instance != null) {
-            NFlowerMenu.stop();
-            Thread.sleep(30);
-        }
-        gameUI.map.wdgmsg("click", Coord.z, gob.rc.floor(posres), 3, 0, 1, (int) gob.id, gob.rc.floor(posres),
-                0, -1);
-        waitEvent( ()->NFlowerMenu.instance != null,20);
-        if (NFlowerMenu.instance != null) {
-            if (NFlowerMenu.instance.findInCurrentFlower(name)) {
-                return true;
-            } else {
-                NFlowerMenu.stop();
-            }
-        }
-        return false;
-    }
-
     public static boolean drop(GItem item)
             throws InterruptedException {
         int counter = 0;
@@ -1834,21 +1812,46 @@ public class NUtils {
             int id
     )
             throws InterruptedException {
-        while (NFlowerMenu.instance != null) {
-            NFlowerMenu.stop();
-            Thread.sleep(30);
+        NFlowerMenu oldfm = getFlowerMenu();
+        if(oldfm!=null)
+        {
+            oldfm.cancel();
+            waitEvent(()->getFlowerMenu() == null, 50);
         }
         gameUI.map.wdgmsg("click", Coord.z, gob.rc.floor(posres), 3, 0, 1, (int) gob.id, gob.rc.floor(posres),
                 id, -1);
-        waitEvent(()->NFlowerMenu.instance!=null,50);
-        if (NFlowerMenu.instance != null) {
-            if (NFlowerMenu.instance.findInCurrentFlower(name)) {
-                return true;
-            } else {
-                NFlowerMenu.stop();
-            }
+        waitEvent(()->getFlowerMenu() != null, 50);
+        NFlowerMenu fm = getFlowerMenu();
+        if (fm != null) {
+            return fm.find(name);
         }
         return false;
+    }
+
+    public static boolean checkGobFlower(
+            NAlias name,
+            Gob gob
+    )
+            throws InterruptedException {
+        NFlowerMenu oldfm = getFlowerMenu();
+        if(oldfm!=null)
+        {
+            oldfm.cancel();
+            waitEvent(()->getFlowerMenu() == null, 50);
+        }
+        gameUI.map.wdgmsg("click", Coord.z, gob.rc.floor(posres), 3, 0, 1, (int) gob.id, gob.rc.floor(posres),
+                0, -1);
+        waitEvent(()->getFlowerMenu() != null, 50);
+        NFlowerMenu fm = getFlowerMenu();
+        if (fm != null) {
+            return fm.find(name);
+        }
+        return false;
+    }
+
+    public static NFlowerMenu getFlowerMenu()
+    {
+        return (NFlowerMenu) nui.findInRoot(NFlowerMenu.class);
     }
 
     public static boolean build(

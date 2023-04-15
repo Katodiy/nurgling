@@ -1,121 +1,57 @@
 package nurgling;
 
 import haven.FlowerMenu;
+import haven.GOut;
 
 public class NFlowerMenu extends FlowerMenu {
-    public static boolean selectNext = false;
-    public static boolean selectPick = false;
-    public static String name;
-    public static boolean needCheck;
-    public static NFlowerMenu instance;
-    
-    public NFlowerMenu(String... options ) {
-        super ( options );
-        instance = this;
+    @Override
+    public void draw(GOut g) {
+        super.draw(g);
     }
-    
-    public static void stop ()
-            throws InterruptedException {
-        if ( instance != null ) {
-            instance.choose ( null );
-            if ( instance.kg != null ) {
-                instance.kg.remove ();
-                instance.mg.remove ();
-            }
-            instance.lostfocus ();
-            instance.destroy ();
-            instance = null;
-        }
-    }
-    
-    public static void select ( String name1 ) {
-        name = name1;
-        selectNext = true;
-    }
-    
-    public void selectInCurrent ( String name1 ) {
-        for ( Petal p : opts ) {
-            if ( p.name.contains ( name1 ) ) {
-                choose ( p );
+
+    public void select(String text) {
+        for (Petal p : opts) {
+            if (p.name.contains(text)) {
+                choose(p);
             }
         }
+        cancel();
     }
-    
-    public boolean isContain(String name1 ){
-        for ( Petal p : opts ) {
-            if ( p.name.contains ( name1 ) ) {
+
+    public void select(NAlias text) {
+        for (Petal p : opts) {
+            if (NUtils.checkName(p.name, text)) {
+                choose(p);
+            }
+        }
+        cancel();
+    }
+
+    public boolean find(String text) {
+        for (Petal p : opts) {
+            if (p.name.contains(text)) {
                 return true;
             }
         }
+        cancel();
         return false;
     }
-    
-    public void selectInCurrent ( NAlias name1 ) {
-        for ( Petal p : opts ) {
-            if ( NUtils.checkName ( p.name,name1 ) ) {
-                choose ( p );
-            }
-        }
-    }
-    
-    
-    protected void added () {
-        if ( c.equals ( -1, -1 ) ) {
-            c = parent.ui.lcc;
-        }
-        mg = ui.grabmouse ( this );
-        kg = ui.grabkeys ( this );
-        organize ( opts );
-        new NOpenings ().ntick ( 0 );
-    }
-    
-    public class NOpenings extends Opening {
 
-        @Override
-        public void ntick(double s) {
-            super.ntick(s);
-            if (s == 1.0) {
-                if (selectNext) {
-                    for (Petal p : opts) {
-                        if (p.name.contains(name)) {
-                            selectNext = false;
-                            choose(p);
-                        }
-                    }
-
-                }
-            }
-            if (NConfiguration.getInstance().autoPicking && !NUtils.getUI().modshift) {
-                for (Petal p : opts) {
-                    for (NConfiguration.PickingAction pa : NConfiguration.getInstance().pickingActions)
-                        if (pa.isEnable && p.name.contains(pa.action))
-                            choose(p);
-                }
-            }
-        }
-    }
-
-    
-    
-    public boolean findInCurrentFlower ( String name ) {
-        for ( Petal p : opts ) {
-            if ( p.name.contains ( name ) ) {
+    public boolean find(NAlias text) {
+        for (Petal p : opts) {
+            if (NUtils.checkName(p.name, text)) {
                 return true;
             }
         }
+        cancel();
         return false;
     }
-    
-    public boolean findInCurrentFlower ( NAlias name ) {
-        for ( Petal p : opts ) {
-            if ( NUtils.checkName ( p.name,name ) ) {
-                return true;
-            }
-        }
-        return false;
+
+    public NFlowerMenu(String... options) {
+        super(options);
     }
-    
-    public static void check () {
-        needCheck = true;
+
+    public void cancel(){
+        NUtils.getUI().wdgmsg(this,"cl", -1);
     }
 }

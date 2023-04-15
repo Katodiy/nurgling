@@ -4,6 +4,7 @@ import haven.*;
 
 import nurgling.*;
 import nurgling.bots.tools.InContainer;
+import nurgling.bots.tools.Ingredient;
 import nurgling.bots.tools.OutContainer;
 import nurgling.tools.AreasID;
 import nurgling.tools.Finder;
@@ -55,10 +56,9 @@ public class FillContainers implements Action
                 int current = gui.getInventory().getWItems(items,q).size();
                 for (OutContainer outContainer : outContainers) {
                     if (!outContainer.isFull) {
-                        if (items != null && NConfiguration.getInstance().ingrTh.get(items.keys.get(0)) != null) {
-
+                        if (items != null && Ingredient.get(items.keys.get(0)) != null) {
                             for (GItem item : gui.getInventory().getWItems(items,q)) {
-                                int th = NConfiguration.getInstance().ingrTh.get(NUtils.getInfo(item));
+                                double th = Ingredient.get(items.keys.get(0)).th;
                                 if (((NGItem) item).quality() < th)
                                     NUtils.drop(item);
                             }

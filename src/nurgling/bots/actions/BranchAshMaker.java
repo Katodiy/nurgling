@@ -4,10 +4,7 @@ import haven.Coord;
 import haven.GItem;
 import haven.Gob;
 
-import nurgling.NAlias;
-import nurgling.NGameUI;
-import nurgling.NUtils;
-import nurgling.PathFinder;
+import nurgling.*;
 import nurgling.tools.Finder;
 import nurgling.tools.NArea;
 
@@ -48,7 +45,7 @@ public class BranchAshMaker implements Action {
                 new PathFinder(gui, brazier).run();
                 GItem block = gui.getInventory().getItem(new NAlias("block"));
                 while (block != null) {
-                    new SelectFlowerAction(block, "Split", SelectFlowerAction.Types.Inventory).run(gui);
+                    new SelectFlowerAction((NGItem) block, "Split", SelectFlowerAction.Types.Item).run(gui);
                     NUtils.waitEvent(() -> !gui.getInventory().getWItems(new NAlias("branch")).isEmpty(), 20);
                     while (!gui.getInventory().getWItems(new NAlias("branch")).isEmpty()) {
                         NUtils.takeItemToHand(gui.getInventory().getItem(new NAlias("branch")));
@@ -80,7 +77,7 @@ public class BranchAshMaker implements Action {
                 new PathFinder(gui, brazier).run();
                 GItem block = gui.getInventory().getItem(new NAlias("block"));
                 while (block != null) {
-                    new SelectFlowerAction(block, "Split", SelectFlowerAction.Types.Inventory).run(gui);
+                    new SelectFlowerAction((NGItem) block, "Split", SelectFlowerAction.Types.Item).run(gui);
                     NUtils.waitEvent(() -> !gui.getInventory().getWItems(new NAlias("branch")).isEmpty(), 20);
                     while (!gui.getInventory().getWItems(new NAlias("branch")).isEmpty()) {
                         NUtils.takeItemToHand(gui.getInventory().getItem(new NAlias("branch")));

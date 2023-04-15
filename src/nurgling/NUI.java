@@ -135,4 +135,15 @@ public class NUI extends UI {
     public long getTickId () {
         return tickId;
     }
+
+    public Widget findInRoot(Class<?> c)
+    {
+        for(Widget wdg: root.children()){
+            if(wdg.getClass()==c)
+            {
+                return wdg;
+            }
+        }
+        return null;
+    }
 }

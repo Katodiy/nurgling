@@ -204,14 +204,14 @@ public class ChickenMaster implements Action {
             if (roost == null) {
                 return new Results(Results.Types.NO_ITEMS);
             }
-            new SelectFlowerAction(roost, "Wring neck", SelectFlowerAction.Types.Inventory).run(gui);
+            new SelectFlowerAction((NGItem) roost, "Wring neck", SelectFlowerAction.Types.Item).run(gui);
             NUtils.waitEvent(()-> gui.getInventory().getItem(new NAlias("rooster-dead"))!=null,200);
             /// Ощипываем
             GItem roost_dead = gui.getInventory().getItem(new NAlias("rooster-dead"));
             if (roost_dead == null) {
                 return new Results(Results.Types.NO_ITEMS);
             }
-            new SelectFlowerAction(roost_dead, "Pluck", SelectFlowerAction.Types.Inventory).run(gui);
+            new SelectFlowerAction((NGItem) roost_dead, "Pluck", SelectFlowerAction.Types.Item).run(gui);
             NUtils.waitEvent(()-> gui.getInventory().getWItems(new NAlias("feather")).size()>=3 && gui.getInventory().getItem(new NAlias("chicken-plucked"))!=null,500);
 
             /// Сбрасываем перья
@@ -235,7 +235,7 @@ public class ChickenMaster implements Action {
             if (chicken_plucked == null) {
                 return new Results(Results.Types.NO_ITEMS);
             }
-            new SelectFlowerAction(chicken_plucked, "Clean", SelectFlowerAction.Types.Inventory).run(gui);
+            new SelectFlowerAction((NGItem) chicken_plucked, "Clean", SelectFlowerAction.Types.Item).run(gui);
             NUtils.waitEvent(()-> gui.getInventory().getItem(new NAlias("entrails"))!=null && gui.getInventory().getItem(new NAlias("chicken-cleaned"))!=null,500);
             new TransferTrash().run(gui);
             /// Разделываем курицу
@@ -243,7 +243,7 @@ public class ChickenMaster implements Action {
             if (chicken_cleaned == null) {
                 return new Results(Results.Types.NO_ITEMS);
             }
-            new SelectFlowerAction(chicken_cleaned, "Butcher", SelectFlowerAction.Types.Inventory).run(gui);
+            new SelectFlowerAction((NGItem) chicken_cleaned, "Butcher", SelectFlowerAction.Types.Item).run(gui);
             NUtils.waitEvent(()-> gui.getInventory().getItem(new NAlias("bone"))!=null,200);
             NUtils.waitEvent(()-> gui.getInventory().getItem(new NAlias("meat"))!=null,200);
             new TransferBones().run(gui);
@@ -303,7 +303,7 @@ public class ChickenMaster implements Action {
             if ( hen == null ) {
                 return new Results ( Results.Types.NO_ITEMS );
             }
-            new SelectFlowerAction ( hen, "Wring neck", SelectFlowerAction.Types.Inventory ).run ( gui );
+            new SelectFlowerAction ( (NGItem) hen, "Wring neck", SelectFlowerAction.Types.Item ).run ( gui );
 
             NUtils.waitEvent(()-> gui.getInventory().getItem(new NAlias("hen-dead"))!=null,200);
             /// Ощипываем
@@ -311,7 +311,7 @@ public class ChickenMaster implements Action {
             if ( hen_dead == null ) {
                 return new Results ( Results.Types.NO_ITEMS );
             }
-            new SelectFlowerAction ( hen_dead, "Pluck", SelectFlowerAction.Types.Inventory ).run ( gui );
+            new SelectFlowerAction ( (NGItem) hen_dead, "Pluck", SelectFlowerAction.Types.Item ).run ( gui );
             NUtils.waitEvent(()-> gui.getInventory().getWItems(new NAlias("feather")).size()>=3 && gui.getInventory().getItem(new NAlias("chicken-plucked"))!=null,500);
             /// Сбрасываем перья
             ArrayList<GItem> items = gui.getInventory()
@@ -334,7 +334,7 @@ public class ChickenMaster implements Action {
             if ( chicken_plucked == null ) {
                 return new Results ( Results.Types.NO_ITEMS );
             }
-            new SelectFlowerAction ( chicken_plucked, "Clean", SelectFlowerAction.Types.Inventory ).run ( gui );
+            new SelectFlowerAction ( (NGItem)chicken_plucked, "Clean", SelectFlowerAction.Types.Item ).run ( gui );
             NUtils.waitEvent(()-> gui.getInventory().getItem(new NAlias("entrails"))!=null && gui.getInventory().getItem(new NAlias("chicken-cleaned"))!=null,500);
 
             new TransferTrash ().run ( gui );
@@ -343,7 +343,7 @@ public class ChickenMaster implements Action {
             if ( chicken_cleaned == null ) {
                 return new Results ( Results.Types.NO_ITEMS );
             }
-            new SelectFlowerAction ( chicken_cleaned, "Butcher", SelectFlowerAction.Types.Inventory ).run ( gui );
+            new SelectFlowerAction ( (NGItem)chicken_cleaned, "Butcher", SelectFlowerAction.Types.Item ).run ( gui );
             NUtils.waitEvent(()-> gui.getInventory().getItem(new NAlias("bone"))!=null,200);
             new TransferBones ().run ( gui );
             new TransferMeat ().run ( gui );

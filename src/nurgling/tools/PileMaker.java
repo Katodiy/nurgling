@@ -89,11 +89,12 @@ public class PileMaker {
             Thread.sleep ( 100 );
         }
         gameUI.map.wdgmsg ( "itemact", itemForPile.item.sz, target_coord.floor ( posres ), 0 );
-        
-        Thread.sleep ( 300 );
-        if ( NFlowerMenu.instance != null ) {
-            NFlowerMenu.instance.selectInCurrent ( "Pile" );
-            Thread.sleep ( 300 );
+
+        NUtils.waitEvent(()->NUtils.getFlowerMenu()!=null,10);
+        NFlowerMenu fm = NUtils.getFlowerMenu();
+        if ( fm != null ) {
+            fm.select ( "Pile" );
+            NUtils.waitEvent(()->NUtils.getFlowerMenu()==null,50);
         }
         gameUI.map.wdgmsg ( "place", target_coord.floor ( posres ), 0, 1, 0 );
         NUtils.waitEvent(()->((NGameUI)gameUI).getWindow("Stockpile")!=null,50);

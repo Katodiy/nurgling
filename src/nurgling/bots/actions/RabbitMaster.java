@@ -149,14 +149,14 @@ public class RabbitMaster implements Action {
                 if ( buck == null ) {
                     return new Results ( Results.Types.NO_ITEMS );
                 }
-                new SelectFlowerAction ( buck, "Wring neck", SelectFlowerAction.Types.Inventory ).run ( gui );
+                new SelectFlowerAction ( (NGItem) buck, "Wring neck", SelectFlowerAction.Types.Item ).run ( gui );
                 NUtils.waitEvent (()->gui.getInventory ().getItem ( new NAlias ( "rabbit-dead" ) )!=null,delay) ;
                 /// Снимаем шкуру
                 GItem rabbit_dead = gui.getInventory ().getItem ( new NAlias ( "rabbit-dead" ) );
                 if ( rabbit_dead == null ) {
                     return new Results ( Results.Types.NO_ITEMS );
                 }
-                new SelectFlowerAction ( rabbit_dead, "Flay", SelectFlowerAction.Types.Inventory ).run ( gui );
+                new SelectFlowerAction ( (NGItem)rabbit_dead, "Flay", SelectFlowerAction.Types.Item ).run ( gui );
                 NUtils.waitEvent (()->gui.getInventory ().getItem ( new NAlias ( "rabbit-carcas" ) )!=null,delay  );
                 NUtils.waitEvent (()->gui.getInventory ().getItem ( TransferRawHides.raw_hides )!=null,delay  );
                 /// Сбрасываем шкуру
@@ -166,7 +166,7 @@ public class RabbitMaster implements Action {
                 if ( carcas == null ) {
                     return new Results ( Results.Types.NO_ITEMS );
                 }
-                new SelectFlowerAction ( carcas, "Clean", SelectFlowerAction.Types.Inventory ).run ( gui );
+                new SelectFlowerAction ( (NGItem)carcas, "Clean", SelectFlowerAction.Types.Item ).run ( gui );
                 NUtils.waitEvent (()->gui.getInventory ().getItem ( new NAlias ( "rabbit-clean" ) )!=null,delay);
                 NUtils.waitEvent (()->gui.getInventory ().getItem ( new NAlias ( "entrails" ) )!=null,delay);
                 new TransferTrash ().run ( gui );
@@ -175,7 +175,7 @@ public class RabbitMaster implements Action {
                 if ( rabbit_cleaned == null ) {
                     return new Results ( Results.Types.NO_ITEMS );
                 }
-                new SelectFlowerAction ( rabbit_cleaned, "Butcher", SelectFlowerAction.Types.Inventory ).run ( gui );
+                new SelectFlowerAction ( (NGItem)rabbit_cleaned, "Butcher", SelectFlowerAction.Types.Item ).run ( gui );
                 NUtils.waitEvent (()->gui.getInventory ().getItem ( new NAlias ( "bone" ) )!=null,delay  );
                 NUtils.waitEvent (()->gui.getInventory ().getItem ( new NAlias ( "meat" ) )!=null,delay  );
                 new TransferBones ().run ( gui );
@@ -232,14 +232,14 @@ public class RabbitMaster implements Action {
                 if ( buck == null ) {
                     return new Results ( Results.Types.NO_ITEMS );
                 }
-                new SelectFlowerAction ( buck, "Wring neck", SelectFlowerAction.Types.Inventory ).run ( gui );
+                new SelectFlowerAction ( (NGItem)buck, "Wring neck", SelectFlowerAction.Types.Item ).run ( gui );
                 NUtils.waitEvent (()->gui.getInventory ().getItem ( new NAlias ( "rabbit-dead" ) )!=null,delay  );
                 /// Снимаем шкуру
                 GItem rabbit_dead = gui.getInventory ().getItem ( new NAlias ( "rabbit-dead" ) );
                 if ( rabbit_dead == null ) {
                     return new Results ( Results.Types.NO_ITEMS );
                 }
-                new SelectFlowerAction ( rabbit_dead, "Flay", SelectFlowerAction.Types.Inventory ).run ( gui );
+                new SelectFlowerAction ( (NGItem)rabbit_dead, "Flay", SelectFlowerAction.Types.Item ).run ( gui );
                 NUtils.waitEvent (()->gui.getInventory ().getItem ( new NAlias ( "rabbit-carcas" ) )!=null,delay  );
                 NUtils.waitEvent (()->gui.getInventory ().getItem ( TransferRawHides.raw_hides )!=null,delay  );
                 /// Сбрасываем шкуру
@@ -249,7 +249,7 @@ public class RabbitMaster implements Action {
                 if ( carcas == null ) {
                     return new Results ( Results.Types.NO_ITEMS );
                 }
-                new SelectFlowerAction ( carcas, "Clean", SelectFlowerAction.Types.Inventory ).run ( gui );
+                new SelectFlowerAction ( (NGItem)carcas, "Clean", SelectFlowerAction.Types.Item ).run ( gui );
                 NUtils.waitEvent (()->gui.getInventory ().getItem ( new NAlias ( "rabbit-clean" ) )!=null,delay  );
                 NUtils.waitEvent (()->gui.getInventory ().getItem ( new NAlias ( "entrails" ) )!=null,delay);
                 new TransferTrash ().run ( gui );
@@ -258,7 +258,7 @@ public class RabbitMaster implements Action {
                 if ( rabbit_cleaned == null ) {
                     return new Results ( Results.Types.NO_ITEMS );
                 }
-                new SelectFlowerAction ( rabbit_cleaned, "Butcher", SelectFlowerAction.Types.Inventory ).run ( gui );
+                new SelectFlowerAction ( (NGItem)rabbit_cleaned, "Butcher", SelectFlowerAction.Types.Item ).run ( gui );
                 NUtils.waitEvent (()->gui.getInventory ().getItem ( new NAlias ( "bone" ) )!=null,100  );
                 NUtils.waitEvent (()->gui.getInventory ().getItem ( new NAlias ( "meat" ) )!=null,delay  );
                 new TransferBones ().run ( gui );

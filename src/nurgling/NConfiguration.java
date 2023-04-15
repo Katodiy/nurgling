@@ -19,6 +19,7 @@ import haven.res.ui.tt.slot.Slotted;
 import haven.res.ui.tt.stackn.Stack;
 import nurgling.bots.settings.IngredientSettings;
 import nurgling.bots.tools.AItem;
+import nurgling.bots.tools.Ingredient;
 import nurgling.json.*;
 import nurgling.json.parser.JSONParser;
 import nurgling.json.parser.ParseException;
@@ -35,7 +36,6 @@ public class NConfiguration {
     public boolean disabledCheck = false;
     public boolean enablePfBoundingBoxes = false;
     public HashMap<String, Integer> playerSpeed_h = new HashMap<String, Integer>();
-    public HashMap<String, Integer> ingrTh = new HashMap<String, Integer>();
     public HashMap<String, Integer> horseSpeed_h = new HashMap<String, Integer>();
     public List<NLoginData> logins = new ArrayList<NLoginData>();
     public boolean autologin = false;
@@ -526,10 +526,8 @@ public class NConfiguration {
                 jingredientKey.put("barter_out", IngredientSettings.data.get(ingredientKey).barter_out.toString());
                 jingredientKey.put("area_in", IngredientSettings.data.get(ingredientKey).area_in.toString());
                 jingredientKey.put("area_out", IngredientSettings.data.get(ingredientKey).area_out.toString());
-                if(ingrTh.get(ingredientKey)!=null) {
-                    jingredientKey.put("th", ingrTh.get(ingredientKey));
-                }
-
+                jingredientKey.put("th",IngredientSettings.data.get(ingredientKey).th);
+                jingredientKey.put("isGroup",IngredientSettings.data.get(ingredientKey).isGroup);
                 ingredients.add(jingredientKey);
             }
         }
@@ -773,13 +771,10 @@ public class NConfiguration {
                     JSONObject ingredient = jingredient.next();
                     String ingName = ingredient.get("name").toString();
                     IngredientSettings.data.put(ingName,
-                            new AItem(AreasID.valueOf(ingredient.get("area_out").toString()),
+                            new Ingredient(AreasID.valueOf(ingredient.get("area_out").toString()),
                                     AreasID.valueOf(ingredient.get("barter_out").toString()),
                                     AreasID.valueOf(ingredient.get("area_in").toString()),
-                                    AreasID.valueOf(ingredient.get("barter_in").toString())));
-                    if(ingredient.containsKey("th")){
-                        ingrTh.put(ingName,Integer.valueOf(ingredient.get("th").toString()));
-                    }
+                                    AreasID.valueOf(ingredient.get("barter_in").toString()), new NAlias(ingName), ((ingredient.containsKey("th")) ? Double.parseDouble(ingredient.get("th").toString()) : 0.), (ingredient.containsKey("isGroup") && (boolean) (ingredient.get("isGroup")))));
                 }
             }
             JSONArray jkeys =  ( JSONArray ) jsonObject.get ( "button_keys" );

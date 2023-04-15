@@ -106,20 +106,7 @@ public class TakeItemsFromBarter implements Action {
             return new Results ( Results.Types.NO_ITEMS );
         }
     }
-    public TakeItemsFromBarter(
-            Gob gob,
-            Ingredient ingredient
-    ){
-        this(gob,ingredient.item,ingredient.area_out,ingredient.isInfo,ingredient.count);
-    }
-    
-    public TakeItemsFromBarter(
-            Ingredient ingredient
-    ){
-        this( Finder.findObjectInArea ( new NAlias ( "barter" ), 2000,
-                Finder.findNearestMark ( ingredient.barter_out) ),ingredient.item,ingredient.barter_out,ingredient.isInfo,ingredient.count);
-    }
-    
+
     public TakeItemsFromBarter(
             Gob gob,
             NAlias items,

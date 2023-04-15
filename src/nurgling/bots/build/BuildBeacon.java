@@ -29,19 +29,31 @@ public class BuildBeacon extends Bot {
         command.command = new char[]{ 'b', 'e' };
         command.name = "Wilderness Beacon";
         command.ingredients = new ArrayList<Ingredient> ();
-        command.ingredients
-                .add ( new Ingredient( new NAlias( new ArrayList<String> ( Arrays.asList ( "clay" ) ) ), clay_area,
-                        10 ) );
-        command.ingredients
-                .add ( new Ingredient ( new NAlias ( new ArrayList<String> ( Arrays.asList ( "stone" ) ) ), stone_area,
-                        10 ) );
-        command.ingredients
-                .add ( new Ingredient ( new NAlias ( new ArrayList<String> ( Arrays.asList ( "board" ) ) ), board_area,
-                        10 ) );
+        Ingredient clay = new Ingredient();
+        clay.item = new NAlias( "clay" );
+        clay.isGroup = true;
+        command.ingredients.add (clay);
+        command.spec_in_area.put(clay,clay_area);
+        command.ing_count.put(clay,20);
+        Ingredient stone = new Ingredient();
+        stone.item = new NAlias( "stone" );
+        stone.isGroup = true;
+        command.ingredients.add (stone);
+        command.spec_in_area.put(stone,stone_area);
+        command.ing_count.put(stone,20);
+        Ingredient board = new Ingredient();
+        board.item = new NAlias( "board" );
+        board.isGroup = true;
+        command.ingredients.add (board);
+        command.spec_in_area.put(board,board_area);
+        command.ing_count.put(board,10);
 
-        command.ingredients
-                .add ( new Ingredient ( new NAlias ( new ArrayList<String> ( Arrays.asList ( "block" ) ) ), block_area,
-                        20 ) );
+        Ingredient block = new Ingredient();
+        board.item = new NAlias( "block" );
+        board.isGroup = true;
+        command.ingredients.add (board);
+        command.spec_in_area.put(board,block_area);
+        command.ing_count.put(board,20);
 
 
         runActions.add ( new Build( build_area, "beacon", command ) );
