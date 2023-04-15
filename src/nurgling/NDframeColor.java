@@ -41,7 +41,7 @@ public class NDframeColor extends NGAttrib implements Gob.SetupMod {
             }
         }
         if (!isFound) {
-            color = new MixColor(NConfiguration.getInstance().colors.get("free"));
+            color = NConfiguration.getInstance().colors.get("free");
             gob.addTag(NGob.Tags.free);
             isFree = true;
         }
@@ -49,11 +49,11 @@ public class NDframeColor extends NGAttrib implements Gob.SetupMod {
         {
             if (!NUtils.isIt(targetOverlay.res, "-blood", "-fishraw", "-windweed") || NUtils.isIt(targetOverlay, "-windweed-dry")) {
                 gob.addTag(NGob.Tags.ready);
-                color = new MixColor(NConfiguration.getInstance().colors.get("ready"));
+                color = NConfiguration.getInstance().colors.get("ready");
             }
             else {
                 gob.addTag(NGob.Tags.inwork);
-                color = new MixColor(NConfiguration.getInstance().colors.get("inwork"));
+                color = NConfiguration.getInstance().colors.get("inwork");
             }
         }
         count = gob.ols.size();

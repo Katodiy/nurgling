@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
 
+import haven.render.MixColor;
 import haven.res.ui.tt.highlighting.Highlighting;
 import haven.res.ui.tt.slot.Slotted;
 import haven.res.ui.tt.stackn.Stack;
@@ -29,7 +30,7 @@ public class NConfiguration {
     public boolean isVerified = false;
     public boolean isSubscribed = false;
     public boolean isMinerCredo = false;
-    public HashMap<String, Color> colors = new HashMap<>();
+    public HashMap<String, MixColor> colors = new HashMap<>();
     private static final NConfiguration instance = new NConfiguration();
     public boolean disabledCheck = false;
     public boolean enablePfBoundingBoxes = false;
@@ -356,15 +357,15 @@ public class NConfiguration {
                 KeyBinding.get ("cm12",KeyMatch.forcode(KeyEvent.VK_EQUALS,KeyMatch.C))
         };
 
-        colors.put("no_color",new Color(0,0,0,0));
-        colors.put("free",Color.green);
-        colors.put("ready",Color.red);
-        colors.put("inwork",new Color(0,0,0,0));
-        colors.put("warning",Color.yellow);
-        colors.put("no_soil",Color.yellow);
-        colors.put("no_water",Color.yellow);
-        colors.put("full",Color.red);
-        colors.put("not_full",Color.orange);
+        colors.put("no_color",new MixColor(new Color(0, 0, 0,0)));
+        colors.put("free",new MixColor(new Color(121, 151, 219,244)));
+        colors.put("ready",new MixColor(new Color(229, 27, 81, 195)));
+        colors.put("inwork",new MixColor(new Color(229, 81, 29,195)));
+        colors.put("warning",new MixColor(new Color(224, 204, 36, 139)));
+        colors.put("no_soil",new MixColor(new Color(224, 114, 36, 187)));
+        colors.put("no_water",new MixColor(new Color(36, 202, 224, 139)));
+        colors.put("full",new MixColor(new Color(224, 36, 114, 240)));
+        colors.put("not_full",new MixColor(new Color(224, 186, 36, 174)));
 
         playerSpeed_h.put("Crawl On", 0);
         playerSpeed_h.put("Walk On", 1);
@@ -603,7 +604,7 @@ public class NConfiguration {
         JSONArray colorsarr = new JSONArray ();
         for(String key: colors.keySet()){
             JSONObject colorobj = new JSONObject ();
-            Color clr = colors.get(key);
+            Color clr = colors.get(key).color();
             colorobj.put("name", key);
             colorobj.put("r", clr.getRed());
             colorobj.put("g", clr.getGreen());
@@ -964,7 +965,7 @@ public class NConfiguration {
                 Iterator<JSONObject> color_it = colors_arr.iterator();
                 while (color_it.hasNext()) {
                     JSONObject item = color_it.next();
-                    colors.put(item.get("name").toString(), new Color((int)((long)item.get("r")),(int)((long)item.get("g")),(int)((long)item.get("b")),(int)((long)item.get("a"))));
+                    colors.put(item.get("name").toString(), new MixColor(new Color((int)((long)item.get("r")),(int)((long)item.get("g")),(int)((long)item.get("b")),(int)((long)item.get("a")))));
                 }
             }
             if(jsonObject.get ( "showCropStage" )!=null)

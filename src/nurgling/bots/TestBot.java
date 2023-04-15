@@ -94,6 +94,7 @@ public class TestBot extends Bot {
                                 //                                System.out.println ( res );
                                 System.out.println ( gob.rc );
                                 
+                                //         Resource.readimage(new ByteArrayInputStream(((TexR) l).img))
                                 //                                Coord sfcoord = gob.rc.div ( MCache.tilesz ).floor ();
                                 //                                Area calibr =  Finder.findCalibrationArea ();
                                 //                                System.out.println (isGobInArea ( calibr ));

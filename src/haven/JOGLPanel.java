@@ -447,8 +447,6 @@ public class JOGLPanel extends GLCanvas implements Runnable, UIPanel, Console.Di
     private void drawstats(UI ui, GOut g, GLRender buf) {
 
 	int y = g.sz().y - UI.scale(190), dy = FastText.h;
-	// Разобраться почему при наличии этих вызовов все работает быстреее..... видимо что то происходит внутри с контекстом....
-	y = 10000;
 	FastText.aprintf(g, new Coord(10, y -= dy), 0, 1, "FPS: %d (%d%%, %d%% idle, latency %d)", fps, (int)(uidle * 100.0), (int)(ridle * 100.0), framelag);
 	Runtime rt = Runtime.getRuntime();
 	long free = rt.freeMemory(), total = rt.totalMemory();
