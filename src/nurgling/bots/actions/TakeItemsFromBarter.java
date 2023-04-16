@@ -45,7 +45,7 @@ public class TakeItemsFromBarter implements Action {
                                 for ( int i = 0 ; i < count ; i++ ) {
                                     sb.bbtn.click ();
                                     int finalI = i + 1;
-                                    NUtils.waitEvent ( () -> gui.getInventory ().getItems ( items ).size () >= ( finalI ),
+                                    NUtils.waitEvent ( () -> gui.getInventory ().getWItems( items ).size () >= ( finalI ),
                                             60 );
                                 }
                             }
@@ -90,7 +90,7 @@ public class TakeItemsFromBarter implements Action {
                                 sb.bbtn.click ();
                                 int finalI = i + 1;
                                 NUtils.waitEvent (
-                                        () -> gui.getInventory ().getItems ( items ).size () >= ( finalI ),
+                                        () -> gui.getInventory ().getWItems( items ).size () >= ( finalI ),
                                         60 );
                             }
                         }
@@ -99,27 +99,14 @@ public class TakeItemsFromBarter implements Action {
             }
         }
     
-        if (  gui.getInventory ().getItems ( items ).size () >= count  ) {
+        if (  gui.getInventory ().getWItems( items ).size () >= count  ) {
             return new Results ( Results.Types.SUCCESS );
         }
         else {
             return new Results ( Results.Types.NO_ITEMS );
         }
     }
-    public TakeItemsFromBarter(
-            Gob gob,
-            Ingredient ingredient
-    ){
-        this(gob,ingredient.item,ingredient.area_out,ingredient.isInfo,ingredient.count);
-    }
-    
-    public TakeItemsFromBarter(
-            Ingredient ingredient
-    ){
-        this( Finder.findObjectInArea ( new NAlias ( "barter" ), 2000,
-                Finder.findNearestMark ( ingredient.barter_out) ),ingredient.item,ingredient.barter_out,ingredient.isInfo,ingredient.count);
-    }
-    
+
     public TakeItemsFromBarter(
             Gob gob,
             NAlias items,

@@ -50,7 +50,7 @@ public class DryerTobaccoAction implements Action {
                     while ( res.type == Results.Types.FULL );
                 }
             }
-            if ( !gui.getInventory ().getItems ( new NAlias("tobacco-cured") ).isEmpty () ) {
+            if ( !gui.getInventory ().getWItems( new NAlias("tobacco-cured") ).isEmpty () ) {
                 new TransferItemsToBarter(AreasID.tobacco_out, new NAlias("tobacco-cured"), false).run(gui);
             }
         }

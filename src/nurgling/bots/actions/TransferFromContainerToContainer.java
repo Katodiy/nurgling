@@ -112,7 +112,7 @@ public class TransferFromContainerToContainer implements Action {
                         }
                     }
                     else {
-                        if ( !gui.getInventory ().getItems ( items ).isEmpty () ) {
+                        if ( !gui.getInventory ().getWItems( items ).isEmpty () ) {
                             if(out == null) {
                                 new TransferToPile ( output, NHitBox.get ( oname.keys.get ( 0 ) ), oname, items )
                                         .run ( gui );
@@ -155,7 +155,7 @@ public class TransferFromContainerToContainer implements Action {
         }
         
         
-        if ( !gui.getInventory ().getItems ( items ).isEmpty () ) {
+        if ( !gui.getInventory ().getWItems( items ).isEmpty () ) {
             if ( !NUtils.checkName ( "stockpile", oname ) ) {
                 for ( Status ogob : sgobs ) {
                     if ( ( NUtils.isIt ( ogob.gob, new NAlias ( "dframe","table-" ) ) || ((  ogob.gob.getModelAttribute() & full ) == 0 && ogob.status ))) {

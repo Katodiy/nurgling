@@ -22,7 +22,7 @@ public class CraftRope implements Action {
         target = new NAlias( new ArrayList<> ( Arrays.asList ( "flax", "hemp", "cattail" ) ) );
         
         if ( !Finder.findObjectsInArea ( new NAlias ( "stockpile-hide" ), in_area ).isEmpty () ) {
-            while ( gui.getInventory ().getItems (new NAlias ("hidestrap")).size ()<10 ){
+            while ( gui.getInventory ().getWItems(new NAlias ("hidestrap")).size ()<10 ){
                 new TakeFromContainers ( new NAlias ( "stockpile-hide" ),
                         new NAlias (new ArrayList<> (Arrays.asList ( "hide", "patch", "scale" )) ), 1,
                         in_area,

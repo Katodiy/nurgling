@@ -113,7 +113,7 @@ public class Text implements Disposable {
 	    font = f;
 	    this.defcol = defcol;
 	    BufferedImage junk = TexI.mkbuf(new Coord(10, 10));
-	    Graphics tmpl = junk.getGraphics();
+	    java.awt.Graphics tmpl = junk.getGraphics();
 	    tmpl.setFont(f);
 	    m = tmpl.getFontMetrics();
 	}
@@ -130,11 +130,6 @@ public class Text implements Disposable {
 	    this(font.deriveFont(UI.scale((float)psz)));
 	}
 
-	@Deprecated
-	public Foundry(String font, int psz) {
-	    this(new Font(font, Font.PLAIN, psz));
-	}
-		
 	public Foundry aa(boolean aa) {
 	    this.aa = aa;
 	    return(this);

@@ -32,8 +32,7 @@ import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.function.*;
 import haven.ItemInfo.AttrCache;
-import haven.res.ui.tt.leashed.Leashed;
-import haven.res.ui.tt.q.quality.Quality;
+import nurgling.NGItem;
 
 import static haven.ItemInfo.find;
 import static haven.Inventory.sqsz;
@@ -100,15 +99,15 @@ public class WItem extends Widget implements DTarget {
 		shorttip = longtip = null;
 		ttinfo = info;
 	    }
-	    if(now - hoverstart < 1.0) {
-		if(shorttip == null)
-		    shorttip = new ShortTip(info);
-		return(shorttip);
-	    } else {
-		if(longtip == null)
+//	    if(now - hoverstart < 1.0) {
+//		if(shorttip == null)
+//		    shorttip = new ShortTip(info);
+//		return(shorttip);
+//	    } else {
+		if(longtip == null || ((NGItem)item).needlongtip())
 		    longtip = new LongTip(info);
 		return(longtip);
-	    }
+//	    }
 	} catch(Loading e) {
 	    return("...");
 	}
@@ -142,21 +141,10 @@ public class WItem extends Widget implements DTarget {
 		if(inf instanceof GItem.OverlayInfo)
 		    buf.add(GItem.InfoOverlay.create((GItem.OverlayInfo<?>)inf));
 	    }
-		buf.sort(new Comparator<GItem.InfoOverlay<?>>() {
-			@Override
-			public int compare(GItem.InfoOverlay<?> o1, GItem.InfoOverlay<?> o2) {
-				if(o2.inf instanceof Quality)
-					return -1;
-				else if(o1.inf instanceof Quality)
-					return 1;
-				else
-					return 0;
-			}
-		});
 	    GItem.InfoOverlay<?>[] ret = buf.toArray(new GItem.InfoOverlay<?>[0]);
 	    return(() -> ret);
 	});
-    public final AttrCache<Double> itemmeter = new AttrCache<>(this::info, AttrCache.map1(GItem.MeterInfo.class, minf -> minf::meter));
+    public final AttrCache<Double> itemmeter = new AttrCache<Double>(this::info, AttrCache.map1(GItem.MeterInfo.class, minf -> minf::meter));
 
     private Widget contparent() {
 	/* XXX: This is a bit weird, but I'm not sure what the alternative is... */
@@ -192,10 +180,6 @@ public class WItem extends Widget implements DTarget {
 	    drawmain(g, spr);
 	    g.defstate();
 	    GItem.InfoOverlay<?>[] ols = itemols.get();
-	    if(ols != null) {
-		for(GItem.InfoOverlay<?> ol : ols)
-		    ol.draw(g);
-	    }
 	    Double meter = (item.meter > 0) ? Double.valueOf(item.meter / 100.0) : itemmeter.get();
 	    if((meter != null) && (meter > 0)) {
 		g.chcolor(255, 255, 255, 64);
@@ -203,6 +187,10 @@ public class WItem extends Widget implements DTarget {
 		g.prect(half, half.inv(), half, meter * Math.PI * 2);
 		g.chcolor();
 	    }
+		if(ols != null) {
+			for(GItem.InfoOverlay<?> ol : ols)
+				ol.draw(g);
+		}
 	} else {
 	    g.image(missing.layer(Resource.imgc).tex(), Coord.z, sz);
 	}
@@ -236,11 +224,12 @@ public class WItem extends Widget implements DTarget {
 	return(true);
     }
 
-    public boolean mousehover(Coord c) {
-	if(item.contents != null) {
-	    item.hovering = this;
+    public boolean mousehover(Coord c, boolean on) {
+	boolean ret = super.mousehover(c, on);
+	if(on && (item.contents != null)) {
+	    item.hovering(this);
 	    return(true);
 	}
-	return(super.mousehover(c));
+	return(ret);
     }
 }

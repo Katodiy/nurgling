@@ -157,10 +157,11 @@ public class NMiniMap extends MiniMap {
             if(NUtils.getGameUI().mapfile.playerSegmentId() == marker.seg &&marker instanceof NSMarker && NUtils.checkName(((NSMarker)marker).res.name,"small/bush", "small/bumling")) {
                 {
                     Coord2d tmp = marker.tc.sub(loc.tc).mul(tilesz).add(6, 6);
-                    NQuestInfo.setMarker(marker.name(), marker);
-                    NQuestInfo.updateTags(marker.name());
+
                     Gob gob = Finder.findObject(tmp,new NAlias("tree","bumling"));
-                    if(gob!=null){
+                    if(gob!=null && NUtils.getGameUI()!=null && NUtils.getGameUI().questInfo!=null){
+                        NUtils.getGameUI().getQuestInfo().setMarker(marker.name(), marker, gob.id);
+                        NUtils.getGameUI().getQuestInfo().updateTags(marker.name());
                         gob.addTag(NGob.Tags.quester);
                     }
                 }

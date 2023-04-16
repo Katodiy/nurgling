@@ -694,10 +694,6 @@ public class Audio {
 	play(fromres(res));
     }
 
-	public static void alarm(Resource res) {
-		play(fromres(res));
-	}
-
     public static void main(String[] args) throws Exception {
 	Collection<Monitor> clips = new LinkedList<Monitor>();
 	for(int i = 0; i < args.length; i++) {

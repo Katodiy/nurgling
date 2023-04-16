@@ -173,4 +173,39 @@
     <copy todir="bin/" file="build/nurgler-res.jar" />
   </target>
 
+
+  <target name="pre-release" depends="build-env, jar, extlib/jogl">
+    <copy todir="release" failonerror="false" quiet="true">
+      <file name="lib/ext/builtin-res.jar" />
+      <file name="lib/ext/hafen-res.jar" />
+    </copy>
+    <copy todir="release">
+      <fileset dir="lib/ext/jogl">
+        <include name="*.jar" />
+      </fileset>
+    </copy>
+    <copy file="etc/ansgar-config.properties" tofile="release/haven-config.properties" failonerror="false" quiet="true" />
+    <copy todir="release/" file="build/nurgler-res.jar" />
+    <copy todir="release/" file="etc/drink_data.json" />
+    <copy todir="release/" file="etc/tile_names.json" />
+    <copy todir="release/" file="build/hafen.jar" />
+    <copy todir="release/" file="etc/run.bat" />
+    <copy todir="release/" file="etc/run8.bat" />
+    <copy todir="release/" file="etc/run_updater.bat" />
+    <copy todir="release/" file="etc/run_updater8.bat" />
+    <copy todir="release/" file="etc/nurgling_launcher.jar" />
+  </target>
+
+  <property name="version.num" value="0.044"/>
+  <target name="version" depends="pre-release">
+    <buildnumber file="build.num"/>
+    <exec executable="java" failifexecutionfails="false">
+      <arg line="-jar etc/nurgling_launcher.jar hash release ${version.num}.${build.number}" />
+    </exec>
+  </target>
+
+  <target name="release" depends="version">
+    <copy todir="release/" file="ver" />
+  </target>
+
 </project>

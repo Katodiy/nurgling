@@ -1,112 +1,33 @@
 package nurgling;
 
 import haven.*;
+import haven.res.ui.tt.slot.Slotted;
+import haven.res.ui.tt.stackn.Stack;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.*;
 
 public class NInventory extends Inventory {
+    public NSearchWidget searchwdg;
+    public NPopUpWidget toggles;
+    public ICheckBox bundle;
+
+    public MenuGrid.Pagina pagBundle = null;
 
     public NInventory(Coord sz) {
         super(sz);
     }
 
-    Window wnd = null;
-
-    AtomicBoolean isTogglReady = new AtomicBoolean(false);
-    MenuGrid.PagButton bundle = null;
-    class ToggleChecker implements Runnable
-    {
-        @Override
-        public void run() {
-            try {
-                NUtils.getGameUI().isToogleCheck.set(true);
-                NUtils.waitEvent(()->NUtils.getGameUI().menu!=null,2000);
-                for(MenuGrid.Pagina p : NUtils.getGameUI().menu.paginae.keySet())
-                {
-                    if(p.res!=null) {
-                        String name = ((Session.CachedRes.Ref) (p.res)).getName();
-                        if (name.contains("paginae/act/itemcomb")) {
-                            (bundle = p.button()).use(new MenuGrid.Interaction(1, 0));
-                            break;
-                        }
-                    }
-                }
-                NUtils.waitEvent(()->NUtils.getGameUI().isBundle!=null,2000);
-                if(bundle!=null)
-                {
-                    bundle.use(new MenuGrid.Interaction(1, 0));
-                    NUtils.waitEvent(()->NUtils.getGameUI().isToogleCheck.get(),2000);
-                }
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            isTogglReady.set(true);
-        }
-    }
-
-    NMiniMapWnd.NMenuCheckBox mmbundle = null;
-    @Override
-    public void tick(double dt) {
-        super.tick(dt);
-        if(NUtils.getGameUI().getInventory()==this)
-        {
-            if(wnd == null)
-            {
-                if(!NUtils.getGameUI().isToogleCheck.get() && !isTogglReady.get()) {
-                    new Thread(new ToggleChecker()).start();
-                }
-                if(isTogglReady.get() && NUtils.getGameUI().isBundle!=null) {
-                    wnd = this.getparent(Window.class);
-                    mmbundle = (NMiniMapWnd.NMenuCheckBox)wnd.add(new NMiniMapWnd.NMenuCheckBox("lbtn-bundle", GameUI.kb_vil, "Enable/disable stack"), sz.x - 2* wnd.cbtn.sz.x, -UI.scale(21)).changed(a -> {
-                        bundle.use(new MenuGrid.Interaction(1, 0));
-                    });
-                    mmbundle.a = NUtils.getGameUI().isBundle.get();
-                }
-            }
-            else
-            {
-                if(NUtils.getGameUI().isBundle!=null)
-                    mmbundle.a = NUtils.getGameUI().isBundle.get();
-            }
-        }
-    }
+    boolean showPopup = false;
 
     @Override
     public void resize(Coord sz) {
-        mmbundle.move(new Coord(sz.x - 2* wnd.cbtn.sz.x, -UI.scale(21)));
-        wnd.cbtn.move(new Coord(sz.x - wnd.cbtn.sz.x, -UI.scale(21)));
-        super.resize(sz);
-    }
+        super.resize(new Coord(sz));
+        searchwdg.resize(new Coord(sz.x , 0));
+        searchwdg.move(new Coord(0,sz.y + UI.scale(5)));
+        parent.pack();
 
-    /**
-     * Получить контейнеры с водой
-     *
-     * @return Массив контейнеров
-     */
-    public ArrayList<WItem> getWaterContainers(
-    )
-            throws InterruptedException {
-        ArrayList<WItem> containers = new ArrayList<>();
 
-        for (WItem item : getAll()) {
-            if (item != null) {
-                try {
-                    NUtils.checkName(item.item.getres().name,
-                            new NAlias(new ArrayList<>(Arrays.asList("waterskin", "waterflask", "kuksa")),
-                                    new ArrayList<>()));
-                } catch (Loading e) {
-
-                }
-                if (NUtils.isContentWater(item.item)) {
-                    containers.add(item);
-                }
-            }
-        }
-        return containers;
+        movePopup(parent.c);
     }
 
     /**
@@ -116,7 +37,7 @@ public class NInventory extends Inventory {
      * @return Предмет из инвентаря
      */
     public GItem getItem(NAlias key) throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof GItem) {
@@ -131,7 +52,7 @@ public class NInventory extends Inventory {
     }
 
     public WItem getItem(GItem item) throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
@@ -146,7 +67,7 @@ public class NInventory extends Inventory {
     }
 
     public GItem getItem(NAlias key, Class <? extends ItemInfo> candidate) throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
@@ -165,6 +86,7 @@ public class NInventory extends Inventory {
     }
 
     public boolean findItem(GItem item) {
+        waitLoading();
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
                 /// Для каждого найденго в компонентах предмета осуществляется проверка на его соответствие ключу
@@ -192,7 +114,7 @@ public class NInventory extends Inventory {
             QualityType type
     )
             throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         double quality = (type == QualityType.High) ? -1 : 10000;
         WItem res = null;
         /// Рзбираются компоненты инвентаря
@@ -217,7 +139,7 @@ public class NInventory extends Inventory {
             NAlias name
     )
             throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
@@ -244,7 +166,7 @@ public class NInventory extends Inventory {
             double q
     )
             throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
@@ -268,7 +190,7 @@ public class NInventory extends Inventory {
             int freeSpace
     )
             throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
@@ -290,7 +212,7 @@ public class NInventory extends Inventory {
     }
 
     public boolean isInInventory(GItem item) throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
@@ -302,46 +224,56 @@ public class NInventory extends Inventory {
         }
         return false;
     }
-    public ArrayList<GItem> getItems(
-            final NAlias names
-    ) throws InterruptedException {
-        return getItems(names,-1);
-    }
-    public ArrayList<GItem> getItems(
+
+    public ArrayList<GItem> getWItems(
             final NAlias names,
             double q
-    ) throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+    ) {
+        waitLoading();
         ArrayList<GItem> result = new ArrayList<>();
-        /// Рзбираются компоненты инвентаря
+            for (Widget widget = child; widget != null; widget = widget.next) {
+                if (widget instanceof WItem) {
+                    NWItem wdg = ((NWItem) widget);
+                    if (NUtils.isIt(wdg, names)) {
+                        if (((NGItem)wdg.item).quality() >= q) {
+                            result.add(wdg.item);
+                        }
+                    }
+                }
+            }
+        return result;
+    }
+
+    public ArrayList<GItem> getWItems(
+            Class<?> cl
+    ) {
+        waitLoading();
+        ArrayList<GItem> result = new ArrayList<>();
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
-                GItem wdg = ((WItem) widget).item;
-                /// Для каждого найденго в компонентах предмета осуществляется проверка на его соответствие ключу
-                if (NUtils.isIt(wdg, names) || (NUtils.isItInfo(wdg, names))) {
-                    if ((((NGItem) (wdg)).quality()) >= q) {
-                        result.add(wdg);
-                    }
+                NGItem wdg = (NGItem) ((WItem) widget).item;
+                if (wdg.isSeached) {
+                    result.add(wdg);
                 }
             }
         }
         return result;
     }
 
-    public ArrayList<GItem> getItems(
+    public ArrayList<GItem> getWItems(
             final NAlias names,
             double q,
             boolean isMore
     )
             throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         ArrayList<GItem> result = new ArrayList<>();
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
                 /// Для каждого найденго в компонентах предмета осуществляется проверка на его соответствие ключу
-                if (NUtils.isIt((WItem) widget, names) || (NUtils.isItInfo(((WItem) widget).item, names)))
-                   {
+                if (NUtils.isIt((WItem) widget, names))
+                {
                     if (isMore) {
                         if ((((NGItem)((WItem) widget).item).quality()) >= q) {
                             result.add(((WItem) widget).item);
@@ -357,9 +289,38 @@ public class NInventory extends Inventory {
         return result;
     }
 
-    public ArrayList<GItem> getItems(
+    public ArrayList<GItem> getGItems(
+            final NAlias names,
+            double q,
+            boolean isMore
+    )
+            throws InterruptedException {
+        waitLoading();
+        ArrayList<GItem> result = new ArrayList<>();
+        /// Рзбираются компоненты инвентаря
+        for (Widget widget = child; widget != null; widget = widget.next) {
+            if (widget instanceof WItem) {
+                /// Для каждого найденго в компонентах предмета осуществляется проверка на его соответствие ключу
+                if (NUtils.checkName(((NGItem)((NWItem) widget).item).name(), names))
+                {
+                    if (isMore) {
+                        if ((((NGItem)((WItem) widget).item).quality()) >= q) {
+                            result.add(((WItem) widget).item);
+                        }
+                    } else {
+                        if  ((((NGItem)((WItem) widget).item).quality()) <= q) {
+                            result.add(((WItem) widget).item);
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public ArrayList<GItem> getWItems(
     ) throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         ArrayList<GItem> result = new ArrayList<>();
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
@@ -373,7 +334,7 @@ public class NInventory extends Inventory {
 
     public ArrayList<WItem> getAll()
             throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         ArrayList<WItem> result = new ArrayList<>();
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
@@ -395,6 +356,7 @@ public class NInventory extends Inventory {
      * @return Количество
      */
     public int getNumberItem(NAlias key) {
+        waitLoading();
         int result = 0;
         /// Рзбираются компоненты инвентаря
         for (Widget widget = child; widget != null; widget = widget.next) {
@@ -411,34 +373,49 @@ public class NInventory extends Inventory {
         return result;
     }
 
+    public ArrayList<GItem> getWItems(
+            NAlias name
+    ) {
+        waitLoading();
+        ArrayList<GItem> result = new ArrayList<>();
+        for (Widget widget = child; widget != null; widget = widget.next) {
+            if (widget instanceof WItem) {
+                NGItem wdg = (NGItem) ((WItem) widget).item;
+                if (NUtils.checkName(wdg.res.get().name, name)) {
+                    result.add(wdg);
+                }
+            }
+        }
+        return result;
+    }
+
+    public ArrayList<GItem> getGItems(
+            NAlias name
+    ) {
+        waitLoading();
+        ArrayList<GItem> result = new ArrayList<>();
+        for (Widget widget = child; widget != null; widget = widget.next) {
+            if (widget instanceof WItem) {
+                NGItem wdg = (NGItem) ((WItem) widget).item;
+                if (NUtils.checkName(wdg.name(), name)) {
+                    result.add(wdg);
+                }
+            }
+        }
+        return result;
+    }
+
     /**
      * Получить свободное место
      *
      * @return свободное место
      */
     public int getFreeSpace() throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         int freespace = 0;
         if(parent instanceof NGameUI || parent instanceof Window) {
             boolean[][] inventory = new boolean[isz.x][isz.y];
-            for (int i = 0; i < isz.x; i++) {
-                for (int j = 0; j < isz.y; j++) {
-                    inventory[i][j] = false;
-                }
-            }
-            for (Widget widget = child; widget != null; widget = widget.next) {
-                if (widget instanceof WItem) {
-                    WItem wdg = (WItem) widget;
-                    Coord pos = new Coord(wdg.c.x / (sqsz.x  - UI.scale(1)), wdg.c.y / (sqsz.x  - UI.scale(1)));
-                    Coord size = ((NGItem) wdg.item).spriteSize;
-                    Coord endPos = new Coord(pos.x + size.x - UI.scale(1), pos.y + size.y  - UI.scale(1));
-                    for (int i = pos.x; i <= endPos.x; i++) {
-                        for (int j = pos.y; j <= endPos.y; j++) {
-                            inventory[i][j] = true;
-                        }
-                    }
-                }
-            }
+            fillInventorySpace(inventory);
             for (int i = 0; i < isz.x; i++) {
                 for (int j = 0; j < isz.y; j++) {
                     if (!inventory[i][j])
@@ -457,10 +434,7 @@ public class NInventory extends Inventory {
         return freespace;
     }
 
-    public Coord getFreeCoord(WItem item) throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
-        int freespace = isz.x * isz.y;
-        boolean[][] inventory = new boolean[isz.x][isz.y];
+    private void fillInventorySpace(boolean[][] inventory) {
         for (int i = 0; i < isz.x; i++) {
             for (int j = 0; j < isz.y; j++) {
                 inventory[i][j] = false;
@@ -469,25 +443,59 @@ public class NInventory extends Inventory {
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
                 WItem wdg = (WItem) widget;
-                Coord pos = new Coord(wdg.c.x / (sqsz.x - 1), wdg.c.y / (sqsz.x - 1));
-                Coord size = ((NGItem) wdg.item).spriteSize;
-                Coord endPos = new Coord(pos.x + size.x - 1, pos.y + size.y - 1);
-                for (int i = pos.x; i <= endPos.x; i++) {
-                    for (int j = pos.y; j <= endPos.y; j++) {
+                Coord pos = new Coord(wdg.c.x / (sqsz.x  - UI.scale(1)), wdg.c.y / (sqsz.x  - UI.scale(1)));
+                Coord size = ((NGItem) wdg.item).sprSz();
+                Coord endPos = new Coord(pos.x + size.x, pos.y + size.y );
+                for (int i = pos.x; i < endPos.x; i++) {
+                    for (int j = pos.y; j < endPos.y; j++) {
                         inventory[i][j] = true;
                     }
                 }
             }
         }
+    }
 
-        Coord size = new Coord(item.sz.x / sqsz.x, item.sz.y / sqsz.y);
+    public Coord getFreeCoord(WItem item) throws InterruptedException {
+        waitLoading();
+        boolean[][] inventory = new boolean[isz.x][isz.y];
+        fillInventorySpace(inventory);
+
+        Coord size = new Coord(((NGItem)item.item).sprSz());
         for (int i = 0; i < isz.x; i++) {
             for (int j = 0; j < isz.y; j++) {
                 if (!inventory[i][j]) {
-                    if (i + size.x - 1 < isz.x && j + size.y - 1 < isz.y) {
+                    if (i + size.x < isz.x && j + size.y< isz.y) {
                         boolean isFree = true;
-                        for (int k = i; k <= i + size.x - 1; k++) {
-                            for (int n = j; n <= j + size.y - 1; n++) {
+                        for (int k = i; k < i + size.x; k++) {
+                            for (int n = j; n < j + size.y; n++) {
+                                if (inventory[k][n]) {
+                                    isFree = false;
+                                    break;
+                                }
+                            }
+                        }
+                        if (isFree) {
+                            return new Coord(i, j);
+                        }
+                    }
+                }
+            }
+        }
+        return new Coord(-1, -1);
+    }
+
+    public Coord getFreeCoord(Coord coord) throws InterruptedException {
+        waitLoading();
+        boolean[][] inventory = new boolean[isz.x][isz.y];
+        fillInventorySpace(inventory);
+
+        for (int i = 0; i < isz.x; i++) {
+            for (int j = 0; j < isz.y; j++) {
+                if (!inventory[i][j]) {
+                    if (i + coord.x <= isz.x && j + coord.y <= isz.y) {
+                        boolean isFree = true;
+                        for (int k = i; k < i + coord.x; k++) {
+                            for (int n = j; n < j + coord.y; n++) {
                                 if (inventory[k][n]) {
                                     isFree = false;
                                     break;
@@ -505,29 +513,12 @@ public class NInventory extends Inventory {
     }
 
     public int getNumberFreeCoord(GItem item) throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         if (item != null) {
             boolean[][] inventory = new boolean[isz.x][isz.y];
-            for (int i = 0; i < isz.x; i++) {
-                for (int j = 0; j < isz.y; j++) {
-                    inventory[i][j] = false;
-                }
-            }
-            for (Widget widget = child; widget != null; widget = widget.next) {
-                if (widget instanceof WItem) {
-                    WItem wdg = (WItem) widget;
-                    Coord pos = new Coord((wdg.c.x - 1) / sqsz.x, (wdg.c.y - 1) / sqsz.y);
-                    Coord size = ((NGItem) wdg.item).spriteSize;
-                    Coord endPos = new Coord(pos.x + size.x - 1, pos.y + size.y - 1);
-                    for (int i = pos.x; i <= endPos.x; i++) {
-                        for (int j = pos.y; j <= endPos.y; j++) {
-                            inventory[i][j] = true;
-                        }
-                    }
-                }
-            }
+            fillInventorySpace(inventory);
             int count = 0;
-            Coord size = new Coord(item.sz.x / sqsz.x, item.sz.y / sqsz.y);
+            Coord size = ((NGItem)item).sprSz();
             if (NUtils
                     .isIt(item, new NAlias(new ArrayList<String>(Arrays.asList("pickaxe", "bough"))))) {
                 size.y = 2;
@@ -535,10 +526,10 @@ public class NInventory extends Inventory {
             for (int i = 0; i < isz.x; i++) {
                 for (int j = 0; j < isz.y; j++) {
                     if (!inventory[i][j]) {
-                        if (i + size.x - 1 < isz.x && j + size.y - 1 < isz.y) {
+                        if (i + size.x - UI.scale(1) < isz.x && j + size.y - UI.scale(1) < isz.y) {
                             boolean isFree = true;
-                            for (int k = i; k <= i + size.x - 1; k++) {
-                                for (int n = j; n <= j + size.y - 1; n++) {
+                            for (int k = i; k < i + size.x; k++) {
+                                for (int n = j; n < j + size.y; n++) {
                                     if (inventory[k][n]) {
                                         isFree = false;
                                         break;
@@ -559,36 +550,18 @@ public class NInventory extends Inventory {
     }
 
     public int getNumberFreeCoord(Coord target_size) throws InterruptedException {
-        NUtils.waitEvent(this::isLoaded,50);
+        waitLoading();
         int count = 0;
         /// Вычисляем свободные слоты в инвентаре
         boolean[][] inventory = new boolean[isz.x][isz.y];
-        for (int i = 0; i < isz.x; i++) {
-            for (int j = 0; j < isz.y; j++) {
-                inventory[i][j] = false;
-            }
-        }
-        for (Widget widget = child; widget != null; widget = widget.next) {
-            if (widget instanceof WItem) {
-                WItem wdg = (WItem) widget;
-                Coord pos = new Coord((wdg.c.x - 1) / sqsz.x, (wdg.c.y - 1) / sqsz.y);
-                Coord size = UI.unscale(((NGItem) wdg.item).spriteSize);
-                Coord endPos = new Coord(pos.x + size.x - 1, pos.y + size.y - 1);
-                for (int i = pos.x; i <= endPos.x; i++) {
-                    for (int j = pos.y; j <= endPos.y; j++) {
-                        inventory[i][j] = true;
-                    }
-                }
-            }
-        }
-
+        fillInventorySpace(inventory);
         for (int i = 0; i < isz.x; i++) {
             for (int j = 0; j < isz.y; j++) {
                 if (!inventory[i][j]) {
                     if (i + target_size.x - 1 < isz.x && j + target_size.y - 1 < isz.y) {
                         boolean isFree = true;
-                        for (int k = i; k <= i + target_size.x - 1; k++) {
-                            for (int n = j; n <= j + target_size.y - 1; n++) {
+                        for (int k = i; k < i + target_size.x; k++) {
+                            for (int n = j; n < j + target_size.y; n++) {
                                 if (inventory[k][n]) {
                                     isFree = false;
                                     break;
@@ -597,8 +570,8 @@ public class NInventory extends Inventory {
                         }
                         if (isFree) {
                             count += 1;
-                            for (int k = i; k <= i + target_size.x - 1; k++) {
-                                for (int n = j; n <= j + target_size.y - 1; n++) {
+                            for (int k = i; k < i + target_size.x; k++) {
+                                for (int n = j; n < j + target_size.y; n++) {
                                     inventory[k][n] = true;
                                 }
                             }
@@ -608,18 +581,6 @@ public class NInventory extends Inventory {
             }
         }
         return count;
-    }
-
-
-    public WItem getNew() {
-        for (Widget wdg = child; wdg != null; wdg = wdg.next) {
-            if (wdg instanceof WItem) {
-                if (wdg.next == null) {
-                    return (WItem) wdg;
-                }
-            }
-        }
-        return null;
     }
 
     public static final Comparator<NGItem> ITEM_COMPARATOR_ASC = new Comparator<NGItem>() {
@@ -636,6 +597,7 @@ public class NInventory extends Inventory {
     };
 
     private List<NGItem> getSame(GItem item, Boolean ascending) {
+        waitLoading();
         List<NGItem> items = new ArrayList<>();
         if (item != null && item.res != null) {
             boolean isMeat = (NUtils.isIt(item,"meat"));
@@ -678,12 +640,24 @@ public class NInventory extends Inventory {
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
                 NGItem item = ((NGItem) ((WItem) widget).item);
-                if ( (item.status & NGItem.COMPLETED) == 0)
+                if ( (item.getStatus() & NGItem.NAME_IS_READY) == 0 || (item.getStatus() & NGItem.SPR_IS_READY) == 0)
                     return false;
             }
         }
         return true;
     }
+
+    public void movePopup(Coord c) {
+        if(toggles !=null)
+        {
+           toggles.move(new Coord(c.x - toggles.sz.x + toggles.atl.x +UI.scale(10),c.y + UI.scale(35)));
+        }
+        if(searchwdg!=null && searchwdg.history!=null) {
+            searchwdg.history.move(new Coord(c.x  + ((Window)parent).ca().ul.x + UI.scale(7), c.y + parent.sz.y- UI.scale(37)));
+        }
+        super.mousemove(c);
+    }
+
 
     public boolean locked = false;
     @Override
@@ -706,5 +680,124 @@ public class NInventory extends Inventory {
     public boolean mousedown(Coord c, int button) {
         return !locked && super.mousedown(c, button);
     }
-}
 
+    @Override
+    public void tick(double dt) {
+        super.tick(dt);
+        if(toggles !=null)
+            toggles.visible = parent.visible && showPopup;
+    }
+
+    private static final TexI[] collapsei = new TexI[]{
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/itogglecu")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/itogglecd")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/itogglech")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/itogglecdh"))};
+
+    private static final TexI[] gildingi = new TexI[]{
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/gilding/u")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/gilding/d")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/gilding/h")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/gilding/dh"))};
+
+    private static final TexI[] vari = new TexI[]{
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/var/u")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/var/d")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/var/h")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/var/dh"))};
+
+    private static final TexI[] stacki = new TexI[]{
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/stack/u")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/stack/d")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/stack/h")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/stack/dh"))};
+
+    private static final TexI[] autoflower = new TexI[]{
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/autoflower/u")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/autoflower/d")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/autoflower/h")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/autoflower/dh"))};
+
+    private static final TexI[] bundlei = new TexI[]{
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/bundle/u")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/bundle/d")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/bundle/h")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/bundle/dh"))};
+
+    public void installMainInv() {
+        searchwdg = new NSearchWidget(new Coord(sz));
+        searchwdg.resize(sz);
+        parent.add(searchwdg, (new Coord(0, sz.y + UI.scale(10))));
+        parent.add(new ICheckBox(collapsei[0], collapsei[1], collapsei[2], collapsei[3]) {
+                       @Override
+                       public void changed(boolean val) {
+                           super.changed(val);
+                           showPopup = val;
+                       }
+                   }
+                , new Coord(-gildingi[0].sz().x + UI.scale(2), UI.scale(27)));
+
+        parent.pack();
+        toggles = NUtils.getGameUI().add(new NPopUpWidget(new Coord(UI.scale(50), UI.scale(80)), NPopUpWidget.Type.RIGHT));
+
+
+        Widget pw = toggles.add(new ICheckBox(gildingi[0], gildingi[1], gildingi[2], gildingi[3]) {
+            @Override
+            public void changed(boolean val) {
+                super.changed(val);
+                Slotted.show = val;
+            }
+        }, toggles.atl);
+        pw.settip(Resource.remote().loadwait("nurgling/hud/buttons/gilding/u").flayer(Resource.tooltip).t);
+        ((ICheckBox)pw).a = Slotted.show;
+        pw = toggles.add(new ICheckBox(vari[0], vari[1], vari[2], vari[3]) {
+            @Override
+            public void changed(boolean val) {
+                super.changed(val);
+                NFoodInfo.show = val;
+            }
+        }, pw.pos("bl").add(UI.scale(new Coord(0, 5))));
+        pw.settip(Resource.remote().loadwait("nurgling/hud/buttons/var/u").flayer(Resource.tooltip).t);
+        ((ICheckBox)pw).a = NFoodInfo.show;
+        pw = toggles.add(new ICheckBox(stacki[0], stacki[1], stacki[2], stacki[3]) {
+            @Override
+            public void changed(boolean val) {
+                super.changed(val);
+                Stack.show = val;
+            }
+        }, pw.pos("bl").add(UI.scale(new Coord(0, 5))));
+        ((ICheckBox)pw).a = Stack.show;
+        pw.settip(Resource.remote().loadwait("nurgling/hud/buttons/stack/u").flayer(Resource.tooltip).t);
+
+        bundle = toggles.add(new ICheckBox(bundlei[0], bundlei[1], bundlei[2], bundlei[3]) {
+            @Override
+            public void changed(boolean val) {
+                super.changed(val);
+                pagBundle.button().use(new MenuGrid.Interaction(1, 0));
+            }
+        }, pw.pos("ur").add(UI.scale(new Coord(5, 0))));
+        bundle.settip(Resource.remote().loadwait("nurgling/hud/buttons/bundle/u").flayer(Resource.tooltip).t);
+
+        pw = toggles.add(new ICheckBox(autoflower[0], autoflower[1], autoflower[2], autoflower[3]) {
+            @Override
+            public void changed(boolean val) {
+                super.changed(val);
+                NConfiguration.getInstance().autoFlower = val;
+            }
+        }, pw.pos("bl").add(UI.scale(new Coord(0, 5))));
+        ((ICheckBox)pw).a = Stack.show;
+        pw.settip(Resource.remote().loadwait("nurgling/hud/buttons/autoflower/u").flayer(Resource.tooltip).t);
+
+        toggles.pack();
+        movePopup(parent.c);
+        toggles.pack();
+
+    }
+
+    void waitLoading(){
+        try {
+            NUtils.waitEvent(this::isLoaded,500);
+        } catch (InterruptedException ignored) {
+        }
+    }
+}

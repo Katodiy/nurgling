@@ -32,11 +32,11 @@ public class NContainerColor extends NGAttrib implements Gob.SetupMod {
             gob.removeTag(NGob.Tags.free, NGob.Tags.full);
         }
         if (gob.isTag(NGob.Tags.full))
-            color = new MixColor(NConfiguration.getInstance().colors.get("full"));
+            color =NConfiguration.getInstance().colors.get("full");
         else if (gob.isTag(NGob.Tags.not_full)) {
-            color = new MixColor(NConfiguration.getInstance().colors.get("not_full"));
+            color = NConfiguration.getInstance().colors.get("not_full");
         } else if (gob.isTag(NGob.Tags.free)) {
-            color = new MixColor(NConfiguration.getInstance().colors.get("free"));
+            color = NConfiguration.getInstance().colors.get("free");
         }
     }
 
@@ -49,7 +49,7 @@ public class NContainerColor extends NGAttrib implements Gob.SetupMod {
     }
 
 
-    public Pipe.Op placestate() {
+    public Pipe.Op gobstate() {
         if (disabled)
             return color;
         else

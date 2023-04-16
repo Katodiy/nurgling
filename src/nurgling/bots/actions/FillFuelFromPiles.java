@@ -11,7 +11,6 @@ import nurgling.tools.Finder;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class FillFuelFromPiles implements Action {
     
@@ -48,7 +47,7 @@ public class FillFuelFromPiles implements Action {
                 }
                 if(need>0) {
                     int for_load = need;
-                    need = need - gui.getInventory().getItems(items).size();
+                    need = need - gui.getInventory().getWItems(items).size();
                     if (inPile == null) {
                         return new Results(Results.Types.NO_FUEL);
                     }

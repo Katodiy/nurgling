@@ -33,17 +33,20 @@ public class TreeItemsCollection implements Action {
                     PathFinder pf = new PathFinder(gui, in);
                     pf.setHardMode(true);
                     pf.run();
-                    NFlowerMenu.instance.selectInCurrent(item_name);
-                    do {
-                        NUtils.waitEvent(() -> NUtils.getProg() >= 0, 50, 5);
-                        NUtils.waitEvent(() -> NUtils.getProg() < 0, 1000, 10);
-                        if (gui.getInventory()
-                                .getNumberFreeCoord(gui.getInventory().getItem(item_name)) <= th) {
-                            new TransferToPile(piles, NHitBox.get(pile_name),
-                                    new NAlias(pile_name), item_name).run(gui);
-                        }
-                        Thread.sleep(10);
-                    } while (NUtils.getProg() >= 0);
+                    NFlowerMenu fm = NUtils.getFlowerMenu();
+                    if(fm!=null) {
+                        fm.select(item_name);
+                        do {
+                            NUtils.waitEvent(() -> NUtils.getProg() >= 0, 50, 5);
+                            NUtils.waitEvent(() -> NUtils.getProg() < 0, 1000, 10);
+                            if (gui.getInventory()
+                                    .getNumberFreeCoord(gui.getInventory().getItem(item_name)) <= th) {
+                                new TransferToPile(piles, NHitBox.get(pile_name),
+                                        new NAlias(pile_name), item_name).run(gui);
+                            }
+                            Thread.sleep(10);
+                        } while (NUtils.getProg() >= 0);
+                    }
                 }
             }
         }

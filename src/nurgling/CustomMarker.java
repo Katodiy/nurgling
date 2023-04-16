@@ -67,7 +67,7 @@ public class CustomMarker extends
 	Image image = cache.get(cacheId);
 	if(image == null) {
 	    try {
-		image = new Image(Resource.loadsaved(Resource.remote(), spec), col);
+		image = new Image(spec.get(), col);
 		cache.put(cacheId, image);
 	    } catch (Loading ignored) {}
 	}

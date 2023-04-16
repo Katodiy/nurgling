@@ -27,7 +27,7 @@ public class NCraftWindow extends GameUI.Hidewnd {
 			Pagina lastCraft = ((NMenuGrid) NUtils.getGameUI().menu).lastCraft;
 			Pagina pagina = button.tag;
 			if (pagina != lastCraft) {
-				pagina.button().use();
+				pagina.button().use(new MenuGrid.Interaction(1, ui.modflags()));
 			}
 			((NMenuGrid) NUtils.getGameUI().menu).lastCraft = null;
 		}
@@ -70,7 +70,7 @@ public class NCraftWindow extends GameUI.Hidewnd {
     @Override
     public void cdraw(GOut g) {
 	super.cdraw(g);
-	frame.draw(g, new Coord(0, Math.max(0, tabStrip.sz.y - 1)), asz.sub(0, tabStrip.sz.y));
+	frame.draw(g, new Coord(0, Math.max(0, tabStrip.sz.y - 1)), csz().sub(0, tabStrip.sz.y));
     }
 
     @Override

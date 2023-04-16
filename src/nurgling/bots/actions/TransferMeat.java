@@ -1,7 +1,6 @@
 package nurgling.bots.actions;
 
 import haven.GItem;
-import haven.WItem;
 
 import nurgling.NAlias;
 import nurgling.NGameUI;
@@ -17,15 +16,14 @@ public class TransferMeat implements Action {
     @Override
     public Results run ( NGameUI gui )
             throws InterruptedException {
-        ArrayList<GItem> items = gui.getInventory().getItems(new NAlias("meat"));
+        ArrayList<GItem> items = gui.getInventory().getWItems(new NAlias("meat"));
         for(GItem item:  items){
             if(item.contents!=null) {
                 NUtils.destroyFCNbndl(item);
                 NUtils.waitEvent(()->NUtils.getGameUI().getInventory().wmap.get(item)==null,50);
             }
         }
-        items = gui.getInventory().getItems(new NAlias("meat"));
-        for(GItem item : items){
+        for(GItem item : gui.getInventory().getWItems(new NAlias("meat"))){
             AItem ingredient = Ingredient.get(item);
             NAlias name = new NAlias(NUtils.getInfo(item));
             if(ingredient!=null) {

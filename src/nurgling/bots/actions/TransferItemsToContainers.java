@@ -50,7 +50,7 @@ public class TransferItemsToContainers implements Action {
                 if (cap.equals("")) {
                     cap = NUtils.getContainerType(out.get(0)).cap;
                 }
-                if (!gui.getInventory().getItems(items).isEmpty()) {
+                if (!gui.getInventory().getWItems(items).isEmpty()) {
                     for (Gob data : out) {
                         if (NUtils.isIt(data, new NAlias("htable"))) {
                             if (NUtils.checkHerbCount(data) == 2) {
@@ -70,11 +70,11 @@ public class TransferItemsToContainers implements Action {
                                 }
 
                                 new TransferToContainerIfPossible(items, cap, isInfo).run(gui);
-                                if (gui.getInventory().getItems(items).isEmpty()) {
+                                if (gui.getInventory().getWItems(items).isEmpty()) {
                                     break;
                                 }
                             }else{
-                                if ( !gui.getInventory ().getItems ( items ).isEmpty () ) {
+                                if ( !gui.getInventory ().getWItems( items ).isEmpty () ) {
                                         new TransferToPile ( output, NHitBox.getByName ( items.keys.get ( 0 ) ), new NAlias("stockpile"), items )
                                                 .run ( gui );
                                 }

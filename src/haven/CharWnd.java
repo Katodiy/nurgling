@@ -720,7 +720,7 @@ public class CharWnd extends Window {
 	}
     }
 
-    public static final Convolution iconfilter = new Lanczos(3);
+    public static final PUtils.Convolution iconfilter = new PUtils.Lanczos(3);
     public class Skill {
 	public final String nm;
 	public final Indir<Resource> res;
@@ -1053,8 +1053,6 @@ public class CharWnd extends Window {
 	    public Text text;
 
 	    public DefaultCond(Condition cond) {super(cond);}
-	    @Deprecated
-	    public DefaultCond(Widget parent, Condition cond) {super(cond);}
 
 	    protected void added() {
 		super.added();
@@ -1166,10 +1164,10 @@ public class CharWnd extends Window {
 			}
 			ncond.add(cond);
 		    }
-			this.cond = ncond.toArray(new Condition[0]);
-			refresh();
-			if (cqv != null)
-				cqv.update();
+		    this.cond = ncond.toArray(new Condition[0]);
+		    refresh();
+		    if(cqv != null)
+			cqv.update();
 		} else {
 		    super.uimsg(msg, args);
 		}
@@ -1301,7 +1299,8 @@ public class CharWnd extends Window {
 		this.ccond = cond;
 		this.rcond = rcond;
 		resize();
-		NQuestInfo.selectedQuest();
+		if(NUtils.getGameUI()!= null && NUtils.getGameUI().getQuestInfo()!=null)
+			NUtils.getGameUI().getQuestInfo().selectedQuest();
 	    }
 
 	    void update(Condition c) {
@@ -1313,7 +1312,7 @@ public class CharWnd extends Window {
 		    }
 		}
 		glowt = 0.0;
-		}
+	    }
 	}
 
 	public static class DefaultBox extends Box {
@@ -1349,9 +1348,9 @@ public class CharWnd extends Window {
 		    }
 		    if(cond[i].wdata != null) {
 			Indir<Resource> wres = ui.sess.getres((Integer)cond[i].wdata[0]);
-			nw[i] = (CondWidget)wres.get().getcode(Factory.class, true).create(ui, new Object[] {cond[i]});
+			nw[i] = (CondWidget)wres.get().getcode(Widget.Factory.class, true).create(ui, new Object[] {cond[i]});
 		    } else {
-			nw[i] = new DefaultCond(cont, cond[i]);
+			nw[i] = new DefaultCond(cond[i]);
 		    }
 		    y += cont.add(nw[i], new Coord(0, y)).sz.y;
 		}
@@ -1790,7 +1789,7 @@ public class CharWnd extends Window {
     }
 
     public class QuestList extends Listbox<Quest> {
-	public final List<Quest> quests = new ArrayList<Quest>();
+	public List<Quest> quests = new ArrayList<Quest>();
 	private boolean loading = false;
 	private final Comparator<Quest> comp = new Comparator<Quest>() {
 	    public int compare(Quest a, Quest b) {
@@ -1876,7 +1875,7 @@ public class CharWnd extends Window {
     }
 
     public static <T extends Widget> T settip(T wdg, String resnm) {
-	wdg.tooltip = new PaginaTip(new Resource.Spec(Resource.local(), resnm));
+	wdg.tooltip = new Widget.PaginaTip(new Resource.Spec(Resource.local(), resnm));
 	return(wdg);
     }
 
@@ -2247,7 +2246,6 @@ public class CharWnd extends Window {
 		if(args[a] instanceof byte[])
 		    t.sdt = new MessageBuf((byte[])args[a++]);
 		double m = ((Number)args[a++]).doubleValue();
-		ui.sess.character.constipation.update(t, m);
 		cons.update(t, m);
 	    }
 	} else if(nm == "csk") {

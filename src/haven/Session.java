@@ -71,11 +71,19 @@ public class Session implements Resource.Resolver {
     Map<Long, ObjAck> objacks = new TreeMap<Long, ObjAck>();
     public String username;
     byte[] cookie;
-    final public Map<Integer, CachedRes> rescache = new TreeMap<Integer, CachedRes>();
+    public final Map<Integer, CachedRes> rescache = new TreeMap<Integer, CachedRes>();
+    final Map<Integer, String> res_id_cache = new TreeMap<Integer, String>();
+
+	public String getResName(Integer id)
+	{
+		synchronized (res_id_cache)
+		{
+			return res_id_cache.get(id);
+		}
+	}
+
     public final Glob glob;
     public byte[] sesskey;
-
-	public final NCharacterInfo character;
 
     @SuppressWarnings("serial")
     public static class MessageException extends RuntimeException {
@@ -97,10 +105,10 @@ public class Session implements Resource.Resolver {
 	    this.resid = res.resid;
 	}
 
-	public void waitfor(Runnable callback, Consumer<Waiting> reg) {
+	public void waitfor(Runnable callback, Consumer<Waitable.Waiting> reg) {
 	    synchronized(res) {
 		if(res.resnm != null) {
-		    reg.accept(Waiting.dummy);
+		    reg.accept(Waitable.Waiting.dummy);
 		    callback.run();
 		} else {
 		    reg.accept(res.wq.add(callback));
@@ -153,14 +161,6 @@ public class Session implements Resource.Resolver {
 	    private void reset() {
 		res = null;
 	    }
-
-		public boolean check() {
-			return res != null;
-		}
-
-		public String getName(){
-			return resnm;
-		}
 	}
 
 	private Ref get() {
@@ -329,6 +329,9 @@ public class Session implements Resource.Resolver {
 		String resname = msg.string();
 		int resver = msg.uint16();
 		cachedres(resid).set(resname, resver);
+		synchronized (res_id_cache) {
+			res_id_cache.put(resid, resname);
+		}
 	    } else if(msg.type == RMessage.RMSG_SFX) {
 		Indir<Resource> resid = getres(msg.uint16());
 		double vol = ((double)msg.uint16()) / 256.0;
@@ -653,7 +656,6 @@ public class Session implements Resource.Resolver {
 	this.cookie = cookie;
 	this.args = args;
 	glob = new Glob(this);
-	character = new NCharacterInfo();
 	try {
 	    sk = new DatagramSocket();
 	} catch(SocketException e) {

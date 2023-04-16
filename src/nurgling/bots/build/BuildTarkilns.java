@@ -27,12 +27,19 @@ public class BuildTarkilns extends Bot {
         CraftCommand command = new CraftCommand();
         command.command = new char[]{ 'b', 'b', 'f','t' };
         command.name = "Tar Kiln";
-        command.ingredients = new ArrayList<Ingredient> ();        command.ingredients
-                .add ( new Ingredient ( new NAlias ( new ArrayList<String> ( Arrays.asList ( "stone" ) ) ), stone_area,
-                        35) );
-        command.ingredients
-                .add ( new Ingredient ( new NAlias( new ArrayList<String> ( Arrays.asList ( "clay" ) ) ), clay_area,
-                        50 ) );
+        Ingredient stone = new Ingredient();
+        stone.item = new NAlias ( "stone");
+        stone.isGroup = true;
+        command.ingredients.add (stone);
+        command.spec_in_area.put(stone,stone_area);
+        command.ing_count.put(stone,35);
+        Ingredient clay = new Ingredient();
+        clay.item = new NAlias ( "clay");
+        clay.isGroup = true;
+        command.ingredients.add (clay);
+        command.spec_in_area.put(clay,clay_area);
+        command.ing_count.put(clay,50);
+
 
         ///Добавление цикла в действия бота
         runActions.add ( new Build( build_area, "tarkiln", command ) );

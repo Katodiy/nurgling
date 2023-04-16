@@ -34,9 +34,9 @@ public class NIncubatorColor extends NGAttrib implements Gob.SetupMod {
                 gob.removeTag(NGob.Tags.no_silo);
             }
             if ((gob.modelAttribute & 3) != 3) {
-                color = new MixColor(NConfiguration.getInstance().colors.get("warning"));
+                color = NConfiguration.getInstance().colors.get("warning");
             } else {
-                color = new MixColor(NConfiguration.getInstance().colors.get("no_color"));
+                color = NConfiguration.getInstance().colors.get("no_color");
             }
         } else {
 
@@ -51,9 +51,9 @@ public class NIncubatorColor extends NGAttrib implements Gob.SetupMod {
                 gob.removeTag(NGob.Tags.no_silo);
             }
             if ((gob.modelAttribute & 20) != 20) {
-                color = new MixColor(NConfiguration.getInstance().colors.get("warning"));
+                color = NConfiguration.getInstance().colors.get("warning");
             } else {
-                color = new MixColor(NConfiguration.getInstance().colors.get("no_color"));
+                color = NConfiguration.getInstance().colors.get("no_color");
             }
         }
     }

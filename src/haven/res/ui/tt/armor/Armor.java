@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 
 /* >tt: haven.res.ui.tt.armor.Armor */
 @FromResource(name = "ui/tt/armor", version = 4 , override = true)
-public class Armor extends ItemInfo.Tip implements GItem.OverlayInfo<Tex> {
+public class Armor extends ItemInfo.Tip{
     public final int hard, soft;
 
     public Armor(Owner owner, int hard, int soft) {
@@ -25,17 +25,5 @@ public class Armor extends ItemInfo.Tip implements GItem.OverlayInfo<Tex> {
 
     public BufferedImage tipimg() {
 	return(Text.render(String.format("Armor class: %,d/%,d", hard, soft)).img);
-    }
-    public Tex overlay() {
-        return(new TexI(NGItem.NumberInfo.numrender((int)Math.round(((NGItem)owner).m-((NGItem)owner).d), new Color(255, 255, 255, 255))));
-    }
-
-    public void drawoverlay(GOut g, Tex data) {
-        if(data!=null) {
-            g.chcolor(new Color(198, 0, 0, (int) Math.round(190*((NGItem)owner).wear)));
-            g.frect(new Coord(0,  0), new Coord(g.sz().x,(int)Math.round(g.sz().y*(((NGItem)owner).wear))));
-            g.chcolor();
-//            g.aimage(data, new Coord(g.sz().x, g.sz().y), 1.0, 1.0);
-        }
     }
 }

@@ -30,9 +30,13 @@ public class BuildMCabinet extends Bot {
         command.special_command = new NAlias ( "cabin" );
         command.name = "Metal Cabinet";
         command.ingredients = new ArrayList<Ingredient> ();
-        command.ingredients
-                .add ( new Ingredient ( new NAlias( new ArrayList<String> ( Arrays.asList ( "bar" ) ) ), bar_area,
-                        6 ) );
+        Ingredient bar = new Ingredient();
+        bar.item = new NAlias ( "bar");
+        bar.isGroup = true;
+        command.ingredients.add (bar);
+        command.spec_in_area.put(bar,bar_area);
+        command.ing_count.put(bar,6);
+
         ///Добавление цикла в действия бота
         runActions.add ( new Build( build_area, "cabinet", command ) );
     }

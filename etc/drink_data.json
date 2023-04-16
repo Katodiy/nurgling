@@ -648,4 +648,12 @@
 {"drink": "Weißbier", "vessel": "Tankard"},
 {"drink": "Wine", "vessel": "Wine Glass"},
 {"drink": "Calvados", "vessel": null}
-]}
+],
+"vessel_res": [
+  {"vessel": "Tankard", "res": "vessels/tankard"},
+  {"vessel": "Mug", "res": "vessels/mug"},
+  {"vessel": "Any","res": "vessels/any"},
+  {"vessel": "Drinking Horn", "res": "vessels/drinkinghorn"},
+  {"vessel": "Wine Glass", "res": "vessels/wineglass"}
+]
+}

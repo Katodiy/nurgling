@@ -39,6 +39,7 @@ import haven.MapFile.SMarker;
 import nurgling.NGob;
 import nurgling.NMiniMap;
 import nurgling.NQuestInfo;
+import nurgling.NUtils;
 
 import static haven.MCache.cmaps;
 import static haven.MCache.tilesz;
@@ -588,7 +589,7 @@ public class MiniMap extends Widget {
 				disp.col = BuddyWnd.gc[kin.group];
 			    ret.add(disp);
 			}
-			if(!NQuestInfo.isQuested(gob, icon.img().tex) && (conf != null) && conf.ring){
+			if(!NUtils.getGameUI().questInfo.isQuested(gob, icon.img().tex) && (conf != null) && conf.ring){
 				gob.noteImg = icon.img().tex;
 				gob.addTag(NGob.Tags.notified);
 			}else{

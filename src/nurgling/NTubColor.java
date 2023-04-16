@@ -34,14 +34,14 @@ public class NTubColor extends NGAttrib implements Gob.SetupMod {
         if ((gob.modelAttribute & 8) != 0) {
             gob.addTag(NGob.Tags.ready);
             gob.removeTag(NGob.Tags.inwork, NGob.Tags.free);
-            color = new MixColor(NConfiguration.getInstance().colors.get("ready"));
+            color = NConfiguration.getInstance().colors.get("ready");
         } else if ((gob.modelAttribute & 4) != 0) {
             gob.addTag(NGob.Tags.inwork);
-            color = new MixColor(NConfiguration.getInstance().colors.get("inwork"));
+            color = NConfiguration.getInstance().colors.get("inwork");
             gob.removeTag(NGob.Tags.free, NGob.Tags.ready);
         } else if ((gob.modelAttribute & 2) != 0) {
             gob.addTag(NGob.Tags.free);
-            color = new MixColor(NConfiguration.getInstance().colors.get("free"));
+            color = NConfiguration.getInstance().colors.get("free");
             gob.removeTag(NGob.Tags.inwork, NGob.Tags.ready);
         } else {
             gob.removeTag(NGob.Tags.inwork, NGob.Tags.free, NGob.Tags.ready);

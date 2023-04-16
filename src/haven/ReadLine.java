@@ -203,7 +203,7 @@ public interface ReadLine {
 	public void clipset(Clipboard c) {
 	    if(c != null) {
 		String text = line(Math.min(mark, point), Math.abs(point - mark));
-		StringSelection xf = new StringSelection(text);
+		java.awt.datatransfer.StringSelection xf = new java.awt.datatransfer.StringSelection(text);
 		try {
 		    c.setContents(xf, xf);
 		} catch(IllegalStateException e) {

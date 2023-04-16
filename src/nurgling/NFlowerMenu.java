@@ -1,121 +1,127 @@
 package nurgling;
 
-import haven.FlowerMenu;
+import haven.*;
+import nurgling.bots.actions.SelectFlowerAction;
+
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class NFlowerMenu extends FlowerMenu {
-    public static boolean selectNext = false;
-    public static boolean selectPick = false;
-    public static String name;
-    public static boolean needCheck;
-    public static NFlowerMenu instance;
-    
-    public NFlowerMenu(String... options ) {
-        super ( options );
-        instance = this;
+    @Override
+    public void draw(GOut g) {
+        super.draw(g);
     }
-    
-    public static void stop ()
-            throws InterruptedException {
-        if ( instance != null ) {
-            instance.choose ( null );
-            if ( instance.kg != null ) {
-                instance.kg.remove ();
-                instance.mg.remove ();
-            }
-            instance.lostfocus ();
-            instance.destroy ();
-            instance = null;
-        }
-    }
-    
-    public static void select ( String name1 ) {
-        name = name1;
-        selectNext = true;
-    }
-    
-    public void selectInCurrent ( String name1 ) {
-        for ( Petal p : opts ) {
-            if ( p.name.contains ( name1 ) ) {
-                choose ( p );
+
+    public void select(String text) {
+        for (Petal p : opts) {
+            if (p.name.contains(text)) {
+                choose(p);
             }
         }
+        cancel();
     }
-    
-    public boolean isContain(String name1 ){
-        for ( Petal p : opts ) {
-            if ( p.name.contains ( name1 ) ) {
+
+    public void select(NAlias text) {
+        for (Petal p : opts) {
+            if (NUtils.checkName(p.name, text)) {
+                choose(p);
+            }
+        }
+        cancel();
+    }
+
+    public boolean find(String text) {
+        for (Petal p : opts) {
+            if (p.name.contains(text)) {
                 return true;
             }
         }
+        cancel();
         return false;
     }
-    
-    public void selectInCurrent ( NAlias name1 ) {
-        for ( Petal p : opts ) {
-            if ( NUtils.checkName ( p.name,name1 ) ) {
-                choose ( p );
+
+    public boolean find(NAlias text) {
+        for (Petal p : opts) {
+            if (NUtils.checkName(p.name, text)) {
+                return true;
+            }
+        }
+        cancel();
+        return false;
+    }
+
+    public NFlowerMenu(String... options) {
+        super(options);
+    }
+
+    public void cancel(){
+        NUtils.getUI().wdgmsg(this,"cl", -1);
+    }
+
+    @Override
+    public void choose(Petal option) {
+        super.choose(option);
+        if (!NUtils.getUI().botMode.get() && option!=null && NConfiguration.getInstance().autoFlower && NUtils.getUI().sessInfo.characterInfo.flowerCand != null) {
+            NInventory inv;
+            NGItem fc = NUtils.getUI().sessInfo.characterInfo.flowerCand;
+            if(fc.parent instanceof NInventory) {
+                Window parent = NUtils.findWinParent(fc);
+                inv = (NInventory) fc.parent;
+                ArrayList<GItem> targets = new ArrayList<>();
+                try {
+                if (fc.isSeached) {
+                        for(GItem item : inv.getWItems())
+                            if(((NGItem)item).isSeached)
+                                targets.add(item);
+                }
+                else
+                {
+                    targets = inv.getGItems(new NAlias(fc.name()));
+                }
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                NUtils.getUI().botMode.set(true);
+                new Thread(new AutoChooser(parent, targets, option.name)).start();
             }
         }
     }
-    
-    
-    protected void added () {
-        if ( c.equals ( -1, -1 ) ) {
-            c = parent.ui.lcc;
-        }
-        mg = ui.grabmouse ( this );
-        kg = ui.grabkeys ( this );
-        organize ( opts );
-        new NOpenings ().ntick ( 0 );
-    }
-    
-    public class NOpenings extends Opening {
 
+    class AutoChooser implements Runnable{
+
+        Window win;
+        ArrayList<GItem> items;
+        String action;
         @Override
-        public void ntick(double s) {
-            super.ntick(s);
-            if (s == 1.0) {
-                if (selectNext) {
-                    for (Petal p : opts) {
-                        if (p.name.contains(name)) {
-                            selectNext = false;
-                            choose(p);
-                        }
+        public void run() {
+            try {
+            win.winDisabler = true;
+            win.dwdg.show();
+            win.dwdg.resize(win.deco.sz);
+            win.dwdg.raise();
+            NUtils.waitEvent(() -> NUtils.getFlowerMenu() == null, 500);
+            for(GItem item : items)
+            {
+                    if(!win.winDisabler)
+                        break;
+                    if(item.parent!=null) {
+                        new SelectFlowerAction((NGItem) item, action, SelectFlowerAction.Types.Item).run(NUtils.getGameUI());
+                        NUtils.waitEvent(() -> item.parent == null || !((NInventory) item.parent).findItem(item), 50);
                     }
 
-                }
             }
-            if (NConfiguration.getInstance().autoPicking && !NUtils.getUI().modshift) {
-                for (Petal p : opts) {
-                    for (NConfiguration.PickingAction pa : NConfiguration.getInstance().pickingActions)
-                        if (pa.isEnable && p.name.contains(pa.action))
-                            choose(p);
-                }
+            } catch (InterruptedException e) {
+            }finally {
+                win.winDisabler = false;
+                win.dwdg.hide();
+                NUtils.getUI().botMode.set(false);
             }
         }
-    }
 
-    
-    
-    public boolean findInCurrentFlower ( String name ) {
-        for ( Petal p : opts ) {
-            if ( p.name.contains ( name ) ) {
-                return true;
-            }
+        public AutoChooser(Window win, ArrayList<GItem> items, String action) {
+            this.win = win;
+            this.items = items;
+            this.action = action;
         }
-        return false;
-    }
-    
-    public boolean findInCurrentFlower ( NAlias name ) {
-        for ( Petal p : opts ) {
-            if ( NUtils.checkName ( p.name,name ) ) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    public static void check () {
-        needCheck = true;
     }
 }

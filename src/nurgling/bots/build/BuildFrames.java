@@ -29,17 +29,25 @@ public class BuildFrames extends Bot {
         command.command = new char[]{ 'b', 'b', 'd' };
         command.name = "Drying Frame";
         command.ingredients = new ArrayList<Ingredient> ();
-        command.ingredients
-                .add ( new Ingredient( new NAlias( new ArrayList<String> ( Arrays.asList ( "bough" ) ) ), block_area,
-                        2 ) );
-        command.ingredients
-                .add ( new Ingredient ( new NAlias ( new ArrayList<String> ( Arrays.asList ( "fibre", "taproot","nettle","toughroot", "hidestrap" ) ) ),
-                        fibre_area,
-                        2 ) );
-        command.ingredients
-                .add ( new Ingredient ( new NAlias ( new ArrayList<String> ( Arrays.asList ( "branch" ) ) ),
-                        branch_area,
-                        5 ) );
+        Ingredient bough = new Ingredient();
+        bough.item = new NAlias( "bough" );
+        bough.isGroup = true;
+        command.ingredients.add (bough);
+        command.spec_in_area.put(bough,bough_area);
+        command.ing_count.put(bough,2);
+        Ingredient string = new Ingredient();
+        string.item = new NAlias ( new ArrayList<String> ( Arrays.asList ( "fibre", "taproot","nettle","toughroot", "hidestrap" ) ));
+        string.isGroup = true;
+        command.ingredients.add (string);
+        command.spec_in_area.put(string,fibre_area);
+        command.ing_count.put(string,2);
+        Ingredient branch = new Ingredient();
+        branch.item = new NAlias ( "branch");
+        branch.isGroup = true;
+        command.ingredients.add (branch);
+        command.spec_in_area.put(branch,branch_area);
+        command.ing_count.put(branch,5);
+
         ///Добавление цикла в действия бота
         runActions.add ( new Build( build_area, "gfx/terobjs/dframe", command ) );
     }
@@ -68,7 +76,7 @@ public class BuildFrames extends Bot {
                 gameUI.getMap ().isAreaSelectorEnable = true;
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
-                    new Thread ( new AreaSelecter ( gameUI, _zone1, m_selection_start, block_area ),
+                    new Thread ( new AreaSelecter ( gameUI, _zone1, m_selection_start, bough_area ),
                             "Cont Area Selecter" ).start ();
                 }
             }
@@ -118,7 +126,7 @@ public class BuildFrames extends Bot {
     private AtomicBoolean _zone2 = new AtomicBoolean ( false );
     private AtomicBoolean _zone3 = new AtomicBoolean ( false );
     private NArea build_area = new NArea ();
-    private NArea block_area = new NArea ();
+    private NArea bough_area = new NArea ();
     private NArea fibre_area = new NArea ();
     private NArea branch_area = new NArea ();
     private AtomicBoolean m_selection_start = new AtomicBoolean ( false );

@@ -8,7 +8,7 @@ import java.util.List;
 public class NAlias {
     public ArrayList<String> keys;
     public ArrayList<String> exceptions;
-    
+
     public NAlias() {
         keys = new ArrayList<String> ();
         exceptions = new ArrayList<String> ();
@@ -23,13 +23,13 @@ public class NAlias {
         keys = new ArrayList<String> ( Collections.singletonList ( name ) );
         exceptions = new ArrayList<String> ();
     }
-    
+
     public NAlias(ArrayList<String> keys ) {
         this.keys = new ArrayList<String> ();
         exceptions = new ArrayList<String> ();
         this.keys.addAll ( keys );
     }
-    
+
     public NAlias(
             ArrayList<String> keys,
             ArrayList<String> exceptions
@@ -37,7 +37,7 @@ public class NAlias {
         this.keys = keys;
         this.exceptions = exceptions;
     }
-    
+
     public NAlias(
             List<String> keys,
             List<String> exceptions
@@ -47,9 +47,8 @@ public class NAlias {
         this.exceptions = new ArrayList<> ();
         this.exceptions.addAll ( exceptions );
     }
-    
+
     public String getDefault () {
         return keys.get ( 0 );
     }
-    
 }

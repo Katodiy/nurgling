@@ -8,7 +8,6 @@ import nurgling.tools.Finder;
 import nurgling.tools.NArea;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class SeederSeed implements Action {
 
@@ -28,11 +27,11 @@ public class SeederSeed implements Action {
             SeedArea area
     )
             throws InterruptedException {
-        if (gui.getInventory().getItems(in.items).size() < 2) {
+        if (gui.getInventory().getWItems(in.items).size() < 2) {
             if (!gui.hand.isEmpty())
                 NUtils.transferToInventory();
             new TakeFromBarrels(in.outArea, gui.getInventory().getFreeSpace(), in.items).run(gui);
-            if (gui.getInventory().getItems(in.items).size() < 2)
+            if (gui.getInventory().getWItems(in.items).size() < 2)
                 return false;
         }
         boolean isReverse = false;
@@ -44,7 +43,7 @@ public class SeederSeed implements Action {
         }
 
         do {
-            if(gui.getInventory().getItems(in.items).size()<2)
+            if(gui.getInventory().getWItems(in.items).size()<2)
                 break;
             NUtils.activateItem(gui.getInventory().getItem(in.items));
             long start_id = NUtils.getUI().getTickId();

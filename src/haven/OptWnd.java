@@ -1535,16 +1535,16 @@ public class OptWnd extends Window {
 
 				}, prev.pos("bl").adds(0, 5));
 
-				prev = add(new CheckBox("Collect Food Info:") {
-					{
-						a = NConfiguration.getInstance().collectFoodInfo;
-					}
-
-					public void set(boolean val) {
-						NConfiguration.getInstance().collectFoodInfo = val;
-						a = val;
-					}
-				}, prev.pos("bl").adds(0, 5));
+//				prev = add(new CheckBox("Collect Food Info:") {
+//					{
+//						a = NConfiguration.getInstance().collectFoodInfo;
+//					}
+//
+//					public void set(boolean val) {
+//						NConfiguration.getInstance().collectFoodInfo = val;
+//						a = val;
+//					}
+//				}, prev.pos("bl").adds(0, 5));
 				prev = add(new CheckBox("Bots zones:") {
 					{
 						a = NConfiguration.getInstance().showAreas;

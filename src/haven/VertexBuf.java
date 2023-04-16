@@ -109,7 +109,7 @@ public class VertexBuf {
     }
 
     private FillBuffer fill(VertexArray.Buffer vbuf, Environment env) {
-	Layout fmt = data().fmt;
+	VertexArray.Layout fmt = data().fmt;
 	FillBuffer dst = env.fillbuf(vbuf);
 	ByteBuffer buf = dst.push();
 	int inp = 0;

@@ -63,7 +63,7 @@ public class Build implements Action {
                     }
                 }
                 for ( int num = 0 ; num < command.ingredients.size () ; num += 1 ) {
-                    needed[num] = command.ingredients.get ( num ).count;
+                    needed[num] = command.ing_count.get(command.ingredients.get ( num ));
                 }
                 try {
                     Coord2d pos;
@@ -100,42 +100,42 @@ public class Build implements Action {
                         taked = Math.min ( needed[num], gui.getInventory ().getNumberFreeCoord ( size ) );
                     }
                     if ( NUtils.checkName ( "clay", data.item ) && Finder.findObjectsInArea ( new NAlias ("stockpile" +
-                            "-clay"), data.inarea ).isEmpty ())
+                            "-clay"), command.spec_in_area.get(data) ).isEmpty ())
                     {
                         gui.msg("Clay:" + taked);
-                        if ( new ClayDiggingBuild (  data.inarea , taked).run ( gui ).type !=
+                        if ( new ClayDiggingBuild ( command.spec_in_area.get(data) , taked).run ( gui ).type !=
                                 Results.Types.SUCCESS ) {
                             return new Results ( Results.Types.NO_ITEMS );
                         }
-                        int current = gui.getInventory ().getItems ( data.item ).size ();
+                        int current = gui.getInventory ().getWItems( data.item ).size ();
                         taked = taked - current;
                     }
                     else if ( NUtils.checkName ( "board", data.item ) &&
-                            Finder.findObjectInArea ( new NAlias ( "log" ), 2000, data.inarea ) != null ) {
+                            Finder.findObjectInArea ( new NAlias ( "log" ), 2000, command.spec_in_area.get(data) ) != null ) {
                         new Equip(saw_tools).run(gui);
                         taked = Math.min ( needed[num], gui.getInventory ().getNumberFreeCoord ( size ) );
                         if(taked>0)
-                            if ( new WorkWithLog ( taked, new NAlias ( "log" ), false, data.inarea ).run ( gui ).type !=
+                            if ( new WorkWithLog ( taked, new NAlias ( "log" ), false, command.spec_in_area.get(data)).run ( gui ).type !=
                                     Results.Types.SUCCESS ) {
                                 return new Results ( Results.Types.NO_ITEMS );
                             }
-                        int current = gui.getInventory ().getItems ( data.item ).size ();
+                        int current = gui.getInventory ().getWItems( data.item ).size ();
                         taked = taked - current;
                     }
                     else if ( NUtils.checkName ( "block", data.item ) &&
-                            Finder.findObjectInArea ( new NAlias ( "log" ), 2000, data.inarea ) != null ) {
+                            Finder.findObjectInArea ( new NAlias ( "log" ), 2000, command.spec_in_area.get(data) ) != null ) {
                         new Equip(lumber_tools).run(gui);
                         taked = Math.min ( needed[num], gui.getInventory ().getNumberFreeCoord ( size ) );
                         if(taked>0)
-                            if ( new WorkWithLog ( taked, new NAlias ( "log" ), true, data.inarea ).run ( gui ).type !=
+                            if ( new WorkWithLog ( taked, new NAlias ( "log" ), true, command.spec_in_area.get(data) ).run ( gui ).type !=
                                     Results.Types.SUCCESS ) {
                                 return new Results ( Results.Types.NO_ITEMS );
                             }
-                        int current = gui.getInventory ().getItems ( data.item ).size ();
+                        int current = gui.getInventory ().getWItems( data.item ).size ();
                         taked = taked - current;
                     }
                     else if ( NUtils.checkName ( "stone", data.item ) &&
-                            Finder.findObjectInArea ( new NAlias ( "bumlings" ), 2000, data.inarea ) != null ) {
+                            Finder.findObjectInArea ( new NAlias ( "bumlings" ), 2000, command.spec_in_area.get(data) ) != null ) {
                         gui.msg("Stone:" + taked);
                         if ( new Equip (
                                 new NAlias ( new ArrayList<String> ( Arrays.asList ( "pickaxe", "stoneaxe" ) ) ) ).run (
@@ -143,7 +143,7 @@ public class Build implements Action {
                             return new Results ( Results.Types.NO_WORKSTATION );
                         }
                         int cFreeSpace = gui.getInventory ().getFreeSpace ();
-                        if ( new WorkWithBumbling ( taked, new NAlias ( "bumlings" ), data.inarea ).run ( gui ).type !=
+                        if ( new WorkWithBumbling ( taked, new NAlias ( "bumlings" ), command.spec_in_area.get(data) ).run ( gui ).type !=
                                 Results.Types.SUCCESS ) {
                             return new Results ( Results.Types.NO_ITEMS );
                         }
@@ -153,11 +153,11 @@ public class Build implements Action {
                         needed[num] -= current;
                     }
                     else {
-                        NUtils.ContainerProp icontainer = NUtils.getContainerType(data.inarea);
+                        NUtils.ContainerProp icontainer = NUtils.getContainerType(command.spec_in_area.get(data));
                         if (icontainer.name == null) {
                             return new Results(Results.Types.NO_ITEMS);
                         }
-                        ArrayList<Gob> igobs = Finder.findObjectsInArea(icontainer.name, data.inarea);
+                        ArrayList<Gob> igobs = Finder.findObjectsInArea(icontainer.name, command.spec_in_area.get(data));
                         for (Gob in : igobs) {
                             if (in.getModelAttribute() != 0) {
                                 PathFinder pf = new PathFinder(gui, in);
@@ -171,7 +171,7 @@ public class Build implements Action {
                                         Results.Types.FULL) {
                                     return new Results(Results.Types.NO_FREE_SPACE);
                                 }
-                                int current = (NUtils.checkName("stone", data.item)) ? fs - gui.getInventory().getFreeSpace() : gui.getInventory().getItems(data.item).size();
+                                int current = (NUtils.checkName("stone", data.item)) ? fs - gui.getInventory().getFreeSpace() : gui.getInventory().getWItems(data.item).size();
                                 taked = taked - current;
                                 if (taked <= 0) {
                                     Window wnd = gui.getWindow(icontainer.cap);
@@ -186,15 +186,15 @@ public class Build implements Action {
                     }
                     if ( taked > 0 ) {
                         for ( Ingredient datarev : command.ingredients ) {
-                            NUtils.ContainerProp irevcontainer = NUtils.getContainerType ( datarev.inarea );
+                            NUtils.ContainerProp irevcontainer = NUtils.getContainerType ( command.spec_in_area.get(datarev) );
                             if ( irevcontainer.name != null ) {
-                                if ( !gui.getInventory ().getItems ( datarev.item ).isEmpty () ) {
+                                if ( !gui.getInventory ().getWItems( datarev.item ).isEmpty () ) {
                                     if ( !irevcontainer.cap.contains ( "Stockpile" ) ) {
-                                        new TransferItemsToContainers ( 1024, datarev.inarea, irevcontainer.name,
+                                        new TransferItemsToContainers ( 1024, command.spec_in_area.get(datarev), irevcontainer.name,
                                                 irevcontainer.cap, datarev.item ).run ( gui );
                                     }
                                     else {
-                                        new TransferToPile ( datarev.inarea,
+                                        new TransferToPile ( command.spec_in_area.get(datarev),
                                                 NHitBox.get ( irevcontainer.name.keys.get ( 0 ) ),
                                                 irevcontainer.name, datarev.item );
                                     }
@@ -205,7 +205,7 @@ public class Build implements Action {
                     }
                     else {
                         if ( !NUtils.checkName ( "stone", data.item ) ) {
-                            needed[num] -= gui.getInventory ().getItems ( data.item ).size ();
+                            needed[num] -= gui.getInventory ().getWItems( data.item ).size ();
                         }
                     }
                 }

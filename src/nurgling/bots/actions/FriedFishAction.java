@@ -69,7 +69,7 @@ public class FriedFishAction implements Action {
                 Gob.Overlay ol = (gob.findol(Roastspit.class));
                 String content = ((Roastspit) ol.spr).getContent();
                 if (content == null) {
-                    if (gui.getInventory().getItems(fish).isEmpty()) {
+                    if (gui.getInventory().getWItems(fish).isEmpty()) {
                         new TakeFromPile(fish, gui.getInventory().getFreeSpace(), fish, raw_fish).run(gui);
                     }
                     new TakeToHand(fish).run(gui);

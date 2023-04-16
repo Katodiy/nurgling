@@ -1,60 +1,33 @@
 package nurgling.bots.tools;
 
 import haven.GItem;
-import haven.WItem;
 import nurgling.NAlias;
 import nurgling.NUtils;
 import nurgling.bots.settings.IngredientSettings;
 import nurgling.tools.AreasID;
-import nurgling.tools.NArea;
 
 
 public class Ingredient extends AItem{
     public NAlias item;
+    public double th = 0;
+    public boolean isGroup = false;
 
-    public int count;
-    public NArea inarea = null;
-    public boolean isInfo = true;
-    
-    public Ingredient (
-            NAlias item,
-            AreasID area_out,
-            int count
-    ) {
+    public Ingredient(AreasID area_out, AreasID barter_out, AreasID area_in, AreasID barter_in, NAlias item, double th, boolean isGroup) {
+        super(area_out, barter_out, area_in, barter_in);
         this.item = item;
-        this.area_out = area_out;
-        this.count = count;
-    }
-    
-    public Ingredient (
-            NAlias item,
-            AreasID area_out,
-            int count,
-            AreasID barter_out,
-            boolean isInfo
-    ) {
-        this.item = item;
-        this.area_out = area_out;
-        this.barter_out = barter_out;
-        this.count = count;
-        this.isInfo = isInfo;
-    }
-    
-    public Ingredient (
-            NAlias item,
-            NArea inarea ,
-            int count
-    ) {
-        this.item = item;
-        this.inarea = inarea;
-        this.count = count;
+        this.th = th;
+        this.isGroup = isGroup;
     }
 
-    public static AItem get(GItem item) {
+    public Ingredient()
+    {
+    }
+
+    public static Ingredient get(GItem item) {
         return IngredientSettings.data.get(NUtils.getInfo(item));
     }
 
-    public static AItem get(String info) {
+    public static Ingredient get(String info) {
         return IngredientSettings.data.get(info);
     }
 }

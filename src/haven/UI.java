@@ -43,7 +43,7 @@ public class UI {
     public static int MOD_SHIFT = KeyMatch.S, MOD_CTRL = KeyMatch.C, MOD_META = KeyMatch.M, MOD_SUPER = KeyMatch.SUPER;
     public RootWidget root;
     public final LinkedList<Grab> keygrab = new LinkedList<Grab>(), mousegrab = new LinkedList<Grab>();
-    private final Map<Integer, Widget> widgets = new TreeMap<Integer, Widget>();
+    protected final Map<Integer, Widget> widgets = new TreeMap<Integer, Widget>();
     public final Map<Widget, Integer> rwidgets = new HashMap<Widget, Integer>();
     public Environment env;
     public Receiver rcvr;
@@ -189,7 +189,6 @@ public class UI {
 	synchronized(widgets) {
 	    widgets.put(id, w);
 	    rwidgets.put(w, id);
-		w.bound();
 	}
     }
 
@@ -336,7 +335,7 @@ public class UI {
     public void wdgmsg(Widget sender, String msg, Object... args) {
 	int id = widgetid(sender);
 	if(id < 0) {
-	    new Warning("wdgmsg sender (%s) is not in rwidgets, message is %s", sender.getClass().getName(), msg).issue();
+//	    new Warning("wdgmsg sender (%s) is not in rwidgets, message is %s", sender.getClass().getName(), msg).issue();
 	    return;
 	}
 	if(rcvr != null)
@@ -463,7 +462,7 @@ public class UI {
     }
 
     public void mousehover(Coord c) {
-	root.mousehover(c);
+	root.mousehover(c, true);
     }
 
     public void setmousepos(Coord c) {

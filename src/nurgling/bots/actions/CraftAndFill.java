@@ -2,7 +2,6 @@ package nurgling.bots.actions;
 
 import haven.GItem;
 import haven.Gob;
-import haven.WItem;
 import haven.Window;
 import nurgling.*;
 import nurgling.bots.tools.CraftCommand;
@@ -12,7 +11,6 @@ import nurgling.tools.Finder;
 import nurgling.tools.NArea;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class CraftAndFill implements Action {
     @Override
@@ -25,7 +23,7 @@ public class CraftAndFill implements Action {
         }
         int size = 0;
         for ( Ingredient data : command.ingredients ) {
-            size += data.count;
+            size += command.ing_count.get(data);
         }
         for ( int i = 0 ; i < count ; i++ ) {
             if ( gui.getInventory ().getFreeSpace () <= size ) {
@@ -54,16 +52,16 @@ public class CraftAndFill implements Action {
                 if ( barter == null ) {
                     ArrayList<Gob> igobs;
                     NUtils.ContainerProp icontainer;
-                    if(data.inarea==null) {
+                    if(data.area_in==null) {
                         icontainer = NUtils.getContainerType(data.area_out);
                         igobs = Finder.findObjectsInArea(icontainer.name,
                                 Finder.findNearestMark(data.area_out));
                     }else {
-                        icontainer = NUtils.getContainerType(data.inarea);
+                        icontainer = NUtils.getContainerType(data.area_in);
                         igobs = Finder.findObjectsInArea(icontainer.name,
-                               data.inarea);
+                                Finder.findNearestMark(data.area_in));
                     }
-                    int needed = data.count;
+                    int needed = command.ing_count.get(data);
                     for ( Gob in : igobs ) {
                         if ( in.getModelAttribute() != 0 ) {
                             PathFinder pf = new PathFinder ( gui, in );
@@ -77,8 +75,8 @@ public class CraftAndFill implements Action {
                                 return new Results ( Results.Types.NO_FREE_SPACE );
                             }
                             Thread.sleep ( 500 );
-                            int current =  gui.getInventory ().getItems ( data.item ).size ();
-                            needed = data.count - current;
+                            int current =  gui.getInventory ().getWItems( data.item ).size ();
+                            needed = command.ing_count.get(data) - current;
 //                            System.out.println ( "neded" + data.item.keys.get ( 0 ) + needed );
                             if ( needed <= 0 ) {
                                 Window wnd = gui.getWindow ( icontainer.cap );
@@ -97,7 +95,7 @@ public class CraftAndFill implements Action {
                     if ( needed > 0 ) {
                         for ( Ingredient datarev : command.ingredients ) {
                             NUtils.ContainerProp irevcontainer = NUtils.getContainerType ( datarev.area_out);
-                            if ( !gui.getInventory ().getItems ( datarev.item ).isEmpty () ) {
+                            if ( !gui.getInventory ().getWItems( datarev.item ).isEmpty () ) {
                                 if ( !irevcontainer.cap.contains ( "Stockpile" ) ) {
                                     new TransferItemsToContainers ( fullMark, datarev.area_out, irevcontainer.name,
                                             irevcontainer.cap, datarev.item ).run ( gui );
@@ -118,7 +116,7 @@ public class CraftAndFill implements Action {
                     }
                 }
                 else {
-                    if ( new TakeItemsFromBarter ( barter, data.item, data.barter_out, data.isInfo, data.count ).run (
+                    if ( new TakeItemsFromBarter ( barter, data.item, data.barter_out, data.isGroup, count ).run (
                             gui ).type == Results.Types.NO_ITEMS ) {
                         return new Results ( Results.Types.NO_ITEMS );
                     }

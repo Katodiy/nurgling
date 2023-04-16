@@ -2,7 +2,6 @@ package nurgling.bots.actions;
 
 import haven.GItem;
 import haven.Gob;
-import haven.WItem;
 
 import nurgling.NAlias;
 import nurgling.NGameUI;
@@ -19,7 +18,7 @@ public class TransferToBarrel implements Action {
     public Results run ( NGameUI gui )
             throws InterruptedException {
         
-        while ( !gui.getInventory ().getItems ( items ).isEmpty () ) {
+        while ( !gui.getInventory ().getWItems( items ).isEmpty () ) {
             ArrayList<Gob> gobs;
             if(targetBarrel==null) {
                 gobs = Finder.findObjectsInArea(new NAlias("barrel"),
@@ -52,7 +51,7 @@ public class TransferToBarrel implements Action {
             }
             
             new PathFinder( gui, gob ).run ();
-            for ( GItem item : gui.getInventory ().getItems ( items ) ) {
+            for ( GItem item : gui.getInventory ().getWItems( items ) ) {
                 if ( gui.hand.isEmpty () ) {
                     new TakeToHand ( item ).run ( gui );
                 }

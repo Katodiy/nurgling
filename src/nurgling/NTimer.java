@@ -1,14 +1,13 @@
 package nurgling;
 
 
-import haven.Config;
-import haven.KeyBinding;
-import haven.Widget;
+import haven.*;
 import nurgling.json.JSONArray;
 import nurgling.json.JSONObject;
 import nurgling.json.parser.JSONParser;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -70,8 +69,9 @@ public class NTimer {
 			jtimers.add ( timerobj );
 		}
 		obj.put("timers",jtimers);
-		try ( FileWriter file = new FileWriter ( "./timers.json" ) ) {
+		try (OutputStreamWriter file = new OutputStreamWriter(Files.newOutputStream(Paths.get(  "./timers.json" )), StandardCharsets.UTF_8) ) {
 			file.write ( obj.toJSONString () );
+			file.close();
 		}
 		catch ( IOException e ) {
 			e.printStackTrace ();

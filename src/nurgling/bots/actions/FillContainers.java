@@ -4,15 +4,13 @@ import haven.*;
 
 import nurgling.*;
 import nurgling.bots.tools.InContainer;
+import nurgling.bots.tools.Ingredient;
 import nurgling.bots.tools.OutContainer;
 import nurgling.tools.AreasID;
 import nurgling.tools.Finder;
 import nurgling.tools.NArea;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-
-import static haven.render.Rendered.ScreenQuad.data;
 
 public class FillContainers implements Action
 {
@@ -55,18 +53,17 @@ public class FillContainers implements Action
         }
         else {
             do {
-                int current = gui.getInventory().getItems(items,q).size();
+                int current = gui.getInventory().getWItems(items,q).size();
                 for (OutContainer outContainer : outContainers) {
                     if (!outContainer.isFull) {
-                        if (items != null && NConfiguration.getInstance().ingrTh.get(items.keys.get(0)) != null) {
-
-                            for (GItem item : gui.getInventory().getItems(items,q)) {
-                                int th = NConfiguration.getInstance().ingrTh.get(NUtils.getInfo(item));
+                        if (items != null && Ingredient.get(items.keys.get(0)) != null) {
+                            for (GItem item : gui.getInventory().getWItems(items,q)) {
+                                double th = Ingredient.get(items.keys.get(0)).th;
                                 if (((NGItem) item).quality() < th)
                                     NUtils.drop(item);
                             }
                         }
-                        if (gui.getInventory().getItems(items,q).isEmpty()) {
+                        if (gui.getInventory().getWItems(items,q).isEmpty()) {
                             break;
                         }
                         new PathFinder(gui, outContainer.gob, true).run();
@@ -78,12 +75,12 @@ public class FillContainers implements Action
                         }
                     }
                 }
-                if (current != 0 && current == gui.getInventory().getItems(items).size()) {
+                if (current != 0 && current == gui.getInventory().getWItems(items).size()) {
                     return new Results(Results.Types.NO_ITEMS);
                 }
                 if (takeMaxFromContainers != null && !OutContainer.allFull(outContainers)) {
                     takeMaxFromContainers.run(gui);
-                    if (gui.getInventory().getItems(items).size() == 0) {
+                    if (gui.getInventory().getWItems(items).size() == 0) {
                         return new Results(Results.Types.NO_ITEMS);
                     }
                 }

@@ -40,18 +40,18 @@ public class NCheeseColor extends NGAttrib implements Gob.SetupMod {
             }
         }
         if (!isFound) {
-            color = new MixColor(NConfiguration.getInstance().colors.get("free"));
+            color = NConfiguration.getInstance().colors.get("free");
             gob.addTag(NGob.Tags.free);
             gob.removeTag(NGob.Tags.not_full, NGob.Tags.full);
             isFree = true;
         } else if (count < 3) {
             gob.addTag(NGob.Tags.not_full);
             gob.removeTag(NGob.Tags.free, NGob.Tags.full);
-            color = new MixColor(NConfiguration.getInstance().colors.get("not_full"));
+            color = NConfiguration.getInstance().colors.get("not_full");
         } else {
             gob.addTag(NGob.Tags.full);
             gob.removeTag(NGob.Tags.free, NGob.Tags.not_full);
-            color = new MixColor(NConfiguration.getInstance().colors.get("full"));
+            color = NConfiguration.getInstance().colors.get("full");
         }
         count = gob.ols.size();
     }

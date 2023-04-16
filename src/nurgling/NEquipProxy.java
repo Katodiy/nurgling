@@ -44,23 +44,7 @@ public class NEquipProxy extends NDraggableWidget implements NDTarget2 {
 	return super.mousedown(c, button);
     }
 
-
-	@Override
-	public boolean mousehover(Coord c) {
-		Equipory e = NUtils.getEquipment();
-		if(e != null) {
-			NWItem w = (NWItem) NUtils.getEquipment().quickslots[slot(c).idx];
-			if (w != null) {
-				w.item.proxy = true;
-				w.item.proxypos = this.c.add(((c.div(invsq.sz())).mul(invsq.sz())));
-				w.mousehover(Coord.z);
-				return true;
-			}
-		}
-		return false;
-	}
-
-
+	
 	@Override
     public void draw(GOut g) {
 	Equipory equipory = NUtils.getEquipment();
@@ -99,6 +83,19 @@ public class NEquipProxy extends NDraggableWidget implements NDTarget2 {
 	}
 	return super.tooltip(c, prev);
     }
+
+	public boolean mousehover(Coord c, boolean on) {
+		boolean ret = super.mousehover(c, on);
+		NEquipory.Slots slot = slot(c);
+		if(NUtils.getEquipment()!=null) {
+			WItem w = NUtils.getEquipment().quickslots[slot.idx];
+			if (w!=null && on && (w.item.contents != null)) {
+				w.item.hovering(this);
+				return (true);
+			}
+		}
+		return(ret);
+	}
 
     @Override
     public boolean drop(WItem target, Coord cc, Coord ul) {

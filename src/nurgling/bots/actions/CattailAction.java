@@ -1,19 +1,13 @@
 package nurgling.bots.actions;
 
-import haven.Coord;
 import haven.GItem;
-import haven.Gob;
-import haven.WItem;
 
 import nurgling.NAlias;
 import nurgling.NGameUI;
 import nurgling.NUtils;
-import nurgling.tools.Finder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import static haven.OCache.posres;
 
 public class CattailAction implements Action {
     @Override
@@ -21,7 +15,7 @@ public class CattailAction implements Action {
             throws InterruptedException {
         while (gui.getInventory().getFreeSpace() > 0) {
             Thread.sleep(50);
-            for (GItem fordrop : gui.getInventory().getItems(
+            for (GItem fordrop : gui.getInventory().getWItems(
                     new NAlias(new ArrayList<String>(Arrays.asList("cattail")),
                             new ArrayList<>(Arrays.asList("fibre"))))) {
                 NUtils.drop(fordrop);

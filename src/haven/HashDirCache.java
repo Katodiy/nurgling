@@ -98,7 +98,7 @@ public class HashDirCache implements ResCache {
     private static URI mkurn(String id) {
 	try {
 	    return(new URI("urn:haven-cache:" + id));
-	} catch(URISyntaxException e) {
+	} catch(java.net.URISyntaxException e) {
 	    throw(new IllegalArgumentException(id));
 	}
     }
@@ -313,12 +313,14 @@ public class HashDirCache implements ResCache {
 		}
 
 		public void close() throws IOException {
-			st.close();
-			try {
-				Files.move(tmp, path, StandardCopyOption.ATOMIC_MOVE);
-			} catch (AtomicMoveNotSupportedException e) {
-				Files.move(tmp, path, StandardCopyOption.REPLACE_EXISTING);
-			}
+		    st.close();
+		    Utils.ioretry(() -> {
+			    try {
+				return(Files.move(tmp, path, StandardCopyOption.ATOMIC_MOVE));
+			    } catch(AtomicMoveNotSupportedException e) {
+				return(Files.move(tmp, path, StandardCopyOption.REPLACE_EXISTING));
+			    }
+			});
 		}
 	    });
     }

@@ -2,14 +2,14 @@
 package haven.res.ui.tt.attrmod;
 
 import haven.*;
-import haven.res.lib.tspec.Spec;
-import nurgling.NEquipory;
+import haven.res.ui.tt.food.Fac;
 
 import static haven.PUtils.*;
 import java.util.*;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.ConcurrentHashMap;
 
-/* >tt: AttrMod$Fac */
+/* >tt: AttrMod$haven.res.ui.tt.curio.Fac */
 @haven.FromResource(name = "ui/tt/attrmod", version = 10)
 public class AttrMod extends ItemInfo.Tip {
     public final Collection<Mod> mods;
@@ -24,15 +24,6 @@ public class AttrMod extends ItemInfo.Tip {
     public AttrMod(Owner owner, Collection<Mod> mods) {
 	super(owner);
 	this.mods = mods;
-		if(owner instanceof Spec) {
-			if(((Spec) owner).ctx instanceof GItem) {
-				if (((GItem) ((Spec) owner).ctx).parent instanceof NEquipory) {
-					if (((Spec) owner).ctx instanceof GItem && ((GItem) ((Spec) owner).ctx).parent instanceof Equipory) {
-						((NEquipory) ((GItem) ((Spec) owner).ctx).parent).updBuffs = true;
-					}
-				}
-			}
-		}
     }
 
     public static class Fac implements InfoFactory {
@@ -49,17 +40,22 @@ public class AttrMod extends ItemInfo.Tip {
 	}
     }
 
-	public static String buff = "128,255,128", debuff = "255,128,128";
+	public static final ConcurrentHashMap<Resource, BufferedImage> attrResCache = new ConcurrentHashMap<>();
+
+    public static String buff = "128,255,128";
+	public static String debuff = "255,128,128";
     public static BufferedImage modimg(Collection<Mod> mods) {
 	Collection<BufferedImage> lines = new ArrayList<BufferedImage>(mods.size());
 	for(Mod mod : mods) {
 	    BufferedImage line = RichText.render(String.format("%s $col[%s]{%s%d}", mod.attr.layer(Resource.tooltip).t,
 							       (mod.mod < 0)?debuff:buff, (mod.mod < 0)?'-':'+', Math.abs(mod.mod)),
 						 0).img;
-	    BufferedImage icon = convolvedown(mod.attr.layer(Resource.imgc).img,
-					      new Coord(line.getHeight(), line.getHeight()),
-					      CharWnd.iconfilter);
-	    lines.add(catimgsh(0, icon, line));
+		if(attrResCache.get(mod.attr)==null) {
+			attrResCache.put(mod.attr, convolvedown(mod.attr.layer(Resource.imgc).img,
+					new Coord(line.getHeight(), line.getHeight()),
+					CharWnd.iconfilter));
+		}
+	    lines.add(catimgsh(0, attrResCache.get(mod.attr), line));
 	}
 	return(catimgs(0, lines.toArray(new BufferedImage[0])));
     }

@@ -62,6 +62,12 @@ public class FoodInfo extends ItemInfo.Tip {
 	    this.img = PUtils.convolve(res.flayer(Resource.imgc).img, imgsz, CharWnd.iconfilter);
 	    this.a = a;
 	}
+
+		public Event(CharWnd.FoodMeter.Event ev, BufferedImage img, double a) {
+			this.ev = ev;
+			this.img = img;
+			this.a = a;
+		}
     }
 
     public static class Effect {

@@ -27,8 +27,9 @@
 package haven;
 
 import nurgling.NDTarget2;
+import nurgling.NWItem;
 
-public class ItemDrag extends WItem {
+public class ItemDrag extends NWItem {
     public Coord doff;
     
     public ItemDrag(Coord dc, GItem item) {
@@ -91,7 +92,7 @@ public class ItemDrag extends WItem {
     }
 	
     public boolean mousedown(Coord c, int button) {
-	if(ui.modctrl && ui.modshift && !ui.modmeta) {
+	if(ui.modctrl && !ui.modshift && !ui.modmeta) {
 	    /* XXX */
 	    GameUI gui = getparent(GameUI.class);
 	    if((gui != null) && (gui.map != null)) {

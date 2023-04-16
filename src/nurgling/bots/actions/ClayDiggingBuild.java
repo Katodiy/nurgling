@@ -39,7 +39,7 @@ public class ClayDiggingBuild implements Action {
                 NUtils.command ( new char[]{ 'a', 'd' } );
                 gui.map.wdgmsg ( "click", Coord.z, pos.floor ( posres ), 1, 0 );
                 int counter = 0;
-                while ( gui.getInventory ().getItems ( new NAlias ( "clay" ) ).size () < taked &&
+                while ( gui.getInventory ().getWItems( new NAlias ( "clay" ) ).size () < taked &&
                         ( counter < 20 || NUtils.getProg() >= 0 ) ) {
                     Thread.sleep ( 50 );
                     counter++;
@@ -49,7 +49,7 @@ public class ClayDiggingBuild implements Action {
                 if ( NUtils.getStamina() <= 0.3 ) {
                     new Drink ( 0.9, false ).run ( gui );
                 }
-                if ( gui.getInventory ().getItems ( new NAlias ( "clay" ) ).size () >= taked ) {
+                if ( gui.getInventory ().getWItems( new NAlias ( "clay" ) ).size () >= taked ) {
                     return new Results ( Results.Types.SUCCESS );
                 }
                 else {

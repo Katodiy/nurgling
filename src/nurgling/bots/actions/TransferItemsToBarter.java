@@ -6,6 +6,7 @@ import haven.Widget;
 import haven.Window;
 import haven.res.ui.barterbox.Shopbox;
 
+import haven.res.ui.tt.defn.DefName;
 import nurgling.NAlias;
 import nurgling.NGameUI;
 import nurgling.NUtils;
@@ -24,7 +25,7 @@ public class TransferItemsToBarter implements Action {
     public Results run ( NGameUI gui )
             throws InterruptedException {
         if ( gob != null ) {
-            if ( gui.getInventory ().getItems ( items, q, true ).size () > 0  ) {
+            if ( !isInfo && gui.getInventory ().getWItems( items, q, true ).size () > 0 ||isInfo && gui.getInventory ().getGItems( items, q, true ).size () > 0  ) {
                 PathFinder pf = new PathFinder( gui, gob );
                 pf.run ();
                 
@@ -38,7 +39,8 @@ public class TransferItemsToBarter implements Action {
                         if ( sp instanceof Shopbox ) {
                             Shopbox sb = ( Shopbox ) sp;
                             if ( sb.price != null ) {
-                                NAlias alias = new NAlias ( ( String ) sb.price.res.res.get ().name );
+                                NUtils.waitEvent(()-> sb.spr!=null,50);
+                                NAlias alias = (!(isInfo)?new NAlias ( ( String ) sb.price.res.res.get ().name ): new NAlias(DefName.getname(sb.price)));
                                 try {
                                     String name = ( String ) sb.price.spr ().getClass ().getField ( "name" )
                                                                      .get ( sb.price.spr () );
@@ -90,14 +92,14 @@ public class TransferItemsToBarter implements Action {
                                     }
                                 }
                                 if ( isFind ) {
-                                    int size = gui.getInventory ().getItems ( items, q, true ).size ();
-                                    for(GItem item:  gui.getInventory ().getItems ( items, q, true )){
+                                    int size = (!isInfo)?gui.getInventory ().getWItems( items, q, true ).size ():gui.getInventory ().getGItems( items, q, true ).size ();
+                                    for(GItem item:  (!isInfo)?gui.getInventory ().getWItems( items, q, true ):gui.getInventory ().getGItems( items, q, true )){
                                         if(item.contents!=null) {
                                             NUtils.destroyFCNbndl(item);
                                             NUtils.waitEvent(()->NUtils.getGameUI().getInventory().wmap.get(item)==null,50);
                                         }
                                     }
-                                    while ( gui.getInventory ().getItems ( items, q, true ).size () > 0 ) {
+                                    while (  ((!isInfo)?gui.getInventory ().getWItems( items, q, true ):gui.getInventory ().getGItems( items, q, true )).size () > 0 ) {
                                         sb.bbtn.click ();
                                         Thread.sleep ( 50 );
                                         if ( sb.res == null ) {
@@ -161,7 +163,7 @@ public class TransferItemsToBarter implements Action {
     }
 
     void fcknbranchbundle() throws InterruptedException {
-        for(GItem branch: NUtils.getGameUI().getInventory().getItems(new NAlias("branch")))
+        for(GItem branch: NUtils.getGameUI().getInventory().getWItems(new NAlias("branch")))
             if(branch.contents!=null) {
                 NUtils.destroyFCNbndl(branch);
                 NUtils.waitEvent(()->NUtils.getGameUI().getInventory().wmap.get(branch)==null,50);

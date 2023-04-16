@@ -2,7 +2,6 @@ package nurgling.bots.actions;
 
 import haven.Gob;
 import haven.Resource;
-import haven.Window;
 import nurgling.NAlias;
 import nurgling.NGameUI;
 import nurgling.NUtils;
@@ -11,7 +10,6 @@ import nurgling.tools.Finder;
 
 
 import java.util.ArrayList;
-import java.util.Comparator;
 
 public class FreeFrames implements Action {
 
@@ -45,7 +43,7 @@ public class FreeFrames implements Action {
                 while ( res.type == Results.Types.FULL );
             }
         }
-        if ( !gui.getInventory ().getItems ( items ).isEmpty () ) {
+        if ( !gui.getInventory ().getWItems( items ).isEmpty () ) {
             new TransferHides (  ).run ( gui );
         }
         return new Results ( Results.Types.SUCCESS );
