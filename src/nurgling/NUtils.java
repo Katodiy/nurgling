@@ -513,13 +513,15 @@ public class NUtils {
         }
         return true;
     }
-
-    public static boolean transferToInventory(Coord sz)
+    public static boolean transferToInventory(Coord sz) throws InterruptedException
+    {
+        return transferToInventory(sz, gameUI.getInventory());
+    }
+    public static boolean transferToInventory(Coord sz, NInventory inv)
             throws InterruptedException {
         if (gameUI.vhand != null) {
-            NInventory inv = gameUI.getInventory();
             int fs = inv.getFreeSpace();
-            Coord placePos = gameUI.getInventory().getFreeCoord(sz);
+            Coord placePos = inv.getFreeCoord(sz);
             if (placePos.x != -1) {
                 int counter = 0;
                 while ((fs == inv.getFreeSpace() || gameUI.vhand != null) && counter != 20) {
@@ -1854,6 +1856,17 @@ public class NUtils {
         return (NFlowerMenu) nui.findInRoot(NFlowerMenu.class);
     }
 
+    public static Window getSplitWnd()
+    {
+        for(Widget wdg: nui.root.children()){
+            if(wdg instanceof Window && ((Window)wdg).cap.contains("Split"))
+            {
+                return (Window)wdg;
+            }
+        }
+        return null;
+    }
+
     public static boolean build(
             char[] command,
             Coord2d coord,
@@ -1940,6 +1953,15 @@ public class NUtils {
                 return (Window) t_parent;
             } else {
                 t_parent = wdg.parent.parent;
+            }
+        }
+        return null;
+    }
+
+    public static Widget getChild(Widget wnd, Class<?> c) {
+        for (Widget wdg = wnd.child; wdg != null; wdg = wdg.next) {
+            if (wdg.getClass() == c) {
+                return wdg;
             }
         }
         return null;

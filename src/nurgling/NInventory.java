@@ -718,6 +718,12 @@ public class NInventory extends Inventory {
             new TexI(Resource.loadsimg("nurgling/hud/buttons/autoflower/h")),
             new TexI(Resource.loadsimg("nurgling/hud/buttons/autoflower/dh"))};
 
+    private static final TexI[] autosplittor = new TexI[]{
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/autosplittor/u")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/autosplittor/d")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/autosplittor/h")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/autosplittor/dh"))};
+
     private static final TexI[] bundlei = new TexI[]{
             new TexI(Resource.loadsimg("nurgling/hud/buttons/bundle/u")),
             new TexI(Resource.loadsimg("nurgling/hud/buttons/bundle/d")),
@@ -787,6 +793,16 @@ public class NInventory extends Inventory {
         }, pw.pos("bl").add(UI.scale(new Coord(0, 5))));
         ((ICheckBox)pw).a = Stack.show;
         pw.settip(Resource.remote().loadwait("nurgling/hud/buttons/autoflower/u").flayer(Resource.tooltip).t);
+
+        pw = toggles.add(new ICheckBox(autosplittor[0], autosplittor[1], autosplittor[2], autosplittor[3]) {
+            @Override
+            public void changed(boolean val) {
+                super.changed(val);
+                NConfiguration.getInstance().autoSplitter = val;
+            }
+        }, pw.pos("bl").add(UI.scale(new Coord(0, 5))));
+        ((ICheckBox)pw).a = Stack.show;
+        pw.settip(Resource.remote().loadwait("nurgling/hud/buttons/autosplittor/u").flayer(Resource.tooltip).t);
 
         toggles.pack();
         movePopup(parent.c);

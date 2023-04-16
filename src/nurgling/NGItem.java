@@ -12,6 +12,8 @@ import static haven.Inventory.sqsz;
 
 public class NGItem extends GItem {
     public boolean isSeached = false;
+    public boolean isQuested = false;
+    int questedVer = -1;
     int old_infoseq;
 
 
@@ -55,9 +57,8 @@ public class NGItem extends GItem {
     @Override
     public void tick(double dt) {
         super.tick(dt);
-        if(infoseq!=old_infoseq || (status&READY)!=READY)
-        {
-            if(rawinfo!= null) {
+        if (infoseq != old_infoseq || (status & READY) != READY) {
+            if (rawinfo != null) {
                 status &= ~RAWINFO_IS_READY;
                 status &= ~HAVE_CONTENT;
                 for (Object o : rawinfo.data) {
@@ -66,10 +67,9 @@ public class NGItem extends GItem {
                         if (a[0] instanceof Integer) {
                             String resName = NUtils.getUI().sess.getResName((Integer) a[0]);
                             if (resName != null) {
-                                if ( resName.equals("ui/tt/q/quality")) {
-                                    quality = (Float)a[1];
-                                }
-                                else if(resName.equals("ui/tt/cont")) {
+                                if (resName.equals("ui/tt/q/quality")) {
+                                    quality = (Float) a[1];
+                                } else if (resName.equals("ui/tt/cont")) {
                                     double q = -1;
                                     String name = null;
                                     for (Object so : a) {
@@ -92,18 +92,15 @@ public class NGItem extends GItem {
                                             }
                                         }
                                     }
-                                    if(name!=null && q!=-1) {
+                                    if (name != null && q != -1) {
                                         content = new NContent(q, name);
                                         status |= HAVE_CONTENT;
                                     }
-                                } else if(resName.equals("ui/tt/coin"))
-                                {
+                                } else if (resName.equals("ui/tt/coin")) {
                                     defn = (String) a[1];
                                     status |= NAME_IS_READY;
                                 }
-                            }
-                            else
-                            {
+                            } else {
                                 return;
                             }
                         }
@@ -112,13 +109,12 @@ public class NGItem extends GItem {
                 }
                 status |= RAWINFO_IS_READY;
             }
-            if(spr!=null)
-            {
-                if(sprSz == null) {
+            if (spr != null) {
+                if (sprSz == null) {
                     sprSz = spr.sz().div(new Coord(sqsz.x - UI.scale(1), sqsz.y - UI.scale(1)));
                     status |= SPR_IS_READY;
                 }
-                if(!res.get().name.contains("coin")) {
+                if (!res.get().name.contains("coin")) {
                     status &= ~NAME_IS_READY;
                     if (res.get() != null) {
                         defn = DefName.getname(this);
@@ -130,6 +126,8 @@ public class NGItem extends GItem {
             }
             old_infoseq = infoseq;
         }
+        if (name() != null && NQuestInfo.ver > questedVer)
+            isQuested = NUtils.getGameUI().getQuestInfo().isQuestedItem(this);
     }
 
     public String name(){
@@ -250,4 +248,6 @@ public class NGItem extends GItem {
         }
         return null;
     }
+
+
 }

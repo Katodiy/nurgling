@@ -195,6 +195,7 @@ public class NQuestInfo extends NDraggableWidget {
             in_work.set(false);
             updCompleted.set(false);
             needUpdate = false;
+            targets.clear();
             items.clear();
             new_questers.clear();
             markers.clear();
@@ -413,8 +414,10 @@ public class NQuestInfo extends NDraggableWidget {
     }
 
     private void draw_as_questList() {
-        items.clear();
         synchronized (markers) {
+            targets.clear();
+            items.clear();
+            ver+=1;
             for (QuestGob gob : markers.values())
                 gob.tagsSet.clear();
             imgs = new LinkedList<>();
@@ -447,6 +450,7 @@ public class NQuestInfo extends NDraggableWidget {
                             if (completed == q.conditions.length - 1)
                                 quester.ended += 1;
                         }
+
                         if (quester.main_quests.size() > 0) {
                             imgs.add(new QuestImage(catimgsh(5, active_title.render(name).img, fnd1.render(String.format("($col[128,255,128]{%d}|$col[255,128,128]{%d})", quester.ended, quester.main_quests.size() - quester.ended), UI.scale(200)).img), qid));
                         } else {
@@ -484,6 +488,13 @@ public class NQuestInfo extends NDraggableWidget {
                             }
                         }
                     }
+                    if(credo!=null)
+                    {
+                        for (Quester.Quest q : credo.main_quests.values())
+                            for (CharWnd.Quest.Condition c : q.conditions) {
+                                checkTarget(c.desc);
+                            }
+                    }
                 }
             }
         }
@@ -500,8 +511,10 @@ public class NQuestInfo extends NDraggableWidget {
     }
 
     void draw_as_tasks() {
-        items.clear();
         synchronized (markers) {
+            targets.clear();
+            items.clear();
+            ver+=1;
             for (QuestGob gob : markers.values())
                 gob.tagsSet.clear();
             imgs = new LinkedList<>();
@@ -558,6 +571,13 @@ public class NQuestInfo extends NDraggableWidget {
                                 quester.ended += 1;
                         }
                         updateTags(quester.name);
+                    }
+                    if(credo!=null)
+                    {
+                        for (Quester.Quest q : credo.main_quests.values())
+                            for (CharWnd.Quest.Condition c : q.conditions) {
+                                checkTarget(c.desc);
+                            }
                     }
                 }
                 if (bring_t.size() > 0) {
@@ -637,6 +657,7 @@ public class NQuestInfo extends NDraggableWidget {
         return !in_work.get() && !updCompleted.get();
     }
 
+    private final Set<String> targets = new HashSet<>();
     private final Set<String> items = new HashSet<>();
 
     private void checkTarget(String info) {
@@ -677,7 +698,7 @@ public class NQuestInfo extends NDraggableWidget {
                     name = "horse/horse";
                 else if (name.contains("rat"))
                     name = "rat/rat";
-                items.add((name.replaceAll("\\s+", "")).replaceAll("'+", ""));
+                targets.add((name.replaceAll("\\s+", "")).replaceAll("'+", ""));
             }
         }
         if (info.contains("Raid a")) {
@@ -686,17 +707,32 @@ public class NQuestInfo extends NDraggableWidget {
                 name = info.substring(info.indexOf(" an ") + 4);
             if (!name.isEmpty()) {
                 if (name.contains("bird"))
-                    items.add("nest");
+                    targets.add("nest");
                 else
-                    items.add("anthill");
+                    targets.add("anthill");
             }
+        }
+        if( info.contains("Bring")){
+
+            String name;
+            if(info.contains(" a ") || info.contains(" an ")) {
+                if(info.contains(" a "))
+                    name = info.substring(info.indexOf(" a ") + 3, info.indexOf("to") - 1);
+                else
+                    name = info.substring(info.indexOf(" an ") + 4, info.indexOf("to") - 1);
+            }
+                else
+            {
+                name = info.substring(6, info.indexOf("to") - 1);
+            }
+            items.add(name);
         }
     }
 
     public boolean isQuested(Gob gob, Tex tex) {
         String name = gob.getResName();
         if (name != null) {
-            for (String item : items) {
+            for (String item : targets) {
                 if (NUtils.checkName(name, new NAlias(new ArrayList<>(Collections.singletonList(item)), new ArrayList<>(Collections.singletonList("crabapp"))))) {
                     gob.noteImg = tex;
                     gob.addTag(NGob.Tags.quest);
@@ -724,5 +760,18 @@ public class NQuestInfo extends NDraggableWidget {
             }
         }
         return super.mousedown(c, button);
+    }
+    static int ver = 0;
+    public boolean isQuestedItem(NGItem item){
+        synchronized (markers)
+        {
+            for(String name : items)
+            {
+                if(item.name()!=null && item.name().toLowerCase().contains(name))
+                    return true;
+            }
+        }
+        item.questedVer = ver;
+        return false;
     }
 }

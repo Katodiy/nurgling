@@ -7,12 +7,15 @@ import java.awt.image.BufferedImage;
 /* >tt: CustName */
 @FromResource(name = "ui/tt/cn", version = 4)
 public class CustomName extends ItemInfo.Name implements GItem.OverlayInfo<Tex> {
-    float count = -1;
+    public float count = -1;
 
     public CustomName(Owner owner, String str) {
         super(owner, str);
         if (str.contains(" kg ")) {
             count = Float.parseFloat(str.substring(0, str.indexOf(" kg ")));
+        }
+        else if (str.contains(" l ")) {
+            count = Float.parseFloat(str.substring(0, str.indexOf(" l ")));
         }
     }
 

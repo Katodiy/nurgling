@@ -1,6 +1,7 @@
 package nurgling;
 
 import haven.*;
+import haven.res.ui.tt.cn.CustomName;
 import nurgling.bots.actions.SelectFlowerAction;
 
 import java.util.ArrayList;
@@ -124,4 +125,6 @@ public class NFlowerMenu extends FlowerMenu {
             this.action = action;
         }
     }
+
+
 }

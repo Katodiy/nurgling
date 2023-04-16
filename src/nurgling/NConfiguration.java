@@ -76,6 +76,7 @@ public class NConfiguration {
     public boolean showBB = false;
 
     public boolean autoFlower = false;
+    public boolean autoSplitter = false;
 
     public static void saveButtons(String name, NGameUI.NButtonBeltSlot[] custom) {
         String key = NUtils.getUI().sessInfo.characterInfo.chrid;
