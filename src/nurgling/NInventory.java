@@ -730,6 +730,12 @@ public class NInventory extends Inventory {
             new TexI(Resource.loadsimg("nurgling/hud/buttons/bundle/h")),
             new TexI(Resource.loadsimg("nurgling/hud/buttons/bundle/dh"))};
 
+    private static final TexI[] dropperi = new TexI[]{
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/dropper/u")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/dropper/d")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/dropper/h")),
+            new TexI(Resource.loadsimg("nurgling/hud/buttons/dropper/dh"))};
+
     public void installMainInv() {
         searchwdg = new NSearchWidget(new Coord(sz));
         searchwdg.resize(sz);
@@ -791,7 +797,6 @@ public class NInventory extends Inventory {
                 NConfiguration.getInstance().autoFlower = val;
             }
         }, pw.pos("bl").add(UI.scale(new Coord(0, 5))));
-        ((ICheckBox)pw).a = Stack.show;
         pw.settip(Resource.remote().loadwait("nurgling/hud/buttons/autoflower/u").flayer(Resource.tooltip).t);
 
         pw = toggles.add(new ICheckBox(autosplittor[0], autosplittor[1], autosplittor[2], autosplittor[3]) {
@@ -801,8 +806,16 @@ public class NInventory extends Inventory {
                 NConfiguration.getInstance().autoSplitter = val;
             }
         }, pw.pos("bl").add(UI.scale(new Coord(0, 5))));
-        ((ICheckBox)pw).a = Stack.show;
         pw.settip(Resource.remote().loadwait("nurgling/hud/buttons/autosplittor/u").flayer(Resource.tooltip).t);
+
+        pw = toggles.add(new ICheckBox(dropperi[0], dropperi[1], dropperi[2], dropperi[3]) {
+            @Override
+            public void changed(boolean val) {
+                super.changed(val);
+                NConfiguration.getInstance().autoDropper = val;
+            }
+        }, pw.pos("bl").add(UI.scale(new Coord(0, 5))));
+        pw.settip(Resource.remote().loadwait("nurgling/hud/buttons/dropper/u").flayer(Resource.tooltip).t);
 
         toggles.pack();
         movePopup(parent.c);

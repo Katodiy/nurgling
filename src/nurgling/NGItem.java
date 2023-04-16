@@ -128,6 +128,10 @@ public class NGItem extends GItem {
         }
         if (name() != null && NQuestInfo.ver > questedVer)
             isQuested = NUtils.getGameUI().getQuestInfo().isQuestedItem(this);
+        if(isSeached)
+            if (NConfiguration.getInstance().autoDropper)
+                if(parent instanceof NInventory && parent == NUtils.getGameUI().maininv)
+                    wdgmsg("drop", sz, NUtils.getGameUI().getMap().player().rc, 0);
     }
 
     public String name(){
@@ -249,5 +253,8 @@ public class NGItem extends GItem {
         return null;
     }
 
+    public void setAsSearched(boolean value) {
+        isSeached = value;
+    }
 
 }

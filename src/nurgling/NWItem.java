@@ -45,7 +45,7 @@ public class NWItem extends WItem {
                     if (NUtils.getGameUI().itemsForSearch.onlyName()) {
                         if (name.toLowerCase().contains(NUtils.getGameUI().itemsForSearch.name)) {
                             if (!((NGItem) item).isSeached) {
-                                ((NGItem) item).isSeached = true;
+                                ((NGItem) item).setAsSearched(true);
                             }
                             return;
                         }
@@ -58,7 +58,7 @@ public class NWItem extends WItem {
                             if (!((NGItem) item).isSeached) {
                                 if (!NUtils.getGameUI().itemsForSearch.q.isEmpty() && !searchQuality())
                                     return;
-                                ((NGItem) item).isSeached = true;
+                                ((NGItem) item).setAsSearched(true);
                             }
                             return;
                         }
@@ -67,7 +67,7 @@ public class NWItem extends WItem {
                 if(!NUtils.getGameUI().itemsForSearch.q.isEmpty() && searchQuality())
                 {
                     if (!((NGItem) item).isSeached) {
-                        ((NGItem) item).isSeached = true;
+                        ((NGItem) item).setAsSearched(true);
                     }
                 }
             }
@@ -76,7 +76,7 @@ public class NWItem extends WItem {
         if (((NGItem) item).isSeached) {
             if (NUtils.getGameUI().itemsForSearch != null && !NUtils.getGameUI().itemsForSearch.q.isEmpty() && searchQuality())
                 return;
-            ((NGItem) item).isSeached = false;
+            ((NGItem) item).setAsSearched(false);
         }
     }
 
