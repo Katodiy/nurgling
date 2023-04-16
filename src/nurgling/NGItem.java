@@ -131,9 +131,13 @@ public class NGItem extends GItem {
         if(isSeached)
             if (NConfiguration.getInstance().autoDropper)
                 if(parent instanceof NInventory && parent == NUtils.getGameUI().maininv)
-                    wdgmsg("drop", sz, NUtils.getGameUI().getMap().player().rc, 0);
+                    if(Math.abs(NUtils.getTickId()-idTickOfDrop)>60) {
+                        wdgmsg("drop", sz, NUtils.getGameUI().getMap().player().rc, 0);
+                        idTickOfDrop = NUtils.getTickId();
+                    }
     }
 
+    private long idTickOfDrop = 0;
     public String name(){
         if((status & NAME_IS_READY) == NAME_IS_READY)
         {
