@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class NUI extends UI {
     public NSessInfo sessInfo;
@@ -146,4 +147,13 @@ public class NUI extends UI {
         }
         return null;
     }
+
+    @Override
+    public void mousedown(MouseEvent ev, Coord c, int button) {
+        if(button==3 && NConfiguration.getInstance().autoFlower)
+            sessInfo.characterInfo.flowerCand = null;
+        super.mousedown(ev, c, button);
+    }
+
+    public AtomicBoolean botMode = new AtomicBoolean(false);
 }

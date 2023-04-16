@@ -171,8 +171,14 @@ public class NGItem extends GItem {
 
     @Override
     public void wdgmsg(String msg, Object... args) {
-        if((status&NAME_IS_READY)==NAME_IS_READY && msg.equals("take"))
-            NUtils.getGameUI().getCharInfo().setCandidate(defn);
+        if((status&NAME_IS_READY)==NAME_IS_READY) {
+            if (msg.equals("take")) {
+                NUtils.getGameUI().getCharInfo().setCandidate(defn);
+            } else if (msg.equals("iact")) {
+                NUtils.getGameUI().getCharInfo().setFlowerCandidate(this);
+            }
+        }
+
         super.wdgmsg(msg, args);
     }
 

@@ -26,6 +26,8 @@
 
 package haven;
 
+import nurgling.NGameUI;
+
 import java.util.*;
 import java.lang.annotation.*;
 import java.lang.reflect.*;

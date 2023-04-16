@@ -118,4 +118,9 @@ public class NCharacterInfo extends Widget {
     public void setCandidate(String defn) {
         varCand = defn;
     }
+
+    NGItem flowerCand;
+    public void setFlowerCandidate(NGItem item) {
+        flowerCand = item;
+    }
 }

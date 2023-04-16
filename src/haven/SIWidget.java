@@ -29,7 +29,7 @@ package haven;
 import java.awt.image.*;
 
 public abstract class SIWidget extends Widget {
-    private Tex surf = null;
+    Tex surf = null;
 
     public SIWidget(Coord sz) {
 	super(sz);

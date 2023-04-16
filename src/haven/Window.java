@@ -27,6 +27,7 @@
 package haven;
 
 import nurgling.NInventory;
+import nurgling.NUtils;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -78,7 +79,9 @@ public class Window extends Widget implements DTarget {
 	public Deco deco;
     public boolean dt = false;
     public String cap;
-    private UI.Grab dm = null;
+	public boolean winDisabler = false;
+	public DisablerWdg dwdg;
+	private UI.Grab dm = null;
     private Coord doff;
     public boolean decohide = false;
     public boolean large = false;
@@ -99,6 +102,8 @@ public class Window extends Widget implements DTarget {
 	this.large = lg;
 	setfocustab(true);
 	chdeco(defdeco ? makedeco() : deco);
+	this.dwdg = add(new DisablerWdg(this));
+	dwdg.hide();
     }
 
     public Window(Coord sz, String cap, boolean lg, Deco deco) {
@@ -210,7 +215,7 @@ public class Window extends Widget implements DTarget {
 	    ((Window)parent).cdraw(g);
 	}
 
-	protected void drawbg(GOut g) {
+	public void drawbg(GOut g) {
 	    Coord bgc = new Coord();
 	    for(bgc.y = ca.ul.y; bgc.y < ca.br.y; bgc.y += bg.sz().y) {
 		for(bgc.x = ca.ul.x; bgc.x < ca.br.x; bgc.x += bg.sz().x)
@@ -349,6 +354,11 @@ public class Window extends Widget implements DTarget {
 	    deco.iresize(sz);
 	    deco.c = deco.contarea().ul.inv();
 	    this.sz = deco.sz;
+		if(dwdg!=null)
+		{
+			dwdg.sz = this.sz;
+			dwdg.c = deco.c;
+		}
 	} else {
 	    this.sz = sz;
 	}
@@ -403,7 +413,7 @@ public class Window extends Widget implements DTarget {
     }
 
     public boolean mousedown(Coord c, int button) {
-	if(super.mousedown(c, button)) {
+	if( super.mousedown(c, button)) {
 	    parent.setfocus(this);
 	    raise();
 	    return(true);
@@ -480,4 +490,55 @@ public class Window extends Widget implements DTarget {
 		    g.getimage(img -> Debug.dumpimage(img, args[0]));
 	    });
     }
+
+	public static final Tex[] gear = new Tex[]{
+			Resource.loadtex("nurgling/hud/gear/gear0"),
+			Resource.loadtex("nurgling/hud/gear/gear1"),
+			Resource.loadtex("nurgling/hud/gear/gear2"),
+			Resource.loadtex("nurgling/hud/gear/gear3"),
+			Resource.loadtex("nurgling/hud/gear/gear4"),
+			Resource.loadtex("nurgling/hud/gear/gear5"),
+			Resource.loadtex("nurgling/hud/gear/gear6"),
+			Resource.loadtex("nurgling/hud/gear/gear7"),
+			Resource.loadtex("nurgling/hud/gear/gear8"),
+			Resource.loadtex("nurgling/hud/gear/gear9"),
+			Resource.loadtex("nurgling/hud/gear/gear10"),
+			Resource.loadtex("nurgling/hud/gear/gear11")};
+	private static final TexI[] canceli = new TexI[]{
+			new TexI(Resource.loadsimg("nurgling/hud/buttons/cancel/u")),
+			new TexI(Resource.loadsimg("nurgling/hud/buttons/cancel/d")),
+			new TexI(Resource.loadsimg("nurgling/hud/buttons/cancel/h"))};
+	public class DisablerWdg extends Widget{
+		@Override
+		public void draw(GOut g) {
+			if(winDisabler && deco instanceof DefaultDeco) {
+				if(!this.cancelb.visible)
+					this.cancelb.show();
+				((DefaultDeco)deco).drawbg(g);
+				int id = (int) (NUtils.getTickId() / 5) % 12;
+				g.image(gear[id], new Coord(this.sz.x / 2 - gear[0].sz().x / 2, sz.y / 2 - gear[0].sz().y / 2));
+				super.draw(g);
+			}
+		}
+
+		@Override
+		public void resize(Coord sz) {
+			super.resize(sz);
+			cancelb.move( new Coord(sz.x / 2 - canceli[0].sz().x / 2  + UI.scale(1), sz.y / 2 - canceli[0].sz().y / 2 - UI.scale(1)));
+		}
+
+		public IButton cancelb;
+
+		public DisablerWdg(Window wparent) {
+			super();
+			cancelb = add(new IButton(canceli[0].back,canceli[1].back,canceli[2].back){
+				@Override
+				public void click() {
+					wparent.winDisabler = !wparent.winDisabler;
+					cancelb.hide();
+				}
+			});
+			cancelb.hide();
+		}
+	}
 }

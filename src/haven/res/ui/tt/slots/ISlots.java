@@ -32,7 +32,8 @@ public class ISlots extends ItemInfo.Tip implements GItem.NumberInfo {
 
     public static final String chc = "192,192,255";
     public void layout(Layout l) {
-	isShifted = ((NGItem)owner).ui.modshift;
+	if(owner instanceof NGItem)
+		isShifted = ((NGItem)owner).ui.modshift;
 	l.cmp.add(ch.img, new Coord(0, l.cmp.sz.y));
 	if(attrs.length > 0) {
 	    BufferedImage head = RichText.render(String.format("Chance: $col[%s]{%d%%} to $col[%s]{%d%%}", chc, Math.round(100 * pmin), chc, Math.round(100 * pmax)), 0).img;
@@ -49,7 +50,7 @@ public class ISlots extends ItemInfo.Tip implements GItem.NumberInfo {
 	    BufferedImage head = RichText.render(String.format("Chance: $col[%s]{%d%%}", chc, (int)Math.round(100 * pmin)), 0).img;
 	    l.cmp.add(head, new Coord(10, l.cmp.sz.y));
 	}
-	if(((NGItem)owner).ui.modshift) {
+	if(!(owner instanceof NGItem) || ((NGItem)owner).ui.modshift) {
 		for (SItem si : s)
 			si.layout(l);
 	}

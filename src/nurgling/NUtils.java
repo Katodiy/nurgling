@@ -1932,4 +1932,16 @@ public class NUtils {
         }
         return Optional.of(new Coord2d((float) ((b2 * c1 - b1 * c2) / delta), (float) ((a1 * c2 - a2 * c1) / delta)));
     }
+
+    public static Window findWinParent(Widget wdg){
+        Widget t_parent = wdg.parent;
+        while (t_parent!=null && !(t_parent instanceof NGameUI)) {
+            if (t_parent instanceof Window) {
+                return (Window) t_parent;
+            } else {
+                t_parent = wdg.parent.parent;
+            }
+        }
+        return null;
+    }
 }
