@@ -80,6 +80,7 @@ public class NConfiguration {
     public boolean autoDropper = false;
     public boolean invert_hor = false;
     public boolean invert_ver = false;
+    public String baseurl =" https://raw.githubusercontent.com/Katodiy/nurgling-release/master/ver";
 
     public static void saveButtons(String name, NGameUI.NButtonBeltSlot[] custom) {
         String key = NUtils.getUI().sessInfo.characterInfo.chrid;

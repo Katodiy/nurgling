@@ -1,8 +1,18 @@
 package nurgling;
 
 import haven.*;
+import haven.Label;
+import haven.Window;
 
 import java.awt.*;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class NLoginScreen extends LoginScreen {
     static Text.Foundry NUtils;
@@ -18,6 +28,27 @@ public class NLoginScreen extends LoginScreen {
         add ( new LoginList ( UI.scale(200), 29 ), new Coord ( UI.scale(10), UI.scale(10) ) );
         optbtn.move(new Coord(UI.scale(680), UI.scale(30)));
         adda(new StatusLabel(hostname, 0.5), bgc.x, bg.sz().y, 0.5, 1);
+
+        try {
+            URL upd_url = new URL(NConfiguration.getInstance().baseurl);
+            ReadableByteChannel rbc = Channels.newChannel(upd_url.openStream());
+            FileOutputStream fos = null;
+            fos = new FileOutputStream("tmp_ver");
+            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get("tmp_ver")), StandardCharsets.UTF_8));
+            String line = reader.readLine();
+            reader.close();
+            BufferedReader reader2 = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get("ver")), StandardCharsets.UTF_8));
+            String line2 = reader2.readLine();
+            reader2.close();
+            if(!line2.contains(line))
+            {
+                Window win = adda(new Window(new Coord(UI.scale(150,40)),"Attention"), bgc.x, bg.sz().y/8, 0.5, 0.5);
+                win.add(new Label("New version available!"));
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
     
     @Override
