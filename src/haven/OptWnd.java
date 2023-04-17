@@ -127,8 +127,8 @@ public class OptWnd extends Window {
 			    a = val;
 			}
 		    }, Coord.z);
-			prev = add(new Label("Camera:"), prev.pos("bl").adds(0, 5));
-			Dropbox cam = add(new Dropbox<String>(100, 5, 16) {
+			prev = add(new Label("Camera:"), prev.pos("bl").adds(0, UI.scale(5)));
+			Dropbox cam = add(new Dropbox<String>(UI.scale(100), 5, UI.scale(16)) {
 				@Override
 				protected String listitem(int i) {
 					return new LinkedList<>(NMapView.camlist()).get(i);
@@ -154,6 +154,28 @@ public class OptWnd extends Window {
 				}
 			}, prev.pos("ur").adds(5, 0));
 			cam.sel = NMapView.defcam();
+
+		prev = add(new CheckBox("Invert horizontal camera rotation") {
+			{a = NConfiguration.getInstance().invert_hor;}
+
+			public void set(boolean val) {
+				a = val;
+				NConfiguration.getInstance().invert_hor = val;
+				NConfiguration.getInstance().write();
+			}
+		}, prev.pos("bl").adds(0, UI.scale(5)));
+
+
+		prev = add(new CheckBox("Invert vertical camera rotation") {
+			{a = NConfiguration.getInstance().invert_ver;}
+
+			public void set(boolean val) {
+				a = val;
+				NConfiguration.getInstance().invert_ver = val;
+				NConfiguration.getInstance().write();
+			}
+		}, prev.pos("bl").adds(0, UI.scale(5)));
+
 		prev = add(new Label("Render scale"), prev.pos("bl").adds(0, 5));
 		{
 		    Label dpy = new Label("");
