@@ -1,8 +1,10 @@
 package nurgling;
 
 import haven.*;
+import haven.Window;
 import haven.res.ui.tt.highlighting.Highlighting;
 import haven.res.ui.tt.slot.Slotted;
+import nurgling.bots.actions.AutoSplitter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,6 +29,37 @@ public class NUI extends UI {
         Highlighting.init();
         Slotted.init();
         NFoodInfo.init();
+    }
+
+    @Override
+    public void wdgmsg(Widget sender, String msg, Object... args) {
+        super.wdgmsg(sender, msg, args);
+        if(NConfiguration.getInstance().autoSplitter)
+        if(!botMode.get() && args.length>0) {
+            if (msg.contains("activate")) {
+                if (sender.parent != null && sender.parent instanceof Window && ((Window) sender.parent).cap.contains("Split")) {
+                    NGItem fc = NUtils.getUI().sessInfo.characterInfo.flowerCand;
+                    if (fc.parent instanceof NInventory) {
+                        Window parent = NUtils.findWinParent(fc);
+                        NInventory inv = (NInventory) fc.parent;
+                        ArrayList<GItem> targets = new ArrayList<>();
+                        try {
+                            if (fc.isSeached) {
+                                for (GItem item : inv.getWItems())
+                                    if (((NGItem) item).isSeached)
+                                        targets.add(item);
+                            } else {
+                                targets = inv.getGItems(new NAlias(fc.name()));
+                            }
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                        NUtils.getUI().botMode.set(true);
+                        new Thread(new AutoSplitter(parent, targets, Double.parseDouble(args[0].toString()))).start();
+                    }
+                }
+            }
+        }
     }
 
     @Override

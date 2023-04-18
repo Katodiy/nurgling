@@ -27,6 +27,7 @@
 package haven;
 
 import haven.res.ui.tt.highlighting.Highlighting;
+import haven.res.ui.tt.highlighting.ItemHigh;
 import haven.res.ui.tt.q.quality.Quality;
 import haven.res.ui.tt.wear.Wear;
 import haven.res.ui.tt.wellmined.WellMined;
@@ -395,6 +396,7 @@ public abstract class ItemInfo {
 	{
 		NGItem item = (NGItem) owner;
 		ret.add(new Highlighting(owner));
+		ret.add(new ItemHigh(owner));
 	}
 	return(ret);
     }

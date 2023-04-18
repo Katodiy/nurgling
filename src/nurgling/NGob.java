@@ -494,7 +494,7 @@ public class NGob {
                 if (NUtils.checkName(name, "rowboat", "dugout", "snekkja", "knarr")) {
                     gob.addTag(Tags.transport);
                 }
-            } else if (NUtils.checkName(name, "beehive", "trough", "barterhand")) {
+            } else if (NUtils.checkName(name, "gfx/terobjs/beehive", "trough", "barterhand")) {
                 gob.addTag(Tags.area);
                 if (NUtils.checkName(name, "trough")) {
                     gob.addTag(Tags.trough);

@@ -76,6 +76,11 @@ public class NConfiguration {
     public boolean showBB = false;
 
     public boolean autoFlower = false;
+    public boolean autoSplitter = false;
+    public boolean autoDropper = false;
+    public boolean invert_hor = false;
+    public boolean invert_ver = false;
+    public String baseurl =" https://raw.githubusercontent.com/Katodiy/nurgling-release/master/ver";
 
     public static void saveButtons(String name, NGameUI.NButtonBeltSlot[] custom) {
         String key = NUtils.getUI().sessInfo.characterInfo.chrid;
@@ -621,6 +626,8 @@ public class NConfiguration {
         obj.put("enablePfBoundingBoxes",enablePfBoundingBoxes);
         obj.put("showBB",showBB);
         obj.put("hideNature",hideNature);
+        obj.put("invert_ver",invert_ver);
+        obj.put("invert_hor",invert_hor);
         obj.put("enableCollectFoodInfo",collectFoodInfo);
         obj.put("isPaths",isPaths);
         JSONArray pathCandidates = new JSONArray ();
@@ -905,6 +912,12 @@ public class NConfiguration {
             }
             if ( jsonObject.get ( "hideNature" ) != null ) {
                 hideNature = (boolean)jsonObject.get ( "hideNature" );
+            }
+            if ( jsonObject.get ( "invert_ver" ) != null ) {
+                invert_ver = (boolean)jsonObject.get ( "invert_ver" );
+            }
+            if ( jsonObject.get ( "invert_hor" ) != null ) {
+                invert_hor = (boolean)jsonObject.get ( "invert_hor" );
             }
             if ( jsonObject.get ( "enableCollectFoodInfo" ) != null ) {
                 collectFoodInfo = (boolean)jsonObject.get ( "enableCollectFoodInfo" );
