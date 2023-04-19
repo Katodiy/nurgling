@@ -36,7 +36,7 @@ public class BuildTrellis extends Bot {
         command.spec_in_area.put(block,block_area);
         command.ing_count.put(block,3);
         Ingredient string = new Ingredient();
-        string.item = new NAlias ( new ArrayList<String> ( Arrays.asList ( "fibre", "taproot","nettle","toughroot", "hidestrap" ) ));
+        string.item = new NAlias ( new ArrayList<String> ( Arrays.asList ( "fibre", "taproot","nettle","toughroot", "hidestrap", "barkcordage" ) ));
         string.isGroup = true;
         command.ingredients.add (string);
         command.spec_in_area.put(string,fibre_area);

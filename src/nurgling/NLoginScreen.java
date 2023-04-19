@@ -30,21 +30,33 @@ public class NLoginScreen extends LoginScreen {
         adda(new StatusLabel(hostname, 0.5), bgc.x, bg.sz().y, 0.5, 1);
 
         try {
-            URL upd_url = new URL(NConfiguration.getInstance().baseurl);
-            ReadableByteChannel rbc = Channels.newChannel(upd_url.openStream());
-            FileOutputStream fos = null;
-            fos = new FileOutputStream("tmp_ver");
-            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get("tmp_ver")), StandardCharsets.UTF_8));
-            String line = reader.readLine();
-            reader.close();
-            BufferedReader reader2 = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get("ver")), StandardCharsets.UTF_8));
-            String line2 = reader2.readLine();
-            reader2.close();
-            if(!line2.contains(line))
-            {
-                Window win = adda(new Window(new Coord(UI.scale(150,40)),"Attention"), bgc.x, bg.sz().y/8, 0.5, 0.5);
-                win.add(new Label("New version available!"));
+            if(new File("ver").exists()) {
+                URL upd_url = new URL(NConfiguration.getInstance().baseurl);
+                ReadableByteChannel rbc = Channels.newChannel(upd_url.openStream());
+                FileOutputStream fos = null;
+                fos = new FileOutputStream("tmp_ver");
+                fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get("tmp_ver")), StandardCharsets.UTF_8));
+                String line = reader.readLine();
+                reader.close();
+                BufferedReader reader2 = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get("ver")), StandardCharsets.UTF_8));
+                String line2 = reader2.readLine();
+                reader2.close();
+                if (!line2.contains(line)) {
+                    Window win = adda(new Window(new Coord(UI.scale(150, 40)), "Attention"){
+                        @Override
+                        public void wdgmsg(String msg, Object... args) {
+                            if(msg.equals("close")) {
+                                hide();
+                            }
+                            else {
+                                super.wdgmsg(msg, args);
+                            }
+                        }
+                    }, bgc.x, bg.sz().y / 8, 0.5, 0.5);
+
+                    win.add(new Label("New version available!"));
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
