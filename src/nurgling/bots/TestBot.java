@@ -2,7 +2,6 @@ package nurgling.bots;
 
 import haven.*;
 
-import haven.res.lib.itemtex.ItemTex;
 import nurgling.NAlias;
 import nurgling.NGameUI;
 import nurgling.NUtils;
@@ -74,7 +73,7 @@ public class TestBot extends Bot {
                 y = min.y;
             }
             
-            for(GItem item: gameUI.getInventory ().getItems ()){
+            for(GItem item: gameUI.getInventory ().getWItems()){
                 if(NUtils.isIt(item, "bronzesword")){
                     int a = 8;
                 }
@@ -95,6 +94,7 @@ public class TestBot extends Bot {
                                 //                                System.out.println ( res );
                                 System.out.println ( gob.rc );
                                 
+                                //         Resource.readimage(new ByteArrayInputStream(((TexR) l).img))
                                 //                                Coord sfcoord = gob.rc.div ( MCache.tilesz ).floor ();
                                 //                                Area calibr =  Finder.findCalibrationArea ();
                                 //                                System.out.println (isGobInArea ( calibr ));

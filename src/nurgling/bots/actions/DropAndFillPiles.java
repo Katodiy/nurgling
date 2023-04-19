@@ -2,7 +2,6 @@ package nurgling.bots.actions;
 
 import haven.GItem;
 import haven.Gob;
-import haven.WItem;
 
 import nurgling.*;
 import nurgling.tools.Finder;
@@ -21,7 +20,7 @@ public class DropAndFillPiles implements Action {
                 new PathFinder ( gui, in ).run ();
                 new TakeMaxFromPile ( in ).run ( gui );
                 new PathFinder( gui, darea.center ).run ();
-                ArrayList<GItem> ditems = gui.getInventory (  ).getItems ( droped );
+                ArrayList<GItem> ditems = gui.getInventory (  ).getWItems( droped );
                 for ( GItem item : ditems ) {
                     NUtils.drop(item);
                 }

@@ -1,6 +1,5 @@
 package nurgling;
 
-import com.sun.jndi.toolkit.ctx.AtomicContext;
 import haven.Resource;
 import haven.Sprite;
 

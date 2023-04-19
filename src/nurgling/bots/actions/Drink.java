@@ -3,10 +3,7 @@ package nurgling.bots.actions;
 import haven.GItem;
 import haven.WItem;
 
-import nurgling.NAlias;
-import nurgling.NGameUI;
-import nurgling.NInventory;
-import nurgling.NUtils;
+import nurgling.*;
 import nurgling.tools.Finder;
 
 import java.util.ArrayList;
@@ -51,10 +48,10 @@ public class Drink implements Action {
                 WItem wbelt = Finder.findDressedItem ( new NAlias ("belt") );
                 if(wbelt!=null) {
                     NInventory belt = ((NInventory)wbelt.item.contents);
-                    ArrayList<GItem> wskins = belt.getItems ( new NAlias ( "waterskin" ) );
+                    ArrayList<GItem> wskins = belt.getWItems( new NAlias ( "waterskin" ) );
                     for ( GItem witem : wskins ) {
                         if ( NUtils.isContentWater ( witem ) ) {
-                            if ( new SelectFlowerAction ( witem, "Drink", SelectFlowerAction.Types.Inventory )
+                            if ( new SelectFlowerAction ( (NGItem) witem, "Drink", SelectFlowerAction.Types.Item )
                                     .run ( gui ).type != Results.Types.SUCCESS ) {
                                 return new Results ( Results.Types.SELECT_FLOWER_FAIL );
                             }

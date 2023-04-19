@@ -57,7 +57,7 @@ public class CollectItemsToPile implements Action {
         /// Выполняем процедуру подбора для каждого элемента в массиве
         while ( !Finder.findObjectsInArea ( items, input ).isEmpty () ){
             
-            if ( gui.getInventory ().getFreeSpace () <= 1 && !gui.getInventory ().getItems ().isEmpty () ) {
+            if ( gui.getInventory ().getFreeSpace () <= 1 && !gui.getInventory ().getWItems().isEmpty () ) {
                 new TransferToPile ( output, NHitBox.getByName ( items.keys.get ( 0 ) ), items, items ).run ( gui );
             }
             

@@ -29,12 +29,19 @@ public class BuildWChest extends Bot {
         command.special_command = new NAlias("bld/chest");
         command.name = "Wooden Chest";
         command.ingredients = new ArrayList<Ingredient> ();
-        command.ingredients
-                .add ( new Ingredient ( new NAlias ( new ArrayList<String> ( Arrays.asList ( "board" ) ) ), board_area,
-                        4 ) );
-        command.ingredients
-                .add ( new Ingredient ( new NAlias ( new ArrayList<String> ( Arrays.asList ( "nugget" ) ) ), block_area,
-                        4 ) );
+        Ingredient board = new Ingredient();
+        board.item = new NAlias( "board" );
+        board.isGroup = true;
+        command.ingredients.add (board);
+        command.spec_in_area.put(board,board_area);
+        command.ing_count.put(board,4);
+        Ingredient nugget = new Ingredient();
+        nugget.item = new NAlias( "nugget" );
+        nugget.isGroup = true;
+        command.ingredients.add (nugget);
+        command.spec_in_area.put(nugget,nugget_area);
+        command.ing_count.put(nugget,4);
+
         ///Добавление цикла в действия бота
         runActions.add ( new Build( build_area, "chest", command ) );
     }
@@ -75,7 +82,7 @@ public class BuildWChest extends Bot {
                 gameUI.getMap ().isAreaSelectorEnable = true;
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
-                    new Thread ( new AreaSelecter ( gameUI, _zone2, m_selection_start, block_area ),
+                    new Thread ( new AreaSelecter ( gameUI, _zone2, m_selection_start, nugget_area),
                             "Cont Area Selecter" ).start ();
                 }
             }
@@ -101,6 +108,6 @@ public class BuildWChest extends Bot {
     private AtomicBoolean _zone2 = new AtomicBoolean ( false );
     private NArea build_area = new NArea ();
     private NArea board_area = new NArea ();
-    private NArea block_area = new NArea ();
+    private NArea nugget_area = new NArea ();
     private AtomicBoolean m_selection_start = new AtomicBoolean ( false );
 }

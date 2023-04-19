@@ -18,11 +18,6 @@ public class NMenuGrid extends MenuGrid {
         }
 
         @Override
-        public void use() {
-            action.perform(pag);
-        }
-
-        @Override
         public void use(Interaction iact) {
             action.perform(pag);
         }

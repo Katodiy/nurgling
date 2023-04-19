@@ -2,14 +2,11 @@ package nurgling.bots.actions;
 
 import haven.GItem;
 import haven.Gob;
-import haven.Resource;
-import haven.WItem;
 import nurgling.*;
 import nurgling.tools.AreasID;
 import nurgling.tools.Finder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 
 public class CurdTubeAction implements Action {
@@ -39,18 +36,18 @@ public class CurdTubeAction implements Action {
                             return new Results(Results.Types.NO_ITEMS);
                     new PathFinder(gui, gob).run();
                     new OpenTargetContainer(gob, "Curding Tub").run(gui);
-                    if(gui.getInventory("Curding Tub")!=null && gui.getInventory("Curding Tub").getItems(new NAlias("curd")).size()<4)
+                    if(gui.getInventory("Curding Tub")!=null && gui.getInventory("Curding Tub").getWItems(new NAlias("curd")).size()<4)
                         return new Results(Results.Types.NO_FUEL);
 
-                    res = new TakeFromContainer("Curding Tub", new NAlias("curd"), 4- gui.getInventory().getItems(new NAlias("curd")).size()).run(gui);
+                    res = new TakeFromContainer("Curding Tub", new NAlias("curd"), 4- gui.getInventory().getWItems(new NAlias("curd")).size()).run(gui);
                     GItem cheese_tray = NUtils.getGameUI().getInventory().getItem(new NAlias("cheesetray"));
-                    NUtils.waitEvent(()->gui.getInventory().getItems(new NAlias("invobjs/curd-")).size()>=4,10);
-                    if(gui.getInventory().getItems(new NAlias("invobjs/curd-")).size()<4)
+                    NUtils.waitEvent(()->gui.getInventory().getWItems(new NAlias("invobjs/curd-")).size()>=4,10);
+                    if(gui.getInventory().getWItems(new NAlias("invobjs/curd-")).size()<4)
                         return new Results(Results.Types.NO_FUEL);
-                    int finalcount = gui.getInventory().getItems(new NAlias("invobjs/curd-")).size()-4;
-                    while (gui.getInventory().getItems(new NAlias("invobjs/curd-")).size()!=finalcount)
+                    int finalcount = gui.getInventory().getWItems(new NAlias("invobjs/curd-")).size()-4;
+                    while (gui.getInventory().getWItems(new NAlias("invobjs/curd-")).size()!=finalcount)
                         new UseItemOnItem(new NAlias("invobjs/curd-"),cheese_tray).run(gui);
-                    if(gui.getInventory("Curding Tub").getItems(new NAlias("invobjs/curd-")).size()<4)
+                    if(gui.getInventory("Curding Tub").getWItems(new NAlias("invobjs/curd-")).size()<4)
                         break;
                     res = new TransferItemsToBarter(Finder.findSubArea(main, AreasID.curd_out), new NAlias("cheesetray"), false).run(gui);
                 }

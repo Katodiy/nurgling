@@ -29,9 +29,12 @@ public class BuildSign extends Bot {
         command.command = new char[]{ 'b', 'f', 'i', 'd' };
         command.name = "Display Sign";
         command.ingredients = new ArrayList<Ingredient> ();
-        command.ingredients
-                .add ( new Ingredient ( new NAlias( new ArrayList<String> ( Arrays.asList ( "board" ) ) ), board_area,
-                        1 ) );
+        Ingredient board = new Ingredient();
+        board.item = new NAlias ( "board");
+        board.isGroup = true;
+        command.ingredients.add (board);
+        command.spec_in_area.put(board,board_area);
+        command.ing_count.put(board,1);
         ///Добавление цикла в действия бота
         runActions.add ( new Build( build_area, "sign", command ) );
     }

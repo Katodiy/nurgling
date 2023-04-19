@@ -1,14 +1,11 @@
 package nurgling.bots.actions;
 
 import haven.GItem;
-import haven.Gob;
 
-import haven.WItem;
 import nurgling.*;
 import nurgling.bots.tools.AItem;
 import nurgling.bots.tools.Ingredient;
 import nurgling.tools.AreasID;
-import nurgling.tools.Finder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,14 +18,13 @@ public class TransferHides implements Action {
     public Results run ( NGameUI gui )
             throws InterruptedException {
 
-        ArrayList<GItem> items = gui.getInventory().getItems(hides);
+        ArrayList<GItem> items = gui.getInventory().getWItems(hides);
         for(GItem item : items){
-            AItem ingredient = Ingredient.get(item);
+            Ingredient ingredient = Ingredient.get(item);
             NAlias name = new NAlias(NUtils.getInfo(item));
-            if((ingredient != null) && (NConfiguration.getInstance().ingrTh.get(name.keys.get(0))==null || ((NGItem) item).quality() > NConfiguration.getInstance().ingrTh.get(name.keys.get(0)))) {
-                double th = NConfiguration.getInstance().ingrTh.get(name.keys.get(0)) != null ? NConfiguration.getInstance().ingrTh.get(name.keys.get(0)) : 0;
-                new TransferItemsToBarter(ingredient.barter_out, name, true, th).run(gui);
-                new FillContainers(name, ingredient.area_out, new ArrayList<>(), th).run(gui);
+            if((ingredient != null) && (((NGItem) item).quality() > ingredient.th)) {
+                new TransferItemsToBarter(ingredient.barter_out, name, true, ingredient.th).run(gui);
+                new FillContainers(new NAlias(item.resource().name), ingredient.area_out, new ArrayList<>(), ingredient.th).run(gui);
             }
         }
 

@@ -26,12 +26,7 @@
 
 package haven;
 
-import nurgling.NAlias;
-import nurgling.NConfiguration;
-import nurgling.NInventory;
-import nurgling.NUtils;
-import rx.functions.Action1;
-import rx.functions.Action2;
+import nurgling.NGameUI;
 
 import java.util.*;
 import java.lang.annotation.*;
@@ -56,34 +51,8 @@ public class Widget {
     public KeyBinding kb_gkey;
     private Widget prevtt;
     static Map<String, Factory> types = new TreeMap<String, Factory>();
-	private boolean disposed = false;
-	private boolean bound = false;
-	private final List<Action1<Widget>> boundListeners = new LinkedList<>();
-	private final List<Action2<Widget, Boolean>> focusListeners = new LinkedList<>();
 
-	public void bound() {
-		bound = true;
-		synchronized (boundListeners) {
-			boundListeners.forEach(action -> action.call(this));
-			boundListeners.clear();
-		}
-	}
-
-	public void  onBound(Action1<Widget> action) {
-		synchronized (boundListeners) {
-			if(bound) {
-				action.call(this);
-			} else {
-				boundListeners.add(action);
-			}
-		}
-	}
-
-	public void onFocused(Action2<Widget, Boolean> action) {
-		synchronized (focusListeners) { focusListeners.add(action); }
-	}
-
-	@dolda.jglob.Discoverable
+    @dolda.jglob.Discoverable
     @Target(ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
     public @interface RName {
@@ -542,9 +511,6 @@ public class Widget {
     }
 
     public void dispose() {
-		disposed = true;
-		synchronized (boundListeners) {boundListeners.clear();}
-		synchronized (focusListeners) {focusListeners.clear();}
     }
 
     public void rdispose() {
@@ -847,15 +813,20 @@ public class Widget {
 	}
     }
 
-    public boolean mousehover(Coord c) {
+    public boolean mousehover(Coord c, boolean hovering) {
+	boolean ret = false;
 	for(Widget wdg = lchild; wdg != null; wdg = wdg.prev) {
+	    boolean ch = hovering;
 	    if(!wdg.visible)
-		continue;
+		ch = false;
 	    Coord cc = xlate(wdg.c, true);
-	    if(c.isect(cc, wdg.sz) && wdg.mousehover(c.add(cc.inv())))
-		return(true);
+	    boolean inside = c.isect(cc, wdg.sz);
+	    if(wdg.mousehover(c.add(cc.inv()), ch && inside)) {
+		hovering = false;
+		ret = true;
+	    }
 	}
-	return(false);
+	return(ret);
     }
 
     private static final Map<Integer, Integer> gkeys = Utils.<Integer, Integer>map().
@@ -1382,15 +1353,6 @@ public class Widget {
 	private KeyMatch rkey = null;
 
 	public KeyboundTip(String base, boolean rich) {
-		if(!NConfiguration.getInstance().disabledCheck) {
-			if (base != null) {
-				if (NUtils.checkName(base, new NAlias("Verified account"))) {
-					NConfiguration.getInstance().isVerified = true;
-				} else if (NUtils.checkName(base, new NAlias("Subscribed"))) {
-					NConfiguration.getInstance().isSubscribed = true;
-				}
-			}
-		}
 	    this.base = base;
 	    this.rich = rich;
 	}
@@ -1433,11 +1395,6 @@ public class Widget {
 	}
     }
 
-    @Deprecated
-    public Object tooltip(Coord c, boolean again) {
-	return(null);
-    }
-
     public Object tooltip(Coord c, Widget prev) {
 	if(prev != this)
 	    prevtt = null;
@@ -1458,7 +1415,7 @@ public class Widget {
 	    }
 	}
 	prevtt = null;
-	return(tooltip(c, prev == this));
+	return(null);
     }
 
     public Widget settip(String text, boolean rich) {
@@ -1527,13 +1484,13 @@ public class Widget {
 
     public abstract class Anim {
 	public Anim() {
-	    synchronized(ui) {
+	    synchronized((ui == null) ? this : ui) {
 		nanims.add(this);
 	    }
 	}
 
 	public void clear() {
-	    synchronized(ui) {
+	    synchronized((ui == null) ? this : ui) {
 		nanims.remove(this);
 		anims.remove(this);
 	    }

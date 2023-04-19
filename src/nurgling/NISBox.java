@@ -48,7 +48,7 @@ public class NISBox extends ISBox {
     @Override
     protected void added() {
         if(parent instanceof Window) {
-            boolean isStockpile = "Stockpile".equals(((Window) parent).cap.text);
+            boolean isStockpile = "Stockpile".equals(((Window) parent).cap);
             if(isStockpile) {
                 take = new TakeButton(UI.scale(40), "Take");
                 value = new Value(UI.scale(40), "");

@@ -27,11 +27,11 @@ public class NTroughColor extends NGAttrib implements Gob.SetupMod {
         if ((gob.modelAttribute & 2) == 0) {
             gob.addTag(NGob.Tags.warning);
             marker.isVisible = true;
-            color = new MixColor(NConfiguration.getInstance().colors.get("warning"));
+            color = NConfiguration.getInstance().colors.get("warning");
         } else {
             gob.removeTag(NGob.Tags.warning);
             marker.isVisible = false;
-            color = new MixColor(NConfiguration.getInstance().colors.get("no_color"));
+            color = NConfiguration.getInstance().colors.get("no_color");
         }
         currentStage = gob.getModelAttribute();
     }

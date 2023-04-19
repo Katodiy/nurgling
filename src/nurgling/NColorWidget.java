@@ -5,6 +5,7 @@ import haven.Coord;
 import haven.GOut;
 import haven.Widget;
 import haven.Label;
+import haven.render.MixColor;
 
 import javax.swing.*;
 import javax.swing.colorchooser.AbstractColorChooserPanel;
@@ -39,14 +40,14 @@ public class NColorWidget extends Widget
                 }
             }
             colorChooser.setPreviewPanel(new JPanel());
-            colorChooser.setColor(NConfiguration.getInstance().colors.get(clr));
+            colorChooser.setColor(NConfiguration.getInstance().colors.get(clr).color());
         }
 
         @Override
         public void draw(GOut g) {
             int delta = 2;
             Coord size = new Coord(sz.x-2*delta,sz.y-2*delta);
-            g.chcolor(NConfiguration.getInstance().colors.get(clr));
+            g.chcolor(NConfiguration.getInstance().colors.get(clr).color());
             g.frect(new Coord(delta,  delta), size);
             g.chcolor();
             g.chcolor(Color.BLACK);
@@ -69,7 +70,7 @@ public class NColorWidget extends Widget
                     JDialog chooser = JColorChooser.createDialog(null, "SelectColor", true, colorChooser, new AbstractAction() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            NConfiguration.getInstance().colors.put(clr,colorChooser.getColor());
+                            NConfiguration.getInstance().colors.put(clr,new MixColor(colorChooser.getColor()));
                         }
                     }, new ActionListener() {
                         @Override

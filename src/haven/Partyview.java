@@ -126,7 +126,7 @@ public class Partyview extends Widget {
 	    if(leave.show(!avs.isEmpty()))
 		pack();
 	}
-	for(Entry<Member, MemberView> e : avs.entrySet())
+	for(Map.Entry<Member, MemberView> e : avs.entrySet())
 	    e.getValue().color = e.getKey().col;
     }
 

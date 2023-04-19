@@ -79,8 +79,10 @@ public class Bot implements Runnable {
             ((NOCache) gameUI.ui.sess.glob.oc).paths.pflines = null;
 //        NUtils.destroyOverlays();
         /// Убиваем окно состояния бота
-        window.destroy();
-        window = null;
+        if(window!=null) {
+            window.destroy();
+            window = null;
+        }
     }
 
     public void closeAction() {

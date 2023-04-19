@@ -29,11 +29,11 @@ public class NBarrelColor extends NGAttrib implements Gob.SetupMod {
             }
         }
         if (!isFound) {
-            color = new MixColor(NConfiguration.getInstance().colors.get("free"));
+            color = NConfiguration.getInstance().colors.get("free");
             gob.addTag(NGob.Tags.free);
             isFree = true;
         } else {
-            color = new MixColor(NConfiguration.getInstance().colors.get("no_color"));
+            color = NConfiguration.getInstance().colors.get("no_color");
             gob.removeTag(NGob.Tags.free);
             isFree = false;
         }

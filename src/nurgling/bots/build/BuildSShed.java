@@ -28,20 +28,30 @@ public class BuildSShed extends Bot {
         command.command = new char[]{ 'b', 'b', 'f', 'm' };
         command.name = "Smoke Shed";
         command.ingredients = new ArrayList<Ingredient> ();
-        command.ingredients
-                .add ( new Ingredient( new NAlias( new ArrayList<String> ( Arrays.asList ( "brick" ) ) ), brick_area,
-                        10 ) );
-        command.ingredients
-                .add ( new Ingredient ( new NAlias ( new ArrayList<String> ( Arrays.asList ( "bough" ) ) ), bough_area,
-                        6 ) );
-        command.ingredients
-                .add ( new Ingredient ( new NAlias ( new ArrayList<String> ( Arrays.asList ( "board" ) ) ), board_area,
-                        12 ) );
-
-        command.ingredients
-                .add ( new Ingredient ( new NAlias ( new ArrayList<String> ( Arrays.asList ( "block" ) ) ), block_area,
-                        4 ) );
-
+        Ingredient board = new Ingredient();
+        board.item = new NAlias ( "board");
+        board.isGroup = true;
+        command.ingredients.add (board);
+        command.spec_in_area.put(board,board_area);
+        command.ing_count.put(board,12);
+        Ingredient brick = new Ingredient();
+        brick.item = new NAlias ( "brick");
+        brick.isGroup = true;
+        command.ingredients.add (brick);
+        command.spec_in_area.put(brick,brick_area);
+        command.ing_count.put(brick,10);
+        Ingredient bough = new Ingredient();
+        bough.item = new NAlias ( "bough");
+        bough.isGroup = true;
+        command.ingredients.add (bough);
+        command.spec_in_area.put(bough,bough_area);
+        command.ing_count.put(bough,6);
+        Ingredient block = new Ingredient();
+        block.item = new NAlias ( "block");
+        block.isGroup = true;
+        command.ingredients.add (block);
+        command.spec_in_area.put(block,block_area);
+        command.ing_count.put(block,4);
 
         runActions.add ( new Build( build_area, "smokeshed", command ) );
     }

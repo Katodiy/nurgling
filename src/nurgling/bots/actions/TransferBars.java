@@ -1,18 +1,14 @@
 package nurgling.bots.actions;
 
 import haven.GItem;
-import haven.WItem;
 import nurgling.NAlias;
 import nurgling.NGameUI;
-import nurgling.NUtils;
 import nurgling.bots.tools.AItem;
 import nurgling.bots.tools.Ingredient;
 import nurgling.tools.AreasID;
-import nurgling.tools.Finder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
 
 public class TransferBars implements Action {
     public static final NAlias metals = new NAlias( new ArrayList<> ( Arrays.asList ( "bar", "nugget", "pebble-gold" ) ),
@@ -21,7 +17,7 @@ public class TransferBars implements Action {
     public Results run ( NGameUI gui )
             throws InterruptedException {
         new CollectQuicksilver ().run ( gui );
-        ArrayList<GItem> items = gui.getInventory().getItems(metals);
+        ArrayList<GItem> items = gui.getInventory().getWItems(metals);
         for(GItem item : items){
             AItem ingredient = Ingredient.get(item);
             NAlias name = new NAlias(item.res.get().name);

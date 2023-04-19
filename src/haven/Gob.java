@@ -370,6 +370,7 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 				}
 
 			}
+			updateCustom(this);
 		}
 	for (GAttrib a : attr.values())
 		a.ctick(dt);
@@ -394,6 +395,7 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 	    glob.oc.remove(this);
 	updateCustom(this);
     }
+
 
     public void gtick(Render g) {
 	Drawable d = getattr(Drawable.class);
@@ -785,9 +787,6 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 	.add(Session.class, g -> g.glob.sess);
     public <T> T context(Class<T> cl) {return(ctxr.context(cl, this));}
 
-    @Deprecated
-    public Glob glob() {return(context(Glob.class));}
-
     /* Because generic functions are too nice a thing for Java. */
     public double getv() {
 	Moving m = getattr(Moving.class);
@@ -798,8 +797,11 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 
     public Collection<Location.Chain> getloc() {
 	Collection<Location.Chain> ret = new ArrayList<>(slots.size());
-	for(RenderTree.Slot slot : slots)
-	    ret.add(slot.state().get(Homo3D.loc));
+	for(RenderTree.Slot slot : slots) {
+	    Location.Chain loc = slot.state().get(Homo3D.loc);
+	    if(loc != null)
+		ret.add(loc);
+	}
 	return(ret);
     }
 

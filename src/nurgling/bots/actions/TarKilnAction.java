@@ -42,7 +42,7 @@ public class TarKilnAction implements Action {
                             new NAlias("log"), true, block_area).run(gui).type != Results.Types.SUCCESS) {
                         return new Results(Results.Types.NO_ITEMS);
                     }
-                    num = gui.getInventory().getItems(new NAlias("block")).size();
+                    num = gui.getInventory().getWItems(new NAlias("block")).size();
                     PathFinder pf = new PathFinder(gui, gob);
                     pf.setHardMode(true);
                     pf.run();

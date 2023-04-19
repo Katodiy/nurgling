@@ -7,27 +7,35 @@ import java.awt.event.KeyEvent;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
 
+import haven.render.MixColor;
+import haven.res.ui.tt.highlighting.Highlighting;
+import haven.res.ui.tt.slot.Slotted;
+import haven.res.ui.tt.stackn.Stack;
 import nurgling.bots.settings.IngredientSettings;
 import nurgling.bots.tools.AItem;
+import nurgling.bots.tools.Ingredient;
 import nurgling.json.*;
 import nurgling.json.parser.JSONParser;
 import nurgling.json.parser.ParseException;
 import nurgling.tools.AreasID;
 
 public class NConfiguration {
+    public boolean showDebugInfo = false;
     public static final Text.Foundry fnd = new Text.Foundry(Text.sans, 14);
     public boolean isVerified = false;
     public boolean isSubscribed = false;
     public boolean isMinerCredo = false;
-    public HashMap<String, Color> colors = new HashMap<>();
+    public HashMap<String, MixColor> colors = new HashMap<>();
     private static final NConfiguration instance = new NConfiguration();
     public boolean disabledCheck = false;
     public boolean enablePfBoundingBoxes = false;
     public HashMap<String, Integer> playerSpeed_h = new HashMap<String, Integer>();
-    public HashMap<String, Integer> ingrTh = new HashMap<String, Integer>();
     public HashMap<String, Integer> horseSpeed_h = new HashMap<String, Integer>();
     public List<NLoginData> logins = new ArrayList<NLoginData>();
     public boolean autologin = false;
@@ -67,12 +75,15 @@ public class NConfiguration {
     public boolean hideNature = true;
     public boolean showBB = false;
 
-    public static String getCharKey()
-    {
-        return NUtils.getUI().sess.username + "/" + NUtils.getGameUI().chrid;
-    }
+    public boolean autoFlower = false;
+    public boolean autoSplitter = false;
+    public boolean autoDropper = false;
+    public boolean invert_hor = false;
+    public boolean invert_ver = false;
+    public String baseurl =" https://raw.githubusercontent.com/Katodiy/nurgling-release/master/ver";
+
     public static void saveButtons(String name, NGameUI.NButtonBeltSlot[] custom) {
-        String key = getCharKey();
+        String key = NUtils.getUI().sessInfo.characterInfo.chrid;
         HashMap<String, HashMap<Integer, String>> customKeys  = (instance.allKeys.get(key)==null)?instance.allKeys.put(key, new HashMap<>()):instance.allKeys.get(key);
 
         if(customKeys!=null) {
@@ -353,15 +364,15 @@ public class NConfiguration {
                 KeyBinding.get ("cm12",KeyMatch.forcode(KeyEvent.VK_EQUALS,KeyMatch.C))
         };
 
-        colors.put("no_color",new Color(0,0,0,0));
-        colors.put("free",Color.green);
-        colors.put("ready",Color.red);
-        colors.put("inwork",new Color(0,0,0,0));
-        colors.put("warning",Color.yellow);
-        colors.put("no_soil",Color.yellow);
-        colors.put("no_water",Color.yellow);
-        colors.put("full",Color.red);
-        colors.put("not_full",Color.orange);
+        colors.put("no_color",new MixColor(new Color(0, 0, 0,0)));
+        colors.put("free",new MixColor(new Color(121, 151, 219,244)));
+        colors.put("ready",new MixColor(new Color(229, 27, 81, 195)));
+        colors.put("inwork",new MixColor(new Color(229, 81, 29,195)));
+        colors.put("warning",new MixColor(new Color(224, 204, 36, 139)));
+        colors.put("no_soil",new MixColor(new Color(224, 114, 36, 187)));
+        colors.put("no_water",new MixColor(new Color(36, 202, 224, 139)));
+        colors.put("full",new MixColor(new Color(224, 36, 114, 240)));
+        colors.put("not_full",new MixColor(new Color(224, 186, 36, 174)));
 
         playerSpeed_h.put("Crawl On", 0);
         playerSpeed_h.put("Walk On", 1);
@@ -380,6 +391,7 @@ public class NConfiguration {
         dragWidgets.put("belt1", new DragWdg(false,new Coord(50,230)));
         dragWidgets.put("belt2", new DragWdg(false,new Coord(50,250)));
         dragWidgets.put("NQuestInfo", new DragWdg(false,new Coord(200,250)));
+        dragWidgets.put("NBotsInfo", new DragWdg(false,new Coord ( 200, 250 )));
         resizeWidgets.put("ChatUI", new Coord(700,300));
         resizeWidgets.put("MiniMap", new Coord(133,133));
 
@@ -521,10 +533,8 @@ public class NConfiguration {
                 jingredientKey.put("barter_out", IngredientSettings.data.get(ingredientKey).barter_out.toString());
                 jingredientKey.put("area_in", IngredientSettings.data.get(ingredientKey).area_in.toString());
                 jingredientKey.put("area_out", IngredientSettings.data.get(ingredientKey).area_out.toString());
-                if(ingrTh.get(ingredientKey)!=null) {
-                    jingredientKey.put("th", ingrTh.get(ingredientKey));
-                }
-
+                jingredientKey.put("th",IngredientSettings.data.get(ingredientKey).th);
+                jingredientKey.put("isGroup",IngredientSettings.data.get(ingredientKey).isGroup);
                 ingredients.add(jingredientKey);
             }
         }
@@ -599,7 +609,7 @@ public class NConfiguration {
         JSONArray colorsarr = new JSONArray ();
         for(String key: colors.keySet()){
             JSONObject colorobj = new JSONObject ();
-            Color clr = colors.get(key);
+            Color clr = colors.get(key).color();
             colorobj.put("name", key);
             colorobj.put("r", clr.getRed());
             colorobj.put("g", clr.getGreen());
@@ -609,10 +619,15 @@ public class NConfiguration {
         }
         obj.put("colors",colorsarr);
         obj.put("isGrid",isGrid);
+        obj.put("isShowGild", Slotted.show);
+        obj.put("isShowVar",NFoodInfo.show);
+        obj.put("isShowStackQ", Stack.show);
         obj.put("isEye",isEyed);
         obj.put("enablePfBoundingBoxes",enablePfBoundingBoxes);
         obj.put("showBB",showBB);
         obj.put("hideNature",hideNature);
+        obj.put("invert_ver",invert_ver);
+        obj.put("invert_hor",invert_hor);
         obj.put("enableCollectFoodInfo",collectFoodInfo);
         obj.put("isPaths",isPaths);
         JSONArray pathCandidates = new JSONArray ();
@@ -677,18 +692,20 @@ public class NConfiguration {
         whitePlayers.put("ring",players.get("white").ring);
         whitePlayers.put("arrow",players.get("white").arrow);
         obj.put("white_players",whitePlayers);
+        OutputStreamWriter file = null;
 
-        try ( FileWriter file = new FileWriter ( ((HashDirCache)ResCache.global).base +"/../" + "./config.nurgling.json" ) ) {
+        try  {
+            String path = ((HashDirCache) ResCache.global).base + "\\..\\" + "config.nurgling.json";
+            file = new OutputStreamWriter(Files.newOutputStream(Paths.get(path)), StandardCharsets.UTF_8);
             file.write ( obj.toJSONString () );
-        }
-        catch ( IOException e ) {
+            file.close();
+        }  catch (IOException e) {
             System.out.println("No config. config.nurgling.json not found");
         }
-
     }
 
     public static void initDefault () {
-            getInstance ().read ( ((HashDirCache)ResCache.global).base +"/../" + "./config.nurgling.json" );
+            getInstance ().read ( ((HashDirCache)ResCache.global).base +"\\..\\" + "config.nurgling.json" );
     }
 
     public void read ( String path ) {
@@ -763,13 +780,10 @@ public class NConfiguration {
                     JSONObject ingredient = jingredient.next();
                     String ingName = ingredient.get("name").toString();
                     IngredientSettings.data.put(ingName,
-                            new AItem(AreasID.valueOf(ingredient.get("area_out").toString()),
+                            new Ingredient(AreasID.valueOf(ingredient.get("area_out").toString()),
                                     AreasID.valueOf(ingredient.get("barter_out").toString()),
                                     AreasID.valueOf(ingredient.get("area_in").toString()),
-                                    AreasID.valueOf(ingredient.get("barter_in").toString())));
-                    if(ingredient.containsKey("th")){
-                        ingrTh.put(ingName,Integer.valueOf(ingredient.get("th").toString()));
-                    }
+                                    AreasID.valueOf(ingredient.get("barter_in").toString()), new NAlias(ingName), ((ingredient.containsKey("th")) ? Double.parseDouble(ingredient.get("th").toString()) : 0.), (ingredient.containsKey("isGroup") && (boolean) (ingredient.get("isGroup")))));
                 }
             }
             JSONArray jkeys =  ( JSONArray ) jsonObject.get ( "button_keys" );
@@ -899,6 +913,12 @@ public class NConfiguration {
             if ( jsonObject.get ( "hideNature" ) != null ) {
                 hideNature = (boolean)jsonObject.get ( "hideNature" );
             }
+            if ( jsonObject.get ( "invert_ver" ) != null ) {
+                invert_ver = (boolean)jsonObject.get ( "invert_ver" );
+            }
+            if ( jsonObject.get ( "invert_hor" ) != null ) {
+                invert_hor = (boolean)jsonObject.get ( "invert_hor" );
+            }
             if ( jsonObject.get ( "enableCollectFoodInfo" ) != null ) {
                 collectFoodInfo = (boolean)jsonObject.get ( "enableCollectFoodInfo" );
             }
@@ -955,7 +975,7 @@ public class NConfiguration {
                 Iterator<JSONObject> color_it = colors_arr.iterator();
                 while (color_it.hasNext()) {
                     JSONObject item = color_it.next();
-                    colors.put(item.get("name").toString(), new Color((int)((long)item.get("r")),(int)((long)item.get("g")),(int)((long)item.get("b")),(int)((long)item.get("a"))));
+                    colors.put(item.get("name").toString(), new MixColor(new Color((int)((long)item.get("r")),(int)((long)item.get("g")),(int)((long)item.get("b")),(int)((long)item.get("a")))));
                 }
             }
             if(jsonObject.get ( "showCropStage" )!=null)
@@ -970,6 +990,13 @@ public class NConfiguration {
                 isEyed = ( Boolean ) jsonObject.get ( "isEye" );
             if(jsonObject.get ( "isPaths" )!=null)
                 isPaths = ( Boolean ) jsonObject.get ( "isPaths" );
+            if(jsonObject.get ( "isShowGild" )!=null)
+                Slotted.show = ( Boolean ) jsonObject.get ( "isShowGild" );
+            if(jsonObject.get ( "isShowVar" )!=null)
+                NFoodInfo.show = ( Boolean ) jsonObject.get ( "isShowVar" );
+            if(jsonObject.get ( "isShowStackQ" )!=null)
+                Stack.show = ( Boolean ) jsonObject.get ( "isShowStackQ" );
+
             if(jsonObject.get ( "isGrid" )!=null)
                 isGrid = ( Boolean ) jsonObject.get ( "isGrid" );
             JSONArray pathCategories = ( JSONArray ) jsonObject.get ( "pathCategories" );

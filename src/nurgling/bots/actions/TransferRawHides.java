@@ -1,7 +1,6 @@
 package nurgling.bots.actions;
 
 import haven.GItem;
-import haven.WItem;
 
 import nurgling.NAlias;
 import nurgling.NGameUI;
@@ -20,7 +19,7 @@ public class TransferRawHides implements Action {
     @Override
     public Results run ( NGameUI gui )
             throws InterruptedException {
-        ArrayList<GItem> items = gui.getInventory().getItems(raw_hides, AreasID.getTh(AreasID.lqhides), false);
+        ArrayList<GItem> items = gui.getInventory().getWItems(raw_hides, AreasID.getTh(AreasID.lqhides), false);
         /// Переносим предметы в инвентарь
 
         for (GItem item : items) {

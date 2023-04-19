@@ -10,8 +10,6 @@ import haven.res.ui.croster.CattleId;
 import haven.res.ui.croster.Entry;
 import haven.res.ui.croster.RosterWindow;
 import haven.res.ui.tt.defn.DefName;
-import haven.res.ui.tt.q.qbuff.QBuff;
-import haven.res.ui.tt.q.quality.Quality;
 import nurgling.bots.*;
 import nurgling.bots.actions.UseItemOnItem;
 import nurgling.bots.actions.WaitAction;
@@ -40,9 +38,6 @@ import static nurgling.tools.Finder.findNearestObject;
 
 public class NUtils {
     static HashMap<String,String> data_titles;
-
-
-
     private static NFightView fightView;
     public static void setFightView(NFightView fightView) {
         NUtils.fightView = fightView;
@@ -101,9 +96,9 @@ public class NUtils {
     ) { if (regEx!=null) {
         /// Проверяем имя на соответствие
         for (String key : regEx.keys) {
-            if (name.contains(key)) {
+            if (name.toLowerCase().contains(key.toLowerCase())) {
                 for (String ex : regEx.exceptions) {
-                    if (name.contains(ex)) {
+                    if (name.toLowerCase().contains(ex.toLowerCase())) {
                         return false;
                     }
                 }
@@ -417,11 +412,7 @@ public class NUtils {
                 Resource res = null;
                 res = item.item.getres();
                 if (res != null) {
-                    /// Проверяем имя на соответствие
-                    if(((NGItem)item.item).dfname!=null)
-                        return checkName(res.name, regEx) || checkName(((NGItem)item.item).dfname, regEx);
-                    else
-                        return checkName(res.name, regEx);
+                    return checkName(res.name, regEx);
                 }
             } catch (Loading e) {
             }
@@ -509,6 +500,28 @@ public class NUtils {
             NInventory inv = gameUI.getInventory();
             int fs = inv.getFreeSpace();
             Coord placePos = gameUI.getInventory().getFreeCoord(gameUI.vhand);
+            if (placePos.x != -1) {
+                int counter = 0;
+                while ((fs == inv.getFreeSpace() || gameUI.vhand != null) && counter != 20) {
+                    inv.wdgmsg("drop", placePos);
+                    Thread.sleep(100);
+                    counter++;
+                }
+                return fs != inv.getFreeSpace();
+            }
+            return false;
+        }
+        return true;
+    }
+    public static boolean transferToInventory(Coord sz) throws InterruptedException
+    {
+        return transferToInventory(sz, gameUI.getInventory());
+    }
+    public static boolean transferToInventory(Coord sz, NInventory inv)
+            throws InterruptedException {
+        if (gameUI.vhand != null) {
+            int fs = inv.getFreeSpace();
+            Coord placePos = inv.getFreeCoord(sz);
             if (placePos.x != -1) {
                 int counter = 0;
                 while ((fs == inv.getFreeSpace() || gameUI.vhand != null) && counter != 20) {
@@ -908,18 +921,7 @@ public class NUtils {
     public static String getInfo(
             final GItem item
     ) {
-        if (item != null) {
-            try {
-                /// Запрашиваем информацию по предмету
-                for (ItemInfo info : item.info()) {
-                    if (info instanceof ItemInfo.Name) {
-                        return ((ItemInfo.Name) info).str.text;
-                    }
-                }
-            } catch (Loading e) {
-            }
-        }
-        return null;
+        return ((NGItem)item).defn;
     }
 
     public static String getInfo(
@@ -1000,13 +1002,13 @@ public class NUtils {
             if (o instanceof Object[]) {
                 Object[] a = (Object[]) o;
                 if (a[0] instanceof Integer) {
-                    if (NUtils.checkName("ui/tt/cont", ((Session.CachedRes) item.glob().sess.rescache.get((Integer) a[0])).resnm)) {
+                    if (NUtils.checkName("ui/tt/cont", ((Session.CachedRes) NUtils.getUI().sess.rescache.get((Integer) a[0])).resnm)) {
                         for(Object o1 : (Object[])a[1])
                         {
                             if ( o1 instanceof Object[]) {
                                 Object[] b = (Object[]) o1;
                                 if (b[0] instanceof Integer) {
-                                    if (NUtils.checkName("ui/tt/cn", ((Session.CachedRes) item.glob().sess.rescache.get((Integer) b[0])).resnm)) {
+                                    if (NUtils.checkName("ui/tt/cn", ((Session.CachedRes) NUtils.getUI().sess.rescache.get((Integer) b[0])).resnm)) {
                                         return (String) b[1];
                                     }
                                 }
@@ -1026,12 +1028,12 @@ public class NUtils {
             if (o instanceof Object[]) {
                 Object[] a = (Object[]) o;
                 if (a[0] instanceof Integer) {
-                    if (NUtils.checkName("ui/tt/cont", ((Session.CachedRes) item.glob().sess.rescache.get((Integer) a[0])).resnm)) {
+                    if (NUtils.checkName("ui/tt/cont", ((Session.CachedRes) NUtils.getUI().sess.rescache.get((Integer) a[0])).resnm)) {
                         for(Object o1 : (Object[])a[1]) {
                             if (o1 instanceof Object[]) {
                                 Object[] b = (Object[]) o1;
                                 if (b[0] instanceof Integer) {
-                                    if (NUtils.checkName("ui/tt/q/quality", ((Session.CachedRes) item.glob().sess.rescache.get((Integer) b[0])).resnm)) {
+                                    if (NUtils.checkName("ui/tt/q/quality", ((Session.CachedRes) NUtils.getUI().sess.rescache.get((Integer) b[0])).resnm)) {
                                         return (double) (float) b[1];
                                     }
                                 }
@@ -1051,7 +1053,7 @@ public class NUtils {
             if (o instanceof Object[]) {
                 Object[] a = (Object[]) o;
                 if (a[0] instanceof Integer) {
-                    if (NUtils.checkName("ui/tt/q/quality", ((Session.CachedRes) item.glob().sess.rescache.get((Integer) a[0])).resnm)) {
+                    if (NUtils.checkName("ui/tt/q/quality", ((Session.CachedRes) NUtils.getUI().sess.rescache.get((Integer) a[0])).resnm)) {
                         return (float)a[1];
                     }
                 }
@@ -1065,7 +1067,7 @@ public class NUtils {
             if (o instanceof Object[]) {
                 Object[] a = (Object[]) o;
                 if (a[0] instanceof Integer) {
-                    if (NUtils.checkName("ui/tt/defn", ((Session.CachedRes) item.glob().sess.rescache.get((Integer) a[0])).resnm)) {
+                    if (NUtils.checkName("ui/tt/defn", ((Session.CachedRes) NUtils.getUI().sess.rescache.get((Integer) a[0])).resnm)) {
                         return DefName.getname(item);
                     }
                 }
@@ -1112,7 +1114,7 @@ public class NUtils {
             final NAlias regEx
     ) {
         if (item != null) {
-            return checkName(((NGItem)item).dfname, regEx);
+            return checkName(((NGItem)item).name(), regEx);
         }
         return false;
     }
@@ -1423,7 +1425,7 @@ public class NUtils {
             if (sp instanceof NISBox) {
                 /// Для каждого элемента из списка кандидатов выполняем процедуру переноса
                 /// Находим предмет в инвентаре
-                ArrayList<GItem> wItems = gameUI.getInventory().getItems(names);
+                ArrayList<GItem> wItems = gameUI.getInventory().getWItems(names);
                 /// Вычисляем оставшееся свободное место в пайле
                 for (GItem wItem : wItems) {
                     if(((NGItem)wItem).quality()>=q) {
@@ -1445,28 +1447,6 @@ public class NUtils {
             }
         }
         /// Если окно так и не появилось бросаем исключение об отсутствии пайла
-        return false;
-    }
-
-    public static boolean checkGobFlower(
-            NAlias name,
-            Gob gob
-    )
-            throws InterruptedException {
-        while (NFlowerMenu.instance != null) {
-            NFlowerMenu.stop();
-            Thread.sleep(30);
-        }
-        gameUI.map.wdgmsg("click", Coord.z, gob.rc.floor(posres), 3, 0, 1, (int) gob.id, gob.rc.floor(posres),
-                0, -1);
-        waitEvent( ()->NFlowerMenu.instance != null,20);
-        if (NFlowerMenu.instance != null) {
-            if (NFlowerMenu.instance.findInCurrentFlower(name)) {
-                return true;
-            } else {
-                NFlowerMenu.stop();
-            }
-        }
         return false;
     }
 
@@ -1550,7 +1530,7 @@ public class NUtils {
     }
 
     static boolean findBundle() throws InterruptedException {
-        for(GItem item : gameUI.getInventory().getItems()) {
+        for(GItem item : gameUI.getInventory().getWItems()) {
             if (item.contents != null) {
                 return true;
             }
@@ -1559,7 +1539,7 @@ public class NUtils {
     }
 
     static void destroyAllBundle() throws InterruptedException {
-        for(GItem item : gameUI.getInventory().getItems()) {
+        for(GItem item : gameUI.getInventory().getWItems()) {
             if (item.contents != null) {
                 item.wdgmsg("iact", item.sz, 3);
                 NUtils.waitEvent(()->NUtils.getGameUI().getInventory().wmap.get(item)==null,50,10);
@@ -1834,21 +1814,57 @@ public class NUtils {
             int id
     )
             throws InterruptedException {
-        while (NFlowerMenu.instance != null) {
-            NFlowerMenu.stop();
-            Thread.sleep(30);
+        NFlowerMenu oldfm = getFlowerMenu();
+        if(oldfm!=null)
+        {
+            oldfm.cancel();
+            waitEvent(()->getFlowerMenu() == null, 50);
         }
         gameUI.map.wdgmsg("click", Coord.z, gob.rc.floor(posres), 3, 0, 1, (int) gob.id, gob.rc.floor(posres),
                 id, -1);
-        waitEvent(()->NFlowerMenu.instance!=null,50);
-        if (NFlowerMenu.instance != null) {
-            if (NFlowerMenu.instance.findInCurrentFlower(name)) {
-                return true;
-            } else {
-                NFlowerMenu.stop();
-            }
+        waitEvent(()->getFlowerMenu() != null, 50);
+        NFlowerMenu fm = getFlowerMenu();
+        if (fm != null) {
+            return fm.find(name);
         }
         return false;
+    }
+
+    public static boolean checkGobFlower(
+            NAlias name,
+            Gob gob
+    )
+            throws InterruptedException {
+        NFlowerMenu oldfm = getFlowerMenu();
+        if(oldfm!=null)
+        {
+            oldfm.cancel();
+            waitEvent(()->getFlowerMenu() == null, 50);
+        }
+        gameUI.map.wdgmsg("click", Coord.z, gob.rc.floor(posres), 3, 0, 1, (int) gob.id, gob.rc.floor(posres),
+                0, -1);
+        waitEvent(()->getFlowerMenu() != null, 50);
+        NFlowerMenu fm = getFlowerMenu();
+        if (fm != null) {
+            return fm.find(name);
+        }
+        return false;
+    }
+
+    public static NFlowerMenu getFlowerMenu()
+    {
+        return (NFlowerMenu) nui.findInRoot(NFlowerMenu.class);
+    }
+
+    public static Window getSplitWnd()
+    {
+        for(Widget wdg: nui.root.children()){
+            if(wdg instanceof Window && ((Window)wdg).cap.contains("Split"))
+            {
+                return (Window)wdg;
+            }
+        }
+        return null;
     }
 
     public static boolean build(
@@ -1928,5 +1944,26 @@ public class NUtils {
             return Optional.empty();
         }
         return Optional.of(new Coord2d((float) ((b2 * c1 - b1 * c2) / delta), (float) ((a1 * c2 - a2 * c1) / delta)));
+    }
+
+    public static Window findWinParent(Widget wdg){
+        Widget t_parent = wdg.parent;
+        while (t_parent!=null && !(t_parent instanceof NGameUI)) {
+            if (t_parent instanceof Window) {
+                return (Window) t_parent;
+            } else {
+                t_parent = wdg.parent.parent;
+            }
+        }
+        return null;
+    }
+
+    public static Widget getChild(Widget wnd, Class<?> c) {
+        for (Widget wdg = wnd.child; wdg != null; wdg = wdg.next) {
+            if (wdg.getClass() == c) {
+                return wdg;
+            }
+        }
+        return null;
     }
 }

@@ -48,24 +48,24 @@ public class WorkWithLog implements Action {
                 }
                 int counter = 0;
                 while ( ( NUtils.getProg() >= 0 && NUtils.getStamina() >= 0.3 &&
-                        ( ( isCopping ) ? gui.getInventory ().getItems ( new NAlias ( "block" ) ).size () : gui
-                                .getInventory ().getItems ( new NAlias ( "board" ) ).size () ) < count &&
+                        ( ( isCopping ) ? gui.getInventory ().getWItems( new NAlias ( "block" ) ).size () : gui
+                                .getInventory ().getWItems( new NAlias ( "board" ) ).size () ) < count &&
                         ( ( isCopping ) ? gui.getInventory ().getNumberFreeCoord ( new Coord ( 2, 1 ) ) : gui
                                 .getInventory ().getNumberFreeCoord ( new Coord ( 1, 4 ) ) ) > 0 &&
                         Finder.findObject ( gob.id ) != null ) || counter < 10 ) {
                     Thread.sleep ( 50 );
                     counter += 1;
                 }
-                if ( ( ( isCopping ) ? gui.getInventory ().getItems ( new NAlias ( "block" ) ).size () : gui
-                        .getInventory ().getItems ( new NAlias ( "board" ) ).size () ) >= count ) {
+                if ( ( ( isCopping ) ? gui.getInventory ().getWItems( new NAlias ( "block" ) ).size () : gui
+                        .getInventory ().getWItems( new NAlias ( "board" ) ).size () ) >= count ) {
                     NUtils.stopWithClick ();
                     return new Results ( Results.Types.SUCCESS );
                 }
                 if ( NUtils.getStamina() < 0.3 ) {
                     new Drink ( 0.9, false ).run ( gui );
                 }
-                need = count - ( ( isCopping ) ? gui.getInventory ().getItems ( new NAlias ( "block" ) ).size () : gui
-                        .getInventory ().getItems ( new NAlias ( "board" ) ).size () );
+                need = count - ( ( isCopping ) ? gui.getInventory ().getWItems( new NAlias ( "block" ) ).size () : gui
+                        .getInventory ().getWItems( new NAlias ( "board" ) ).size () );
                 if ( ( isCopping ) ? ( gui.getInventory ().getNumberFreeCoord ( new Coord ( 2, 1 ) ) == 0 ) :
                         ( gui.getInventory ().getNumberFreeCoord ( new Coord ( 1, 4 ) ) ) == 0 ) {
                     return new Results ( Results.Types.SUCCESS );

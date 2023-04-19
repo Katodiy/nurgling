@@ -1,32 +1,86 @@
 package nurgling;
 
 import haven.*;
+import haven.Window;
+import haven.res.ui.tt.highlighting.Highlighting;
+import haven.res.ui.tt.slot.Slotted;
+import nurgling.bots.actions.AutoSplitter;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class NUI extends UI {
+    public NSessInfo sessInfo;
+    public NDataTables dataTables;
     public boolean inspectMode = false;
     long tickId = 0;
     public NUI(Context uictx, Coord sz, Runner fun) {
         super(uictx, sz, fun);
         Thread writeConfigHook = new Thread(() -> {
-            NFoodWriter.instance.write();
+//            NFoodWriter.instance.write();
             NConfiguration.getInstance().write();});
         Runtime.getRuntime().addShutdownHook(writeConfigHook);
         NUtils.setUI(this);
+        dataTables = new NDataTables();
+        Highlighting.init();
+        Slotted.init();
+        NFoodInfo.init();
+    }
+
+    @Override
+    public void wdgmsg(Widget sender, String msg, Object... args) {
+        super.wdgmsg(sender, msg, args);
+        if(NConfiguration.getInstance().autoSplitter)
+        if(!botMode.get() && args.length>0) {
+            if (msg.contains("activate")) {
+                if (sender.parent != null && sender.parent instanceof Window && ((Window) sender.parent).cap.contains("Split")) {
+                    NGItem fc = NUtils.getUI().sessInfo.characterInfo.flowerCand;
+                    if (fc.parent instanceof NInventory) {
+                        Window parent = NUtils.findWinParent(fc);
+                        NInventory inv = (NInventory) fc.parent;
+                        ArrayList<GItem> targets = new ArrayList<>();
+                        try {
+                            if (fc.isSeached) {
+                                for (GItem item : inv.getWItems())
+                                    if (((NGItem) item).isSeached)
+                                        targets.add(item);
+                            } else {
+                                targets = inv.getGItems(new NAlias(fc.name()));
+                            }
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                        NUtils.getUI().botMode.set(true);
+                        new Thread(new AutoSplitter(parent, targets, Double.parseDouble(args[0].toString()))).start();
+                    }
+                }
+            }
+        }
     }
 
     @Override
     public void tick() {
-        try {
-            super.tick();
-            tickId+=1;
-        }catch (Exception e){
-            e.printStackTrace();
+        super.tick();
+        tickId += 1;
+        if (sessInfo == null && sess != null) {
+            sessInfo = new NSessInfo(sess.username);
+        }
+        if (NUtils.getGameUI() == null && sessInfo != null) {
+            for (Widget wdg : widgets.values()) {
+                if (wdg instanceof Img) {
+                    Img img = (Img) wdg;
+                    if (img.tooltip instanceof Widget.KeyboundTip) {
+                        if (!sessInfo.isVerified && ((Widget.KeyboundTip) img.tooltip).base.contains("Verif"))
+                            sessInfo.isVerified = true;
+                        else if (!sessInfo.isSubscribed && ((Widget.KeyboundTip) img.tooltip).base.contains("Subsc"))
+                            sessInfo.isSubscribed = true;
+                    }
+                }
+            }
         }
         if(NConfiguration.getInstance().showAreas && NUtils.getGameUI()!=null ) {
             ArrayList<NOCache.OverlayInfo> forRemove = new ArrayList<>();
@@ -115,4 +169,24 @@ public class NUI extends UI {
     public long getTickId () {
         return tickId;
     }
+
+    public Widget findInRoot(Class<?> c)
+    {
+        for(Widget wdg: root.children()){
+            if(wdg.getClass()==c)
+            {
+                return wdg;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void mousedown(MouseEvent ev, Coord c, int button) {
+        if(button==3 && NConfiguration.getInstance().autoFlower)
+            sessInfo.characterInfo.flowerCand = null;
+        super.mousedown(ev, c, button);
+    }
+
+    public AtomicBoolean botMode = new AtomicBoolean(false);
 }

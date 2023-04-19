@@ -2,7 +2,6 @@ package nurgling.bots.actions;
 
 import haven.GItem;
 import haven.Gob;
-import haven.WItem;
 
 import nurgling.*;
 import nurgling.tools.AreasID;
@@ -16,14 +15,14 @@ public class TransferToTrough implements Action {
     public Results run ( NGameUI gui )
             throws InterruptedException {
         
-        while ( !gui.getInventory ().getItems ( items ).isEmpty () ) {
+        while ( !gui.getInventory ().getWItems( items ).isEmpty () ) {
             
             Gob gob = Finder
                     .findObjectInArea ( new NAlias( "trough" ), 2000, Finder.findNearestMark ( AreasID.swill) );
             
             
             new PathFinder( gui, gob ).run ();
-            for ( GItem item : gui.getInventory ().getItems ( items ) ) {
+            for ( GItem item : gui.getInventory ().getWItems( items ) ) {
                 do {
                     if ( gob.getModelAttribute() != 7 ) {
                         if ( gui.hand.isEmpty () ) {

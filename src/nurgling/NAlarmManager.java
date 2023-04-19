@@ -3,7 +3,6 @@ package nurgling;
 import haven.Audio;
 import haven.HashedMap;
 import haven.Resource;
-import sun.awt.Mutex;
 
 import java.util.HashMap;
 import java.util.concurrent.locks.Lock;

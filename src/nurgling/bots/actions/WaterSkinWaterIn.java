@@ -21,7 +21,7 @@ public class WaterSkinWaterIn implements Action {
         WItem wbelt = Finder.findDressedItem ( new NAlias ("belt") );
         if(wbelt!=null) {
             NInventory belt = ((NInventory) wbelt.item.contents);
-            ArrayList<GItem> wskins = belt.getItems(new NAlias("waterskin"));
+            ArrayList<GItem> wskins = belt.getWItems(new NAlias("waterskin"));
             for (GItem witem : wskins) {
                 if (!NUtils.isContentWater(witem)) {
                     return false;
@@ -44,7 +44,7 @@ public class WaterSkinWaterIn implements Action {
             WItem wbelt = Finder.findDressedItem(new NAlias("belt"));
             if (wbelt != null) {
                 NInventory belt = ((NInventory) wbelt.item.contents);
-                ArrayList<GItem> wskins = belt.getItems(new NAlias("waterskin"));
+                ArrayList<GItem> wskins = belt.getWItems(new NAlias("waterskin"));
                 for (GItem witem : wskins) {
                     if (NUtils.getContent(witem) == null) {
                         if (!gui.hand.isEmpty()) {

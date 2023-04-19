@@ -24,9 +24,12 @@ public class CollectAllInArea implements Action {
             if ( gui.getInventory ().getFreeSpace () > threshold ) {
                 while ( NUtils.checkGobFlower ( action, gob, 0 )) {
                     new PathFinder( gui, gob ).run ();
-                    NFlowerMenu.instance.selectInCurrent ( action );
-                    NUtils.waitEvent(()->NUtils.getProg()>=0,20);
-                    NUtils.waitEvent(()->NUtils.getProg()<0,500);
+                    NFlowerMenu fm = NUtils.getFlowerMenu();
+                    if(fm!=null) {
+                        fm.select(action);
+                        NUtils.waitEvent(() -> NUtils.getProg() >= 0, 20);
+                        NUtils.waitEvent(() -> NUtils.getProg() < 0, 500);
+                    }
                 }
             }
             else {

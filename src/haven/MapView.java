@@ -39,6 +39,7 @@ import haven.render.*;
 import haven.MCache.OverlayInfo;
 import haven.render.sl.Uniform;
 import haven.render.sl.Type;
+import nurgling.NConfiguration;
 import nurgling.NGameUI;
 import nurgling.NMapView;
 import nurgling.NUtils;
@@ -108,6 +109,13 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	public abstract void tick(double dt);
 
 	public String stats() {return("N/A");}
+
+	protected Coord inversion(Coord c, Coord o) {
+		return c.add(
+				NConfiguration.getInstance().invert_hor ? (o.x - c.x) * 2 : 0,
+				NConfiguration.getInstance().invert_ver ? (o.y - c.y) * 2 : 0
+		);
+	}
     }
     
     public class FollowCam extends Camera {
@@ -136,6 +144,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	}
 	
 	public void drag(Coord c) {
+		c = inversion(c, dragorig);
 	    tangl = anglorig + ((float)(c.x - dragorig.x) / 100.0f);
 	    tangl = tangl % ((float)Math.PI * 2.0f);
 	}
@@ -239,6 +248,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	}
 	
 	public void drag(Coord c) {
+		c = inversion(c, dragorig);
 	    elev = elevorig - ((float)(c.y - dragorig.y) / 100.0f);
 	    if(elev < 0.0f) elev = 0.0f;
 	    if(elev > (Math.PI / 2.0)) elev = (float)Math.PI / 2.0f;
@@ -299,6 +309,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	}
 
 	public void drag(Coord c) {
+		c = inversion(c, dragorig);
 	    telev = elevorig - ((float)(c.y - dragorig.y) / 100.0f);
 	    if(telev < 0.0f) telev = 0.0f;
 	    if(telev > (Math.PI / 2.0)) telev = (float)Math.PI / 2.0f;
@@ -360,6 +371,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	}
 
 	public void drag(Coord c) {
+		c = inversion(c, dragorig);
 	    angl = anglorig + ((float)(c.x - dragorig.x) / 100.0f);
 	    angl = angl % ((float)Math.PI * 2.0f);
 	}
@@ -441,6 +453,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	}
 
 	public void drag(Coord c) {
+		c = inversion(c, dragorig);
 	    tangl = anglorig + ((float)(c.x - dragorig.x) / 100.0f);
 	}
 
@@ -1347,7 +1360,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	}
 
 	public void fuzzyget(Render out, Coord c, int rad, Consumer<ClickData> cb) {
-	    Coord gc = Coord.of(c.x, sz().y - c.y);
+	    Coord gc = Coord.of(c.x, sz().y - 1 - c.y);
 	    Area area = new Area(gc.sub(rad, rad), gc.add(rad + 1, rad + 1)).overlap(Area.sized(Coord.z, this.sz()));
 	    out.pget(basic, FragID.fragid, area, new VectorFormat(1, NumberFormat.SINT32), data -> {
 		    Clickslot cs;

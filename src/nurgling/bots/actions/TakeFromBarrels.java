@@ -28,15 +28,15 @@ public class TakeFromBarrels implements Action {
             if ( NUtils.isOverlay ( Objects.requireNonNull ( Finder.findObject ( gob.id ) ), items ) ) {
                 new PathFinder( gui, gob ).run ();
                 while ( need > 0 ) {
-                    int current = gui.getInventory ().getItems ( items ).size ();
+                    int current = gui.getInventory ().getWItems( items ).size ();
                     gui.map.wdgmsg ( "click", Coord.z, gob.rc.floor ( posres ), 3, 1, 0, ( int ) gob.id,
                             gob.rc.floor ( posres ), 0, -1 );
                     int counter = 0;
-                    while ( counter < 20 && current == gui.getInventory ().getItems ( items ).size () ) {
+                    while ( counter < 20 && current == gui.getInventory ().getWItems( items ).size () ) {
                         Thread.sleep ( 200 );
                         counter++;
                     }
-                    int newcount = gui.getInventory ().getItems ( items ).size ();
+                    int newcount = gui.getInventory ().getWItems( items ).size ();
                     if ( current != newcount ) {
                         need = size - newcount;
                     }

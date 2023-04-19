@@ -63,8 +63,11 @@ public class LPExplorer implements Action {
                 while ( !gobs.isEmpty () ) {
                     Gob gob = Finder.findNearestObject (gobs);
                     boolean isChecked;
-                    NFlowerMenu.stop ();
-                    NUtils.waitEvent ( () -> NFlowerMenu.instance == null, 10 );
+                    NFlowerMenu ofm = NUtils.getFlowerMenu();
+                    if(ofm!=null) {
+                        ofm.cancel();
+                        NUtils.waitEvent(() -> NUtils.getFlowerMenu() == null, 10);
+                    }
                     NAlias opt = NUtils.getMenuOpt ( gob, keys );
                     opt.keys.add ( "branch" );
                     opt.keys.add ( "bark" );
@@ -75,8 +78,9 @@ public class LPExplorer implements Action {
                         isChecked = true;
                         gui.map.wdgmsg ( "click", Coord.z, gob.rc.floor ( posres ), 3, 0, 0, ( int ) gob.id,
                                 gob.rc.floor ( posres ), 0, -1 );
-                        if ( NUtils.waitEvent ( () -> NFlowerMenu.instance != null, 60 ) ) {
-                            for ( FlowerMenu.Petal p : NFlowerMenu.instance.opts ) {
+                        NFlowerMenu fm = NUtils.getFlowerMenu();
+                        if (  fm != null ) {
+                            for ( FlowerMenu.Petal p : fm.opts ) {
                                 if ( !NUtils.checkName ( p.name, opt ) ) {
                                     isChecked = false;
                                     PathFinder pf = new PathFinder ( gui, gob );
@@ -101,18 +105,22 @@ public class LPExplorer implements Action {
                                         keys.add ( new Pair<> ( gob.getres ().name, p.name ) );
                                         opt.keys.add ( p.name );
                                     }
-                                    NFlowerMenu.stop ();
+                                    fm.cancel();
+                                    NUtils.waitEvent(()->NUtils.getFlowerMenu() == null,50);
                                     break;
                                 }
                             }
                         }
-                        NFlowerMenu.stop ();
 
                     }
                     while ( !isChecked );
                     gobs.remove ( gob );
                 }
-                NFlowerMenu.stop ();
+                NFlowerMenu fm = NUtils.getFlowerMenu();
+                if (  fm != null ) {
+                    fm.cancel();
+                    NUtils.waitEvent(()->NUtils.getFlowerMenu() == null,50);
+                }
                 NUtils.stopWithClick ();
             }
             catch ( IOException e ) {

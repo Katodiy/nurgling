@@ -3,6 +3,7 @@ package nurgling.bots.settings;
 import haven.*;
 import haven.res.lib.itemtex.ItemTex;
 import haven.res.lib.layspr.Layered;
+import nurgling.NAlias;
 import nurgling.NConfiguration;
 import nurgling.NGob;
 import nurgling.NUtils;
@@ -22,9 +23,9 @@ import static haven.res.lib.itemtex.ItemTex.made_str;
 
 public class IngredientSettings extends Widget {
 
-    public static Map<String, AItem> data = new HashMap<>();
+    public static Map<String, Ingredient> data = new HashMap<>();
     Icon icon;
-    AItem item;
+    Ingredient item;
 
     AreaViewer bareter_in;
     AreaViewer bareter_out;
@@ -34,7 +35,7 @@ public class IngredientSettings extends Widget {
 
     String name;
     public IngredientSettings() {
-        item = new AItem();
+        item = new Ingredient();
         icon = (Icon)(prev = add(new Icon()));
         add(new Label("Drag item from inventory here(and LEFT CLICK). And setup where you want take it and stored it (Barters or/and containers)"), prev.pos("ur").adds(15, 2));
         int y = 10;
@@ -56,7 +57,7 @@ public class IngredientSettings extends Widget {
         add(new Button(50,"Set"){
             @Override
             public void click() {
-                NConfiguration.getInstance().ingrTh.put(name,Integer.valueOf(min_q.text()));
+                data.get(name).th = Double.parseDouble(min_q.text());
                 NConfiguration.getInstance().write();
             }
         },prev.pos("ur").add(5,-2));
@@ -74,17 +75,15 @@ public class IngredientSettings extends Widget {
             name = NUtils.getInfo(target);
             item = data.get(name);
             if(item == null) {
-                item = new AItem();
+                item = new Ingredient( );
+                item.item = new NAlias(name);
                 data.put(name, item);
             }
             bareter_in.dropbox.change(item.barter_in.toString());
             bareter_out.dropbox.change(item.barter_out.toString());
             area_in.dropbox.change(item.area_in.toString());
             area_out.dropbox.change(item.area_out.toString());
-            if(NConfiguration.getInstance().ingrTh.containsKey(name))
-                min_q.settext(String.valueOf(NConfiguration.getInstance().ingrTh.get(name)));
-            else
-                min_q.settext("0");
+            min_q.settext(String.valueOf(item.th));
             icon.tex = new TexI(icon.img);
         }
     }

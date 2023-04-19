@@ -88,7 +88,7 @@ public class Shopbox extends Widget implements ItemInfo.SpriteOwner, GSprite.Own
 	}
     };
 
-    public void draw(GOut g) {
+	public void draw(GOut g) {
 	g.image(bg, Coord.z);
 	sprite: {
 	    ResData res = this.res;
@@ -225,18 +225,14 @@ public class Shopbox extends Widget implements ItemInfo.SpriteOwner, GSprite.Own
     public void wdgmsg(Widget sender, String msg, Object... args) {
 	Integer n;
 	if(sender == bbtn) {
-		try {
-			if (ui.modshift) {
-				int count = NUtils.getGameUI().getInventory().getItems(new NAlias(price.getres().name, price.name())).size();
-				for (int i = 0; i < count; i++) {
-					this.wdgmsg("buy", new Object[0]);
-				}
-			} else {
+
+		if (ui.modshift) {
+			int count = NUtils.getGameUI().getInventory().getWItems(new NAlias(price.getres().name, price.name())).size();
+			for (int i = 0; i < count; i++) {
 				this.wdgmsg("buy", new Object[0]);
 			}
-		}
-		catch (InterruptedException e){
-
+		} else {
+			this.wdgmsg("buy", new Object[0]);
 		}
 	} else if(sender == spipe) {
 	    wdgmsg("spipe");

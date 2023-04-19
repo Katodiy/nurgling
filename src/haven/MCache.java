@@ -36,7 +36,7 @@ import nurgling.tools.AreasID;
 import nurgling.tools.Finder;
 
 /* XXX: This whole file is a bit of a mess and could use a bit of a
- * rewrite some rainy day. Synchronization eNUtilsly is quite hairy. */
+ * rewrite some rainy day. Synchronization especially is quite hairy. */
 public class MCache implements MapSource {
     public static final Coord2d tilesz = Coord2d.of(11, 11);
     public static final Coord tilesz2 = tilesz.round(); /* XXX: Remove me in due time. */
@@ -69,13 +69,13 @@ public class MCache implements MapSource {
 	    this.map = map;
 	}
 
-	public void waitfor(Runnable callback, Consumer<Waiting> reg) {
+	public void waitfor(Runnable callback, Consumer<Waitable.Waiting> reg) {
 	    synchronized(map.grids) {
 		if(map.grids.containsKey(gc)) {
-		    reg.accept(Waiting.dummy);
+		    reg.accept(Waitable.Waiting.dummy);
 		    callback.run();
 		} else {
-		    reg.accept(new Checker(callback) {
+		    reg.accept(new Waitable.Checker(callback) {
 			    protected Object monitor() {return(map.grids);}
 			    double st = Utils.rtime();
 			    protected boolean check() {
@@ -85,7 +85,7 @@ public class MCache implements MapSource {
 				}
 				return(map.grids.containsKey(gc));
 			    }
-			    protected Waiting add() {return(map.gridwait.add(this));}
+			    protected Waitable.Waiting add() {return(map.gridwait.add(this));}
 			}.addi());
 		}
 	    }
@@ -255,10 +255,6 @@ public class MCache implements MapSource {
 		olseq++;
 		this.a = a;
 	    }
-	}
-
-	@Deprecated public void update(Coord c1, Coord c2) {
-	    update(new Area(c1, c2.add(1, 1)));
 	}
     }
 
@@ -439,22 +435,26 @@ public class MCache implements MapSource {
 
 	public MapMesh getcut(Coord cc) {
 	    Cut cut = geticut(cc);
-	    if(cut.dmesh != null) {
+	    MapMesh ret = cut.mesh;
+	    if((ret == null) || (cut.dmesh != null)) {
 		synchronized(cut) {
-		    if(cut.dmesh != null) {
-			if(cut.dmesh.done() || (cut.mesh == null)) {
-			    MapMesh old = cut.mesh;
-			    cut.mesh = cut.dmesh.get();
-			    cut.dmesh = null;
-			    cut.ols.clear();
-			    cut.olols.clear();
-			    if(old != null)
-				old.dispose();
-			}
+		    ret = cut.mesh;
+		    if((ret == null) && (cut.dmesh == null)) {
+			/* Grid has been disposed, so wait for new one to arrive. */
+			throw(new LoadingMap(MCache.this, gc));
+		    }
+		    if((ret == null) || ((cut.dmesh != null) && cut.dmesh.done())) {
+			MapMesh old = cut.mesh;
+			cut.mesh = ret = cut.dmesh.get();
+			cut.dmesh = null;
+			cut.ols.clear();
+			cut.olols.clear();
+			if(old != null)
+			    old.dispose();
 		    }
 		}
 	    }
-	    return(cut.mesh);
+	    return(ret);
 	}
 	
 	public RenderTree.Node getolcut(OverlayInfo id, Coord cc) {
@@ -489,21 +489,23 @@ public class MCache implements MapSource {
 
 	private void buildcut(final Coord cc) {
 	    final Cut cut = geticut(cc);
-	    Defer.Future<?> prev = cut.dmesh;
-	    cut.dmesh = Defer.later(new Defer.Callable<MapMesh>() {
-		    public MapMesh call() {
-			Random rnd = new Random(id);
-			rnd.setSeed(rnd.nextInt() ^ cc.x);
-			rnd.setSeed(rnd.nextInt() ^ cc.y);
-			return(MapMesh.build(MCache.this, rnd, ul.add(cc.mul(cutsz)), cutsz));
-		    }
+	    synchronized(cut) {
+		Defer.Future<?> prev = cut.dmesh;
+		cut.dmesh = Defer.later(new Defer.Callable<MapMesh>() {
+			public MapMesh call() {
+			    Random rnd = new Random(id);
+			    rnd.setSeed(rnd.nextInt() ^ cc.x);
+			    rnd.setSeed(rnd.nextInt() ^ cc.y);
+			    return(MapMesh.build(MCache.this, rnd, ul.add(cc.mul(cutsz)), cutsz));
+			}
 
-		    public String toString() {
-			return("Building map...");
-		    }
-		});
-	    if(prev != null)
-		prev.cancel();
+			public String toString() {
+			    return("Building map...");
+			}
+		    });
+		if(prev != null)
+		    prev.cancel();
+	    }
 	}
 
 	public void ivneigh(Coord nc) {
@@ -548,20 +550,25 @@ public class MCache implements MapSource {
 	    }
 	}
 
-
 	public void dispose() {
 	    for(Cut cut : cuts) {
-		if(cut.dmesh != null)
-		    cut.dmesh.cancel();
-		if(cut.mesh != null)
-		    cut.mesh.dispose();
-		for(RenderTree.Node r : cut.ols.values()) {
-		    if(r instanceof Disposable)
-			((Disposable)r).dispose();
-		}
-		for(RenderTree.Node r : cut.olols.values()) {
-		    if(r instanceof Disposable)
-			((Disposable)r).dispose();
+		synchronized(cut) {
+		    if(cut.dmesh != null) {
+			cut.dmesh.cancel();
+			cut.dmesh = null;
+		    }
+		    if(cut.mesh != null) {
+			cut.mesh.dispose();
+			cut.mesh = null;
+		    }
+		    for(RenderTree.Node r : cut.ols.values()) {
+			if(r instanceof Disposable)
+			    ((Disposable)r).dispose();
+		    }
+		    for(RenderTree.Node r : cut.olols.values()) {
+			if(r instanceof Disposable)
+			    ((Disposable)r).dispose();
+		    }
 		}
 	    }
 	}
@@ -816,11 +823,6 @@ public class MCache implements MapSource {
 	return(g.getz(tc.sub(g.ul)));
     }
 
-    @Deprecated
-    public int getz(Coord tc) {
-	return((int)Math.round(getfz(tc)));
-    }
-
     public double getcz(double px, double py) {
 	double tw = tilesz.x, th = tilesz.y;
 	Coord ul = Coord.of(Utils.floordiv(px, tw), Utils.floordiv(py, th));
@@ -864,7 +866,8 @@ public class MCache implements MapSource {
 	Grid g = getgridt(tc);
 	MapMesh cut = g.getcut(tc.sub(g.ul).div(cutsz));
 	Tiler t = tiler(g.gettile(tc.sub(g.ul)));
-	return(cut.getsurf(id, t).getz(pc));
+	ZSurface surf = cut.getsurf(id, t);
+	return(surf.getz(pc));
     }
 
     public Coord3f getzp(SurfaceID id, Coord2d pc) {

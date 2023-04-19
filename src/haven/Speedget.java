@@ -146,9 +146,9 @@ public class Speedget extends Widget {
 	}
 	return(super.globtype(key, ev));
     }
-	@Override
-	public void bound() {
-		super.bound();
-		NUtils.setSpeedget(this);
-	}
+//	@Override
+//	public void bound() {
+//		super.bound();
+//		NUtils.setSpeedget(this);
+//	}
 }

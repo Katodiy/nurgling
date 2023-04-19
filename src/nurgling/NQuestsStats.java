@@ -12,6 +12,9 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 import static haven.ItemInfo.catimgs;
@@ -161,8 +164,8 @@ public class NQuestsStats extends Window {
         URL url = NQuestsStats.class.getProtectionDomain().getCodeSource().getLocation();
         if (url != null) {
             try {
-                String path =  ((HashDirCache) ResCache.global).base + "/../"  + "./quest_stats.json";
-                FileWriter file = new FileWriter(path);
+                String path = ((HashDirCache) ResCache.global).base + "/../" + "./quest_stats.json";
+                OutputStreamWriter file = new OutputStreamWriter(Files.newOutputStream(Paths.get(path)), StandardCharsets.UTF_8);
                 file.write(obj.toJSONString());
                 file.close();
             } catch (IOException e) {
@@ -178,7 +181,7 @@ public class NQuestsStats extends Window {
             if(!new File(path).exists())
                 return;
             BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(new FileInputStream(path), "UTF-8"));
+                    new InputStreamReader(new FileInputStream(path), StandardCharsets.UTF_8));
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = (JSONObject) parser.parse(reader);
             JSONArray questers = (JSONArray)jsonObject.get("qusters");

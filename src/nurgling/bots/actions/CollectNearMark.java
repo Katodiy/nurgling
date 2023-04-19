@@ -25,7 +25,7 @@ public class CollectNearMark implements Action {
                     if(gob.rc.dist(leashed_gob.rc)<20){
                         GItem urope = gui.getInventory().getItem(new NAlias("rope"), Leashed.class);
                         if(urope!=null){
-                            new SelectFlowerAction(urope,"Pull", SelectFlowerAction.Types.Inventory).run(gui);
+                            new SelectFlowerAction((NGItem) urope,"Pull", SelectFlowerAction.Types.Item).run(gui);
                         }
                         NUtils.waitEvent(()->gob.rc.dist(leashed_gob.rc)>20,50);
                     }

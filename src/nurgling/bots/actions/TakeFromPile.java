@@ -60,7 +60,7 @@ public class TakeFromPile implements Action {
             while ( need > 0 && Finder.findObject ( inPile.id ) != null ) {
                 if(!NUtils.takeItemFromPile ())
                     return new Results ( Results.Types.FULL );
-                need = count - gui.getInventory ().getItems ( items ).size ();
+                need = count - gui.getInventory ().getWItems( items ).size ();
             }
             if ( Finder.findObject ( inPile.id ) == null ) {
                 inPile = Finder.findObjectInArea ( iname, 1000, Finder.findNearestMark ( input ) );

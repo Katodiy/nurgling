@@ -34,9 +34,9 @@ public class TextEntry extends Widget implements ReadLine.Owner {
     public static final Color defcol = new Color(255, 205, 109), dirtycol = new Color(255, 232, 209);
     public static final Color selcol = new Color(24, 80, 192);
     public static final Text.Foundry fnd = new Text.Foundry(Text.serif, 12).aa(true);
-    public static final Tex lcap = Resource.loadtex("gfx/hud/text/l");
-    public static final Tex rcap = Resource.loadtex("gfx/hud/text/r");
-    public static final Tex mext = Resource.loadtex("gfx/hud/text/m");
+    public static final Tex lcap = Resource.loadtex("nurgling/hud/text/l");
+    public static final Tex rcap = Resource.loadtex("nurgling/hud/text/r");
+    public static final Tex mext = Resource.loadtex("nurgling/hud/text/m");
     public static final Tex caret = Resource.loadtex("gfx/hud/text/caret");
     public static final int toffx = lcap.sz().x;
     public static final Coord coff = UI.scale(new Coord(-2, 0));
@@ -53,10 +53,7 @@ public class TextEntry extends Widget implements ReadLine.Owner {
     @RName("text")
     public static class $_ implements Factory {
 	public Widget create(UI ui, Object[] args) {
-	    if(args[0] instanceof Coord)
-		return(new TextEntry(UI.scale((Coord)args[0]), (String)args[1]));
-	    else
-		return(new TextEntry(UI.scale((Integer)args[0]), (String)args[1]));
+	    return(new TextEntry(UI.scale((Integer)args[0]), (String)args[1]));
 	}
     }
 
@@ -146,11 +143,6 @@ public class TextEntry extends Widget implements ReadLine.Owner {
 	super(new Coord(w, mext.sz().y));
 	rsettext(deftext);
 	setcanfocus(true);
-    }
-
-    @Deprecated
-    public TextEntry(Coord sz, String deftext) {
-	this(sz.x, deftext);
     }
 
     protected void changed() {

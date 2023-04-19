@@ -1,180 +1,126 @@
 package nurgling;
 
 import haven.*;
-import nurgling.json.JSONArray;
-import nurgling.json.JSONObject;
-import nurgling.json.parser.JSONParser;
 
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.function.Function;
 
-public class NCharacterInfo {
+public class NCharacterInfo extends Widget {
 
-    public final Constipation constipation = new Constipation();
+//    public final Constipation constipation = new Constipation();
 
-    static NCharacterInfo instance;
+    String chrid;
+    String path;
+    final Set<String> varity = new HashSet<>();
+    CharWnd charWnd = null;
+    long lastWriting = 0;
+    long delta = 300;
 
-    public NCharacterInfo() {
-        instance = this;
+    double oldFEPSsize = 0;
+    boolean needFEPreset = false;
+
+    boolean isStarted = false;
+    String varCand = null;
+
+    public NCharacterInfo(String chrid) {
+        this.chrid = chrid;
+        path = ((HashDirCache) ResCache.global).base + "\\..\\" +NUtils.getUI().sessInfo.username + "_" + chrid.trim() + ".dat";
+        read();
     }
 
-    public static class Constipation {
-        public NWItem lastItem = null;
-        public Constipation() {
-            variety_food = new ArrayList<String>();
-        }
+    void read() {
 
-        public ArrayList<String> variety_food = new ArrayList<String>();
-
-        String chrid;
-
-        public final List<Data> els = new ArrayList<Data>();
-        private Integer[] order = {};
-
-        public void updateFood(ResData t, double a) {
-        }
-        public void update(ResData t, double a)
-        {
-            /// Учет съеденной еды
-            if(lastItem!=null) {
-                String candidate = lastItem.item.res.get().name;
-                if (!variety_food.contains(candidate))
-                    variety_food.add(candidate);
-                lastItem = null;
-            }
-            prev: {
-                for(Iterator<Data> i = els.iterator(); i.hasNext();) {
-                    Data el = i.next();
-                    if(!Utils.eq(el.rd, t))
-                        continue;
-                    if(a == 1.0)
-                        i.remove();
-                    else
-                        el.update(a);
-                    break prev;
-                }
-                els.add(new Data(t, a));
-            }
-            order();
-        }
-
-        private void order() {
-            int n = els.size();
-            order = new Integer[n];
-            for(int i = 0; i < n; i++)
-                order[i] = i;
-            Arrays.sort(order, (a, b) -> (ecmp.compare(els.get(a), els.get(b))));
-        }
-
-        private static final Comparator<Data> ecmp = (a, b) -> {
-            if(a.value < b.value)
-                return(-1);
-            else if(a.value > b.value)
-                return(1);
-            return(0);
-        };
-
-        public Data get(int i) {
-            return els.size() > i ? els.get(i) : null;
-        }
-
-        public static class Data {
-            private final HashMap<Class, BufferedImage> renders = new HashMap<>();
-            public final Indir<Resource> res;
-            private ResData rd;
-            public double value;
-
-            public Data(ResData rd, double value) {
-                this.rd = rd;
-                this.res = rd.res;
-                this.value = value;
-            }
-
-            public void update(double a) {
-                value = a;
-                renders.clear();
-            }
-
-            private BufferedImage render(Class type, Function<Data, BufferedImage> renderer) {
-                if(!renders.containsKey(type)) {
-                    renders.put(type, renderer.apply(this));
-                }
-                return renders.get(type);
-            }
-        }
-
-        private final HashMap<Class, Function<Data, BufferedImage>> renderers = new HashMap<>();
-
-        public void addRenderer(Class type, Function<Data, BufferedImage> renderer) {
-            renderers.put(type, renderer);
-        }
-
-        public boolean hasRenderer(Class type) {
-            return renderers.containsKey(type);
-        }
-
-        public BufferedImage render(Class type, Data data) {
-            try {
-                return renderers.containsKey(type) ? data.render(type, renderers.get(type)) : null;
-            } catch (Loading ignored) {}
-            return null;
-        }
-
-        public static void write() {
-            if(instance !=null) {
-                URL url = NUtils.class.getProtectionDomain().getCodeSource().getLocation();
-
-                if (url != null) {
-                    try {
-                        String path = url.toURI().getPath().substring(0, url.toURI().getPath().lastIndexOf("/"));
-                        JSONObject obj = new JSONObject();
-                        JSONArray varietyData = new JSONArray();
-                        for (String item : instance.constipation.variety_food)
-                            varietyData.add(item);
-                        obj.put ( "variety_food", varietyData );
-
-                        FileWriter file = new FileWriter(path + "/" + NUtils.getGameUI().chrid + "_info.dat");
-                        file.write(obj.toJSONString());
-                        file.close();
-
-                    } catch (URISyntaxException | IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            }
-        }
-
-        public static void init(){
-            if(instance !=null) {
-                if(instance.constipation.chrid!=null){
-                    try {
-                        URL url = NUtils.class.getProtectionDomain().getCodeSource().getLocation();
-                        String path = url.toURI().getPath().substring(0, url.toURI().getPath().lastIndexOf("/"));
-
-                        if(new File(path + "/" + NUtils.getGameUI().chrid + "_info.dat").exists()) {
-                            BufferedReader reader = new BufferedReader (
-                                    new InputStreamReader (Files.newInputStream(Paths.get(path + "/" + NUtils.getGameUI().chrid + "_info.dat")), "UTF-8" ) );
-                            JSONParser parser = new JSONParser();
-                            JSONObject jsonObject = (JSONObject) parser.parse(reader);
-
-                            // loop array
-                            JSONArray msg = (JSONArray) jsonObject.get("variety_food");
-                            instance.constipation.variety_food.addAll(msg);
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(Files.newInputStream(Paths.get(path)), StandardCharsets.UTF_8))) {
+            while (reader.ready()) {
+                String line = reader.readLine();
+                if (line.contains("varity")) {
+                    synchronized (varity) {
+                        for (int i = 0; i < Integer.parseInt(line.split("\t")[1]); i++) {
+                            varity.add(reader.readLine());
                         }
                     }
-                    catch ( IOException | nurgling.json.parser.ParseException e ) {
-                        e.printStackTrace ();
-                    } catch (URISyntaxException e) {
-                        throw new RuntimeException(e);
-                    }
                 }
             }
+            reader.close();
+        } catch (IOException ignored) {
         }
+    }
+
+    void write() {
+        OutputStreamWriter file;
+        try  {
+            file = new OutputStreamWriter(Files.newOutputStream(Paths.get(path)), StandardCharsets.UTF_8);
+            if (!varity.isEmpty()) {
+                file.write("varity\t" + String.valueOf(varity.size()) +"\n");
+                for (String var : varity) {
+                    file.write(var+"\n");
+                }
+                file.close();
+            }
+        }  catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setCharWnd(CharWnd charWnd) {
+        oldFEPSsize = calcFEPsize(charWnd);
+        this.charWnd = charWnd;
+    }
+
+    private double calcFEPsize(CharWnd charWnd)
+    {
+        double len = 0;
+        for (CharWnd.FoodMeter.El el : charWnd.feps.els){
+            len+=el.a;
+        }
+        return len;
+    }
+
+    @Override
+    public void tick(double dt) {
+        super.tick(dt);
+        if(charWnd!=null) {
+            double fepssize = calcFEPsize(charWnd);
+            if(Math.abs(oldFEPSsize-fepssize)>0.005) {
+                if (varity.size() > 0 && fepssize==0) {
+                    varity.clear();
+
+                    oldFEPSsize = 0;
+                }
+                else
+                {
+                    if (varCand != null) {
+                        varity.add(varCand);
+                    }
+                    oldFEPSsize = fepssize;
+                }
+                needFEPreset = true;
+                isStarted = true;
+            }
+            if(varity.size()>0 && oldFEPSsize == 0 && isStarted)
+            {
+                varity.clear();
+                needFEPreset = true;
+            }
+            if (NUtils.getTickId() - lastWriting > delta && needFEPreset) {
+                write();
+                lastWriting = NUtils.getTickId();
+                needFEPreset = false;
+                oldFEPSsize = fepssize;
+            }
+        }
+    }
+
+    public void setCandidate(String defn) {
+        varCand = defn;
+    }
+
+    NGItem flowerCand;
+    public void setFlowerCandidate(NGItem item) {
+        flowerCand = item;
     }
 }
