@@ -690,11 +690,16 @@ public class NUtils {
 
     static Optional<Integer> speedValue = Optional.empty();
     public static void setSpeed(int value) {
-        if(speedget!=null && gameUI.ui!=null) {
-            if (value >= 0 && value <= 3)
-                speedget.set(value);
-        }else{
-            speedValue = Optional.of(value);
+        if ( gameUI != null ) {
+            for ( Widget w = gameUI.lchild ; w != null ; w = w.prev ) {
+                if ( w instanceof GameUI.Hidepanel) {
+                    for ( Widget w2 = w.lchild ; w2 != null ; w2 = w2.prev ) {
+                        if ( w2 instanceof Speedget) {
+                            (( Speedget ) w2).set(value);
+                        }
+                    }
+                }
+            }
         }
     }
 
