@@ -55,6 +55,24 @@ public class NFlowerMenu extends FlowerMenu {
         super(options);
     }
 
+    @Override
+    public void tick(double dt) {
+        super.tick(dt);
+        if(NUtils.getUI()!=null && !NUtils.getUI().botMode.get())
+        {
+            if(!ui.modshift) {
+                for (NConfiguration.PickingAction pa : NConfiguration.getInstance().pickingActions) {
+                    for (Petal p : opts) {
+                        if (NUtils.checkName(p.name, pa.action)) {
+                            choose(p);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public void cancel(){
         NUtils.getUI().wdgmsg(this,"cl", -1);
     }
