@@ -62,10 +62,12 @@ public class NFlowerMenu extends FlowerMenu {
         {
             if(!ui.modshift) {
                 for (NConfiguration.PickingAction pa : NConfiguration.getInstance().pickingActions) {
-                    for (Petal p : opts) {
-                        if (NUtils.checkName(p.name, pa.action)) {
-                            choose(p);
-                            break;
+                    if(pa.isEnable) {
+                        for (Petal p : opts) {
+                            if (NUtils.checkName(p.name, pa.action)) {
+                                choose(p);
+                                break;
+                            }
                         }
                     }
                 }
