@@ -1250,4 +1250,22 @@ public class Finder {
     }
 
 
+    public static Gob findQuickObject() {
+        Gob result = null;
+        double th = NConfiguration.getInstance().quickRange;
+        synchronized (NUtils.getGameUI().ui.sess.glob.oc) {
+            for (Gob gob : NUtils.getGameUI().ui.sess.glob.oc) {
+                double dist = NUtils.getGameUI().map.player().rc.dist(gob.rc);
+                if (dist < th) {
+                    for (String cand : NConfiguration.getInstance().quickActions) {
+                        if (NUtils.isIt(gob, new NAlias(cand))) {
+                            result = gob;
+                            th = dist;
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
 }

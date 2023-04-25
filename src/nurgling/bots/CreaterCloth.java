@@ -51,7 +51,7 @@ public class CreaterCloth extends Bot {
         }, new Coord ( 0, y ) );
 
         y += UI.scale(35);
-        window.add ( new Button ( window.buttons_size, "Fibres" ) {
+        window.add ( new Button ( window.buttons_size, "Ingredients" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable = true;
