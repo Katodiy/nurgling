@@ -99,6 +99,14 @@ public class NConfiguration {
         instance.write();
     }
 
+    public void setPickActions(LinkedList<NAutoPickMenu.PickItem> pickList) {
+        pickingActions.clear();
+        for(NAutoPickMenu.PickItem item: pickList)
+        {
+            pickingActions.add(new PickingAction(item.text.texts,item.select.a));
+        }
+    }
+
     public static class PickingAction{
         public String action;
         public boolean isEnable;

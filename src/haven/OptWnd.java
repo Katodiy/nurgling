@@ -1881,106 +1881,19 @@ public class OptWnd extends Window {
 		}
 
 		class AutoPicking extends Widget {
-			class PickAction extends Widget{
-				NConfiguration.PickingAction value;
 
-				CheckBox isEnable;
-				int id;
-				public PickAction(NConfiguration.PickingAction val, int id) {
-					this.id = id;
-					this.value = val;
-					isEnable = add(new CheckBox("") {
-						{
-							a = value.isEnable;
-						}
-
-						public void set(boolean val) {
-							value.isEnable = val;
-							a = val;
-							ArrayList<NConfiguration.PickingAction> pa = new ArrayList<>();
-							for(Integer key :wdgts.keySet()){
-								PickAction p = ((PickAction) wdgts.get(key));
-								pa.add(new NConfiguration.PickingAction(p.value.action,p.isEnable.a));
-							}
-							NConfiguration.getInstance().pickingActions = pa;
-							NConfiguration.getInstance().write();
-						}
-					}, new Coord(0,0));
-					add(new Label(value.action),isEnable.pos("ur").add(20,0));
-					add(new Button(20,"\u25Bc"){
-						@Override
-						public void click() {
-							int id = ((PickAction)this.parent).id;
-							if(id<wdgts.size()-1){
-								Widget w = wdgts.get(id);
-								Coord c = w.c;
-								w.move(w.pos("bl").adds(0,5));
-								wdgts.get(id+1).move(c);
-								wdgts.put(id,wdgts.get(id+1));
-								wdgts.put(id+1,w);
-								int old_id = id;
-								((PickAction)w).id = old_id + 1;
-								((PickAction)wdgts.get(old_id)).id = old_id;
-								ArrayList<NConfiguration.PickingAction> pa = new ArrayList<>();
-								for(Integer key :wdgts.keySet()){
-									PickAction p = ((PickAction) wdgts.get(key));
-									pa.add(new NConfiguration.PickingAction(p.value.action,p.isEnable.a));
-								}
-								NConfiguration.getInstance().pickingActions = pa;
-								NConfiguration.getInstance().write();
-							}
-						}
-					},isEnable.pos("ur").add(100,0));
-					add(new Button(20,"\u25B2"){
-						@Override
-						public void click() {
-							int id = ((PickAction)this.parent).id;
-							if(id>0){
-								Widget w = wdgts.get(id-1);
-								Coord c = w.c;
-								w.move(w.pos("bl").adds(0,5));
-								wdgts.get(id).move(c);
-								wdgts.put(id-1,wdgts.get(id));
-								wdgts.put(id,w);
-								int old_id = id;
-								((PickAction)w).id = old_id;
-								((PickAction)wdgts.get(old_id-1)).id = old_id-1;
-								ArrayList<NConfiguration.PickingAction> pa = new ArrayList<>();
-								for(Integer key :wdgts.keySet()){
-									PickAction p = ((PickAction) wdgts.get(key));
-									pa.add(new NConfiguration.PickingAction(p.value.action,p.isEnable.a));
-								}
-								NConfiguration.getInstance().pickingActions = pa;
-								NConfiguration.getInstance().write();
-							}
-						}
-					},isEnable.pos("ur").add(130,0));
-					pack();
-
-
-				}
-			}
 			public HashMap<Integer, Widget> wdgts = new HashMap<>();
 			public AutoPicking() {
-
-				prev = add(new Label("Other:"), new Coord(0, 0));
-				prev = add(new CheckBox("Enable Auto Picking:") {
-					{
-						a = NConfiguration.getInstance().autoPicking;
-					}
-
-					public void set(boolean val) {
-						NConfiguration.getInstance().autoPicking = val;
-						a = val;
-					}
-				}, prev.pos("bl").adds(0, 5));
-				int counter = 0;
-				for (NConfiguration.PickingAction pickingAction : NConfiguration.getInstance().pickingActions) {
-					prev = add(new PickAction(pickingAction, counter), prev.pos("bl").adds(0, UI.scale(0)));
-					wdgts.put(counter,prev);
-					counter++;
+				NAutoPickMenu pm = add(new NAutoPickMenu());
+				for(NConfiguration.PickingAction action : NConfiguration.getInstance().pickingActions) {
+					pm.readItem(action.action,action.isEnable);
 				}
-
+				int len = 0;
+				for(NAutoPickMenu.PickItem pL : pm.pickList)
+				{
+					len = Math.max(len,pL.sz.x);
+				}
+				pm.resize(len+UI.scale(10),pm.sz.y);
 				pack();
 			}
 		}
