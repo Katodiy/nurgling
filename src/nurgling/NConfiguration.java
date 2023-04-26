@@ -59,6 +59,7 @@ public class NConfiguration {
 
     public int playerSpeed = 3;
     public int horseSpeed = 3;
+    public int quickRange = 25;
 
     public boolean isEyed = false;
     public boolean isPaths = false;
@@ -104,6 +105,14 @@ public class NConfiguration {
         for(NAutoPickMenu.PickItem item: pickList)
         {
             pickingActions.add(new PickingAction(item.text.texts,item.select.a));
+        }
+    }
+
+    public void setQuickActions(LinkedList<NAutoActionMenu.PatternItem> pickList) {
+        quickActions.clear();
+        for(NAutoActionMenu.PatternItem item: pickList)
+        {
+            quickActions.add(item.text.texts);
         }
     }
 
@@ -190,6 +199,7 @@ public class NConfiguration {
     public CowsHerd cowsHerd = new CowsHerd();
 
     public ArrayList<PickingAction> pickingActions = new ArrayList<>();
+    public ArrayList<String> quickActions = new ArrayList<>();
 
     public HashMap<String, ArrayList<String>> data_food = new HashMap<>();
     public HashMap<String, ArrayList<String>> data_drinks = new HashMap<>();
@@ -327,6 +337,7 @@ public class NConfiguration {
         pickingActions.add(new PickingAction("Collect bones", false));
         pickingActions.add(new PickingAction("Eat", false));
         pickingActions.add(new PickingAction("Shear wool", false));
+        quickActions.add("cart");
 
         final KeyBinding[] toolKeys1 = {
                 KeyBinding.get ("f1", KeyMatch.forcode(KeyEvent.VK_F1,0)),
@@ -595,6 +606,14 @@ public class NConfiguration {
         }
         obj.put("picking_actions",paarray);
 
+        JSONArray qaarray = new JSONArray ();
+        for ( String quick_action : quickActions ) {
+            JSONObject pa_obj = new JSONObject();
+            pa_obj.put("name", quick_action);
+            qaarray.add(pa_obj);
+        }
+        obj.put("quick_actions",qaarray);
+
         JSONArray resizePos = new JSONArray ();
         for ( String name : resizeWidgets.keySet() ) {
             JSONObject coord = new JSONObject();
@@ -687,6 +706,7 @@ public class NConfiguration {
         obj.put ( "showAreas", showAreas);
         obj.put ( "playerSpeed", playerSpeed);
         obj.put ( "horseSpeed", horseSpeed);
+        obj.put ( "quickRange", quickRange);
 
         JSONObject redPlayers = new JSONObject ();
         redPlayers.put("mark",players.get("red").mark);
@@ -862,6 +882,16 @@ public class NConfiguration {
                 }
             }
 
+            JSONArray qaarray = ( JSONArray ) jsonObject.get ( "quick_actions" );
+            if(qaarray!=null) {
+                quickActions.clear();
+                Iterator<JSONObject> iterator2 = qaarray.iterator();
+                while (iterator2.hasNext()) {
+                    JSONObject item = iterator2.next();
+                    quickActions.add( (String)item.get("name"));
+                }
+            }
+
 
             JSONArray resizePos = ( JSONArray ) jsonObject.get ( "resizePos" );
             if(resizePos!=null) {
@@ -933,7 +963,9 @@ public class NConfiguration {
             if ( jsonObject.get ( "horseSpeed" ) != null ) {
                 horseSpeed = ( int ) (long) jsonObject.get ( "horseSpeed" );
             }
-
+            if ( jsonObject.get ( "quickRange" ) != null ) {
+                quickRange = ( int ) (long) jsonObject.get ( "quickRange" );
+            }
             if(jsonObject.get("red_players")!=null){
                 JSONObject red = (JSONObject)jsonObject.get("red_players");
                 players.put("red", new ArrowProp((boolean) red.get("arrow"),(boolean) red.get("ring"),(boolean) red.get("mark"),(boolean) red.get("mark_target")));

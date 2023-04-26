@@ -1880,20 +1880,29 @@ public class OptWnd extends Window {
 			}
 		}
 
-		class AutoPicking extends Widget {
+		public class AutoPicking extends Widget {
 
 			public HashMap<Integer, Widget> wdgts = new HashMap<>();
+			public NAutoPickMenu pm;
+			public NAutoActionMenu am;
 			public AutoPicking() {
-				NAutoPickMenu pm = add(new NAutoPickMenu());
+				pm = add(new NAutoPickMenu());
 				for(NConfiguration.PickingAction action : NConfiguration.getInstance().pickingActions) {
 					pm.readItem(action.action,action.isEnable);
 				}
+
 				int len = 0;
 				for(NAutoPickMenu.PickItem pL : pm.pickList)
 				{
 					len = Math.max(len,pL.sz.x);
 				}
 				pm.resize(len+UI.scale(10),pm.sz.y);
+
+				am = add(new NAutoActionMenu(),pm.pos("ur").add(UI.scale(20),0));
+				for(String action : NConfiguration.getInstance().quickActions) {
+					am.readItem(action);
+				}
+
 				pack();
 			}
 		}

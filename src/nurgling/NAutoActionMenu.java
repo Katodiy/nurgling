@@ -6,9 +6,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import static java.util.Collections.swap;
-
-public class NAutoPickMenu extends Widget {
+public class NAutoActionMenu extends Widget {
     private static final Text.Foundry elf = CharWnd.attrf;
     private static final int elh = elf.height() + UI.scale(2);
 
@@ -32,135 +30,111 @@ public class NAutoPickMenu extends Widget {
             new TexI(Resource.loadsimg("nurgling/hud/buttons/checkbox/d")),
             new TexI(Resource.loadsimg("nurgling/hud/buttons/checkbox/h")),
             new TexI(Resource.loadsimg("nurgling/hud/buttons/checkbox/dh"))};
-    public PickList list;
+    public PatternList list;
     TextEntry new_item;
     Button addbtn;
-    public NAutoPickMenu() {
-        prev = add(new Label("List of auto-select:"));
-        list = add(new PickList(UI.scale(250, 200)),prev.pos("bl").add(0,UI.scale(5)));
-        new_item = add(new TextEntry(UI.scale(250),""),list.pos("bl").add(0,UI.scale(10)));
+    public NAutoActionMenu() {
+        prev = add(new Label("List of gobs for quick action:"));
+        list = add(new PatternList(UI.scale(250, 200)),prev.pos("bl").add(0,UI.scale(5)));
+        new_item = add(new TextEntry(UI.scale(250-85),""),list.pos("bl").add(0,UI.scale(10)));
         addbtn = add(new Button(UI.scale(75),"Add"){
             @Override
             public void click() {
                 super.click();
-                pickList.add(new PickItem(new_item.text()));
-                NConfiguration.getInstance().setPickActions(pickList);
+                patternList.add(new PatternItem(new_item.text()));
+                NConfiguration.getInstance().setQuickActions(patternList);
                 NConfiguration.getInstance().write();
                 int len = 0;
-                for(NAutoPickMenu.PickItem pL : pickList)
+                for(PatternItem pL : patternList)
                 {
-                    len = Math.max(len,pL.sz.x);
+                    len = Math.max(len,pL.sz.x-UI.scale(10));
                 }
-                NAutoPickMenu.this.resize(len+UI.scale(10),NAutoPickMenu.this.sz.y);
-                OptWnd.NOptWnd.AutoPicking ap = (OptWnd.NOptWnd.AutoPicking)NAutoPickMenu.this.parent;
-                ap.am.move(ap.pm.pos("ur").add(UI.scale(5), 0));
-                ap.sz.x = ap.am.sz.x+ap.pm.sz.x+UI.scale(5);
+                len = Math.max(len,UI.scale(240));
+                NAutoActionMenu.this.resize(len+UI.scale(10), NAutoActionMenu.this.sz.y);
             }
         },new_item.pos("ur").add(UI.scale(5),UI.scale(10)));
+        Label quick_rad_lab = add(new Label("Quick radius:"),new_item.pos("bl").add(0,UI.scale(5)) );
+        HSlider hs = (HSlider)(prev = add(new HSlider(UI.scale(160), 10, 200,1) {
+            public void changed() {
+                quick_rad_lab.settext("Quick radius: " + String.valueOf(val));
+                NConfiguration.getInstance().quickRange = val;
+            }
+        }, quick_rad_lab.pos("bl").add(0,UI.scale(5))));
+        hs.val = NConfiguration.getInstance().quickRange;
+        quick_rad_lab.settext("Quick radius: " + String.valueOf(hs.val));
         pack();
     }
 
-    public void readItem(String name, boolean isChecked){
-        PickItem p = new PickItem(name);
-        pickList.add(p);
-        p.select.a = isChecked;
+    public void readItem(String name){
+        PatternItem p = new PatternItem(name);
+        patternList.add(p);
         int len = 0;
-        for(PickItem pL : pickList)
+        for(PatternItem pL : patternList)
         {
             len = Math.max(len,pL.sz.x);
         }
-        this.resize(len+UI.scale(5),p.sz.y*pickList.size());
-        for(PickItem pL : pickList)
+//        this.resize(len+UI.scale(5),p.sz.y* patternList.size());
+        for(PatternItem pL : patternList)
         {
             pL.resize(len,p.sz.y);
         }
     }
 
-    public final LinkedList<PickItem> pickList = new LinkedList<>();
+    public final LinkedList<PatternItem> patternList = new LinkedList<>();
 
-    public class PickItem extends Widget{
+    public class PatternItem extends Widget{
         Label text;
-        IButton up;
-        IButton down;
         ICheckBox select;
         IButton remove;
 
         @Override
         public void resize(Coord sz) {
-            up.move(new Coord(sz.x - 3* (removei[0].sz().x + UI.scale(5)),  remove.c.y));
-            down.move(new Coord(sz.x - 2*(removei[0].sz().x + UI.scale(5)),  remove.c.y));
-            remove.move(new Coord(sz.x - removei[0].sz().x - UI.scale(5),  remove.c.y));
             super.resize(sz);
+            remove.move(new Coord(sz.x - removei[0].sz().x - UI.scale(15),  remove.c.y));
         }
 
-        public PickItem(String text){
+        public PatternItem(String text){
             select = add(new ICheckBox(checkboxi[0], checkboxi[1], checkboxi[2], checkboxi[3]) {
                 @Override
                 public void changed(boolean val) {
                     super.changed(val);
-                    NConfiguration.getInstance().setPickActions(pickList);
                 }
             }, new Coord(0, UI.scale(4)));
             this.text = add(new Label(text),this.select.pos("ur").add(UI.scale(5),UI.scale(1) ) );
 
-            up = add(new IButton(upi[0].back,upi[1].back,upi[2].back){
-                @Override
-                public void click() {
-                    int i = pickList.indexOf(PickItem.this);
-                    if(i>0) {
-                        swap(pickList, i-1, i);
-                        NConfiguration.getInstance().setPickActions(pickList);
-                        NConfiguration.getInstance().write();
-                    }
-                }
-            },this.text.pos("ur").add(UI.scale(5),0 ));
-            up.settip(Resource.remote().loadwait("nurgling/hud/buttons/upItem/u").flayer(Resource.tooltip).t);
-
-            down = add(new IButton(downi[0].back,downi[1].back,downi[2].back){
-                @Override
-                public void click() {
-                    int i = pickList.indexOf(PickItem.this);
-                    if(i<pickList.size()-1) {
-                        swap(pickList, i, i+1);
-                        NConfiguration.getInstance().setPickActions(pickList);
-                        NConfiguration.getInstance().write();
-                    }
-                }
-            },this.up.pos("ur").add(UI.scale(5),0 ));
-            down.settip(Resource.remote().loadwait("nurgling/hud/buttons/downItem/u").flayer(Resource.tooltip).t);
-
             remove = add(new IButton(removei[0].back,removei[1].back,removei[2].back){
                 @Override
                 public void click() {
-                    pickList.remove(PickItem.this);
-                    NConfiguration.getInstance().setPickActions(pickList);
+                    patternList.remove(PatternItem.this);
+                    NConfiguration.getInstance().setQuickActions(patternList);
                     NConfiguration.getInstance().write();
                 }
-            },this.down.pos("ur").add(UI.scale(5),0 ));
+            },this.text.pos("ur").add(UI.scale(5),0 ));
             remove.settip(Resource.remote().loadwait("nurgling/hud/buttons/removeItem/u").flayer(Resource.tooltip).t);
 
             pack();
         }
     }
 
-    public class PickList extends SListBox<PickItem, Widget> {
-        PickList(Coord sz) {
+    public class PatternList extends SListBox<PatternItem, Widget> {
+        PatternList(Coord sz) {
             super(sz, elh);
             pack();
         }
 
-        protected List<PickItem> items() {return(new ArrayList<>(pickList));}
+        protected List<PatternItem> items() {return(new ArrayList<>(patternList));}
 
-        protected Widget makeitem(PickItem item, int idx, Coord sz) {
-            return(new ItemWidget<PickItem>(this, sz, item) {
+        protected Widget makeitem(PatternItem item, int idx, Coord sz) {
+            return(new ItemWidget<PatternItem>(this, sz, item) {
                 {
                     int len = 0;
                     int h = 0;
-                    for(PickItem pL : pickList)
+                    for(PatternItem pL : patternList)
                     {
                         len = Math.max(len,pL.sz.x);
                         h = pL.sz.y;
                     }
+                    len = Math.max(len,UI.scale(250));
                     item.resize(new Coord(len,h));
                     add(item);
                 }

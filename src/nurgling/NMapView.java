@@ -6,6 +6,7 @@ import haven.res.lib.itemtex.ItemTex;
 import nurgling.bots.CheckClay;
 import nurgling.bots.CheckWater;
 import nurgling.bots.FeedClover;
+import nurgling.tools.Finder;
 import nurgling.tools.NArea;
 
 import java.awt.event.KeyEvent;
@@ -25,6 +26,7 @@ public class NMapView extends MapView {
             KeyMatch.C ) );
     public static final KeyBinding kb_light = KeyBinding.get ( "light", KeyMatch.forchar ( 'H', KeyMatch.C ) );
     public static final KeyBinding kb_give = KeyBinding.get ( "giveS", KeyMatch.forchar ( 'Q', KeyMatch.C) );
+    public static final KeyBinding kb_quick_action = KeyBinding.get ( "kb_quick_action", KeyMatch.forchar ( 'Q', 0) );
     private boolean n_selection = false;
     private boolean withpf = false;
 
@@ -317,7 +319,13 @@ public class NMapView extends MapView {
             char c,
             KeyEvent ev
     ) {
-        if (kb_light.key().match(ev)) {
+        if (kb_quick_action.key().match(ev)) {
+            Gob gob = Finder.findQuickObject();
+            if(gob!=null) {
+                NUtils.activate(gob);
+                return true;
+            }
+        }else if (kb_light.key().match(ev)) {
             NConfiguration.getInstance().nightVision = !NConfiguration.getInstance().nightVision;
             NConfiguration.getInstance().write();
             return true;

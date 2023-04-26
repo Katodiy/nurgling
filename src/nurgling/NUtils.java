@@ -311,6 +311,50 @@ public class NUtils {
         return false;
     }
 
+
+    public static boolean craft(
+            String pagCommand,
+            String name
+    )
+            throws InterruptedException {
+        Widget spwnd = null;
+        if(gameUI.craftwnd!=null) {
+            spwnd = gameUI.craftwnd.makeWidget;
+        }
+        if (spwnd == null || !checkName(name, gameUI.craftwnd.makeWidget.rcpnm)) {
+            for (MenuGrid.Pagina p : NUtils.getGameUI().menu.paginae) {
+                if (p.res().name.contains(pagCommand)) {
+                    (p).button().use(new MenuGrid.Interaction(1, 0));
+                    break;
+                }
+            }
+            waitEvent(() -> (gameUI.craftwnd!=null && gameUI.craftwnd.makeWidget!=null), 500);
+            waitEvent(() -> gameUI.craftwnd.makeWidget!=null && checkName(name, gameUI.craftwnd.makeWidget.rcpnm), 50);
+            spwnd = gameUI.craftwnd.makeWidget;
+        }
+        if (spwnd != null) {
+            spwnd.wdgmsg("make", 1);
+            waitEvent(() -> getProg() >= 0, 150);
+            waitEvent(()->NUtils.isPose(getGameUI().map.player(),new NAlias("idle")) || (NUtils.isPose(getGameUI().map.player(),new NAlias("loomsit")) && NUtils.getProg()<0),10000);
+            gameUI.craftwnd.hide();
+            /// Ждем завершения крафта
+
+            while (getProg() < 0 || gameUI.getInventory().getFreeSpace() > 0) {
+                if (gameUI.getInventory().getFreeSpace() == 0)
+                    break;
+                waitEvent(() -> getProg() >= 0, 30);
+                if (getProg() < 0)
+                    break;
+                if (gameUI.getInventory().getFreeSpace() == 0)
+                    break;
+                waitEvent(() -> getProg() < 0, 100);
+            }
+            stopWithClick();
+            return true;
+        }
+        return false;
+    }
+
     public static boolean isPose(Gob gob, NAlias name){
         if(gob!=null && gob.getattr(Drawable.class)!=null && gob.getattr(Drawable.class) instanceof Composite && ((Composite)gob.getattr(Drawable.class)).oldposes!=null)
         for(ResData data:((Composite)gob.getattr(Drawable.class)).oldposes)
