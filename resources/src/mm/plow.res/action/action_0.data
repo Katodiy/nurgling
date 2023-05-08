@@ -1,0 +1,17 @@
+#ABUTTON LAYER FOR RES dout//metalplow.res
+#String pr
+paginae/bld/vnm
+#uint16 pver
+4
+#String name
+Metal Plow
+#String preq
+
+#uint16 hk
+80
+#uint16 ad length
+2
+#String ad[0]
+bp
+#String ad[1]
+metalplow
