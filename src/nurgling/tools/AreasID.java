@@ -37,7 +37,7 @@ public enum AreasID {
     leather, inten, entr, out_bone1, lqbone, fat, hqbone, out_bone2, g_bone, meat1, bear_meat, deer_meat, moose_meat, walrus_meat, badger_meat, meat2, fox_meat, greyseal_meat, lynx_meat, meat3, chiken_meat, meat4, tin, b_common_bar, copper, ciron, lead, gold, b_uncommon_bar, silver, sausages, sausages1, sausages2, special3, raw_meat, meat6, pork_meat, cow_meat, lamb_meat, horse_meat, goat_meat, special1, special7, special2, special5, special6, garden1, gardenRes, garden2, bloodstern, garden3, boar_meat, kit_meat1, kit_meat2, special9, special8, special4, onion, thyme, butter, calibration, candle, barrel_work_zone, slag, moose_hides, wolverine_hides, angler_hides, greyseal_hides, bear_hides, boar_hides, bone1, backed, unbacked, barrels, logs, kritter, carrot, swill, hens, chicken, feather, eggs, water, pigs, truffle, cows, sheeps, milk, wool, goats, flax, flaxFibre,
     hide1, hide2, hide3, bunny, rabbit, bar1, bar2, horses,
 
-
+    smelter,
     cheese_in, cheese_out, curd_out, cheese_main, c_outside, c_inside, c_cellar, c_mine,
     fish1,fish2,fish3,fish4,fish5,fish6,fish7,fish8,fish9,fish10,fish11,fish12,fish13,fish14,fish15,fish16,fish17,fish18,fish19,fish20,fish21,fish22,fish23,fish24,fish25,fish26,fish27,fish28,fish29,fish30,fish31,fish32,fish33,fish34,fish35,fish36,fish37,fish38,fish39,fish40, cheese_final, tobacco_work;
 

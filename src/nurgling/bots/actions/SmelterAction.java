@@ -22,11 +22,13 @@ public class SmelterAction implements Action {
     @Override
     public Results run ( NGameUI gui )
             throws InterruptedException {
+        if(Finder.findObjectsInArea ( smelter_name, Finder.findNearestMark(AreasID.smelter) ).isEmpty())
+            return new Results(Results.Types.NO_WORKSTATION);
         while ( !Finder.findObjectsInArea ( new NAlias ( "ore" ), Finder.findNearestMark ( AreasID.ore ) )
                        .isEmpty () ) {
             /// Wait until the smelters go out
             new WaitAction ( () -> {
-                for ( Gob gob : Finder.findObjects ( smelter_name ) ) {
+                for ( Gob gob : Finder.findObjectsInArea ( smelter_name, Finder.findNearestMark(AreasID.smelter) ) ) {
                         if(NUtils.isIt(gob,"primsmelter")){
                             isPrim = true;
                         }
@@ -52,14 +54,14 @@ public class SmelterAction implements Action {
 
             /// We throw out slag
             if ( Finder.findNearestMark ( AreasID.slag ) == null ) {
-                new ClearContainers ( smelter_name, isPrim?"Furnace":"Smelter", new NAlias ( "slag" ) ).run ( gui );
+                new ClearContainers ( smelter_name, isPrim?"Furnace":"Smelter", new NAlias ( "slag" ), AreasID.smelter ).run ( gui );
             }
             else {
                 new TransferToPileFromContainer ( smelter_name, new NAlias ( "stockpile-stone" ), new NAlias ( "slag" ),
-                        AreasID.slag, isPrim?"Furnace":"Smelter" ).run ( gui );
+                        AreasID.slag, AreasID.smelter, isPrim?"Furnace":"Smelter" ).run ( gui );
             }
             //Filling Smelters with Stockpiles
-            new FillContainers(ores, new NAlias("smelter"), new ArrayList<>(), new TakeMaxFromContainers(ores,AreasID.ore,new ArrayList<>())).run(gui);
+            new FillContainers(ores, AreasID.smelter, new ArrayList<>(), new TakeMaxFromContainers(ores,AreasID.ore,new ArrayList<>())).run(gui);
             new TransferToPile(AreasID.ore, NHitBox.getByName("stockpile"), new NAlias("stockpile"), ores).run(gui);
 
             //Fill the smelter with fuel from the piles

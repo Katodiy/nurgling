@@ -9,6 +9,8 @@ public class Smelter extends Settings {
     public Smelter(){
         prev = add(new Label("Ore:"));
         prev = add(new AreaIconSelecter(AreasID.ore),prev.pos("bl").add(0,5));
+        prev = add(new Label("Smelter:"),prev.pos("bl").add(0,5));
+        prev = add(new AreaIconSelecter(AreasID.smelter),prev.pos("bl").add(0,5));
         prev = add(new Label("Slag:"),prev.pos("bl").add(0,5));
         prev = add(new AreaIconSelecter(AreasID.slag),prev.pos("bl").add(0,5));
         prev = add(new ThresholdSetter(AreasID.slag),prev.pos("bl").add(0,5));
