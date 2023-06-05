@@ -243,9 +243,9 @@ public class PoseMorph {
 		}
 	    }
 	}
+	sortweights(bw, ba, mba);
 	int tbn = 4;
 	if(mba > tbn) {
-	    sortweights(bw, ba, mba);
 	    IntBuffer tba = Utils.wibuf(nv * tbn);
 	    FloatBuffer tbw = Utils.wfbuf(nv * tbn);
 	    for(int i = 0, off = 0, toff = 0; i < nv; i++, off += mba, toff += tbn) {
@@ -268,8 +268,9 @@ public class PoseMorph {
 	    }
 	    ba = tba; bw = tbw; mba = tbn;
 	}
+	String[] bnames = bones.toArray(new String[0]);
 	normweights(bw, ba, mba);
-	dst.add(new BoneData(mba, ba, bones.toArray(new String[0])));
+	dst.add(new BoneData(mba, ba, bnames));
 	dst.add(new WeightData(mba, bw));
     }
 
