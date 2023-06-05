@@ -1,13 +1,10 @@
 package nurgling;
 
 import haven.*;
-import haven.Window;
 import haven.res.ui.tt.highlighting.Highlighting;
 import haven.res.ui.tt.slot.Slotted;
 import nurgling.bots.actions.AutoSplitter;
 
-import javax.swing.*;
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
