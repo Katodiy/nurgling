@@ -69,7 +69,7 @@ public class Sheeps extends Bot {
         };
         runActions.add(new AnimalWool<Sheep>(new NAlias("sheep"), AreasID.sheeps,AreasID.wool,Sheep.class,wlpred));
         runActions.add(new AnimalMilk<Sheep>(new NAlias("sheep"), AreasID.sheeps,AreasID.milk,Sheep.class,wlpred));
-        runActions.add(new AnimalAction<Sheep>(new NAlias("sheep"), AreasID.sheeps, comparator, Sheep.class, wpred, NConfiguration.getInstance().sheepsHerd.totalSheeps, wlpred,NConfiguration.getInstance().sheepsHerd.adultSheeps));
+        runActions.add(new AnimalAction<Sheep>(new NAlias("sheep"), AreasID.sheeps, comparator, Sheep.class, wpred, NConfiguration.getInstance().sheepsHerd.totalSheeps.get(), wlpred,NConfiguration.getInstance().sheepsHerd.adultSheeps.get()));
         runActions.add(new AnimalAction<Sheep>(new NAlias("sheep"), AreasID.sheeps, comparator, Sheep.class, mpred, 1, mlpred,1));
     }
     

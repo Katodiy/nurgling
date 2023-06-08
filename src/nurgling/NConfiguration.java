@@ -1,6 +1,16 @@
 package nurgling;
 
 import haven.*;
+import haven.render.MixColor;
+import haven.res.ui.tt.slot.Slotted;
+import haven.res.ui.tt.stackn.Stack;
+import nurgling.bots.settings.IngredientSettings;
+import nurgling.bots.tools.Ingredient;
+import nurgling.json.JSONArray;
+import nurgling.json.JSONObject;
+import nurgling.json.parser.JSONParser;
+import nurgling.json.parser.ParseException;
+import nurgling.tools.AreasID;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -10,20 +20,8 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
 import java.util.List;
-
-import haven.render.MixColor;
-import haven.res.ui.tt.highlighting.Highlighting;
-import haven.res.ui.tt.slot.Slotted;
-import haven.res.ui.tt.stackn.Stack;
-import nurgling.bots.settings.IngredientSettings;
-import nurgling.bots.tools.AItem;
-import nurgling.bots.tools.Ingredient;
-import nurgling.json.*;
-import nurgling.json.parser.JSONParser;
-import nurgling.json.parser.ParseException;
-import nurgling.tools.AreasID;
+import java.util.*;
 
 public class NConfiguration {
     public boolean showDebugInfo = false;
@@ -150,21 +148,70 @@ public class NConfiguration {
 
     }
 
+    public static class NInteger
+    {
+        Integer val;
+
+        public NInteger(Integer val) {
+            this.val = val;
+        }
+
+        void set(Integer val)
+        {
+            this.val = val;
+        }
+
+        public Integer get() {
+            return val;
+        }
+
+        @Override
+        public String toString() {
+            return val.toString();
+        }
+    }
+
+    public static class NDouble
+    {
+        Double val;
+
+        public NDouble(Double val) {
+            this.val = val;
+        }
+
+        void set(Double val)
+        {
+            this.val = val;
+        }
+
+        public Double get() {
+            return val;
+        }
+
+        @Override
+        public String toString() {
+            return val.toString();
+        }
+    }
+
     public class SheepsHerd{
-        public int totalSheeps = 4;
-
-        public int adultSheeps = 4;
-
-        public double milkq = 1.5;
-        public double milkquan = 1;
-
-        public double woolq = 0.33;
-        public double woolquan = 0.33;
-
-        public double meatq = 0;
-        public double meatquan = 0;
-
-        public int breedingGap = 10;
+        public NInteger totalSheeps = new NInteger(4);
+        public NInteger adultSheeps = new NInteger(4);
+        public NInteger breedingGap = new NInteger(10);
+        public NDouble milkq = new NDouble(1.5);
+        public NDouble woolq = new NDouble(0.33);
+        public NDouble meatq = new NDouble(0.);
+        public NDouble hideq = new NDouble(0.);
+        public NDouble meatquanth =new NDouble(0.);
+        public NDouble milkquanth =new NDouble(0.);
+        public NDouble woolquanth =new NDouble(0.);
+        public NDouble meatquan1 = new NDouble(0.);
+        public NDouble meatquan2 = new NDouble(0.);
+        public NDouble milkquan1 = new NDouble(0.);
+        public NDouble milkquan2 = new NDouble(0.);
+        public NDouble woolquan1 = new NDouble(0.);
+        public NDouble woolquan2 = new NDouble(0.);
+        public NDouble coverbreed = new NDouble(0.);
     }
 
     public class PigsHerd{
@@ -487,11 +534,18 @@ public class NConfiguration {
         jShepsHerd.put("adult_count",sheepsHerd.adultSheeps);
         jShepsHerd.put("breading_gap",sheepsHerd.breedingGap);
         jShepsHerd.put("mq",sheepsHerd.milkq);
-        jShepsHerd.put("m",sheepsHerd.milkquan);
         jShepsHerd.put("wq",sheepsHerd.woolq);
-        jShepsHerd.put("w",sheepsHerd.woolquan);
         jShepsHerd.put("meatq",sheepsHerd.meatq);
-        jShepsHerd.put("meat",sheepsHerd.meatquan);
+        jShepsHerd.put("hideq",sheepsHerd.hideq);
+        jShepsHerd.put("milkquan1",sheepsHerd.milkquan1);
+        jShepsHerd.put("milkquan2",sheepsHerd.milkquan2);
+        jShepsHerd.put("milkquanth",sheepsHerd.milkquanth);
+        jShepsHerd.put("woolquan1",sheepsHerd.woolquan1);
+        jShepsHerd.put("woolquan2",sheepsHerd.woolquan2);
+        jShepsHerd.put("woolquanth",sheepsHerd.woolquanth);
+        jShepsHerd.put("meatquan1",sheepsHerd.meatquan1);
+        jShepsHerd.put("meatquan2",sheepsHerd.meatquan2);
+        jShepsHerd.put("meatquanth",sheepsHerd.meatquanth);
         obj.put("sheepsHerd",jShepsHerd);
 
         JSONObject jCowsHerd = new JSONObject();
@@ -762,16 +816,23 @@ public class NConfiguration {
 
             JSONObject jShepsHerd = ( JSONObject ) jsonObject.get("sheepsHerd");
             if(jShepsHerd!=null) {
-                sheepsHerd.totalSheeps = Integer.valueOf(jShepsHerd.get("female_count").toString());
+                sheepsHerd.totalSheeps.set(Integer.valueOf(jShepsHerd.get("female_count").toString()));
                 if(jGoatHerd.get("adult_count")!=null)
-                    sheepsHerd.adultSheeps = Integer.valueOf(jShepsHerd.get("adult_count").toString());
-                sheepsHerd.breedingGap = Integer.valueOf(jShepsHerd.get("breading_gap").toString());
-                sheepsHerd.milkq = Double.valueOf(jShepsHerd.get("mq").toString());
-                sheepsHerd.milkquan = Double.valueOf(jShepsHerd.get("m").toString());
-                sheepsHerd.woolq = Double.valueOf(jShepsHerd.get("wq").toString());
-                sheepsHerd.woolquan = Double.valueOf(jShepsHerd.get("w").toString());
-                sheepsHerd.meatq = Double.valueOf(jShepsHerd.get("meatq").toString());
-                sheepsHerd.meatquan = Double.valueOf(jShepsHerd.get("meat").toString());
+                    sheepsHerd.adultSheeps.set(Integer.valueOf(jShepsHerd.get("adult_count").toString()));
+                sheepsHerd.breedingGap.set(Integer.valueOf(jShepsHerd.get("breading_gap").toString()));
+                sheepsHerd.milkq.set((jShepsHerd.get("mq")!=null?Double.parseDouble(jShepsHerd.get("mq").toString()):0.));
+                sheepsHerd.woolq.set((jShepsHerd.get("wq")!=null?Double.parseDouble(jShepsHerd.get("wq").toString()):0.));
+                sheepsHerd.meatq.set((jShepsHerd.get("meatq")!=null?Double.parseDouble(jShepsHerd.get("meatq").toString()):0.));
+                sheepsHerd.hideq.set((jShepsHerd.get("hideq")!=null?Double.parseDouble(jShepsHerd.get("hideq").toString()):0.));
+                sheepsHerd.milkquan1.set((jShepsHerd.get("milkquan1")!=null?Double.parseDouble(jShepsHerd.get("milkquan1").toString()):0.));
+                sheepsHerd.milkquan2.set((jShepsHerd.get("milkquan2")!=null?Double.parseDouble(jShepsHerd.get("milkquan2").toString()):0.));
+                sheepsHerd.milkquanth.set((jShepsHerd.get("milkquanth")!=null?Double.parseDouble(jShepsHerd.get("milkquanth").toString()):0.));
+                sheepsHerd.woolquan1.set((jShepsHerd.get("woolquan1")!=null?Double.parseDouble(jShepsHerd.get("woolquan1").toString()):0.));
+                sheepsHerd.woolquan2.set((jShepsHerd.get("woolquan2")!=null?Double.parseDouble(jShepsHerd.get("woolquan2").toString()):0.));
+                sheepsHerd.woolquanth.set((jShepsHerd.get("woolquanth")!=null?Double.parseDouble(jShepsHerd.get("woolquanth").toString()):0.));
+                sheepsHerd.meatquan1.set((jShepsHerd.get("meatquan1")!=null?Double.parseDouble(jShepsHerd.get("meatquan1").toString()):0.));
+                sheepsHerd.meatquan2.set((jShepsHerd.get("meatquan2")!=null?Double.parseDouble(jShepsHerd.get("meatquan2").toString()):0.));
+                sheepsHerd.meatquanth.set((jShepsHerd.get("meatquanth")!=null?Double.parseDouble(jShepsHerd.get("meatquanth").toString()):0.));
             }
 
             JSONObject jCowsHerd = ( JSONObject ) jsonObject.get("cowsHerd");

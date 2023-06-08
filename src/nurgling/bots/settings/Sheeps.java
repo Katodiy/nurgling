@@ -1,125 +1,73 @@
 package nurgling.bots.settings;
 
-import haven.Button;
 import haven.Label;
-import haven.TextEntry;
-import haven.Widget;
 import nurgling.NConfiguration;
+import nurgling.NSettinsSetD;
+import nurgling.NSettinsSetI;
 
 public class Sheeps extends Settings {
-    TextEntry totalsheeps;
-    TextEntry totalAdult;
-    TextEntry breedingGap;
-    TextEntry milkQuality;
-    TextEntry milkQuantity;
-    TextEntry woolQuality;
-    TextEntry woolQuantity;
-    TextEntry meatQuality;
-    TextEntry meatQuantity;
-    public Sheeps(){
-        Widget first, second, third;
+
+    NSettinsSetI totalsheeps;
+    NSettinsSetI totalAdult;
+    NSettinsSetI gap;
+    NSettinsSetD milkQuality;
+    NSettinsSetD meatQuality;
+    NSettinsSetD woolQuality;
+    NSettinsSetD hideQuality;
+    NSettinsSetD meatq1;
+    NSettinsSetD meatq2;
+    NSettinsSetD meatqth;
+    NSettinsSetD milk1;
+    NSettinsSetD milk2;
+    NSettinsSetD milkth;
+    NSettinsSetD wool1;
+    NSettinsSetD wool2;
+    NSettinsSetD woolth;
+    NSettinsSetD coverbreed;
+
+    public Sheeps() {
         prev = add(new Label("Main settings:"));
+        prev = totalsheeps = add(new NSettinsSetI("Total sheeps:", NConfiguration.getInstance().sheepsHerd.totalSheeps), prev.pos("bl").add(0, 5));
+        prev = totalAdult = add(new NSettinsSetI("Total adult:", NConfiguration.getInstance().sheepsHerd.adultSheeps), prev.pos("bl").add(0, 5));
+        prev = gap = add(new NSettinsSetI("Gap:", NConfiguration.getInstance().sheepsHerd.breedingGap), prev.pos("bl").add(0, 5));
+        prev = coverbreed = add(new NSettinsSetD("Breeding cover:", NConfiguration.getInstance().sheepsHerd.coverbreed), prev.pos("bl").add(0, 5));
+        prev = add(new Label("Rang settings:"), prev.pos("bl").add(0, 15));
+        prev = meatQuality = add(new NSettinsSetD("Meat:", NConfiguration.getInstance().sheepsHerd.meatq), prev.pos("bl").add(0, 5));
+        prev = milkQuality = add(new NSettinsSetD("Milk:", NConfiguration.getInstance().sheepsHerd.milkq), prev.pos("bl").add(0, 5));
+        prev = woolQuality = add(new NSettinsSetD("Wool:", NConfiguration.getInstance().sheepsHerd.woolq), prev.pos("bl").add(0, 5));
+        prev = hideQuality = add(new NSettinsSetD("Hide:", NConfiguration.getInstance().sheepsHerd.hideq), prev.pos("bl").add(0, 5));
+        prev = meatq1 = add(new NSettinsSetD("Meat quantity 1:", NConfiguration.getInstance().sheepsHerd.meatquan1), prev.pos("bl").add(0, 5));
+        prev = meatqth = add(new NSettinsSetD("Meat quantity TH:", NConfiguration.getInstance().sheepsHerd.meatquanth), prev.pos("bl").add(0, 5));
+        prev = meatq2 = add(new NSettinsSetD("Meat quantity 2:", NConfiguration.getInstance().sheepsHerd.meatquan2), prev.pos("bl").add(0, 5));
+        prev = milk1 = add(new NSettinsSetD("Milk quantity 1:", NConfiguration.getInstance().sheepsHerd.meatquan1), prev.pos("bl").add(0, 5));
+        prev = milkth = add(new NSettinsSetD("Milk quantity TH:", NConfiguration.getInstance().sheepsHerd.meatquanth), prev.pos("bl").add(0, 5));
+        prev = milk2 = add(new NSettinsSetD("Milk quantity 2:", NConfiguration.getInstance().sheepsHerd.meatquan2), prev.pos("bl").add(0, 5));
+        prev = wool1 = add(new NSettinsSetD("Wool quantity 1:", NConfiguration.getInstance().sheepsHerd.woolquan1), prev.pos("bl").add(0, 5));
+        prev = woolth = add(new NSettinsSetD("Wool quantity TH:", NConfiguration.getInstance().sheepsHerd.woolquanth), prev.pos("bl").add(0, 5));
+        prev = wool2 = add(new NSettinsSetD("Wool quantity 2:", NConfiguration.getInstance().sheepsHerd.woolquan2), prev.pos("bl").add(0, 5));
 
-        prev = first = add(new Label("Total sheeps(female):"), prev.pos("bl").adds(0, 5));
-        second = totalsheeps= add(new TextEntry(50,""), first.pos("ur").adds(5, 2));
-
-        third= add(new Button(50,"Set"){
-            @Override
-            public void click() {
-                NConfiguration.getInstance().sheepsHerd.totalSheeps = Integer.parseInt(totalsheeps.text());
-            }
-        }, second.pos("ur").adds(5, -2));
-
-        prev = first = add(new Label("Breeding Gap:"), first.pos("bl").adds(0, 15));
-        second = breedingGap = add(new TextEntry(50,""), second.pos("bl").adds(0, 9));
-        third= add(new Button(50,"Set"){
-            @Override
-            public void click() {
-                NConfiguration.getInstance().sheepsHerd.breedingGap = Integer.parseInt(breedingGap.text());
-            }
-        }, third.pos("bl").adds(0, 5));
-
-        prev = first = add(new Label("Total with milk:"), first.pos("bl").adds(0, 15));
-        second = totalAdult = add(new TextEntry(50,""), second.pos("bl").adds(0, 9));
-        third= add(new Button(50,"Set"){
-            @Override
-            public void click() {
-                NConfiguration.getInstance().sheepsHerd.adultSheeps = Integer.parseInt(totalAdult.text());
-            }
-        }, third.pos("bl").adds(0, 5));
-
-        prev = add(new Label("Quality constants:"), prev.pos("bl").adds(0, 25));
-
-        prev = first = add(new Label("Milk quality:"), prev.pos("bl").adds(0, 5));
-        second = milkQuality = add(new TextEntry(50,""), first.pos("ur").adds(15, 2));
-        third= add(new Button(50,"Set"){
-            @Override
-            public void click() {
-                NConfiguration.getInstance().sheepsHerd.milkq = Double.parseDouble(milkQuality.text());
-            }
-        }, second.pos("ur").adds(5, -2));
-
-        prev = first = add(new Label("Milk Quantity:"), first.pos("bl").adds(0, 15));
-        second = milkQuantity = add(new TextEntry(50,""), second.pos("bl").adds(0, 9));
-        third= add(new Button(50,"Set"){
-            @Override
-            public void click() {
-                NConfiguration.getInstance().sheepsHerd.milkquan = Double.parseDouble(milkQuantity.text());
-            }
-        }, third.pos("bl").adds(0, 5));
-
-        prev = first = add(new Label("Wool Quality:"), first.pos("bl").adds(0, 15));
-        second = woolQuality = add(new TextEntry(50,""), second.pos("bl").adds(0, 9));
-        third= add(new Button(50,"Set"){
-            @Override
-            public void click() {
-                NConfiguration.getInstance().sheepsHerd.woolq = Double.parseDouble(woolQuality.text());
-            }
-        }, third.pos("bl").adds(0, 5));
-
-        prev = first = add(new Label("Wool Quantity:"), first.pos("bl").adds(0, 15));
-        second = woolQuantity = add(new TextEntry(50,""), second.pos("bl").adds(0, 9));
-        third= add(new Button(50,"Set"){
-            @Override
-            public void click() {
-                NConfiguration.getInstance().sheepsHerd.woolquan = Double.parseDouble(woolQuantity.text());
-            }
-        }, third.pos("bl").adds(0, 5));
-
-        prev = first = add(new Label("Meat Quality:"), first.pos("bl").adds(0, 15));
-        second = meatQuality = add(new TextEntry(50,""), second.pos("bl").adds(0, 9));
-        third= add(new Button(50,"Set"){
-            @Override
-            public void click() {
-                NConfiguration.getInstance().sheepsHerd.meatq = Double.parseDouble(meatQuality.text());
-            }
-        }, third.pos("bl").adds(0, 5));
-
-        prev = first = add(new Label("Meat Quantity:"), first.pos("bl").adds(0, 15));
-        second = meatQuantity = add(new TextEntry(50,""), second.pos("bl").adds(0, 9));
-        third= add(new Button(50,"Set"){
-            @Override
-            public void click() {
-                NConfiguration.getInstance().sheepsHerd.meatquan = Double.parseDouble(meatQuantity.text());
-            }
-        }, third.pos("bl").adds(0, 5));
         pack();
     }
 
     @Override
     public void show() {
-
-        if(meatQuantity!=null) {
-            totalsheeps.settext(String.valueOf(NConfiguration.getInstance().sheepsHerd.totalSheeps));
-            totalAdult.settext(String.valueOf(NConfiguration.getInstance().sheepsHerd.adultSheeps));
-            breedingGap.settext(String.valueOf(NConfiguration.getInstance().sheepsHerd.breedingGap));
-            milkQuality.settext(String.valueOf(NConfiguration.getInstance().sheepsHerd.milkq));
-            milkQuantity.settext(String.valueOf(NConfiguration.getInstance().sheepsHerd.milkquan));
-            meatQuality.settext(String.valueOf(NConfiguration.getInstance().sheepsHerd.meatq));
-            meatQuantity.settext(String.valueOf(NConfiguration.getInstance().sheepsHerd.meatquan));
-            woolQuality.settext(String.valueOf(NConfiguration.getInstance().sheepsHerd.woolq));
-            woolQuantity.settext(String.valueOf(NConfiguration.getInstance().sheepsHerd.woolquan));
-        }
+        totalsheeps.setText(String.valueOf(NConfiguration.getInstance().sheepsHerd.totalSheeps.get()));
+        totalAdult.setText(String.valueOf(NConfiguration.getInstance().sheepsHerd.adultSheeps.get()));
+        gap.setText(String.valueOf(NConfiguration.getInstance().sheepsHerd.breedingGap.get()));
+        coverbreed.setText(String.valueOf(NConfiguration.getInstance().sheepsHerd.coverbreed.get()));
+        milkQuality.setText(String.valueOf(NConfiguration.getInstance().sheepsHerd.milkq.get()));
+        meatQuality.setText(String.valueOf(NConfiguration.getInstance().sheepsHerd.meatq.get()));
+        woolQuality.setText(String.valueOf(NConfiguration.getInstance().sheepsHerd.woolq.get()));
+        hideQuality.setText(String.valueOf(NConfiguration.getInstance().sheepsHerd.hideq.get()));
+        meatq1.setText(String.valueOf(NConfiguration.getInstance().sheepsHerd.meatquan1.get()));
+        meatq2.setText(String.valueOf(NConfiguration.getInstance().sheepsHerd.meatquan2.get()));
+        meatqth.setText(String.valueOf(NConfiguration.getInstance().sheepsHerd.meatquanth.get()));
+        milk1.setText(String.valueOf(NConfiguration.getInstance().sheepsHerd.milkquan1.get()));
+        milk2.setText(String.valueOf(NConfiguration.getInstance().sheepsHerd.milkquan2.get()));
+        milkth.setText(String.valueOf(NConfiguration.getInstance().sheepsHerd.milkquanth.get()));
+        wool1.setText(String.valueOf(NConfiguration.getInstance().sheepsHerd.woolquan1.get()));
+        wool2.setText(String.valueOf(NConfiguration.getInstance().sheepsHerd.woolquan2.get()));
+        woolth.setText(String.valueOf(NConfiguration.getInstance().sheepsHerd.woolquanth.get()));
         super.show();
     }
 }
