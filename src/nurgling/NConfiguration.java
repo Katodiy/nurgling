@@ -46,6 +46,11 @@ public class NConfiguration {
     public boolean restart = true;
     public String nomadPath = "";
     public String village;
+
+    public String discordWebhookUrl;
+    public String discordWebhookUsername;
+    public String discordWebhookIcon;
+
     public boolean showCropStage = false;
     public boolean autoPicking = false;
     public boolean nightVision = false;
@@ -755,6 +760,11 @@ public class NConfiguration {
         obj.put ( "rings", ringsarr );
         obj.put ( "nomad", nomadPath );
         obj.put ( "village", village);
+
+        obj.put ( "discordWebhookUrl", discordWebhookUrl);
+        obj.put ( "discordWebhookUsername", discordWebhookUsername);
+        obj.put ( "discordWebhookIcon", discordWebhookIcon);
+
         obj.put ( "showCropStage", showCropStage);
         obj.put ( "autoPicking", autoPicking);
         obj.put ( "nightVision", nightVision);
@@ -1064,6 +1074,9 @@ public class NConfiguration {
                 this.msg = ( String ) jsonObject.get ( "msg" );
             }
             village = ( String ) jsonObject.get ( "village" );
+            discordWebhookUrl = ( String ) jsonObject.get ( "discordWebhookUrl" );
+            discordWebhookUsername = ( String ) jsonObject.get ( "discordWebhookUsername" );
+            discordWebhookIcon = ( String ) jsonObject.get ( "discordWebhookIcon" );
             JSONArray rings_arr = ( JSONArray ) jsonObject.get ( "rings" );
             if(rings_arr!=null) {
                 Iterator<JSONObject> rings_it = rings_arr.iterator();
