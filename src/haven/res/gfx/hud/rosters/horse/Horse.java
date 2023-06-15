@@ -3,11 +3,10 @@
 
 package haven.res.gfx.hud.rosters.horse;
 
-import haven.*;
-import haven.res.ui.croster.*;
+import haven.Coord;
+import haven.GOut;
+import haven.res.ui.croster.Entry;
 import nurgling.NConfiguration;
-
-import java.util.*;
 
 @haven.FromResource(name = "gfx/hud/rosters/horse", version = 62)
 public class Horse extends Entry {
@@ -73,8 +72,20 @@ public class Horse extends Entry {
 	return(super.mousedown(c, button));
     }
 	public double rang() {
-		NConfiguration.HorsesHerd herd = NConfiguration.getInstance().horsesHerd;
-		return Math.round(Math.min(stam,32)/(32.)*(mb*herd.metabolism + end*herd.endurance));
+		if(NConfiguration.getInstance().selected_horsesHerd.isEmpty())
+			return 0;
+
+		NConfiguration.HorsesHerd herd = NConfiguration.getInstance().horsesHerd.get(NConfiguration.getInstance().selected_horsesHerd);
+
+		double ql = (q > (seedq - herd.breedingGap.get())) ? (q + seedq - herd.breedingGap.get()) / 2. : q + ((seedq - herd.breedingGap.get()) - q) * herd.coverbreed.get();
+		double m = ql * herd.meatq.get() * meatq / 100.;
+		double qm = meat * herd.meatquan1.get() + ((meat > herd.meatquanth.get()) ? ((meat - herd.meatquanth.get()) * (herd.meatquan2.get() - herd.meatquan1.get())) : 0);
+		double _stam = milk * herd.stam1.get() + ((milk > herd.stamth.get()) ? ((milk - herd.stamth.get()) * (herd.stam2.get() - herd.stam1.get())) : 0);
+		double hide = ql * herd.hideq.get() * hideq / 100.;
+		double _end = herd.enduran.get() * end;
+		double _meta = herd.meta.get() * mb;
+
+		return Math.round((m + qm + _stam + _meta + _end + hide) * 10) / 10.;
 	}
 }
 

@@ -9,8 +9,6 @@ import nurgling.tools.AreasID;
 import nurgling.tools.Finder;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
 import java.util.function.Predicate;
 
 public class AnimalMilk<C extends Entry> implements Action {
@@ -22,39 +20,24 @@ public class AnimalMilk<C extends Entry> implements Action {
         NUtils.waitEvent(() -> NUtils.getGameUI().getWindow("Cattle Roster") != null, 500);
         RosterWindow w = (RosterWindow) NUtils.getGameUI().getWindow("Cattle Roster");
         NUtils.waitEvent(w::allLoaded, 1000);
-        w.show(cattleRoster);
         ArrayList<Gob> gobs = Finder.findObjectsInArea(animal,Finder.findNearestMark(current));
         ArrayList<Gob> targets = new ArrayList<>();
 
+        while(NUtils.memorize(gobs,gui,w,cattleRoster));
+
         for (Gob gob : gobs) {
-            if (gob.getattr(CattleId.class) == null && !gob.isTag(NGob.Tags.knocked)) {
-                new PathFinder(gui, gob, PathFinder.Type.dyn).run();
-                new SelectFlowerAction(gob, "Memorize", SelectFlowerAction.Types.Gob).run(gui);
-                NUtils.waitEvent(() -> gob.getattr(CattleId.class) != null, 5000);
-                NUtils.waitEvent(() -> w.roster(cattleRoster).entries.get(gob.getattr(CattleId.class).id) != null, 5000);
-                NUtils.waitEvent(() -> w.roster(cattleRoster).entries.get(gob.getattr(CattleId.class).id).getClass() == cattleRoster, 5000);
-            }
             if (gob.getattr(CattleId.class) != null) {
                 if (pred.test(gob)) {
                     targets.add(gob);
                 }
             }
         }
-        int count = 0;
+        NConfiguration.NInteger count = new NConfiguration.NInteger(0);
         Gob barrel = Finder.findObjectInArea(new NAlias("barrel"),10000,Finder.findSubArea(current,sub));
         Gob cistern = Finder.findObjectInArea(new NAlias("cistern"),10000,Finder.findSubArea(current,sub));
         new LiftObject(barrel).run(gui);
-        for(Gob gob : targets){
-
-            new PathFinder(gui, gob, PathFinder.Type.dyn).run();
-            NUtils.activate(gob);
-            Thread.sleep(1000);
-            count+=1;
-            if(count==4){
-                new PathFinder(gui, cistern, PathFinder.Type.dyn).run();
-                NUtils.activate(cistern);
-                NUtils.waitEvent(()->barrel.isTag(NGob.Tags.free),50);
-            }
+        while(!targets.isEmpty()) {
+            milk(targets, gui, cistern, barrel, count);
         }
         if(!barrel.isTag(NGob.Tags.free)) {
             new PathFinder(gui, cistern, PathFinder.Type.dyn).run();
@@ -64,6 +47,21 @@ public class AnimalMilk<C extends Entry> implements Action {
         new PlaceLifted(Finder.findSubArea(current,sub),barrel.getHitBox(), new NAlias(barrel.getResName())).run(gui);
 
         return new Results(Results.Types.SUCCESS);
+    }
+
+    void milk(ArrayList<Gob> targets, NGameUI gui, Gob cistern, Gob barrel, NConfiguration.NInteger count) throws InterruptedException {
+        targets.sort(NUtils.d_comp);
+        Gob gob = targets.get(0);
+        new PathFinder(gui, gob, PathFinder.Type.dyn).run();
+        NUtils.activate(gob);
+        Thread.sleep(1000);
+        count.set(count.get()+1);
+        if(count.get()==4){
+            new PathFinder(gui, cistern, PathFinder.Type.dyn).run();
+            NUtils.activate(cistern);
+            NUtils.waitEvent(()->barrel.isTag(NGob.Tags.free),50);
+        }
+        targets.remove(gob);
     }
 
     public <C extends Entry> AnimalMilk(NAlias animal, AreasID current, AreasID sub, Class<C> c, Predicate<Gob> pred) {

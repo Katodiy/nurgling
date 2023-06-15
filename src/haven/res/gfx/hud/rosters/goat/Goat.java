@@ -3,11 +3,10 @@
 
 package haven.res.gfx.hud.rosters.goat;
 
-import haven.*;
-import haven.res.ui.croster.*;
+import haven.Coord;
+import haven.GOut;
+import haven.res.ui.croster.Entry;
 import nurgling.NConfiguration;
-
-import java.util.*;
 
 @haven.FromResource(name = "gfx/hud/rosters/goat", version = 63)
 public class Goat extends Entry {
@@ -72,12 +71,21 @@ public class Goat extends Entry {
     }
 
 	public double rang() {
-		NConfiguration.GoatsHerd herd = NConfiguration.getInstance().goatsHerd;
-		double q1 = q;
-		q1 = ((q + herd.breedingGap) > seedq) ? seedq - herd.breedingGap : q;
-		return Math.round(herd.milkq * q1 * milkq / 100 + herd.milkquan * milk + herd.meatq * q1 * meatq / 100 + herd.meatquan * meat + herd.woolq * q1 * woolq / 100 + herd.woolquan * wool + (seedq - q - herd.breedingGap));
+		if(NConfiguration.getInstance().selected_goatsHerd.isEmpty())
+			return 0;
+		NConfiguration.GoatsHerd herd = NConfiguration.getInstance().goatsHerd.get(NConfiguration.getInstance().selected_goatsHerd);
+
+		double ql = (q > (seedq - herd.breedingGap.get())) ? (q + seedq - herd.breedingGap.get()) / 2. : q + ((seedq - herd.breedingGap.get()) - q) * herd.coverbreed.get();
+		double m = ql * herd.meatq.get() * meatq / 100.;
+		double qm = meat * herd.meatquan1.get() + ((meat > herd.meatquanth.get()) ? ((meat - herd.meatquanth.get()) * (herd.meatquan2.get() - herd.meatquan1.get())) : 0);
+		double _milk = ql * herd.milkq.get() * milkq / 100.;
+		double qmilk = milk * herd.milkquan1.get() + ((milk > herd.milkquanth.get()) ? ((milk - herd.milkquanth.get()) * (herd.milkquan2.get() - herd.milkquan1.get())) : 0);
+		double _wool = ql * herd.woolq.get() * woolq / 100.;
+		double qwool = wool * herd.woolquan1.get() + ((wool > herd.woolquanth.get()) ? ((wool - herd.woolquanth.get()) * (herd.woolquan2.get() - herd.woolquan1.get())) : 0);
+		double hide = ql * herd.hideq.get() * hideq / 100.;
+
+		return Math.round((m + qm + _milk + qmilk + _wool + qwool + hide) * 10) / 10.;
 	}
-	double rang;
 }
 
 /* >wdg: GoatRoster */

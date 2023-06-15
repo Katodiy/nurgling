@@ -3,11 +3,10 @@
 
 package haven.res.gfx.hud.rosters.pig;
 
-import haven.*;
-import haven.res.ui.croster.*;
+import haven.Coord;
+import haven.GOut;
+import haven.res.ui.croster.Entry;
 import nurgling.NConfiguration;
-
-import java.util.*;
 
 @haven.FromResource(name = "gfx/hud/rosters/pig", version = 62)
 public class Pig extends Entry {
@@ -72,11 +71,18 @@ public class Pig extends Entry {
     }
 
 	public double rang() {
-		NConfiguration.PigsHerd herd = NConfiguration.getInstance().pigsHerd;
-		double q1 = q;
-		q1 = ((q + herd.breedingGap) > seedq) ? seedq - herd.breedingGap : q;
-		return Math.round(herd.meatq * q1 * meatq / 100 + herd.meatquan * meat +  herd.trufSnout * prc + ((herd.meatq + herd.meatquan)!=0?1:0)*(seedq - q - herd.breedingGap));
-	}
+		if(NConfiguration.getInstance().selected_pigsHerd.isEmpty())
+			return 0;
+
+		NConfiguration.PigsHerd herd = NConfiguration.getInstance().pigsHerd.get(NConfiguration.getInstance().selected_pigsHerd);
+
+		double ql = (q > (seedq - herd.breedingGap.get())) ? (q + seedq - herd.breedingGap.get()) / 2. : q + ((seedq - herd.breedingGap.get()) - q) * herd.coverbreed.get();
+		double m = ql * herd.meatq.get() * meatq / 100.;
+		double qm = meat * herd.meatquan1.get() + ((meat > herd.meatquanth.get()) ? ((meat - herd.meatquanth.get()) * (herd.meatquan2.get() - herd.meatquan1.get())) : 0);
+		double qtruf = prc * herd.trufquan1.get() + ((prc > herd.trufquanth.get()) ? ((prc - herd.trufquanth.get()) * (herd.trufquan2.get() - herd.trufquan1.get())) : 0);
+		double hide = ql * herd.hideq.get() * hideq / 100.;
+
+		return Math.round((m + qm + qtruf + hide) * 10) / 10.;	}
 }
 
 /* >wdg: PigRoster */

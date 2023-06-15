@@ -1,103 +1,142 @@
 package nurgling.bots.settings;
 
-import haven.Button;
+import haven.CheckBox;
 import haven.Label;
-import haven.TextEntry;
-import haven.Widget;
+import haven.UI;
 import nurgling.NConfiguration;
+import nurgling.NEntryListSet;
+import nurgling.NSettinsSetD;
+import nurgling.NSettinsSetI;
+
+import java.util.ArrayList;
 
 public class Cows extends Settings {
-    TextEntry totalcows;
-    TextEntry totalAdult;
-    TextEntry breedingGap;
-    TextEntry milkQuality;
-    TextEntry milkQuantity;
-    TextEntry meatQuality;
-    TextEntry meatQuantity;
-    public Cows(){
-        Widget first, second, third;
-        prev = add(new Label("Main settings:"));
+    NEntryListSet els;
+    NSettinsSetI totalAdult;
+    NSettinsSetI gap;
+    NSettinsSetD milkQuality;
+    NSettinsSetD meatQuality;
+    NSettinsSetD woolQuality;
+    NSettinsSetD hideQuality;
+    NSettinsSetD meatq1;
+    NSettinsSetD meatq2;
+    NSettinsSetD meatqth;
+    NSettinsSetD milk1;
+    NSettinsSetD milk2;
+    NSettinsSetD milkth;
+    NSettinsSetD wool1;
+    NSettinsSetD wool2;
+    NSettinsSetD woolth;
+    NSettinsSetD coverbreed;
 
-        prev = first = add(new Label("Total cows(female):"), prev.pos("bl").adds(0, 5));
-        second = totalcows = add(new TextEntry(50,""), first.pos("ur").adds(5, 2));
-
-        third= add(new Button(50,"Set"){
+    CheckBox ic;
+    CheckBox dk;
+    public Cows() {
+        prev = els = add(new NEntryListSet(NConfiguration.getInstance().cowsHerd.keySet()) {
             @Override
-            public void click() {
-                NConfiguration.getInstance().cowsHerd.totalCows = Integer.parseInt(totalcows.text());
+            public void nsave() {
+                String name = this.get();
+                if(!name.isEmpty()) {
+                    NConfiguration.CowsHerd gh = new NConfiguration.CowsHerd();
+                    NConfiguration.getInstance().cowsHerd.put(this.get(),gh);
+                    totalAdult.setVal(gh.adultCows);
+                    gap.setVal(gh.breedingGap);
+                    coverbreed.setVal(gh.coverbreed);
+                    meatQuality.setVal(gh.meatq);
+                    milkQuality.setVal(gh.milkq);
+                    hideQuality.setVal(gh.hideq);
+                    meatq1.setVal(gh.meatquan1);
+                    meatqth.setVal(gh.meatquanth);
+                    meatq2.setVal(gh.meatquan2);
+                    milk1.setVal(gh.milkquan1);
+                    milkth.setVal(gh.milkquanth);
+                    milk2.setVal(gh.milkquan2);
+                    ic.set(gh.ignoreChildren);
+                    dk.set(gh.disable_killing);
+                }
             }
-        }, second.pos("ur").adds(5, -2));
 
-        prev = first = add(new Label("Breeding Gap:"), first.pos("bl").adds(0, 15));
-        second = breedingGap = add(new TextEntry(50,""), second.pos("bl").adds(0, 9));
-        third= add(new Button(50,"Set"){
             @Override
-            public void click() {
-                NConfiguration.getInstance().cowsHerd.breedingGap = Integer.parseInt(breedingGap.text());
+            public void nchange() {
+                NConfiguration.getInstance().selected_cowsHerd = this.get();
+                NConfiguration.CowsHerd gh = NConfiguration.getInstance().cowsHerd.get(NConfiguration.getInstance().selected_cowsHerd);
+                totalAdult.setVal(gh.adultCows);
+                gap.setVal(gh.breedingGap);
+                coverbreed.setVal(gh.coverbreed);
+                meatQuality.setVal(gh.meatq);
+                milkQuality.setVal(gh.milkq);
+                hideQuality.setVal(gh.hideq);
+                meatq1.setVal(gh.meatquan1);
+                meatqth.setVal(gh.meatquanth);
+                meatq2.setVal(gh.meatquan2);
+                milk1.setVal(gh.milkquan1);
+                milkth.setVal(gh.milkquanth);
+                milk2.setVal(gh.milkquan2);
             }
-        }, third.pos("bl").adds(0, 5));
 
-        prev = first = add(new Label("Total with milk:"), first.pos("bl").adds(0, 15));
-        second = totalAdult = add(new TextEntry(50,""), second.pos("bl").adds(0, 9));
-        third= add(new Button(50,"Set"){
             @Override
-            public void click() {
-                NConfiguration.getInstance().cowsHerd.adultCows = Integer.parseInt(totalAdult.text());
+            public void ndelete() {
+                NConfiguration.getInstance().cowsHerd.remove(NConfiguration.getInstance().selected_cowsHerd);
+                if (!NConfiguration.getInstance().cowsHerd.isEmpty()) {
+                    NConfiguration.getInstance().selected_cowsHerd = (new ArrayList<>(NConfiguration.getInstance().cowsHerd.keySet())).get(0);
+                    update(NConfiguration.getInstance().selected_cowsHerd);
+                } else {
+                    NConfiguration.getInstance().selected_cowsHerd = "";
+                    update("");
+                }
             }
-        }, third.pos("bl").adds(0, 5));
-
-        prev = add(new Label("Quality constants:"), prev.pos("bl").adds(0, 25));
-
-        prev = first = add(new Label("Milk quality:"), prev.pos("bl").adds(0, 5));
-        second = milkQuality = add(new TextEntry(50,""), first.pos("ur").adds(15, 2));
-        third= add(new Button(50,"Set"){
+        });
+        prev = add(new Label("Main settings:"), prev.pos("bl").add(0, 5));
+        ic = (CheckBox)(prev = add (new CheckBox("Save cubs"){
             @Override
-            public void click() {
-                NConfiguration.getInstance().cowsHerd.milkq = Double.parseDouble(milkQuality.text());
+            public void changed(boolean val) {
+                if(!NConfiguration.getInstance().selected_cowsHerd.isEmpty())
+                    NConfiguration.getInstance().cowsHerd.get(NConfiguration.getInstance().selected_cowsHerd).ignoreChildren = val;
             }
-        }, second.pos("ur").adds(5, -2));
+        }, prev.pos("bl").add(0, UI.scale(5))));
 
-        prev = first = add(new Label("Milk Quantity:"), first.pos("bl").adds(0, 15));
-        second = milkQuantity = add(new TextEntry(50,""), second.pos("bl").adds(0, 9));
-        third= add(new Button(50,"Set"){
+        if(!NConfiguration.getInstance().selected_cowsHerd.isEmpty()) {
+            ic.set(NConfiguration.getInstance().cowsHerd.get(NConfiguration.getInstance().selected_cowsHerd).ignoreChildren);
+        }
+        dk = (CheckBox)(prev = add (new CheckBox("Disable slaughting"){
             @Override
-            public void click() {
-                NConfiguration.getInstance().cowsHerd.milkquan = Double.parseDouble(milkQuantity.text());
+            public void changed(boolean val) {
+                if(!NConfiguration.getInstance().selected_cowsHerd.isEmpty()) {
+                    NConfiguration.getInstance().cowsHerd.get(NConfiguration.getInstance().selected_cowsHerd).disable_killing = val;
+                }
             }
-        }, third.pos("bl").adds(0, 5));
+        }, prev.pos("bl").add(0, UI.scale(5))));
+        if(!NConfiguration.getInstance().selected_cowsHerd.isEmpty()) {
+            dk.set(NConfiguration.getInstance().cowsHerd.get(NConfiguration.getInstance().selected_cowsHerd).disable_killing);
+        }
 
-        prev = first = add(new Label("Meat Quality:"), first.pos("bl").adds(0, 15));
-        second = meatQuality = add(new TextEntry(50,""), second.pos("bl").adds(0, 9));
-        third= add(new Button(50,"Set"){
-            @Override
-            public void click() {
-                NConfiguration.getInstance().cowsHerd.meatq = Double.parseDouble(meatQuality.text());
-            }
-        }, third.pos("bl").adds(0, 5));
+        prev = totalAdult = add(new NSettinsSetI("Total adult:"), prev.pos("bl").add(0, 5));
+        prev = gap = add(new NSettinsSetI("Gap:"), prev.pos("bl").add(0, 5));
+        prev = coverbreed = add(new NSettinsSetD("Overbreed ( 0.0 ... 0.3 ):"), prev.pos("bl").add(0, 5));
+        prev = add(new Label("Rank settings:"), prev.pos("bl").add(0, 15));
+        prev = add(new Label("All coefficients are arbitrary, only relations between them matters."), prev.pos("bl").add(0, 5));
+        prev = meatQuality = add(new NSettinsSetD("Meat:"), prev.pos("bl").add(0, 5));
+        prev = milkQuality = add(new NSettinsSetD("Milk:"), prev.pos("bl").add(0, 5));
+        prev = woolQuality = add(new NSettinsSetD("Wool:"), prev.pos("bl").add(0, 5));
+        prev = hideQuality = add(new NSettinsSetD("Hide:"), prev.pos("bl").add(0, 5));
+        prev = add(new Label("Follow stats may be tracked with different coefficients below and above threshold. If you want to ignore threshold, set both coefficients equal."), prev.pos("bl").add(0, 5));
+        prev = add(new Label("If you want to track stat up to threshold, but ignore stat gain over threshold simply set second coefficient to zero."), prev.pos("bl").add(0, 5));
+        prev = meatq1 = add(new NSettinsSetD("Meat quantity 1:"), prev.pos("bl").add(0, 5));
+        prev = meatqth = add(new NSettinsSetD("Meat quantity threshold:"), prev.pos("bl").add(0, 5));
+        prev = meatq2 = add(new NSettinsSetD("Meat quantity 2:"), prev.pos("bl").add(0, 5));
+        prev = milk1 = add(new NSettinsSetD("Milk quantity 1:"), prev.pos("bl").add(0, 5));
+        prev = milkth = add(new NSettinsSetD("Milk quantity threshold:"), prev.pos("bl").add(0, 5));
+        prev = milk2 = add(new NSettinsSetD("Milk quantity 2:"), prev.pos("bl").add(0, 5));
+        prev = wool1 = add(new NSettinsSetD("Wool quantity 1:"), prev.pos("bl").add(0, 5));
+        prev = woolth = add(new NSettinsSetD("Wool quantity threshold:"), prev.pos("bl").add(0, 5));
+        prev = wool2 = add(new NSettinsSetD("Wool quantity 2:"), prev.pos("bl").add(0, 5));
 
-        prev = first = add(new Label("Meat Quantity:"), first.pos("bl").adds(0, 15));
-        second = meatQuantity = add(new TextEntry(50,""), second.pos("bl").adds(0, 9));
-        third= add(new Button(50,"Set"){
-            @Override
-            public void click() {
-                NConfiguration.getInstance().cowsHerd.meatquan = Double.parseDouble(meatQuantity.text());
-            }
-        }, third.pos("bl").adds(0, 5));
         pack();
     }
 
     @Override
     public void show() {
-
-        if(meatQuantity!=null) {
-            totalcows.settext(String.valueOf(NConfiguration.getInstance().cowsHerd.totalCows));
-            totalAdult.settext(String.valueOf(NConfiguration.getInstance().cowsHerd.adultCows));
-            breedingGap.settext(String.valueOf(NConfiguration.getInstance().cowsHerd.breedingGap));
-            milkQuality.settext(String.valueOf(NConfiguration.getInstance().cowsHerd.milkq));
-            milkQuantity.settext(String.valueOf(NConfiguration.getInstance().cowsHerd.milkquan));
-            meatQuality.settext(String.valueOf(NConfiguration.getInstance().cowsHerd.meatq));
-            meatQuantity.settext(String.valueOf(NConfiguration.getInstance().cowsHerd.meatquan));
-        }
+        els.update(NConfiguration.getInstance().selected_cowsHerd);
         super.show();
     }
 }

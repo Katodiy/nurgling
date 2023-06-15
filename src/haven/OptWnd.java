@@ -25,12 +25,12 @@
  */
 
 package haven;
-import haven.res.lib.itemtex.ItemTex;
+
+import haven.render.Lighting;
 import nurgling.*;
 import nurgling.bots.settings.*;
 import nurgling.tools.AreasID;
 
-import haven.render.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -1815,19 +1815,7 @@ public class OptWnd extends Window {
 
 			public BotSettings() {
 
-				prev = add(new Label("Village chat name"));
-				TextEntry name = new TextEntry(110,"");
-				if(NConfiguration.getInstance().village!=null) {
-					name.settext(NConfiguration.getInstance().village);
-				}
-				prev = add(name, prev.pos("bl").add(0,5));
-				prev = add(new Button(50,"Set"){
-					@Override
-					public void click() {
-						NConfiguration.getInstance().village = name.text();
-					}
-				}, prev.pos("bl").add(0,5));
-				prev = add(new Dropbox<String>(100, 5, 16) {
+				prev = add(new Dropbox<String>(UI.scale(100), UI.scale(5), UI.scale(16)) {
 					@Override
 					protected String listitem(int i) {
 						return names.get(i);
@@ -1855,7 +1843,7 @@ public class OptWnd extends Window {
 								((NOptWnd)parent.parent).needUpdate = true;
 							}
 					}
-				}, prev.pos("bl").add(0,5));
+				});
 
 
 				NOper l = (w)->{
@@ -1875,6 +1863,7 @@ public class OptWnd extends Window {
 				l.addWidget(new Cows());
 				l.addWidget(new Pigs());
 				l.addWidget(new Horses());
+				l.addWidget(new Communication());
 
 				for(Widget w: settings)
 					w.hide();

@@ -21,18 +21,12 @@ public class AnimalWool<C extends Entry> implements Action {
         NUtils.waitEvent(() -> NUtils.getGameUI().getWindow("Cattle Roster") != null, 500);
         RosterWindow w = (RosterWindow) NUtils.getGameUI().getWindow("Cattle Roster");
         NUtils.waitEvent(w::allLoaded, 1000);
-        w.show(cattleRoster);
         ArrayList<Gob> gobs = Finder.findObjectsInArea(animal,Finder.findNearestMark(current));
         ArrayList<Gob> targets = new ArrayList<>();
 
+        while(NUtils.memorize(gobs,gui,w,cattleRoster));
+
         for (Gob gob : gobs) {
-            if (gob.getattr(CattleId.class) == null && !gob.isTag(NGob.Tags.knocked)) {
-                new PathFinder(gui, gob, PathFinder.Type.dyn).run();
-                new SelectFlowerAction(gob, "Memorize", SelectFlowerAction.Types.Gob).run(gui);
-                NUtils.waitEvent(() -> gob.getattr(CattleId.class) != null, 5000);
-                NUtils.waitEvent(() -> w.roster(cattleRoster).entries.get(gob.getattr(CattleId.class).id) != null, 5000);
-                NUtils.waitEvent(() -> w.roster(cattleRoster).entries.get(gob.getattr(CattleId.class).id).getClass() == cattleRoster, 5000);
-            }
             if (gob.getattr(CattleId.class) != null) {
                 if (gob.isTag(NGob.Tags.wool)) {
                     targets.add(gob);
@@ -40,16 +34,22 @@ public class AnimalWool<C extends Entry> implements Action {
             }
         }
 
-        for(Gob gob : targets){
-            if(gui.getInventory().getFreeSpace()<5)
-                new TransferToPile(Finder.findSubArea(current,sub),NHitBox.get(),new NAlias("wool"),new NAlias("wool")).run(gui);
-            new PathFinder(gui, gob, PathFinder.Type.dyn).run();
-            new SelectFlowerAction(gob,"Shear wool", SelectFlowerAction.Types.Gob).run(gui);
-            NUtils.waitEvent(()->NUtils.isPose(gui.map.player(),new NAlias("carving")),500);
-            NUtils.waitEvent(()->!NUtils.isPose(gui.map.player(),new NAlias("carving")),10000);
-        }
+        while (!targets.isEmpty())
+            wool(targets,gui);
         new TransferToPile(Finder.findSubArea(current,sub),NHitBox.get(),new NAlias("wool"),new NAlias("wool")).run(gui);
         return new Results(Results.Types.SUCCESS);
+    }
+
+    void wool(ArrayList<Gob> targets, NGameUI gui) throws InterruptedException {
+        targets.sort(NUtils.d_comp);
+        Gob gob = targets.get(0);
+        if (gui.getInventory().getFreeSpace() < 5)
+            new TransferToPile(Finder.findSubArea(current, sub), NHitBox.get(), new NAlias("wool"), new NAlias("wool")).run(gui);
+        new PathFinder(gui, gob, PathFinder.Type.dyn).run();
+        new SelectFlowerAction(gob, "Shear wool", SelectFlowerAction.Types.Gob).run(gui);
+        NUtils.waitEvent(() -> NUtils.isPose(gui.map.player(), new NAlias("carving")), 500);
+        NUtils.waitEvent(() -> !NUtils.isPose(gui.map.player(), new NAlias("carving")), 10000);
+        targets.remove(gob);
     }
 
     public <C extends Entry> AnimalWool(NAlias animal, AreasID current, AreasID sub, Class<C> c, Predicate<Gob> pred) {

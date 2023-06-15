@@ -71,10 +71,14 @@ public class Sheep extends Entry {
     }
 
 	public double rang() {
-		NConfiguration.SheepsHerd herd = NConfiguration.getInstance().sheepsHerd;
 
-		double ql = (q < (seedq - herd.breedingGap.get())) ? (q + seedq - herd.breedingGap.get()) / 2 : q + (q - seedq - herd.breedingGap.get())*herd.coverbreed.get();
-		double m = ql * herd.meatq.get()* hideq/100.;
+		if(NConfiguration.getInstance().selected_sheepsHerd.isEmpty())
+			return 0;
+
+		NConfiguration.SheepsHerd herd = NConfiguration.getInstance().sheepsHerd.get(NConfiguration.getInstance().selected_sheepsHerd);
+
+		double ql = (q > (seedq - herd.breedingGap.get())) ? (q + seedq - herd.breedingGap.get()) / 2. : q + ((seedq - herd.breedingGap.get())-q)*herd.coverbreed.get();
+		double m = ql * herd.meatq.get()* meatq/100.;
 		double qm = meat * herd.meatquan1.get() + (( meat > herd.meatquanth.get()) ? ((meat - herd.meatquanth.get()) * (herd.meatquan2.get() - herd.meatquan1.get())) : 0);
 		double _milk = ql * herd.milkq.get()* milkq/100.;
 		double qmilk = milk * herd.milkquan1.get() + ((milk > herd.milkquanth.get()) ? ((milk - herd.milkquanth.get()) * (herd.milkquan2.get() - herd.milkquan1.get())) : 0);

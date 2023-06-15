@@ -11,6 +11,7 @@ import haven.res.ui.croster.Entry;
 import haven.res.ui.croster.RosterWindow;
 import haven.res.ui.tt.defn.DefName;
 import nurgling.bots.*;
+import nurgling.bots.actions.SelectFlowerAction;
 import nurgling.bots.actions.UseItemOnItem;
 import nurgling.bots.actions.WaitAction;
 import nurgling.json.JSONObject;
@@ -89,6 +90,27 @@ public class NUtils {
                 gameUI.chat.chat.sel.wdgmsg ( "msg", msg );
             }
         }
+    }
+    public static Comparator<Gob> d_comp = new Comparator<Gob>() {
+        @Override
+        public int compare(Gob o1, Gob o2) {
+            return Double.compare(o1.rc.dist(NUtils.getGameUI().map.player().rc),o2.rc.dist(NUtils.getGameUI().map.player().rc));
+        }
+    };
+
+    public static boolean memorize(ArrayList<Gob> gobs, NGameUI gui, RosterWindow w, Class<? extends Entry> cattleRoster) throws InterruptedException {
+        gobs.sort(NUtils.d_comp);
+        for (Gob gob : gobs) {
+            if (gob.getattr(CattleId.class) == null && !gob.isTag(NGob.Tags.knocked)) {
+                new PathFinder(gui, gob, PathFinder.Type.dyn).run();
+                new SelectFlowerAction(gob, "Memorize", SelectFlowerAction.Types.Gob).run(gui);
+                NUtils.waitEvent(() -> gob.getattr(CattleId.class) != null, 5000);
+                NUtils.waitEvent(() -> w.roster(cattleRoster).entries.get(gob.getattr(CattleId.class).id) != null, 5000);
+                NUtils.waitEvent(() -> w.roster(cattleRoster).entries.get(gob.getattr(CattleId.class).id).getClass() == cattleRoster, 5000);
+                return true;
+            }
+        }
+        return false;
     }
     public static boolean checkName(
             final String name,

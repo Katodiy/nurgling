@@ -8,8 +8,29 @@ public class NSettinsSetD extends NSettinsSetW {
 
     NConfiguration.NDouble val;
 
+    public NSettinsSetD(String label) {
+        super(label);
+        this.val = new NConfiguration.NDouble(0.);
+    }
+
+    public void setVal(NConfiguration.NDouble val) {
+        this.val = val;
+        setText(val.toString());
+    }
+
     @Override
     void parseValue() {
-        val.set(Double.parseDouble(textEntry.text()));
+        if(textEntry.text().isEmpty())
+        {
+            textEntry.settext("0");
+            val.set(0.);
+        }
+        try {
+            val.set(Double.parseDouble(textEntry.text()));
+        }
+        catch (NumberFormatException e)
+        {
+            NUtils.getGameUI().error("Incorrect format");
+        }
     }
 }
