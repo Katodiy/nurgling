@@ -286,7 +286,6 @@ public class NMapView extends MapView {
     }
 
     public void click(Gob gob, int button, Coord mouse) {
-//        if(button == 3) {NFlowerMenu.lastGob(gob);}
         Coord mc = gob.rc.floor(posres);
         click(gob.rc, button, mouse, mc, button, ui.modflags(), 0, (int) gob.id, mc, 0, -1);
     }

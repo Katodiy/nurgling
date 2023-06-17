@@ -61,11 +61,11 @@ public class Pointer extends Widget implements NMiniMap.IPointer, DTarget {
 
 	public static Widget mkwidget(UI ui, Object... args) {
 		if(args[0] instanceof MapFile.Marker) {
-			return new nurgling.Pointer((MapFile.Marker) args[0]);
+			return new Pointer((MapFile.Marker) args[0]);
 		}
 		int iconid = (Integer) args[0];
 		Indir<Resource> icon = (iconid < 0) ? null : ui.sess.getres(iconid);
-		return (new nurgling.Pointer(icon));
+		return (new Pointer(icon));
 	}
 
 	public void presize() {
@@ -207,7 +207,7 @@ public class Pointer extends Widget implements NMiniMap.IPointer, DTarget {
 				if(gob != null) {
 					((NMapView)NUtils.getGameUI().map).click(gob, 1);
 				} else {
-					NUtils.getGameUI().map.click(tc(), 1);
+					((NMapView)NUtils.getGameUI().map).click(tc(), 1);
 				}
 			} else if(button == 3) {
 				if(ui.modctrl && marker != null) {
