@@ -388,6 +388,11 @@ public class NConfiguration {
         NHitBox.init();
         iconsettings.put("mm/wheelbarrow",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/wheelbarrow"),true,true,false,false));
         iconsettings.put("mm/anvil",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/anvil"),true,true,false,false));
+        iconsettings.put("mm/horse",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/horse"),true,true,false,false));
+        iconsettings.put("mm/milestones",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/milestones"),true,true,false,false));
+        iconsettings.put("mm/milestonese",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/milestonese"),true,true,false,false));
+        iconsettings.put("mm/milestonew",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/milestonew"),true,true,false,false));
+        iconsettings.put("mm/milestonewe",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/milestonewe"),true,true,false,false));
         iconsettings.put("mm/truffle",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/truffle"),true,true,false,false));
         iconsettings.put("mm/claim",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/claim"),true,true,false,false));
         iconsettings.put("mm/gem",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/gem"),true,true,false,false));
