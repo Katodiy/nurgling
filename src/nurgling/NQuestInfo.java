@@ -376,7 +376,7 @@ public class NQuestInfo extends NDraggableWidget {
     public void tick(double dt) {
         if (!in_work.get() && new_questers != null) {
             if (NUtils.getGameUI() != null && NUtils.getGameUI().chrwdg != null && NUtils.getGameUI().chrwdg.quest != null && !NUtils.getGameUI().chrwdg.cqst.quests.isEmpty() && needUpdate()) {
-                (th = new Thread(new Loader())).start();
+                (th = new Thread(new Loader(), "Quest Checker")).start();
             }
         }
         if (updCompleted.get())

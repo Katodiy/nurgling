@@ -107,7 +107,7 @@ public class NGob {
         mammoth,
         orca,
         stoat,
-        rabbithutch, chickencoop, stalagoomba, kritter_is_ready, qbring, qrage, qwave, qlaugh, qgreet, qcompleted, quality, spermwhale, winter_stoat
+        rabbithutch, chickencoop, stalagoomba, kritter_is_ready, qbring, qrage, qwave, qlaugh, qgreet, qcompleted, quality, troll, spermwhale, winter_stoat
     }
 
     public final HashSet<Tags> tags = new HashSet<>();
@@ -441,6 +441,8 @@ public class NGob {
                     gob.addTag(Tags.orca);
                 else if (NUtils.checkName(name, "spermwhale"))
                     gob.addTag(Tags.spermwhale);
+                else if (NUtils.checkName(name, "troll"))
+                    gob.addTag(Tags.troll);
                 else if (NUtils.checkName(name, "stoat"))
                     gob.addTag(Tags.stoat);
                 if (NUtils.checkName(name, "horse")) {
@@ -734,6 +736,8 @@ public class NGob {
                                 NAlarmManager.play(Tags.orca);
                             else if (gob.isTag(Tags.spermwhale))
                                 NAlarmManager.play(Tags.spermwhale);
+                            else if (gob.isTag(Tags.troll))
+                                NAlarmManager.play(Tags.troll);
                         }
 
                     } else if (gob.isTag(Tags.angryhorse)) {
