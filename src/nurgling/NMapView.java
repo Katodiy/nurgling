@@ -12,6 +12,7 @@ import nurgling.tools.NArea;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static haven.MCache.tilesz;
 import static haven.OCache.posres;
@@ -20,6 +21,7 @@ public class NMapView extends MapView {
     public static Coord2d rc1 = new Coord2d ();
     public static Coord2d rc2 = new Coord2d ();
     public boolean isAreaSelectorEnable = false;
+    public AtomicBoolean isGobSelectorEnable = new AtomicBoolean(false);
     public static final KeyBinding kb_checkClay = KeyBinding.get ( "checkClay", KeyMatch.forchar ( 'w', KeyMatch.C ) );
     public static final KeyBinding kb_checkWater = KeyBinding.get ( "checkWater", KeyMatch.forchar ( 'Y',KeyMatch.C ) );
     public static final KeyBinding kb_feedclower = KeyBinding.get ( "feedClover", KeyMatch.forchar ( 'U',
@@ -100,6 +102,30 @@ public class NMapView extends MapView {
             return new TexI((ItemInfo.catimgs(0, imgs.toArray(new BufferedImage[0]))));
         }
         return (super.tooltip(c, prev));
+    }
+
+    private Gob checkedGob = null;
+    public Gob getSelectedGob() {
+        return checkedGob;
+    }
+
+    public void resetSelectedGob(){
+        checkedGob = null;
+    }
+
+    void getGob(Coord c) {
+        new Hittest(c) {
+            @Override
+            protected void hit(Coord pc, Coord2d mc, ClickData inf) {
+                if (inf != null) {
+                    Gob gob = Gob.from(inf.ci);
+                    if (gob != null) {
+                        checkedGob = gob;
+                    }
+                    isGobSelectorEnable.set(false);
+                }
+            }
+        }.run();
     }
 
     void inspect(Coord c) {
@@ -188,7 +214,12 @@ public class NMapView extends MapView {
             Coord c,
             int button
     ) {
-        if ( isAreaSelectorEnable ) {
+        if(isGobSelectorEnable.get())
+        {
+            getGob(c);
+            return false;
+        }
+        else if ( isAreaSelectorEnable ) {
             if ( selection == null ) {
                 selection = new NSelector ();
                 n_selection = true;

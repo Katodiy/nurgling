@@ -85,9 +85,8 @@ public class PileMaker {
         if ( gameUI.hand.isEmpty () ) {
             itemForPile.item.wdgmsg ( "take", new Coord ( itemForPile.sz.x / 2, itemForPile.sz.y / 2 ) );
         }
-        while ( gameUI.hand.isEmpty () ) {
-            Thread.sleep ( 100 );
-        }
+        NUtils.waitEvent(()->!gameUI.hand.isEmpty (),50);
+
         gameUI.map.wdgmsg ( "itemact", itemForPile.item.sz, target_coord.floor ( posres ), 0 );
 
         NUtils.waitEvent(()->NUtils.getFlowerMenu()!=null,10);
@@ -97,7 +96,7 @@ public class PileMaker {
             NUtils.waitEvent(()->NUtils.getFlowerMenu()==null,50);
         }
         gameUI.map.wdgmsg ( "place", target_coord.floor ( posres ), 0, 1, 0 );
-        NUtils.waitEvent(()->((NGameUI)gameUI).getWindow("Stockpile")!=null,50);
+        NUtils.waitEvent(()->((NGameUI)gameUI).getWindow("Stockpile")!=null,100);
 
         return Finder.findObject ( pile_name );
     }

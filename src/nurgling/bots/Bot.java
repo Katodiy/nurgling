@@ -4,7 +4,6 @@ import haven.Coord;
 import haven.UI;
 import nurgling.NGameUI;
 import nurgling.NOCache;
-import nurgling.NUtils;
 import nurgling.NWindow;
 import nurgling.bots.actions.Action;
 import nurgling.bots.actions.Results;
@@ -40,6 +39,7 @@ public class Bot implements Runnable {
         thread = Thread.currentThread();
         /// Вызываем функцию инициализации бота
         window = gameUI.add(new NWindow(this, this.win_title, win_sz));
+        window.move(UI.scale(new Coord(200,200)));
         try {
             initAction();
             runAction();

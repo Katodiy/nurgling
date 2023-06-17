@@ -4,8 +4,6 @@ import haven.*;
 import nurgling.bots.*;
 import nurgling.bots.build.*;
 
-
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -329,6 +327,8 @@ public class NBotsInfo extends NDraggableWidget implements KeyBinding.Bindable {
                     "bots/icons/fillwaterskin"  ) );
             layouts.get ( 5000 ).add ( new NButton ( "DreamHarvester", new DreamHarvester ( gui ),
                     "bots/icons/dreamer"  ) );
+            layouts.get ( 5000 ).add ( new NButton ( "CollectAll", new AllToPile ( gui ),
+                    "bots/icons/collectitemstopiles"  ) );
 
 //            layouts.get ( 5000 ).add ( new NButton ( "Sort and Transfer Trash", new SortAndTransferTrash ( gui ),
 //                    Special.getPath () + "/icons/trash.png" ) );
