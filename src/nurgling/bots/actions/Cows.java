@@ -33,7 +33,7 @@ public class Cows implements Action {
                 if(NConfiguration.getInstance().cowsHerd.get(NConfiguration.getInstance().selected_cowsHerd).disable_killing)
                     return false;
                 Ochs p1 = (Ochs) (NUtils.getAnimalEntity(gob,Ochs.class));;
-                return !p1.bull && !p1.dead && (!p1.calf || !NConfiguration.getInstance().goatsHerd.get(NConfiguration.getInstance().selected_cowsHerd).ignoreChildren);
+                return !p1.bull && !p1.dead && (!p1.calf || !NConfiguration.getInstance().cowsHerd.get(NConfiguration.getInstance().selected_cowsHerd).ignoreChildren);
             }
         };
         Predicate<Gob> mpred = new Predicate<Gob>() {
@@ -42,7 +42,7 @@ public class Cows implements Action {
                 if(NConfiguration.getInstance().cowsHerd.get(NConfiguration.getInstance().selected_cowsHerd).disable_killing)
                     return false;
                 Ochs p1 = (Ochs) (NUtils.getAnimalEntity(gob,Ochs.class));;
-                return p1.bull && !p1.dead && (!p1.calf || !NConfiguration.getInstance().goatsHerd.get(NConfiguration.getInstance().selected_cowsHerd).ignoreChildren);
+                return p1.bull && !p1.dead && (!p1.calf || !NConfiguration.getInstance().cowsHerd.get(NConfiguration.getInstance().selected_cowsHerd).ignoreChildren);
             }
         };
 

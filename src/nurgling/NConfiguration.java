@@ -82,11 +82,13 @@ public class NConfiguration {
     public String baseurl =" https://raw.githubusercontent.com/Katodiy/nurgling-release/master/ver";
 
     public static void saveButtons(String name, NGameUI.NButtonBeltSlot[] custom) {
-        String key = NUtils.getUI().sessInfo.characterInfo.chrid;
-        HashMap<String, HashMap<Integer, String>> customKeys  = (instance.allKeys.get(key)==null)?instance.allKeys.put(key, new HashMap<>()):instance.allKeys.get(key);
+        String key = NUtils.getUI().sessInfo.username +"/" + NUtils.getUI().sessInfo.characterInfo.chrid;
+        instance.allKeys.computeIfAbsent(key, k -> new HashMap<>());
+        HashMap<String, HashMap<Integer, String>> customKeys  = instance.allKeys.get(key);
 
         if(customKeys!=null) {
-            HashMap<Integer, String> keys = (customKeys.get(name) == null)?customKeys.put(name, new HashMap<Integer, String>()):customKeys.get(name);
+            customKeys.computeIfAbsent(name, k -> new HashMap<Integer, String>());
+            HashMap<Integer, String> keys = customKeys.get(name);
             if(keys!=null) {
                 for (NGameUI.NButtonBeltSlot slot : custom) {
                     if(slot!=null) {

@@ -16,7 +16,6 @@ public class Cows extends Settings {
     NSettinsSetI gap;
     NSettinsSetD milkQuality;
     NSettinsSetD meatQuality;
-    NSettinsSetD woolQuality;
     NSettinsSetD hideQuality;
     NSettinsSetD meatq1;
     NSettinsSetD meatq2;
@@ -24,9 +23,6 @@ public class Cows extends Settings {
     NSettinsSetD milk1;
     NSettinsSetD milk2;
     NSettinsSetD milkth;
-    NSettinsSetD wool1;
-    NSettinsSetD wool2;
-    NSettinsSetD woolth;
     NSettinsSetD coverbreed;
 
     CheckBox ic;
@@ -117,7 +113,6 @@ public class Cows extends Settings {
         prev = add(new Label("All coefficients are arbitrary, only relations between them matters."), prev.pos("bl").add(0, 5));
         prev = meatQuality = add(new NSettinsSetD("Meat:"), prev.pos("bl").add(0, 5));
         prev = milkQuality = add(new NSettinsSetD("Milk:"), prev.pos("bl").add(0, 5));
-        prev = woolQuality = add(new NSettinsSetD("Wool:"), prev.pos("bl").add(0, 5));
         prev = hideQuality = add(new NSettinsSetD("Hide:"), prev.pos("bl").add(0, 5));
         prev = add(new Label("Follow stats may be tracked with different coefficients below and above threshold. If you want to ignore threshold, set both coefficients equal."), prev.pos("bl").add(0, 5));
         prev = add(new Label("If you want to track stat up to threshold, but ignore stat gain over threshold simply set second coefficient to zero."), prev.pos("bl").add(0, 5));
@@ -127,9 +122,6 @@ public class Cows extends Settings {
         prev = milk1 = add(new NSettinsSetD("Milk quantity 1:"), prev.pos("bl").add(0, 5));
         prev = milkth = add(new NSettinsSetD("Milk quantity threshold:"), prev.pos("bl").add(0, 5));
         prev = milk2 = add(new NSettinsSetD("Milk quantity 2:"), prev.pos("bl").add(0, 5));
-        prev = wool1 = add(new NSettinsSetD("Wool quantity 1:"), prev.pos("bl").add(0, 5));
-        prev = woolth = add(new NSettinsSetD("Wool quantity threshold:"), prev.pos("bl").add(0, 5));
-        prev = wool2 = add(new NSettinsSetD("Wool quantity 2:"), prev.pos("bl").add(0, 5));
 
         pack();
     }
