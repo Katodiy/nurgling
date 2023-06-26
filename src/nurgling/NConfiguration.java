@@ -80,6 +80,7 @@ public class NConfiguration {
     public boolean invert_hor = false;
     public boolean invert_ver = false;
     public String baseurl =" https://raw.githubusercontent.com/Katodiy/nurgling-release/master/ver";
+    public boolean flatsurface = true;
 
     public static void saveButtons(String name, NGameUI.NButtonBeltSlot[] custom) {
         String key = NUtils.getUI().sessInfo.username +"/" + NUtils.getUI().sessInfo.characterInfo.chrid;
@@ -114,6 +115,12 @@ public class NConfiguration {
         {
             quickActions.add(item.text.texts);
         }
+    }
+
+    public Tiler getRidge() {
+        if(ridge==null)
+            ridge = customTileRes.get("ridge").tfac().create(7001, customTileRes.get("ridge"));
+        return ridge;
     }
 
     public static class PickingAction{
@@ -384,10 +391,19 @@ public class NConfiguration {
     }
     public Farmer farmer = null;
 
+    public HashMap<String, Tileset> customTileRes = new HashMap<String, Tileset>();
+    private Tiler ridge;
+    void initCustomTileRes()
+    {
+        Resource.local().loadwait("tiles/ridge-tex");
+        customTileRes.put("ridge", Resource.local().loadwait("tiles/ridge").layer(Tileset.class));
+    }
+
 
     NConfiguration () {
         AreasID.init ();
         NHitBox.init();
+        initCustomTileRes();
         iconsettings.put("mm/wheelbarrow",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/wheelbarrow"),true,true,false,false));
         iconsettings.put("mm/anvil",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/anvil"),true,true,false,false));
         iconsettings.put("mm/horse",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/horse"),true,true,false,false));

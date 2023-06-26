@@ -957,7 +957,7 @@ public class Resource implements Serializable {
 	for(Class<?> cl : dolda.jglob.Loader.get(LayerName.class).classes()) {
 	    String nm = cl.getAnnotation(LayerName.class).value();
 	    if(LayerFactory.class.isAssignableFrom(cl)) {
-		addltype(nm, Utils.construct(cl.asSubclass(LayerFactory.class)));
+		addltype(nm, (LayerFactory<?>) Utils.construct(cl.asSubclass(LayerFactory.class)));
 	    } else if(Layer.class.isAssignableFrom(cl)) {
 		addltype(nm, cl.asSubclass(Layer.class));
 	    } else {

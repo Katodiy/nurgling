@@ -31,6 +31,7 @@ import java.util.function.*;
 import java.lang.ref.*;
 import haven.render.*;
 import nurgling.NAlias;
+import nurgling.NConfiguration;
 import nurgling.NUtils;
 import nurgling.tools.AreasID;
 import nurgling.tools.Finder;
@@ -876,11 +877,14 @@ public class MCache implements MapSource {
     }
 
     public double getz(SurfaceID id, Coord2d pc) {
+	if(NConfiguration.getInstance().flatsurface)
+		return 25;
 	Coord tc = pc.floor(tilesz);
 	Grid g = getgridt(tc);
 	MapMesh cut = g.getcut(tc.sub(g.ul).div(cutsz));
 	Tiler t = tiler(g.gettile(tc.sub(g.ul)));
 	ZSurface surf = cut.getsurf(id, t);
+
 	return(surf.getz(pc));
     }
 

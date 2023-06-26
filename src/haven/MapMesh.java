@@ -35,6 +35,9 @@ import haven.render.*;
 import haven.Surface.Vertex;
 import haven.Surface.MeshVertex;
 import haven.render.Rendered.Order;
+import haven.resutil.Ridges;
+import haven.resutil.TerrainTile;
+import nurgling.NConfiguration;
 
 public class MapMesh implements RenderTree.Node, Disposable {
     public final Coord ul, sz;
@@ -113,7 +116,10 @@ public class MapMesh implements RenderTree.Node, Disposable {
 	public MapSurface() {
 	    for(int y = vs.ul.y; y < vs.br.y; y++) {
 		for(int x = vs.ul.x; x < vs.br.x; x++) {
-		    surf[vs.o(x, y)] = new Vertex(x * (float)tilesz.x, y * -(float)tilesz.y, (float)map.getfz(ul.add(x, y)));
+			Vertex v = new Vertex(x * (float)tilesz.x, y * -(float)tilesz.y, (float)map.getfz(ul.add(x, y)));
+			if(NConfiguration.getInstance().flatsurface)
+				v.z = 25;
+			surf[vs.o(x, y)] = v;
 		}
 	    }
 	    for(int y = ts.ul.y; y < ts.br.y; y++) {
@@ -308,7 +314,23 @@ public class MapMesh implements RenderTree.Node, Disposable {
 	    for(c.x = 0; c.x < sz.x; c.x++) {
 		Coord gc = c.add(ul);
 		long ns = rnd.nextLong();
-		mc.tiler(mc.gettile(gc)).lay(m, rnd, c, gc);
+		if(NConfiguration.getInstance().flatsurface) {
+			Tiler t = mc.tiler(mc.gettile(gc));
+			if (t instanceof TerrainTile.RidgeTile) {
+				if (m.data(Ridges.id).model(c)) {
+					Tiler tiler = NConfiguration.getInstance().getRidge();
+					tiler.lay(m, rnd, c, gc);
+				} else {
+					mc.tiler(mc.gettile(gc)).lay(m, rnd, c, gc);
+				}
+			}
+			else {
+				mc.tiler(mc.gettile(gc)).lay(m, rnd, c, gc);
+			}
+		}
+		else {
+			mc.tiler(mc.gettile(gc)).lay(m, rnd, c, gc);
+		}
 		dotrans(m, rnd, c, gc);
 		rnd.setSeed(ns);
 	    }
