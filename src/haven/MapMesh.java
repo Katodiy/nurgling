@@ -302,7 +302,18 @@ public class MapMesh implements RenderTree.Node, Disposable {
 	    for(c.x = 0; c.x < sz.x; c.x++) {
 		Coord gc = c.add(ul);
 		long ns = rnd.nextLong();
-		mc.tiler(mc.gettile(gc)).model(m, rnd, c, gc);
+		if(NConfiguration.getInstance().flatsurface) {
+			Tiler t = mc.tiler(mc.gettile(gc));
+			if (t instanceof TerrainTile.RidgeTile) {
+				Tiler.flatmodel(m, c);
+			} else {
+				mc.tiler(mc.gettile(gc)).model(m, rnd, c, gc);
+			}
+		}
+		else
+		{
+			mc.tiler(mc.gettile(gc)).model(m, rnd, c, gc);
+		}
 		rnd.setSeed(ns);
 	    }
 	}
@@ -314,21 +325,10 @@ public class MapMesh implements RenderTree.Node, Disposable {
 	    for(c.x = 0; c.x < sz.x; c.x++) {
 		Coord gc = c.add(ul);
 		long ns = rnd.nextLong();
-		if(NConfiguration.getInstance().flatsurface) {
-			Tiler t = mc.tiler(mc.gettile(gc));
-			if (t instanceof TerrainTile.RidgeTile) {
-				if (m.data(Ridges.id).model(c)) {
-					Tiler tiler = NConfiguration.getInstance().getRidge();
-					tiler.lay(m, rnd, c, gc);
-				} else {
-					mc.tiler(mc.gettile(gc)).lay(m, rnd, c, gc);
-				}
-			}
-			else {
-				mc.tiler(mc.gettile(gc)).lay(m, rnd, c, gc);
-			}
-		}
-		else {
+		if(NConfiguration.getInstance().flatsurface && m.data(Ridges.id).model(c)) {
+			Tiler tiler = NConfiguration.getInstance().getRidge();
+			tiler.lay(m, rnd, c, gc);
+		} else {
 			mc.tiler(mc.gettile(gc)).lay(m, rnd, c, gc);
 		}
 		dotrans(m, rnd, c, gc);

@@ -1,13 +1,13 @@
-#TEX LAYER FOR RES src/custom/mine-tex.res//
+#TEX LAYER FOR RES src/custom/ridge-tex.res//
 #short m_id
 104
 #Coord m_off
 (0, 0)
 #Coord m_sz
 (256, 256)
+#byte m_ma
+2
+#byte m_magf
+0
 #byte m_minf
 0
-#byte m_magf
-0
-#byte m_magf
-2
