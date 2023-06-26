@@ -1559,6 +1559,18 @@ public class OptWnd extends Window {
 
 				}, prev.pos("bl").adds(0, 5));
 
+				prev = add(new CheckBox("Flat surface (need reboot):") {
+					{
+						a = NConfiguration.getInstance().nextflatsurface;
+					}
+
+					public void set(boolean val) {
+						NConfiguration.getInstance().nextflatsurface = val;
+						a = val;
+					}
+
+				}, prev.pos("bl").adds(0, 5));
+
 //				prev = add(new CheckBox("Collect Food Info:") {
 //					{
 //						a = NConfiguration.getInstance().collectFoodInfo;

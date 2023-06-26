@@ -28,6 +28,8 @@ package haven.resutil;
 
 import haven.*;
 import haven.render.*;
+import nurgling.NConfiguration;
+
 import java.util.*;
 
 public class CSprite extends Sprite {
@@ -53,6 +55,8 @@ public class CSprite extends Sprite {
 
     public void addpart(float xo, float yo, float a, Pipe.Op mat, RenderTree.Node part) {
 	Coord3f pc = new Coord3f(xo, -yo, owner.context(Glob.class).map.getcz(cc.x + xo, cc.y + yo) - cc.z);
+	if(NConfiguration.getInstance().flatsurface)
+		pc.z = 0;
 	Location loc = new Location(Transform.makexlate(new Matrix4f(), pc)
 				    .mul1(Transform.makerot(new Matrix4f(), Coord3f.zu, a)));
 	addpart(loc, mat, part);
