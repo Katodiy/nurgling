@@ -1,0 +1,38 @@
+#TILESET2 LAYER FOR RES src/custom/mine.res//
+#String m_tn
+trn
+#Int m_flavprob
+25
+#Size of m_ta
+6
+#m_ta value
+base
+0
+var
+1
+0.4
+var
+2
+0.4
+var
+3
+0.4
+var
+4
+0.4
+trans
+gfx/tiles/transitions-cloud
+5
+#String m_tags size
+1
+#M_Tags
+hard
+#Flav objs size
+2
+#Flav objs
+1
+sfx/ambient/cave/cave
+40
+1
+sfx/ambient/cave/horror
+10
