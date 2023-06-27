@@ -1570,7 +1570,17 @@ public class OptWnd extends Window {
 					}
 
 				}, prev.pos("bl").adds(0, 5));
+				prev = add(new CheckBox("Show decorative objects(need reboot):") {
+					{
+						a = NConfiguration.getInstance().nextshowCSprite;
+					}
 
+					public void set(boolean val) {
+						NConfiguration.getInstance().nextshowCSprite = val;
+						a = val;
+					}
+
+				}, prev.pos("bl").adds(0, 5));
 //				prev = add(new CheckBox("Collect Food Info:") {
 //					{
 //						a = NConfiguration.getInstance().collectFoodInfo;

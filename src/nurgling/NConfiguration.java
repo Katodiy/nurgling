@@ -82,6 +82,9 @@ public class NConfiguration {
     public String baseurl =" https://raw.githubusercontent.com/Katodiy/nurgling-release/master/ver";
     public boolean flatsurface = false;
     public boolean nextflatsurface = false;
+    public boolean showCSprite = false;
+
+    public boolean nextshowCSprite = false;
 
     public static void saveButtons(String name, NGameUI.NButtonBeltSlot[] custom) {
         String key = NUtils.getUI().sessInfo.username +"/" + NUtils.getUI().sessInfo.characterInfo.chrid;
@@ -827,6 +830,7 @@ public class NConfiguration {
         obj.put("showBB",showBB);
         obj.put("hideNature",hideNature);
         obj.put("flatsurface",nextflatsurface);
+        obj.put("showCSprite",nextshowCSprite);
         obj.put("invert_ver",invert_ver);
         obj.put("invert_hor",invert_hor);
         obj.put("enableCollectFoodInfo",collectFoodInfo);
@@ -1226,6 +1230,10 @@ public class NConfiguration {
             if ( jsonObject.get ( "flatsurface" ) != null ) {
                 flatsurface = (boolean)jsonObject.get ( "flatsurface" );
                 nextflatsurface = flatsurface;
+            }
+            if ( jsonObject.get ( "showCSprite" ) != null ) {
+                showCSprite = (boolean)jsonObject.get ( "showCSprite" );
+                nextshowCSprite = showCSprite;
             }
             if ( jsonObject.get ( "invert_ver" ) != null ) {
                 invert_ver = (boolean)jsonObject.get ( "invert_ver" );

@@ -32,6 +32,8 @@ import java.io.*;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import haven.render.*;
+import nurgling.NConfiguration;
+
 import static haven.MCache.tilesz;
 
 @Resource.LayerName("tileset2")
@@ -278,7 +280,9 @@ public class Tileset extends Resource.Layer {
 	}
 
 	public void flavor(Buffer buf, Terrain trn, Random seed) {
-	    Resource res = this.res.get();
+		if(!NConfiguration.getInstance().showCSprite)
+			return;
+		Resource res = this.res.get();
 	    DRandom trnd = new DRandom(new DRandom(seed).randl(res.name.hashCode(), trn.tile));
 	    Random ornd = new Random();
 	    Tileset set = trn.tileset(trn.tile);
