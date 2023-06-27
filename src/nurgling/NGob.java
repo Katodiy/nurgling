@@ -637,7 +637,7 @@ public class NGob {
                 if (gob.status == Status.ready_for_update) {
                     if (gob.isTag(Tags.quality)) {
                         if (gob.quality != -1) {
-                            gob.addcustomol(new NObjectLabel(gob, String.format("Q: %d", gob.quality), new Color(120, 255, 255)));
+                            gob.addcustomol(new NObjectTexLabel(gob, String.format("%d", gob.quality), Color.WHITE, "quality", true));
                         }
                     }
                     if (gob.isTag(Tags.tree) || gob.isTag(Tags.bumling) || gob.isTag(Tags.quester)) {
@@ -753,7 +753,7 @@ public class NGob {
                     } else if (gob.isTag(Tags.bush)) {
                         scale = Math.round(100 * (ts.scale - 0.3) / 0.7);
                     }
-                    gob.addcustomol(new NObjectLabel(gob, String.format("%.0f %%", (float) scale), Color.WHITE));
+                    gob.addcustomol(new NObjectTexLabel(gob, String.format("%.0f %%", (float) scale), Color.WHITE, "growth"));
                 }
 
                 if (gob.isTag(Tags.iconsign)) {

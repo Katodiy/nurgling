@@ -97,7 +97,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	public void resized() {
 	    float field = 0.5f;
 	    float aspect = ((float)sz.y) / ((float)sz.x);
-	    proj = Projection.frustum(-field, field, -aspect * field, aspect * field, 1, 2000);
+	    proj = Projection.frustum(-field, field, -aspect * field, aspect * field, 1, 5000);
 	}
 
 	public void apply(Pipe p) {
@@ -198,7 +198,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	    
 	    float field = field(elev);
 	    view = haven.render.Camera.pointed(curc.add(camoff).add(0.0f, 0.0f, h), dist(elev), elev, angl);
-	    proj = Projection.frustum(-field, field, -ca * field, ca * field, 1, 2000);
+	    proj = Projection.frustum(-field, field, -ca * field, ca * field, 1, 5000);
 	}
 
 	public float angle() {
@@ -224,7 +224,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
     static {camtypes.put("follow", FollowCam.class);}
 
     public class SimpleCam extends Camera {
-	private float dist = 50.0f;
+	public float dist = 50.0f;
 	private float elev = (float)Math.PI / 4.0f;
 	private float angl = 0.0f;
 	private Coord dragorig = null;
@@ -331,7 +331,7 @@ public class MapView extends PView implements DTarget, Console.Directory {
 	protected float dist = 500.0f;
 	protected float elev = (float)Math.PI / 6.0f;
 	protected float angl = -(float)Math.PI / 4.0f;
-	protected float field = (float)(100 * Math.sqrt(2));
+	public float field = (float)(100 * Math.sqrt(2));
 	private Coord dragorig = null;
 	private float anglorig;
 	protected Coord3f cc, jc;

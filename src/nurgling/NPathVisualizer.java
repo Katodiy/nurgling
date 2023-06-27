@@ -108,11 +108,16 @@ public class NPathVisualizer implements RenderTree.Node {
         for (Pair<Coord3f, Coord3f> line : lines) {
             ret[i++] = line.a.x;
             ret[i++] = -line.a.y;
-            ret[i++] = line.a.z + Z;
-
+            if(!NConfiguration.getInstance().flatsurface)
+                ret[i++] = line.a.z + Z;
+            else
+                ret[i++] = Z;
             ret[i++] = line.b.x;
             ret[i++] = -line.b.y;
-            ret[i++] = line.b.z + Z;
+            if(!NConfiguration.getInstance().flatsurface)
+                ret[i++] = line.b.z + Z;
+            else
+                ret[i++] = Z;
         }
         return ret;
     }

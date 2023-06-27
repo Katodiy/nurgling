@@ -837,6 +837,7 @@ public class NUtils {
     }
 
     static final HashMap<NGob.Tags,TexI> iHashMap = new HashMap<>();
+    static final HashMap<String,TexI> iStrMap = new HashMap<>();
     static final HashMap<String, String> iconMap = new HashMap<>();
     static final HashMap<Color,TexI> iCropMap = new HashMap<>();
     static final HashMap<Integer,TexI> iCropStageMap3 = new HashMap<>();
@@ -854,6 +855,12 @@ public class NUtils {
         iHashMap.put(NGob.Tags.gem,new TexI(Resource.loadsimg("icon/items/gem")));
         iHashMap.put(NGob.Tags.angryhorse,new TexI(Resource.loadsimg("icon/angryhorse")));
         iHashMap.put(NGob.Tags.wool,new TexI(Resource.loadsimg("icon/wool")));
+
+        iStrMap.put("brokens", new TexI(Resource.loadsimg("icon/brokens")));
+        iStrMap.put("brokenm", new TexI(Resource.loadsimg("icon/brokenm")));
+        iStrMap.put("brokenh", new TexI(Resource.loadsimg("icon/brokenh")));
+        iStrMap.put("growth", new TexI(Resource.loadsimg("icon/growth")));
+        iStrMap.put("quality", new TexI(Resource.loadsimg("icon/quality")));
 
         iconMap.put("gfx/terobjs/vehicle/wheelbarrow","mm/wheelbarrow");
         Resource.loadimg("mm/wheelbarrow");
@@ -912,6 +919,10 @@ public class NUtils {
     }
     public static TexI getTexI(NGob.Tags tag) {
         return iHashMap.get(tag);
+    }
+
+    public static TexI getTexI(String key) {
+        return iStrMap.get(key);
     }
     public static TexI getCropTexI(Color clr) {
         return iCropMap.get(clr);
