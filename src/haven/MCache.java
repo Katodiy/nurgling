@@ -889,7 +889,12 @@ public class MCache implements MapSource {
     }
 
     public Coord3f getzp(SurfaceID id, Coord2d pc) {
-	return(Coord3f.of((float)pc.x, (float)pc.y, (float)getz(id, pc)));
+		if(NConfiguration.getInstance().flatsurface)
+		{
+			return(Coord3f.of((float)pc.x, (float)pc.y, 0));
+		}
+		else
+			return(Coord3f.of((float)pc.x, (float)pc.y, (float)getz(id, pc)));
     }
 
     public Coord3f getnorm(SurfaceID id, Coord2d pc) {

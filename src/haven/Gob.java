@@ -217,6 +217,8 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 	}
 
 	private float getz(Coord2d rc, double ra) {
+		if(NConfiguration.getInstance().flatsurface)
+			return 0;
 	    Coord2d[][] no = this.obst, ro = new Coord2d[no.length][];
 	    {
 		double s = Math.sin(ra), c = Math.cos(ra);

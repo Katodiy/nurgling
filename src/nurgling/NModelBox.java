@@ -27,6 +27,9 @@ public class NModelBox extends NSprite implements RenderTree.Node {
 	}
 
 	public static NModelBox forGob(Gob gob) {
+		if(!NConfiguration.getInstance().showBB)
+			if(!NConfiguration.getInstance().hideNature || !(gob.isTag(NGob.Tags.tree) || gob.isTag(NGob.Tags.bumling) || gob.isTag(NGob.Tags.bush)))
+				return null;
 		Resource res = getResource(gob);
 		if(res!=null) {
 			Collection<Resource.Neg> negs = res.layers(Resource.Neg.class);
