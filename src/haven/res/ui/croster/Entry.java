@@ -6,6 +6,9 @@ import haven.render.*;
 import java.util.*;
 import java.util.function.*;
 import haven.MenuGrid.Pagina;
+import nurgling.NGob;
+import nurgling.tools.Finder;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
@@ -51,7 +54,18 @@ public class Entry extends Widget {
 	super(sz);
 	this.id = id;
 	this.name = name;
-	this.mark = adda(new CheckBox(""), UI.scale(5), sz.y / 2, 0, 0.5);
+	this.mark = adda(new CheckBox(""){
+        @Override
+        public void changed(boolean val) {
+            super.changed(val);
+            Gob gob = Finder.findCattle(id);
+            if (gob != null)
+                if (val) {
+                    gob.addTag(NGob.Tags.selected);
+                } else
+                    gob.removeTag(NGob.Tags.selected);
+        }
+    }, UI.scale(5), sz.y / 2, 0, 0.5);
     }
 
     protected void drawbg(GOut g) {

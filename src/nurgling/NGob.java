@@ -52,6 +52,7 @@ public class NGob {
         pig,
         goat,
         sheep,
+        selected,
         wool,
         transport,
         vehicle,
@@ -710,6 +711,8 @@ public class NGob {
                         gob.addcustomol(new NAreaRange(gob, "beeskep", (float) NConfiguration.getInstance().rings.get("beeskep").size, new Color(0, 163, 192, 128), new Color(0, 192, 0, 255)));
                         gob.addcustomol(new NBeeMarker(gob));
                     } else if (gob.isTag(Tags.kritter)) {
+                        if (gob.isTag(Tags.selected))
+                            gob.addcustomol(new NDomesticRing(gob,Color.GREEN,7, 1.f));
                         if (gob.isTag(Tags.sheep) || gob.isTag(Tags.goat))
                             gob.addcustomol(new NWoolMarker(gob, 12));
                         if (gob.isTag(Tags.stalagoomba))

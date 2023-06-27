@@ -2,6 +2,7 @@ package nurgling.tools;
 
 import haven.*;
 import haven.res.lib.itemtex.ItemTex;
+import haven.res.ui.croster.CattleId;
 import nurgling.*;
 import nurgling.NExceptions.NoFreeSpace;
 
@@ -1267,5 +1268,18 @@ public class Finder {
             }
         }
         return result;
+    }
+
+    public static Gob findCattle(long id) {
+        synchronized ( NUtils.getGameUI().ui.sess.glob.oc ) {
+            for (Gob gob : NUtils.getGameUI().ui.sess.glob.oc) {
+                CattleId cid;
+                if ((cid = gob.getattr(CattleId.class))!=null) {
+                    if(cid.id == id)
+                        return gob;
+                }
+            }
+        }
+        return null;
     }
 }
