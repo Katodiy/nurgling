@@ -118,7 +118,7 @@ public class MapMesh implements RenderTree.Node, Disposable {
 		for(int x = vs.ul.x; x < vs.br.x; x++) {
 			Vertex v = new Vertex(x * (float)tilesz.x, y * -(float)tilesz.y, (float)map.getfz(ul.add(x, y)));
 			if(NConfiguration.getInstance().flatsurface)
-				v.z = 25;
+				v.z = 0;
 			surf[vs.o(x, y)] = v;
 		}
 	    }

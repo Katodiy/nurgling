@@ -419,11 +419,11 @@ public class NGob {
         if (gob.getres() != null && NUtils.getGameUI()!=null) {
             gob.isReady = true;
             String name = gob.getResName();
-            if (NUtils.checkName(name, new NAlias(new ArrayList<>(Arrays.asList("tree")), new ArrayList<>(Arrays.asList("log"))))) {
+            if (NUtils.checkName(name, new NAlias(new ArrayList<>(Arrays.asList("gfx/terobjs/tree")), new ArrayList<>(Arrays.asList("log"))))) {
                 gob.addTag(Tags.tree);
-            } else if (NUtils.checkName(name, "bumling")) {
+            } else if (NUtils.checkName(name, "gfx/terobjs/bumling")) {
                 gob.addTag(Tags.bumling);
-            } else if (NUtils.checkName(name, "bushes")) {
+            } else if (NUtils.checkName(name, "gfx/terobjs/bushes")) {
                 gob.addTag(Tags.bush);
             } else if (NUtils.checkName(name, new NAlias(new ArrayList<>(Arrays.asList("kritter")),new ArrayList<>(Arrays.asList("beef", "skeleton"))))) {
                 gob.addTag(Tags.kritter);

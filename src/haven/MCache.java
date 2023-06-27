@@ -878,7 +878,7 @@ public class MCache implements MapSource {
 
     public double getz(SurfaceID id, Coord2d pc) {
 	if(NConfiguration.getInstance().flatsurface)
-		return 25;
+		return 0;
 	Coord tc = pc.floor(tilesz);
 	Grid g = getgridt(tc);
 	MapMesh cut = g.getcut(tc.sub(g.ul).div(cutsz));

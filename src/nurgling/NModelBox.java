@@ -2,167 +2,127 @@ package nurgling;
 
 import haven.*;
 import haven.render.*;
-import nurgling.bots.actions.NGAttrib;
 
-import java.awt.*;
-import java.util.List;
+import java.nio.ByteBuffer;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
-public class NModelBox extends NSprite implements Rendered {
-    private static final VertexArray.Layout LAYOUT = new VertexArray.Layout(new VertexArray.Layout.Input(Homo3D.vertex, new VectorFormat(3, NumberFormat.FLOAT32), 0, 0, 12));
-    private Model model;
-    private final Gob gob;
-    private static final Map<Resource, Model> MODEL_CACHE = new HashMap<>();
-    private static final float Z = 1.2f;
-    private static final Color SOLID_COLOR = new Color(255, 255, 105, 255);
-    private static final Color PASSABLE_COLOR = new Color(105, 207, 124, 255);
-    private static final float PASSABLE_WIDTH = 1.5f;
-    private static final float SOLID_WIDTH = 3f;
-    private static final Pipe.Op SOLID = Pipe.Op.compose(new BaseColor(SOLID_COLOR), new States.LineWidth(SOLID_WIDTH));
-    private static final Pipe.Op PASSABLE = Pipe.Op.compose(new BaseColor(PASSABLE_COLOR), new States.LineWidth(PASSABLE_WIDTH));
-    private Pipe.Op state = SOLID;
+public class NModelBox extends NSprite implements RenderTree.Node {
 
-	protected Collection<RenderTree.Slot> slots;
-	protected Collection<RenderTree.Slot> backup;
-    private NModelBox(Gob gob) {
-	super(gob,null);
-	model = getModel(gob);
-	this.gob = gob;
-    }
+	public static NBoundingBox defaultBb = new NBoundingBox (
+			new ArrayList<> ( Arrays.asList ( NBoundingBox.acbcPol ( new Coord ( 5, 5 ), new Coord ( -5, -5 ) ) ) ),
+			false );
 
-	@Override
-	public boolean tick(double dt) {
-		Pipe.Op n_state = (gob.isTag(NGob.Tags.gate)? ((gob.getModelAttribute()&1)==1?PASSABLE:SOLID) : state);
-		if(n_state!=state) {
-			if(slots!=null) {
-				state = n_state;
-				for (RenderTree.Slot slot : slots) {
-					slot.ostate(state);
-				}
+	private static Resource getResource(Gob gob) {
+		Resource res = gob.getres();
+		if(res == null) {return null;}
+		Collection<RenderLink.Res> links = res.layers(RenderLink.Res.class);
+		for (RenderLink.Res link : links) {
+			if(link.l instanceof RenderLink.MeshMat) {
+				RenderLink.MeshMat mesh = (RenderLink.MeshMat) link.l;
+				return mesh.mesh.get();
 			}
 		}
-		return !NConfiguration.getInstance().showBB && !(NConfiguration.getInstance().hideNature && (gob.isTag(NGob.Tags.tree) || gob.isTag(NGob.Tags.bumling) || gob.isTag(NGob.Tags.bush)));
+		return res;
 	}
 
 	public static NModelBox forGob(Gob gob) {
-		if (NConfiguration.getInstance().showBB || (NConfiguration.getInstance().hideNature && (gob.isTag(NGob.Tags.tree) || gob.isTag(NGob.Tags.bumling) || gob.isTag(NGob.Tags.bush))))
-			return new NModelBox(gob);
+		Resource res = getResource(gob);
+		if(res!=null) {
+			Collection<Resource.Neg> negs = res.layers(Resource.Neg.class);
+			if (negs != null) {
+				ArrayList<NBoundingBox.Polygon> polygons = new ArrayList<>();
+				for (Resource.Neg neg : negs) {
+					Coord2d[] box = new Coord2d[4];
+					box[0] = (new Coord2d(neg.bc.x, -neg.ac.y));
+					box[1] = (new Coord2d(neg.ac.x, -neg.ac.y));
+					box[2] = (new Coord2d(neg.ac.x, -neg.bc.y));
+					box[3] = (new Coord2d(neg.bc.x, -neg.bc.y));
+					polygons.add(new NBoundingBox.Polygon(box));
+				}
+
+				return new NModelBox(new NBoundingBox(polygons, true), gob);
+			}
+		}
 		return null;
 	}
 
-    @Override
-    public void added(RenderTree.Slot slot) {
-		if (slots == null)
-			slots = new ArrayList<>(1);
-		slots.add(slot);
-		backup = new ArrayList<>(slots);
-		slot.ostate(state);
-	}
+	public static class HidePol extends Sprite implements RenderTree.Node {
+		public static Pipe.Op emat = Pipe.Op.compose ( new BaseColor ( new java.awt.Color ( 224, 193, 79, 255 ) ) );
+		final Model emod;
+		private NBoundingBox.Polygon pol;
 
-	public void removed(RenderTree.Slot slot) {
-		if(slots != null)
-			slots.remove(slot);
-	}
+		static final VertexArray.Layout pfmt = new VertexArray.Layout (
+				new VertexArray.Layout.Input ( Homo3D.vertex, new VectorFormat ( 3, NumberFormat.FLOAT32 ), 0, 0,
+						12 ) );
 
-    @Override
-    public void draw(Pipe context, Render out) {
-	if(model != null) {
-	    out.draw(context, model);
-	}
-    }
+		public HidePol ( NBoundingBox.Polygon pol ) {
+			super ( null, null );
+			this.pol = pol;
 
-	private static Model getModel(Gob gob) {
-	Model model = null;
-	Resource res = getResource(gob);
-	if(res!=null) {
-		synchronized (MODEL_CACHE) {
-			model = MODEL_CACHE.get(res);
-			if (model == null) {
-				List<List<Coord3f>> polygons = new LinkedList<>();
+			VertexArray va = new VertexArray ( pfmt,
+					new VertexArray.Buffer ( ( 4 ) * pfmt.inputs[0].stride, DataBuffer.Usage.STATIC,
+							this::fill ) );
 
-				Collection<Resource.Neg> negs = res.layers(Resource.Neg.class);
-				if (negs != null) {
-					for (Resource.Neg neg : negs) {
-						List<Coord3f> box = new LinkedList<>();
-						box.add(new Coord3f(neg.ac.x, -neg.ac.y, Z));
-						box.add(new Coord3f(neg.bc.x, -neg.ac.y, Z));
-						box.add(new Coord3f(neg.bc.x, -neg.bc.y, Z));
-						box.add(new Coord3f(neg.ac.x, -neg.bc.y, Z));
+			this.emod = new Model ( Model.Mode.TRIANGLE_FAN, va, null );
+		}
 
-						polygons.add(box);
-					}
-				}
-
-				Collection<Resource.Obstacle> obstacles = res.layers(Resource.Obstacle.class);
-				if (obstacles != null) {
-					for (Resource.Obstacle obstacle : obstacles) {
-						if ("build".equals(obstacle.id)) {
-							continue;
-						}
-						for (Coord2d[] polygon : obstacle.p) {
-							polygons.add(Arrays.stream(polygon)
-									.map(coord2d -> new Coord3f((float) coord2d.x, (float) -coord2d.y, Z))
-									.collect(Collectors.toList()));
-						}
-					}
-				}
-
-				if (!polygons.isEmpty()) {
-					List<Float> vertices = new LinkedList<>();
-
-					for (List<Coord3f> polygon : polygons) {
-						addLoopedVertices(vertices, polygon);
-					}
-
-					float[] data = convert(vertices);
-					VertexArray.Buffer vbo = new VertexArray.Buffer(data.length * 4, DataBuffer.Usage.STATIC, DataBuffer.Filler.of(data));
-					VertexArray va = new VertexArray(LAYOUT, vbo);
-
-					model = new Model(Model.Mode.LINES, va, null);
-
-					MODEL_CACHE.put(res, model);
+		private FillBuffer fill (
+				VertexArray.Buffer dst,
+				Environment env
+		) {
+			FillBuffer ret = env.fillbuf ( dst );
+			ByteBuffer buf = ret.push ();
+			if ( pol.neg ) {
+				for ( int i = 3 ; i >= 0 ; i-- ) {
+					buf.putFloat ( ( float ) pol.vertices[ i ].x ).putFloat ( ( float ) -pol.vertices[ i ].y )
+							.putFloat ( 1.0f );
 				}
 			}
+			else {
+				for ( int i = 0 ; i < 4 ; i++ ) {
+					buf.putFloat ( ( float ) pol.vertices[ i ].x ).putFloat ( ( float ) pol.vertices[ i ].y )
+							.putFloat ( 1.0f );
+				}
+			}
+			return ( ret );
+		}
+
+		public void added ( RenderTree.Slot slot ) {
+			slot.ostate ( Pipe.Op.compose ( emat ) );
+			slot.add ( emod );
 		}
 	}
 
-	return model;
-    }
+	private NBoundingBox bb;
 
-    private static float[] convert(List<Float> list) {
-	float[] ret = new float[list.size()];
-	int i = 0;
-	for (Float value : list) {
-	    ret[i++] = value;
+	Gob gob;
+	public NModelBox(NBoundingBox bb, Gob gob) {
+		super ( null, null );
+		this.gob = gob;
+		if ( bb == null ) {
+			this.bb = defaultBb;
+		}
+		else {
+			this.bb = bb;
+		}
 	}
-	return ret;
-    }
 
-    private static void addLoopedVertices(List<Float> target, List<Coord3f> vertices) {
-	int n = vertices.size();
-	for (int i = 0; i < n; i++) {
-	    Coord3f a = vertices.get(i);
-	    Coord3f b = vertices.get((i + 1) % n);
-	    Collections.addAll(target, a.x, a.y, a.z);
-	    Collections.addAll(target, b.x, b.y, b.z);
+	public void added ( RenderTree.Slot slot ) {
+		for ( NBoundingBox.Polygon pol : bb.polygons ) {
+			new HidePol( pol ).added ( slot );
+		}
 	}
-    }
 
-    private static Resource getResource(Gob gob) {
-	Resource res = gob.getres();
-	if(res == null) {return null;}
-	Collection<RenderLink.Res> links = res.layers(RenderLink.Res.class);
-	for (RenderLink.Res link : links) {
-	    if(link.l instanceof RenderLink.MeshMat) {
-		RenderLink.MeshMat mesh = (RenderLink.MeshMat) link.l;
-		return mesh.mesh.get();
-	    }
+	@Override
+	public boolean tick(double dt) {
+		if(!NConfiguration.getInstance().showBB) {
+			if (NConfiguration.getInstance().hideNature) {
+				if(gob.isTag(NGob.Tags.tree) || gob.isTag(NGob.Tags.bumling) || gob.isTag(NGob.Tags.bush))
+					return false;
+			}
+			return true;
+		}
+		return super.tick(dt);
 	}
-	return res;
-    }
-
-
-
 }
