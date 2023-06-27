@@ -28,7 +28,7 @@ public class CraftCloth implements Action {
                 new Drink(0.9, false).run(gui);
             }
             new UseWorkStation(new NAlias("loom")).run(gui);
-            new Craft("Linen Cloth", new char[]{'c', 'p', 'f', 'l'}).run(gui);
+            new Craft("Linen Cloth", "paginae/craft/linencloth").run(gui);
         }
         else if(!Finder.findObjectsInArea(new NAlias("stockpile-hemp"), in_area).isEmpty())
         {
@@ -38,7 +38,7 @@ public class CraftCloth implements Action {
                 new Drink(0.9, false).run(gui);
             }
             new UseWorkStation(new NAlias("loom")).run(gui);
-            new Craft("Hemp Cloth", new char[]{'c', 'p', 'f', 'p'}).run(gui);
+            new Craft("Hemp Cloth", "paginae/craft/hempcloth").run(gui);
         }
         else if(!Finder.findObjectsInArea(new NAlias("stockpile-wool"), in_area).isEmpty())
         {

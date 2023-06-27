@@ -38,7 +38,7 @@ public class CraftRope implements Action {
             new Drink(0.9,false).run(gui);
         }
         new UseWorkStation ( new NAlias ( "ropewalk" ) ).run ( gui );
-        new Craft ( "Rope", new char[]{ 'c', 'p', 'f', 'r' } ).run ( gui );
+        new Craft ( "Rope","paginae/craft/rope" ).run ( gui );
         
         new TransferToPile ( out_area, NHitBox.get (  ), new NAlias ( "rope" ), new NAlias ( "rope" ) )
                 .run ( gui );

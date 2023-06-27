@@ -6,7 +6,7 @@ import nurgling.NUtils;
 
 public class Craft implements Action {
     private String craft_name;
-    private String pagCommand;
+    private String pagCommand = "";
     private char[] craftCommand;
     private NAlias special = null;
     
