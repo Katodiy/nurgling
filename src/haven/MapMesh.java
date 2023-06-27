@@ -304,7 +304,7 @@ public class MapMesh implements RenderTree.Node, Disposable {
 		long ns = rnd.nextLong();
 		if(NConfiguration.getInstance().flatsurface) {
 			Tiler t = mc.tiler(mc.gettile(gc));
-			if (t instanceof TerrainTile.RidgeTile) {
+			if (t instanceof TerrainTile.RidgeTile && !t.getClass().getName().contains("InnerCave")) {
 				Tiler.flatmodel(m, c);
 			} else {
 				mc.tiler(mc.gettile(gc)).model(m, rnd, c, gc);

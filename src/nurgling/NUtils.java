@@ -861,6 +861,12 @@ public class NUtils {
         iStrMap.put("brokenh", new TexI(Resource.loadsimg("icon/brokenh")));
         iStrMap.put("growth", new TexI(Resource.loadsimg("icon/growth")));
         iStrMap.put("quality", new TexI(Resource.loadsimg("icon/quality")));
+        iStrMap.put("gred", new TexI(Resource.loadsimg("crop/gred")));
+        iStrMap.put("gbluebrown", new TexI(Resource.loadsimg("crop/gbluebrown")));
+        iStrMap.put("ggreen", new TexI(Resource.loadsimg("crop/ggreen")));
+        iStrMap.put("ggray", new TexI(Resource.loadsimg("crop/ggray")));
+        iStrMap.put("gblue", new TexI(Resource.loadsimg("crop/gblue")));
+        iStrMap.put("gbrown", new TexI(Resource.loadsimg("crop/gbrown")));
 
         iconMap.put("gfx/terobjs/vehicle/wheelbarrow","mm/wheelbarrow");
         Resource.loadimg("mm/wheelbarrow");

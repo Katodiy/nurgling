@@ -698,7 +698,11 @@ public class NGob {
                         gob.addcustomattr(new NDframeColor(gob));
                     } else if (gob.isTag(Tags.ttub)) {
                         gob.addcustomattr(new NTubColor(gob));
-                    } else if (gob.isTag(Tags.chickencoop) || gob.isTag(Tags.rabbithutch)) {
+                    }
+                    else if (gob.isTag(Tags.gardenpot)) {
+                        gob.addcustomol(new NGardenPotMarker(gob));
+                    }
+                    else if (gob.isTag(Tags.chickencoop) || gob.isTag(Tags.rabbithutch)) {
                         gob.addcustomattr(new NIncubatorColor(gob));
                     } else if (gob.isTag(Tags.cheeserack)) {
                         gob.addcustomattr(new NCheeseColor(gob));
