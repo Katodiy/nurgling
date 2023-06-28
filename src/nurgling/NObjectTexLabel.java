@@ -52,7 +52,7 @@ public class NObjectTexLabel extends NSprite implements RenderTree.Node, PView.R
         else if(NUtils.getGameUI().getMap().camera instanceof MapView.OrthoCam)
         {
             Coord sc = Homo3D.obj2view(pos, state, Area.sized(g.sz())).round2();
-            if (((MapView.OrthoCam)cam).field > 300 && !forced)
+            if (((MapView.OrthoCam)cam).field > 400 && !forced)
                 g.aimage(img, sc, 0.5, 0.5);
             else
             {
