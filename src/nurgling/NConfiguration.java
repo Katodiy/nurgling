@@ -401,7 +401,6 @@ public class NConfiguration {
     void initCustomTileRes()
     {
         Resource.local().loadwait("tiles/ridge-tex");
-        Resource res = Resource.local().loadwait("tiles/test-tex");
         customTileRes.put("ridge", Resource.local().loadwait("tiles/ridge").layer(Tileset.class));
     }
 
