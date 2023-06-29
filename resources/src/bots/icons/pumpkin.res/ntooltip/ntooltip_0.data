@@ -1,0 +1,6 @@
+#name
+Pumpkin Bot
+#req
+pumpkin, swill
+#text
+For the bot to work, it is necessary to determine the necessary areas. The field can be of any form. Paving can be used on the field, it will be ignored when planting seeds. There should be a barrel for seeds on the pumpkin plot. Seed collection is carried out in the third stage. In the swill area there should be a trough for collecting seeds. If for one collection the number of seeds exceeds the volume of the barrel + trough - you will need a cistern in the swill area

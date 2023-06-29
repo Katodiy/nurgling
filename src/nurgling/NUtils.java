@@ -1807,6 +1807,12 @@ public class NUtils {
                         -1);
     }
 
+
+    public static void activateItemAll(Gob gob) {
+        gameUI.map
+                .wdgmsg("itemact", Coord.z, gob.rc.floor(posres), 3, 0, (int) gob.id, gob.rc.floor(posres), 0,
+                        0);
+    }
     public static void activateItemToPile(Gob gob) {
         gameUI.map
                 .wdgmsg("itemact", Coord.z, gob.rc.floor(posres), 0, 0, (int) gob.id, gob.rc.floor(posres), 0,

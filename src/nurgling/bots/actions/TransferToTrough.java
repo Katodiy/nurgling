@@ -24,16 +24,14 @@ public class TransferToTrough implements Action {
             new PathFinder( gui, gob ).run ();
             for ( GItem item : gui.getInventory ().getWItems( items ) ) {
                 do {
+                    if(gui.getInventory ().getWItems( items ).isEmpty())
+                        return new Results ( Results.Types.SUCCESS );
                     if ( gob.getModelAttribute() != 7 ) {
                         if ( gui.hand.isEmpty () ) {
                             new TakeToHand ( item ).run ( gui );
                         }
-                        int counter = 0;
-                        while ( !gui.hand.isEmpty () && counter < 20 ) {
-                            NUtils.activateItem ( gob );
-                            Thread.sleep ( 50 );
-                            counter++;
-                        }
+                        NUtils.activateItemAll ( gob );
+                        NUtils.waitEvent(()->gui.hand.isEmpty () || gob.getModelAttribute() == 7,20);
                     }
                     else {
                         if(!gui.hand.isEmpty ())
