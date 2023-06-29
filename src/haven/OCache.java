@@ -32,6 +32,7 @@ import java.lang.annotation.*;
 import java.lang.reflect.*;
 import haven.render.*;
 import nurgling.NDmgOverlay;
+import nurgling.NGob;
 
 public class OCache implements Iterable<Gob> {
     public static final int OD_REM = 0;
@@ -400,6 +401,7 @@ public class OCache implements Iterable<Gob> {
 		    added = true;
 		}
 		gob.updated();
+		NGob.updateRes(gob);
 	    }
 	    synchronized(this) {
 		applier = null;

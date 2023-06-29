@@ -48,7 +48,7 @@ public class BuildSign extends Bot {
         window.add ( new Button ( window.buttons_size, "Зона строительства" ) {
             @Override
             public void click () {
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter( gameUI, _start, m_selection_start, build_area ),
@@ -60,7 +60,7 @@ public class BuildSign extends Bot {
         window.add ( new Button ( window.buttons_size, "Доски" ) {
             @Override
             public void click () {
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter ( gameUI, _zone1, m_selection_start, board_area ),

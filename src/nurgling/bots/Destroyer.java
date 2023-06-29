@@ -27,7 +27,7 @@ public class Destroyer extends Bot {
     @Override
     public void initAction ()
             throws InterruptedException { super.initAction();
-        gameUI.getMap ().isAreaSelectorEnable = true;
+        gameUI.getMap ().isAreaSelectorEnable.set(true);
         if ( !m_selection_start.get () ) {
             m_selection_start.set ( true );
             new Thread ( new AreaSelecter( gameUI, _start, m_selection_start, tree_area ),

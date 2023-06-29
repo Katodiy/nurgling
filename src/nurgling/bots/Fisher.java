@@ -33,7 +33,7 @@ public class Fisher extends Bot{
             @Override
             public void click () {
 
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter( gameUI, _tools_b, m_selection_start, tools_area ),
@@ -45,7 +45,7 @@ public class Fisher extends Bot{
         window.add ( new Button ( window.buttons_size, "Наживка" ) {
             @Override
             public void click () {
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter ( gameUI, _bait_b, m_selection_start, bait_area ),
@@ -57,7 +57,7 @@ public class Fisher extends Bot{
         window.add ( new Button ( window.buttons_size, "Место рыбалки" ) {
             @Override
             public void click () {
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter ( gameUI, _fish_b, m_selection_start, fish_area ),
@@ -69,7 +69,7 @@ public class Fisher extends Bot{
         Widget prev = window.add (new Button ( window.buttons_size, "Пайлы" ) {
             @Override
             public void click () {
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter ( gameUI, _pile_b, m_selection_start, pile_area ),

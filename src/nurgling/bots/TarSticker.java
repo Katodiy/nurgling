@@ -36,7 +36,7 @@ public class TarSticker extends Bot {
         window.add ( new Button ( window.buttons_size, "Blocks/Logs" ) {
             @Override
             public void click () {
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter( gameUI, _start, m_selection_start, tree_area ),
@@ -48,7 +48,7 @@ public class TarSticker extends Bot {
         window.add ( new Button ( window.buttons_size, "Output" ) {
             @Override
             public void click () {
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter ( gameUI, _output, m_selection_start, output_area ),
@@ -60,7 +60,7 @@ public class TarSticker extends Bot {
         window.add ( new Button ( window.buttons_size, "Barrels with tar" ) {
             @Override
             public void click () {
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter ( gameUI, _barrel, m_selection_start, barrel_area ),

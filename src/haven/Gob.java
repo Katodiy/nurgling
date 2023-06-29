@@ -729,7 +729,6 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 	    updateseq++;
 	    if(updwait != null)
 		updwait.wnotify();
-		NGob.updateRes(this);
 	}
     }
 

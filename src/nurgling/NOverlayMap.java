@@ -98,22 +98,26 @@ public class NOverlayMap extends NSprite{
                 current.clear();
                 for (MCache.Grid g : grids) {
                     for (int i = 0; i < g.ols.length; i++) {
-                        if (g.ols[i].get().layer(MCache.ResOverlay.class) == id.id) {
-                            for (Coord c : a) {
-                                Coord t = c.sub(g.ul);
-                                if ((t.x + (t.y * MCache.cmaps.x)) < 10000 && t.x < 100 && t.y < 100 && t.x >= 0 && t.y >= 0) {
-                                    boolean res = (c.mul(MCache.tilesz).add(new Coord2d(MCache.tilesz.x / 2., MCache.tilesz.y / 2.)).dist(tar) <= r);
-                                    if (res) {
-                                        current.add(new History(g, t, res));
-                                        if (!g.ol[i][t.x + (t.y * MCache.cmaps.x)]) {
-                                            hist.add(new History(g, t, g.ol[i][t.x + (t.y * MCache.cmaps.x)]));
-                                            g.ol[i][t.x + (t.y * MCache.cmaps.x)] = res;
-                                            needUpdate = true;
+                        try {
+                            if (g.ols[i].get().layer(MCache.ResOverlay.class) == id.id) {
+                                for (Coord c : a) {
+                                    Coord t = c.sub(g.ul);
+                                    if ((t.x + (t.y * MCache.cmaps.x)) < 10000 && t.x < 100 && t.y < 100 && t.x >= 0 && t.y >= 0) {
+                                        boolean res = (c.mul(MCache.tilesz).add(new Coord2d(MCache.tilesz.x / 2., MCache.tilesz.y / 2.)).dist(tar) <= r);
+                                        if (res) {
+                                            current.add(new History(g, t, res));
+                                            if (!g.ol[i][t.x + (t.y * MCache.cmaps.x)]) {
+                                                hist.add(new History(g, t, g.ol[i][t.x + (t.y * MCache.cmaps.x)]));
+                                                g.ol[i][t.x + (t.y * MCache.cmaps.x)] = res;
+                                                needUpdate = true;
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
+                        catch (Loading e)
+                        {}
                     }
                 }
                 if (needUpdate || (isPlob && (plobrc.x!=plob.rc.x || plobrc.y!=plob.rc.y)))

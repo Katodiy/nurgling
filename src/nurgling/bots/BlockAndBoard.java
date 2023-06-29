@@ -37,7 +37,7 @@ public class BlockAndBoard extends Bot {
                 _blocks.set ( false );
                 _coord.x = 1;
                 _coord.y = 4;
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter( gameUI, _start, m_selection_start, tree_area ),
@@ -51,7 +51,7 @@ public class BlockAndBoard extends Bot {
             public void click () {
                 _boards.set ( false );
                 _blocks.set ( true );
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 _coord.x = 2;
                 _coord.y = 1;
                 if ( !m_selection_start.get () ) {
@@ -65,7 +65,7 @@ public class BlockAndBoard extends Bot {
         window.add ( new Button ( window.buttons_size, "Output piles" ) {
             @Override
             public void click () {
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter ( gameUI, _zone, m_selection_start, pile_area ),

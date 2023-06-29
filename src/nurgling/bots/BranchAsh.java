@@ -32,7 +32,7 @@ public class BranchAsh extends Bot {
         window.add ( new Button ( window.buttons_size, "Blocks piles/Log" ) {
             @Override
             public void click () {
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter( gameUI, _zone1, m_selection_start, block_area ),
@@ -44,7 +44,7 @@ public class BranchAsh extends Bot {
         window.add ( new Button ( window.buttons_size, "Barrel for ash" ) {
             @Override
             public void click () {
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter ( gameUI, _zone2, m_selection_start, ash_area),

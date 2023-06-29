@@ -34,7 +34,7 @@ public class SoilDestroyer extends Bot {
         window.add ( new Button ( window.buttons_size, "Земля" ) {
             @Override
             public void click () {
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter( gameUI, _start, m_selection_start, earth_area ),
@@ -46,7 +46,7 @@ public class SoilDestroyer extends Bot {
         window.add ( new Button ( window.buttons_size, "Пайлы" ) {
             @Override
             public void click () {
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter ( gameUI, _zone, m_selection_start, pile_area ),
@@ -58,7 +58,7 @@ public class SoilDestroyer extends Bot {
         window.add ( new Button ( window.buttons_size, "Сброс" ) {
             @Override
             public void click () {
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter ( gameUI, _dzone, m_selection_start, d_area ), "Cont Area Selecter" )

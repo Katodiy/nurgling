@@ -6,6 +6,8 @@ import haven.res.ui.tt.stackn.Stack;
 
 import java.util.*;
 
+import static nurgling.NGItem.READY;
+
 public class NInventory extends Inventory {
     public NSearchWidget searchwdg;
     public NPopUpWidget toggles;
@@ -435,6 +437,7 @@ public class NInventory extends Inventory {
     }
 
     private void fillInventorySpace(boolean[][] inventory) {
+        waitLoading();
         for (int i = 0; i < isz.x; i++) {
             for (int j = 0; j < isz.y; j++) {
                 inventory[i][j] = false;
@@ -442,7 +445,7 @@ public class NInventory extends Inventory {
         }
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
-                WItem wdg = (WItem) widget;
+                NWItem wdg = (NWItem) widget;
                 Coord pos = new Coord(wdg.c.x / (sqsz.x  - UI.scale(1)), wdg.c.y / (sqsz.x  - UI.scale(1)));
                 Coord size = ((NGItem) wdg.item).sprSz();
                 Coord endPos = new Coord(pos.x + size.x, pos.y + size.y );

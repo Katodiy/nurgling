@@ -24,7 +24,7 @@ public class MineBot extends Bot {
     public void initAction ()
             throws InterruptedException {
         super.initAction ();
-        gameUI.getMap ().isAreaSelectorEnable = true;
+        gameUI.getMap ().isAreaSelectorEnable.set(true);
         Thread sl = null;
         if ( !m_selection_start.get () ) {
             m_selection_start.set ( true );

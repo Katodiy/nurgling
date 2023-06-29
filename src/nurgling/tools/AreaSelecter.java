@@ -27,10 +27,10 @@ public class AreaSelecter implements Runnable {
     
     @Override
     public void run () {
-        gameUI.getMap ().isAreaSelectorEnable = true;
+        gameUI.getMap ().isAreaSelectorEnable.set(true);
         try {
             gameUI.msg ( "Please, select area" );
-            while ( gameUI.getMap ().isAreaSelectorEnable ) {
+            while ( gameUI.getMap ().isAreaSelectorEnable.get() ) {
                 
                 Thread.sleep ( 100 );
             }

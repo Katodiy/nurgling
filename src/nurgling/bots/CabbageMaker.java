@@ -97,7 +97,7 @@ public class CabbageMaker extends Bot {
 //        window.add ( new Button ( window.buttons_size, "Output" ) {
 //            @Override
 //            public void click () {
-//                gameUI.getMap ().isAreaSelectorEnable = true;
+//                gameUI.getMap ().isAreaSelectorEnable.set(true);
 //                if ( !m_selection_start.get () ) {
 //                    m_selection_start.set ( true );
 //                    new Thread ( new AreaSelecter( gameUI, out_zone, m_selection_start, out_area),
@@ -109,7 +109,7 @@ public class CabbageMaker extends Bot {
 //        b_1 = window.add ( new Button ( window.buttons_size, "1" ) {
 //            @Override
 //            public void click () {
-//                gameUI.getMap ().isAreaSelectorEnable = true;
+//                gameUI.getMap ().isAreaSelectorEnable.set(true);
 //                if ( !m_selection_start.get () ) {
 //                    m_selection_start.set ( true );
 //                    new Thread ( new AreaSelecter ( gameUI, _zone1, m_selection_start, ingred_1),
@@ -122,7 +122,7 @@ public class CabbageMaker extends Bot {
 //        b_2 = window.add ( new Button ( window.buttons_size, "2" ) {
 //            @Override
 //            public void click () {
-//                gameUI.getMap ().isAreaSelectorEnable = true;
+//                gameUI.getMap ().isAreaSelectorEnable.set(true);
 //                if ( !m_selection_start.get () ) {
 //                    m_selection_start.set ( true );
 //                    new Thread ( new AreaSelecter ( gameUI, _zone2, m_selection_start, ingred_2),
@@ -135,7 +135,7 @@ public class CabbageMaker extends Bot {
 //        b_3 = window.add ( new Button ( window.buttons_size, "3" ) {
 //            @Override
 //            public void click () {
-//                gameUI.getMap ().isAreaSelectorEnable = true;
+//                gameUI.getMap ().isAreaSelectorEnable.set(true);
 //                if ( !m_selection_start.get () ) {
 //                    m_selection_start.set ( true );
 //                    new Thread ( new AreaSelecter ( gameUI, _zone3, m_selection_start, ingred_3),
@@ -148,7 +148,7 @@ public class CabbageMaker extends Bot {
 //        b_4 = window.add ( new Button ( window.buttons_size, "4" ) {
 //            @Override
 //            public void click () {
-//                gameUI.getMap ().isAreaSelectorEnable = true;
+//                gameUI.getMap ().isAreaSelectorEnable.set(true);
 //                if ( !m_selection_start.get () ) {
 //                    m_selection_start.set ( true );
 //                    new Thread ( new AreaSelecter ( gameUI, _zone4, m_selection_start, ingred_4),

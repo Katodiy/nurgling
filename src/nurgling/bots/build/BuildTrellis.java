@@ -54,7 +54,7 @@ public class BuildTrellis extends Bot {
         window.add ( new Button ( window.buttons_size, "Building area" ) {
             @Override
             public void click () {
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter( gameUI, _start, m_selection_start, build_area ),
@@ -66,7 +66,7 @@ public class BuildTrellis extends Bot {
         window.add ( new Button ( window.buttons_size, "Logs/blocks" ) {
             @Override
             public void click () {
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter ( gameUI, _zone1, m_selection_start, block_area ),
@@ -78,7 +78,7 @@ public class BuildTrellis extends Bot {
         window.add ( new Button ( window.buttons_size, "Strings" ) {
             @Override
             public void click () {
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter ( gameUI, _zone2, m_selection_start, fibre_area ),

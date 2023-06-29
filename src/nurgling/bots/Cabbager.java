@@ -30,7 +30,7 @@ public class Cabbager extends Bot {
         window.add ( new Button ( window.buttons_size, "Input(Not ready)" ) {
             @Override
             public void click () {
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter ( gameUI, _zone1, m_selection_start, unbacked_area),
@@ -42,7 +42,7 @@ public class Cabbager extends Bot {
         window.add ( new Button ( window.buttons_size, "Output(Ready)" ) {
             @Override
             public void click () {
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter ( gameUI, _zone2, m_selection_start, backed_area),

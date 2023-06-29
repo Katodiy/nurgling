@@ -40,7 +40,7 @@ public class TarKilnRefiller extends Bot {
         window.add ( new Button ( window.buttons_size, "Blocks pile/Logs" ) {
             @Override
             public void click () {
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter ( gameUI, _blocks, m_selection_start, block_area ),
@@ -52,7 +52,7 @@ public class TarKilnRefiller extends Bot {
         window.add ( new Button ( window.buttons_size, "Output coal" ) {
             @Override
             public void click () {
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter( gameUI, _coal, m_selection_start, coal_area ),

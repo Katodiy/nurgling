@@ -47,8 +47,8 @@ public class TestBot extends Bot {
             //            pf.run ();
             //            pf.map.print();
             /// Выбрать все объекты
-            gameUI.getMap ().isAreaSelectorEnable = true;
-            while ( gameUI.getMap ().isAreaSelectorEnable ) {
+            gameUI.getMap ().isAreaSelectorEnable.set(true);
+            while ( gameUI.getMap ().isAreaSelectorEnable.get() ) {
                 Thread.sleep ( 100 );
             }
 //            gameUI.msg ( String.valueOf ( gameUI.getInventory ().getNumberFreeCoord ( new Coord ( 4, 1 ) ) ) );

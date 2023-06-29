@@ -412,6 +412,10 @@ public class NConfiguration {
         initCustomTileRes();
         iconsettings.put("mm/wheelbarrow",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/wheelbarrow"),true,true,false,false));
         iconsettings.put("mm/anvil",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/anvil"),true,true,false,false));
+        iconsettings.put("mm/dugout",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/dugout"),true,true,false,false));
+        iconsettings.put("mm/knarr",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/knarr"),true,true,false,false));
+        iconsettings.put("mm/snekkja",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/snekkja"),true,true,false,false));
+        iconsettings.put("mm/rowboat",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/rowboat"),true,true,false,false));
         iconsettings.put("mm/horse",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/horse"),true,true,false,false));
         iconsettings.put("mm/milestones",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/milestones"),true,true,false,false));
         iconsettings.put("mm/milestonese",new GobIcon.Setting(new Resource.Spec(Resource.local(),"mm/milestonese"),true,true,false,false));

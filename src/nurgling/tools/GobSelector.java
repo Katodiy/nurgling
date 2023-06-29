@@ -28,9 +28,7 @@ public class GobSelector implements Runnable {
         NGameUI gameUI = NUtils.getGameUI();
         try {
             gameUI.msg ( "Please, select object" );
-            while ( gameUI.getMap ().isGobSelectorEnable.get() ) {
-                Thread.sleep ( 100 );
-            }
+            NUtils.waitEvent(()->!gameUI.getMap ().isGobSelectorEnable.get(),1000);
             synchronized ( gameUI.getMap () ) {
                 Gob res = gameUI.getMap().getSelectedGob();
                 if(res!=null)

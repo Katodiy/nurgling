@@ -879,6 +879,14 @@ public class NUtils {
         Resource.loadimg("mm/horse");
         iconMap.put("gfx/terobjs/anvil","mm/anvil");
         Resource.loadimg("mm/anvil");
+        iconMap.put("gfx/terobjs/vehicle/rowboat","mm/rowboat");
+        Resource.loadimg("mm/rowboat");
+        iconMap.put("gfx/terobjs/vehicle/knarr","mm/knarr");
+        Resource.loadimg("mm/knarr");
+        iconMap.put("gfx/terobjs/vehicle/snekkja","mm/snekkja");
+        Resource.loadimg("mm/snekkja");
+        iconMap.put("gfx/terobjs/vehicle/dugout","mm/dugout");
+        Resource.loadimg("mm/dugout");
         iconMap.put("gfx/terobjs/road/milestone-stone-m","mm/milestones");
         Resource.loadimg("mm/milestones");
         iconMap.put("gfx/terobjs/road/milestone-stone-e","mm/milestonese");

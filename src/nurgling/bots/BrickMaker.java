@@ -28,7 +28,7 @@ public class BrickMaker extends Bot {
         window.add ( new Button ( window.buttons_size, "Piles of clay" ) {
             @Override
             public void click () {
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter ( gameUI, _zone1, m_selection_start, clay_area),
@@ -40,7 +40,7 @@ public class BrickMaker extends Bot {
         window.add ( new Button ( window.buttons_size, "Output bricks" ) {
             @Override
             public void click () {
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter ( gameUI, _zone2, m_selection_start, brick_area),

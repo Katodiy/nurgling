@@ -59,6 +59,9 @@ public class MineAction implements Action {
                     if(NUtils.getFightView().getCurrentGob() != null){
                         return new Results(Results.Types.FIGHT);
                     }
+                    Gob looserock;
+                    if((looserock = Finder.findObject(new NAlias("looserock")))!=null && looserock.rc.dist(NUtils.getGameUI().map.player().rc)<93.5)
+                        return new Results(Results.Types.NEAR_LOOSEROCK);
                     ArrayList<Gob> mss = Finder.findObjects(new NAlias("minebeam", "column", "towercap", "ladder", "minesupport"));
                     for(Gob ms: mss) {
 

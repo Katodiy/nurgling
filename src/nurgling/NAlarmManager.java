@@ -27,6 +27,7 @@ public class NAlarmManager {
         alarms.put(NGob.Tags.winter_stoat,"alarm/stoat");
         alarms.put(NGob.Tags.stalagoomba,"alarm/stalagoomba");
         alarms.put(NGob.Tags.troll,"alarm/troll");
+        alarms.put(NGob.Tags.looserock,"alarm/looserock");
 
 
     }

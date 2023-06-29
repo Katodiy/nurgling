@@ -108,7 +108,7 @@ public class NGob {
         mammoth,
         orca,
         stoat,
-        rabbithutch, chickencoop, stalagoomba, kritter_is_ready, qbring, qrage, qwave, qlaugh, qgreet, qcompleted, quality, troll, spermwhale, winter_stoat
+        rabbithutch, chickencoop, stalagoomba, kritter_is_ready, qbring, qrage, qwave, qlaugh, qgreet, qcompleted, quality, troll, spermwhale, looserock, winter_stoat
     }
 
     public final HashSet<Tags> tags = new HashSet<>();
@@ -426,7 +426,11 @@ public class NGob {
                 gob.addTag(Tags.bumling);
             } else if (NUtils.checkName(name, "gfx/terobjs/bushes")) {
                 gob.addTag(Tags.bush);
-            } else if (NUtils.checkName(name, new NAlias(new ArrayList<>(Arrays.asList("kritter")),new ArrayList<>(Arrays.asList("beef", "skeleton"))))) {
+            }
+            else if (NUtils.checkName(name, "gfx/terobjs/looserock")) {
+                gob.addTag(Tags.looserock);
+            }
+            else if (NUtils.checkName(name, new NAlias(new ArrayList<>(Arrays.asList("kritter")),new ArrayList<>(Arrays.asList("beef", "skeleton"))))) {
                 gob.addTag(Tags.kritter);
                 if (NUtils.checkName(name, "greyseal"))
                     gob.addTag(Tags.greyseal);
@@ -652,12 +656,16 @@ public class NGob {
                     if (gob.isTag(Tags.highlighted)) {
                         gob.addcustomol(new NHighlightRing(gob));
                         gob.addcustomattr(new NGobHighlight(gob));
-
                     } else if ((gob.isTag(Tags.quest) && !gob.isTag(Tags.knocked)) /*|| (gob.getResName()!=null && gob.getResName().contains("woodensign"))*/) {
                         NAlarmManager.play(Tags.quest);
                         gob.addcustomol(new NNotifiedRing(gob, Color.CYAN, 30, 0.7f, gob.noteImg));
                     } else if (gob.isTag(Tags.notified)) {
                         gob.addcustomol(new NNotifiedRing(gob, Color.GREEN, 20, 0.7f, gob.noteImg));
+                    }
+                    if (gob.isTag(Tags.looserock))
+                    {
+                        NAlarmManager.play(Tags.looserock);
+                        gob.addcustomol(new NAreaRad(gob,  (float) 93.5f, new Color(192, 68, 0, 128), new Color(128, 88, 88, 255)));
                     }
                     if (gob.isTag(Tags.plant)) {
                         NProperties.Crop crop = gob.getCrop();

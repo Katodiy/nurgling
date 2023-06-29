@@ -41,7 +41,7 @@ public class CreaterCloth extends Bot {
         window.add ( new Button ( window.buttons_size, "Output piles" ) {
             @Override
             public void click () {
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter( gameUI, _out_zone, m_selection_start, out_area ),
@@ -54,7 +54,7 @@ public class CreaterCloth extends Bot {
         window.add ( new Button ( window.buttons_size, "Ingredients" ) {
             @Override
             public void click () {
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter ( gameUI, _zone, m_selection_start, pile_area ),

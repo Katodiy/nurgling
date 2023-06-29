@@ -159,7 +159,7 @@ public class NGItem extends GItem {
         {
             return sprSz;
         }
-        return null;
+        return new Coord(1,1);
     }
 
     public NContent content(){

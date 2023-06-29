@@ -28,7 +28,7 @@ public class CartOut extends Bot {
         window.add ( new Button ( window.buttons_size, "Input logs" ) {
             @Override
             public void click () {
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter ( gameUI, _start, m_selection_start, in_area),
@@ -40,7 +40,7 @@ public class CartOut extends Bot {
         window.add ( new Button ( window.buttons_size, "Output logs" ) {
             @Override
             public void click () {
-                gameUI.getMap ().isAreaSelectorEnable = true;
+                gameUI.getMap ().isAreaSelectorEnable.set(true);
                 if ( !m_selection_start.get () ) {
                     m_selection_start.set ( true );
                     new Thread ( new AreaSelecter ( gameUI, _zone, m_selection_start, out_area),
