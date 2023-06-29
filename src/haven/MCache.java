@@ -54,7 +54,7 @@ public class MCache implements MapSource {
     private Reference<Tiler>[] tiles = new Reference[16];
     private final Waitable.Queue gridwait = new Waitable.Queue();
     Map<Coord, Request> req = new HashMap<Coord, Request>();
-    Map<Coord, Grid> grids = new HashMap<Coord, Grid>();
+    public Map<Coord, Grid> grids = new HashMap<Coord, Grid>();
     Session sess;
     Set<Overlay> ols = new HashSet<Overlay>();
     public int olseq = 0, chseq = 0;
@@ -298,14 +298,14 @@ public class MCache implements MapSource {
 	public long id;
 	public int seq = -1;
 	private int olseq = -1;
-	private final Cut cuts[];
+	public final Cut[] cuts;
 	private Flavobjs[] fo = new Flavobjs[cutn.x * cutn.y];
 
-	private class Cut {
-	    MapMesh mesh;
-	    Defer.Future<MapMesh> dmesh;
-	    Map<OverlayInfo, RenderTree.Node> ols = new HashMap<>();
-	    Map<OverlayInfo, RenderTree.Node> olols = new HashMap<>();
+	public class Cut {
+	    public MapMesh mesh;
+	    public Defer.Future<MapMesh> dmesh;
+	    public Map<OverlayInfo, RenderTree.Node> ols = new HashMap<>();
+	    public Map<OverlayInfo, RenderTree.Node> olols = new HashMap<>();
 	}
 
 	private class Flavobj extends Gob {
@@ -709,6 +709,10 @@ public class MCache implements MapSource {
 		    }
 		}
 	    }
+		olids = Arrays.copyOf(olids, olids.length + 1);
+		ols = Arrays.copyOf(ols, ols.length + 1);
+		olids[olids.length-1] = Resource.remote().load("map/overlay/minesup-o");
+		ols[olids.length-1] = new boolean[cmaps.x * cmaps.y];
 	    this.ols = olids;
 	    this.ol = ols;
 	    fill_plots = null;

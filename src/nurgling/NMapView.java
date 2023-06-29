@@ -32,9 +32,12 @@ public class NMapView extends MapView {
     private boolean n_selection = false;
     private boolean withpf = false;
 
+    private final Map<MCache.OverlayInfo, Overlay> custom_ols = new HashMap<>();
+
     public NMapView(Coord sz, Glob glob, Coord2d cc, long plgob) {
         super(sz, glob, cc, plgob);
         basic.add(((NOCache)glob.oc).paths);
+        olsinf.put("minesup", new NOverlayInfo(Resource.remote().loadwait("map/overlay/minesup-o").flayer(MCache.ResOverlay.class),false));
         ItemTex.tryLoad();
     }
 
@@ -507,4 +510,81 @@ public class NMapView extends MapView {
         }
     }
 
+    class NOverlayInfo
+    {
+        public MCache.OverlayInfo id;
+        boolean needUpdate = false;
+
+        public NOverlayInfo(MCache.OverlayInfo flayer, boolean b) {
+            this.id = flayer;
+            this.needUpdate = b;
+        }
+
+        HashMap<Long, ArrayList<NOverlayMap.History>> gobs = new HashMap<>();
+    }
+
+    public HashMap<String, NOverlayInfo> olsinf = new HashMap<>();
+
+    @Override
+    protected void oltick() {
+        if (terrain.area != null) {
+            for (NOverlayInfo olinf : olsinf.values()) {
+                if ((olinf.needUpdate || olinf.gobs.isEmpty()) && custom_ols.get(olinf.id) != null) {
+                    synchronized (NUtils.getGameUI().getMap().glob.map.grids) {
+                        for (MCache.Grid grid : NUtils.getGameUI().getMap().glob.map.grids.values()) {
+                            for (int i = 0; i < grid.cuts.length; i++) {
+                                try {
+                                    MapMesh mesh = (grid.cuts[i].mesh != null) ? grid.cuts[i].mesh : grid.cuts[i].dmesh.get();
+                                    if (mesh == null)
+                                        return;
+                                    grid.cuts[i].ols.put(olinf.id, mesh.makeol(olinf.id));
+                                    grid.cuts[i].olols.put(olinf.id, mesh.makeolol(olinf.id));
+                                } catch (Loading l) {
+                                    l.boostprio(2);
+                                }
+                            }
+                        }
+                        olinf.needUpdate = false;
+                    }
+                }
+                Overlay ol = custom_ols.get(olinf.id);
+                if (ol == null) {
+                    try {
+                        basic.add(ol = new Overlay(olinf.id));
+                        custom_ols.put(olinf.id, ol);
+                    } catch (Loading l) {
+                        l.boostprio(2);
+                        continue;
+                    }
+                }
+            }
+        }
+        super.oltick();
+        if (terrain.area != null)
+            for (NOverlayInfo olinf : olsinf.values())
+                for (Iterator<Map.Entry<Long, ArrayList<NOverlayMap.History>>> iter = olinf.gobs.entrySet().iterator(); iter.hasNext(); ) {
+                    Map.Entry<Long, ArrayList<NOverlayMap.History>> item = iter.next();
+                    Long gobid = item.getKey();
+                    if (NUtils.getGob(gobid) == null && placing == null) {
+                        for (NOverlayMap.History h : olinf.gobs.get(gobid)) {
+                            for (int i = 0; i < h.g.ols.length; i++) {
+                                if (h.g.ols[i].get().layer(MCache.ResOverlay.class) == olinf.id) {
+                                    h.g.ol[i][h.t.x + (h.t.y * MCache.cmaps.x)] = false;
+                                }
+                            }
+                        }
+                        iter.remove();
+                        olinf.needUpdate = true;
+                    }
+                }
+    }
+
+    public void setStatus(MCache.OverlayInfo id, boolean status){
+        for(NOverlayInfo inf: olsinf.values()){
+            if(inf.id == id){
+                inf.needUpdate = status;
+                return;
+            }
+        }
+    }
 }

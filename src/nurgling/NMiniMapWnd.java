@@ -21,6 +21,9 @@ public class NMiniMapWnd extends NResizedWidget{
     public static final KeyBinding kb_eye = KeyBinding.get("ol-eye", KeyMatch.nil);
     public static final KeyBinding kb_grid = KeyBinding.get("ol-mgrid", KeyMatch.nil);
     public static final KeyBinding kb_path = KeyBinding.get("ol-mgrid", KeyMatch.nil);
+
+    public static final KeyBinding kb_hidenature = KeyBinding.get("ol-hidenature", KeyMatch.nil);
+    public static final KeyBinding kb_minesup = KeyBinding.get("ol-minesup", KeyMatch.nil);
     public NMiniMapWnd(String name, NMapView map,MapFile file) {
         super(name);
         minSize = new Coord(UI.scale(133),UI.scale(133));
@@ -55,11 +58,16 @@ public class NMiniMapWnd extends NResizedWidget{
         path.a = NConfiguration.getInstance().isPaths;
         ACheckBox grid = toggle_panel.add(new NMenuCheckBox("lbtn-grid", kb_grid, "Display grid"), (first.sz.x+UI.scale(3))*6, 0).changed(a -> NUtils.getGameUI().mmapw.miniMap.toggleol("grid", a));
         grid.a = NConfiguration.getInstance().isGrid;
+        ACheckBox minesup = toggle_panel.add(new NMenuCheckBox("lbtn-minesup", kb_minesup, "Display safe mining area"), (first.sz.x+UI.scale(3))*7, 0).changed(a -> NUtils.getGameUI().mmapw.miniMap.toggleol("minesup", a));
+        minesup.a = NConfiguration.getInstance().minesup;
+        NUtils.getGameUI().toggleol("minesup", minesup.a);
         map_box = add(new NMenuCheckBox("lbtn-map", GameUI.kb_map, "Map"), miniMap.sz.x-(first.sz.x), 0).state(() -> NUtils.getGameUI().wndstate(NUtils.getGameUI().mapfile)).click(() -> {
             NUtils.getGameUI().togglewnd(NUtils.getGameUI().mapfile);
             if(NUtils.getGameUI().mapfile != null)
                 Utils.setprefb("wndvis-map", NUtils.getGameUI().mapfile.visible());
         });
+        ACheckBox naturalobj = toggle_panel.add(new NMenuCheckBox("lbtn-naturalobj", kb_hidenature, "Hide/show natural objects"), (first.sz.x+UI.scale(3))*8, 0).changed(a -> NUtils.getGameUI().mmapw.miniMap.toggleol("hidenature", a));
+        naturalobj.a = NConfiguration.getInstance().hideNature;
         toggle_panel.add(new NMenuCheckBox("lbtn-ico", GameUI.kb_ico, "Icon settings"), (first.sz.x+UI.scale(3))*3, 0).state(() -> NUtils.getGameUI().wndstate(NUtils.getGameUI().iconwnd)).click(() -> {
             if(NUtils.getGameUI().iconconf == null)
                 return;
@@ -146,6 +154,18 @@ public class NMiniMapWnd extends NResizedWidget{
                     NConfiguration.getInstance().isGrid = a;
                     break;
                 }
+                case "minesup":{
+                    NUtils.getGameUI().toggleol(val, a);
+                    NConfiguration.getInstance().minesup = a;
+                    break;
+                }
+                case "hidenature": {
+                    NConfiguration.getInstance().hideNature = a;
+                    NUtils.showHideNature();
+                    NConfiguration.getInstance().install();
+                    break;
+                }
+
             }
         }
     }

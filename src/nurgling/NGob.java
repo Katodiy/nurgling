@@ -694,6 +694,24 @@ public class NGob {
                                 gob.addcustomol(new NAreaRange(gob, "minesup", 125, new Color(128, 128, 128, 128), new Color(0, 192, 192, 255)));
                             }
                         }
+                        if (gob.findol(NOverlayMap.class) == null) {
+                            if (NUtils.checkName(gob.getResName(), new NAlias(new ArrayList<>(Arrays.asList("natural"))))) {
+                                gob.addcustomol(new NOverlayMap(gob, "minesup", 93.5f));
+                            } else if (NUtils.checkName(gob.getResName(), new NAlias(new ArrayList<>(Arrays.asList("ladder", "minesupport", "towercap"))))) {
+                                if (gob.isTag(Tags.growth)) {
+                                    TreeScale ts = gob.getattr(TreeScale.class);
+                                    int scale = (int) Math.round(100 * (ts.scale - 0.1) / 0.9);
+                                    gob.addcustomol(new NOverlayMap(gob, "minesup", scale));
+                                } else {
+                                    gob.addcustomol(new NOverlayMap(gob, "minesup", 100));
+                                }
+                            } else if (NUtils.checkName(gob.getResName(), new NAlias("minebeam"))) {
+                                gob.addcustomol(new NOverlayMap(gob, "minesup", 150));
+                            } else if (NUtils.checkName(gob.getResName(), new NAlias("column"))) {
+                                gob.addcustomol(new NOverlayMap(gob, "minesup", 125));
+                            }
+                        }
+
                     } else if (gob.isTag(Tags.dframe)) {
                         gob.addcustomattr(new NDframeColor(gob));
                     } else if (gob.isTag(Tags.ttub)) {

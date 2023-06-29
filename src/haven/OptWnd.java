@@ -626,6 +626,10 @@ public class OptWnd extends Window {
 		y = addbtn(cont, "Check water", NMapView.kb_checkWater, y);
 		y = addbtn(cont, "Feed clover", NMapView.kb_feedclower, y);
 		y = addbtn(cont, "Toggle combat/peace", NMapView.kb_give, y);
+		y = cont.adda(new Label("Nurgling keybinding"), cont.sz.x / 2, y + UI.scale(10), 0.5, 0.0).pos("bl").adds(0, 5).y;
+		y = addbtn(cont, "Toggle natural objects", NMiniMapWnd.kb_hidenature, y);
+		y = addbtn(cont, "Toggle mining safe area", NMiniMapWnd.kb_minesup, y);
+		y = addbtn(cont, "Toggle night vision", NMapView.kb_light, y);
 
 		y = cont.adda(new Label("Tool belt"), cont.sz.x / 2, y + UI.scale(10), 0.5, 0.0).pos("bl").adds(0, 5).y;
 		y = addbtn(cont, "Button 1", NConfiguration.getInstance().toolBelts.get("belt0").toolKeys[0], y, true);
@@ -1530,33 +1534,6 @@ public class OptWnd extends Window {
 						a = val;
 						NConfiguration.getInstance().install();
 					}
-				}, prev.pos("bl").adds(0, 5));
-
-				prev = add(new CheckBox("Hide nature objects:") {
-					{
-						a = NConfiguration.getInstance().hideNature;
-					}
-
-					public void set(boolean val) {
-						NConfiguration.getInstance().hideNature = val;
-						a = val;
-						synchronized (NUtils.getGameUI().ui.sess.glob.oc) {
-							if(!NConfiguration.getInstance().hideNature)
-								for (Gob gob : NUtils.getGameUI().ui.sess.glob.oc) {
-									if (gob.isTag(NGob.Tags.tree) || gob.isTag(NGob.Tags.bumling) || gob.isTag(NGob.Tags.bush)) {
-										gob.hideObject();
-									}
-								}
-							else
-								for (Gob gob : NUtils.getGameUI().ui.sess.glob.oc) {
-									if (gob.isTag(NGob.Tags.tree) || gob.isTag(NGob.Tags.bumling) || gob.isTag(NGob.Tags.bush)) {
-										gob.showObject();
-									}
-								}
-						}
-						NConfiguration.getInstance().install();
-					}
-
 				}, prev.pos("bl").adds(0, 5));
 
 				prev = add(new CheckBox("Flat surface (need reboot):") {

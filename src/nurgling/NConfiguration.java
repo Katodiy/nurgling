@@ -85,6 +85,7 @@ public class NConfiguration {
     public boolean showCSprite = false;
 
     public boolean nextshowCSprite = false;
+    public boolean minesup = false;
 
     public static void saveButtons(String name, NGameUI.NButtonBeltSlot[] custom) {
         String key = NUtils.getUI().sessInfo.username +"/" + NUtils.getUI().sessInfo.characterInfo.chrid;
@@ -400,6 +401,7 @@ public class NConfiguration {
     void initCustomTileRes()
     {
         Resource.local().loadwait("tiles/ridge-tex");
+        Resource res = Resource.local().loadwait("tiles/test-tex");
         customTileRes.put("ridge", Resource.local().loadwait("tiles/ridge").layer(Tileset.class));
     }
 
@@ -822,6 +824,7 @@ public class NConfiguration {
         }
         obj.put("colors",colorsarr);
         obj.put("isGrid",isGrid);
+        obj.put("minesup",minesup);
         obj.put("isShowGild", Slotted.show);
         obj.put("isShowVar",NFoodInfo.show);
         obj.put("isShowStackQ", Stack.show);
@@ -1320,7 +1323,9 @@ public class NConfiguration {
                 NFoodInfo.show = ( Boolean ) jsonObject.get ( "isShowVar" );
             if(jsonObject.get ( "isShowStackQ" )!=null)
                 Stack.show = ( Boolean ) jsonObject.get ( "isShowStackQ" );
-
+            if(jsonObject.get ( "minesup" )!=null) {
+                minesup = (Boolean) jsonObject.get("minesup");
+            }
             if(jsonObject.get ( "isGrid" )!=null)
                 isGrid = ( Boolean ) jsonObject.get ( "isGrid" );
             JSONArray pathCategories = ( JSONArray ) jsonObject.get ( "pathCategories" );

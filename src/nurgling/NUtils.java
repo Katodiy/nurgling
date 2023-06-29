@@ -2067,4 +2067,21 @@ public class NUtils {
         }
         return null;
     }
+
+    public static void showHideNature() {
+        synchronized (NUtils.getGameUI().ui.sess.glob.oc) {
+            if(!NConfiguration.getInstance().hideNature)
+                for (Gob gob : NUtils.getGameUI().ui.sess.glob.oc) {
+                    if (gob.isTag(NGob.Tags.tree) || gob.isTag(NGob.Tags.bumling) || gob.isTag(NGob.Tags.bush)) {
+                        gob.hideObject();
+                    }
+                }
+            else
+                for (Gob gob : NUtils.getGameUI().ui.sess.glob.oc) {
+                    if (gob.isTag(NGob.Tags.tree) || gob.isTag(NGob.Tags.bumling) || gob.isTag(NGob.Tags.bush)) {
+                        gob.showObject();
+                    }
+                }
+        }
+    }
 }
