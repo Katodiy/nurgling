@@ -17,7 +17,7 @@ public class Wear extends ItemInfo.Tip implements GItem.OverlayInfo<Tex> {
 	super(owner);
 	this.d = d;
 	this.m = m;
-    this.wear = ((double)d) /m;
+    this.wear = Math.min(1.0,((double)d) /m);
     }
 
     public static ItemInfo mkinfo(Owner owner, Object... args) {
