@@ -43,11 +43,14 @@ import java.util.regex.*;
 import java.io.IOException;
 import java.awt.datatransfer.*;
 
+import static haven.Window.cbtni;
+
 public class ChatUI extends Widget {
 	public static final RichText.Foundry fnd = new RichText.Foundry(new ChatParser(TextAttribute.FONT, Text.dfont.deriveFont(UI.scale(14f)), TextAttribute.FOREGROUND, Color.BLACK));
 	public static final Text.Foundry qfnd = new Text.Foundry(Text.dfont, 12, new Color(192, 255, 192));
 	public static final int selw = UI.scale(130);
 	public static final Coord marg = UI.scale(new Coord(9, 9));
+	public static final Coord dmarg = UI.scale(new Coord(7, 7));
 	public static final int offset = UI.scale(28);
 	public static final Color[] urgcols = new Color[]{
 			null,
@@ -491,8 +494,8 @@ public class ChatUI extends Widget {
 		}
 	}
 
-	private static final Tex chandiv = new TexI(Resource.loadsimg("hud/chat-cdiv"));
-	private static final Tex chanseld = Resource.loadtex("gfx/hud/chat-csel");
+	//private static final Tex chandiv = new TexI(Resource.loadsimg("hud/chat-cdiv"));
+	private static final Tex chanseld = Resource.loadtex("nurgling/hud/chat/csel");
 
 	public class Selector extends Widget {
 		public final BufferedImage ctex = Resource.loadimg("gfx/hud/chantex");
@@ -769,25 +772,25 @@ public class ChatUI extends Widget {
 		}
 	}
 
-	private static final Tex bulc = new TexI(Resource.loadsimg("hud/chat-lc"));
-	private static final Tex burc = new TexI(Resource.loadsimg("hud/chat-rc"));
-	private static final Tex bhb = new TexI(Resource.loadsimg("hud/chat-hori"));
-	private static final Tex bvlb = new TexI(Resource.loadsimg("hud/chat-verti"));
+	private static final Tex bulc = new TexI(Resource.loadsimg("nurgling/hud/chat/lc"));
+	private static final Tex burc = new TexI(Resource.loadsimg("nurgling/hud/chat/rc"));
+	private static final Tex bhb = new TexI(Resource.loadsimg("nurgling/hud/chat/hori"));
+	private static final Tex bvlb = new TexI(Resource.loadsimg("nurgling/hud/chat/vert"));
 	private static final Tex bvrb = bvlb;
 	private static final Tex bmf = new TexI(Resource.loadsimg("hud/chat-mid"));
-	private static final Tex bcbd = new TexI(Resource.loadsimg("hud/chat-close-g"));
+	private static final Tex bcbd = new TexI(Resource.loadsimg("nurgling/hud/chat/cbtng"));
 
 	public void draw(GOut g) {
 		g.rimage(Window.bg, marg, sz.sub(marg.x * 2, marg.y));
 		super.draw(g);
-		g.image(bulc, new Coord(0, 0));
-		g.image(burc, new Coord(sz.x - burc.sz().x, 0));
-		g.rimagev(bvlb, new Coord(0, bulc.sz().y), sz.y - bulc.sz().y);
-		g.rimagev(bvrb, new Coord(sz.x - UI.scale(17), burc.sz().y), sz.y - burc.sz().y);
-		g.rimageh(bhb, new Coord(bulc.sz().x, 0), sz.x - bulc.sz().x - burc.sz().x);
+		g.image(bulc, new Coord(-bulc.sz().x/2+dmarg.x, -bulc.sz().y/2+dmarg.y));
+		g.image(burc, new Coord(sz.x - burc.sz().x/2 - dmarg.x, -bulc.sz().y/2+dmarg.y));
+		g.rimagev(bvlb, new Coord(-bulc.sz().x/2+dmarg.x, bulc.sz().y/2+dmarg.y), sz.y );
+		g.rimagev(bvrb, new Coord(sz.x - burc.sz().x/2 - dmarg.x, bulc.sz().y/2+dmarg.y), sz.y);
+		g.rimageh(bhb, new Coord(bulc.sz().x/2+dmarg.x, -bulc.sz().y/2+dmarg.y), sz.x - bulc.sz().x/2 - burc.sz().x/2 - dmarg.x*2);
 		g.aimage(bmf, new Coord(sz.x / 2, 0), 0.5, 0);
 		if ((sel == null) || (sel.cb == null))
-			g.aimage(bcbd, new Coord(sz.x, 0), 1, 0);
+			g.aimage(bcbd, new Coord(sz.x + marg.x - bcbd.sz().x, marg.y +bcbd.sz().y/2 +bcbd.sz().y), 1, 0);
 	}
 
 	private static final Resource notifsfx = Resource.local().loadwait("sfx/hud/chat");
@@ -953,7 +956,7 @@ public class ChatUI extends Widget {
 		public Channel(boolean closable) {
 			sb = add(new Scrollbar(0, 0, 0));
 			if (closable)
-				cb = add(new IButton("gfx/hud/chat-close", "", "-d", "-h"));
+				cb = add(new IButton(cbtni[0], cbtni[1], cbtni[2]));
 			else
 				cb = null;
 		}
@@ -1040,7 +1043,7 @@ public class ChatUI extends Widget {
 					sb.val = sb.max;
 			}
 			if (cb != null) {
-				cb.c = new Coord(sz.x + marg.x - cb.sz.x, -marg.y);
+				cb.c = new Coord(sz.x + marg.x - cb.sz.x -cb.sz.x/2, -marg.y + cb.sz.x/2);
 			}
 		}
 

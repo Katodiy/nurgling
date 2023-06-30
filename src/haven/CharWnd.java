@@ -1892,7 +1892,7 @@ public class CharWnd extends Window {
 	    base.add(aw = battr.add(new Attr(glob, "str", every), prev.pos("bl").adds(5, 0).add(wbox.btloff())));
 	    base.add(aw = battr.add(new Attr(glob, "agi", other), aw.pos("bl")));
 	    base.add(aw = battr.add(new Attr(glob, "int", every), aw.pos("bl")));
-	    base.add(aw = battr.add(new Attr(glob, "con", other), aw.pos("bl")));
+		base.add(aw = battr.add(new Attr(glob, "con", other), aw.pos("bl")));
 	    base.add(aw = battr.add(new Attr(glob, "prc", every), aw.pos("bl")));
 	    base.add(aw = battr.add(new Attr(glob, "csm", other), aw.pos("bl")));
 	    base.add(aw = battr.add(new Attr(glob, "dex", every), aw.pos("bl")));
