@@ -53,6 +53,16 @@ public class BranderAction implements Action {
         ArrayList<Gob> gobs = Finder.findObjects(area.animal,area.id);
         ArrayList<Gob> targets = new ArrayList<>();
 
+        NUtils.memorize(gobs,gui,w,area.cattleRoster);
+
+        while (!brand(gui, w, gobs, targets)) ;
+
+
+
+        return new Results(Results.Types.SUCCESS);
+    }
+
+    private boolean brand(NGameUI gui, RosterWindow w, ArrayList<Gob> gobs, ArrayList<Gob> targets) throws InterruptedException {
         for (Gob gob : gobs) {
             if (gob.getattr(CattleId.class) == null && !gob.isTag(NGob.Tags.knocked)) {
                 new PathFinder(gui, gob, PathFinder.Type.dyn).run();
@@ -67,21 +77,22 @@ public class BranderAction implements Action {
                 }
             }
         }
-        if (new TakeToHand(new NAlias("brandingiron-r")).run(gui).type != Results.Types.SUCCESS) {
-            return new Results(Results.Types.FAIL);
-        }
+        new TakeToHand(new NAlias("brandingiron-r")).run(gui);
+        if(!targets.isEmpty())
+            targets.sort(NUtils.d_comp);
         for(Gob gob : targets){
-            new PathFinder(gui, gob, PathFinder.Type.dyn).run();
-            NUtils.activateItem(gob);
-            NUtils.waitEvent(()->NUtils.isPose(gui.map.player(),new NAlias("brand")),500);
-            NUtils.waitEvent(()->NUtils.isPose(gui.map.player(),new NAlias("idle") ),5000);
+            if(area.pred.test(gob)) {
+                new PathFinder(gui, gob, PathFinder.Type.dyn).run();
+                NUtils.activateItem(gob);
+                NUtils.waitEvent(() -> NUtils.isPose(gui.map.player(), new NAlias("brand")), 500);
+                NUtils.waitEvent(() -> NUtils.isPose(gui.map.player(), new NAlias("idle")), 5000);
+                return false;
+            }
         }
         NUtils.transferToInventory();
-
-
-
-        return new Results(Results.Types.SUCCESS);
+        return true;
     }
+
     AnimalArea area  = null;
 
     public static class AnimalArea {

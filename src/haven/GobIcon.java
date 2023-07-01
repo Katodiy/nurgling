@@ -88,9 +88,6 @@ public class GobIcon extends GAttrib {
 	if(this.img == null) {
 	    synchronized(cache) {
 		Image img = cache.get(res);
-		if(res.get().name.contains("tanning")){
-			int a = 0;
-		}
 		if(img == null) {
 		    img = new Image(res.get().layer(Resource.imgc));
 		    cache.put(res, img);
