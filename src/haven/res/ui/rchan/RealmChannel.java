@@ -9,9 +9,9 @@ import java.awt.Color;
 import java.awt.font.TextAttribute;
 
 /* >wdg: RealmChannel */
-@haven.FromResource(name = "ui/rchan", version = 19)
+@haven.FromResource(name = "ui/rchan", version = 21)
 public class RealmChannel extends ChatUI.MultiChat {
-    private final Map<Integer, String> pnames = new HashMap<>();
+    private final Map<Long, Sender> senders = new HashMap<>();
 
     public RealmChannel(String name) {
 	super(true, name, 0);
@@ -22,45 +22,98 @@ public class RealmChannel extends ChatUI.MultiChat {
 	return(new RealmChannel(name));
     }
 
+    public class Sender {
+	public final long cid;
+	public final int bid;
+	public final Color color;
+	public String name;
+	double lastseen, muted;
+
+	public Sender(long cid, int bid) {
+	    this.cid = cid;
+	    this.bid = bid;
+	    this.color = fromcolor(bid);
+	    name = Utils.getpref(String.format("chat/name-%x", cid), null);
+	    muted = Utils.getprefd(String.format("chat/muted-%x", cid), 0);
+	    lastseen = Utils.getprefd(String.format("hcat/lastseen-%x", cid), Utils.ntime());
+	}
+
+	public void setname(String name) {
+	    Utils.setpref(String.format("chat/name-%x", cid), this.name = name);
+	}
+
+	public void mute(double muted) {
+	    Utils.setprefd(String.format("chat/muted-%x", cid), this.muted = muted);
+	}
+    }
+
     public class PNamedMessage extends Message {
-	public final int from;
+	public final Sender from;
 	public final String text;
 	public final int w;
-	public final Color col;
 	private String cn;
 	private Text r = null;
 
-	public PNamedMessage(int from, String text, Color col, int w) {
+	public PNamedMessage(Sender from, String text, int w) {
 	    this.from = from;
 	    this.text = text;
 	    this.w = w;
-	    this.col = col;
 	}
 
+	public class Rendered implements Indir<Text> {
+	    public final int w;
+	    public final String nm;
+
+	    public Rendered(int w, String nm) {
+		this.w = w;
+		this.nm = nm;
+	    }
+
+	    public Text get() {
+		return(ChatUI.fnd.render(RichText.Parser.quote(String.format("%s: %s", nm, text)), w, TextAttribute.FOREGROUND, from.color));
+	    }
+	}
+
+	private String nm() {
+	    BuddyWnd.Buddy b = getparent(GameUI.class).buddies.find(from.bid);
+	    if(b != null)
+		return(b.name);
+	    if(from.name != null)
+		return(from.name);
+	    return("???");
+	}
+
+	public Indir<Text> render(int w) {
+	    /* Saving cn right now is just for name lookup, but that
+	     * should go throught rmsgs instead. */
+	    return(new Rendered(w, cn = nm()));
+	}
+
+	public boolean valid(Indir<Text> data) {
+	    return(((Rendered)data).nm.equals(nm()));
+	}
+
+	/* Remove me */
 	private double lnmck = 0;
 	public Text text() {
 	    double now = Utils.rtime();
 	    if((r == null) || (now - lnmck > 1)) {
-		BuddyWnd.Buddy b = getparent(GameUI.class).buddies.find(from);
-		String nm = null;
-		if((nm == null) && (b != null))
-		    nm = b.name;
-		if((nm == null) && pnames.containsKey(Integer.valueOf(from)))
-		    nm = pnames.get(Integer.valueOf(from));
-		if(nm == null)
-		    nm = "???";
+		BuddyWnd.Buddy b = getparent(GameUI.class).buddies.find(from.bid);
+		String nm = nm();
 		if((r == null) || !nm.equals(cn)) {
-		    r = ChatUI.fnd.render(RichText.Parser.quote(String.format("[%s] %s: %s", NUtils.timestamp(), nm, text)), w, TextAttribute.FOREGROUND, col);
+			r = ChatUI.fnd.render(RichText.Parser.quote(String.format("[%s] %s: %s", NUtils.timestamp(), nm, text)), w, TextAttribute.FOREGROUND, from.color);
 		    cn = nm;
 		}
 	    }
 	    return(r);
 	}
 
+	/* Remove me */
 	public Tex tex() {
 	    return(text().tex());
 	}
 
+	/* Remove me */
 	public Coord sz() {
 	    if(r == null)
 		return(text().sz());
@@ -74,11 +127,25 @@ public class RealmChannel extends ChatUI.MultiChat {
 	    Message cur = i.previous();
 	    if(cur instanceof PNamedMessage) {
 		PNamedMessage msg = (PNamedMessage)cur;
-		if((msg.cn != null) && msg.cn.equals(nm))
+		if((msg.cn != null) && (nm.equals("") || msg.cn.equals(nm)))
 		    return(msg);
 	    }
 	}
 	return(null);
+    }
+
+    public Sender frombyname(String nm) {
+	PNamedMessage msg = msgbyname(nm);
+	return((msg == null) ? null : msg.from);
+    }
+
+    public Sender frombyid(long cid, int bid) {
+	synchronized(senders) {
+	    Sender ret = senders.get(cid);
+	    if(ret == null)
+		senders.put(cid, ret = new Sender(cid, bid));
+	    return(ret);
+	}
     }
 
     public static class UserError extends Exception {
@@ -120,31 +187,52 @@ public class RealmChannel extends ChatUI.MultiChat {
 	    case "rename": {
 		if(argv.length < 3)
 		    throw(new UserError("usage: rename NAME NEW-NAME"));
-		PNamedMessage msg = msgbyname(argv[1]);
-		if(msg == null)
+		Sender from = frombyname(argv[1]);
+		if(from == null)
 		    throw(new UserError("%s: no such name", argv[1]));
-		pnames.put(msg.from, argv[2]);
+		from.setname(argv[2]);
+		break;
+	    }
+	    case "mute": {
+		if(argv.length < 2)
+		    throw(new UserError("usage: mute NAME [DURATION]"));
+		Sender from = frombyname(argv[1]);
+		if(from == null)
+		    throw(new UserError("%s: no such name", argv[1]));
+		int dur = 86400;
+		if(argv.length > 2)
+		    dur = parsedur(argv[2]);
+		from.mute(Utils.ntime() + dur);
+		break;
+	    }
+	    case "unmute": {
+		if(argv.length < 2)
+		    throw(new UserError("usage: unmute NAME"));
+		Sender from = frombyname(argv[1]);
+		if(from == null)
+		    throw(new UserError("%s: no such name", argv[1]));
+		from.mute(0);
 		break;
 	    }
 	    case "ban": {
 		if(argv.length < 2)
 		    throw(new UserError("usage: ban NAME [DURATION]"));
-		PNamedMessage msg = msgbyname(argv[1]);
-		if(msg == null)
+		Sender from = frombyname(argv[1]);
+		if(from == null)
 		    throw(new UserError("%s: no such name", argv[1]));
 		int dur = 3600;
 		if(argv.length > 2)
 		    dur = parsedur(argv[2]);
-		wdgmsg("ban", msg.from, dur);
+		wdgmsg("ban", from.bid, dur);
 		break;
 	    }
 	    case "unban": {
 		if(argv.length < 2)
 		    throw(new UserError("usage: unban NAME"));
-		PNamedMessage msg = msgbyname(argv[1]);
-		if(msg == null)
+		Sender from = frombyname(argv[1]);
+		if(from == null)
 		    throw(new UserError("%s: no such name", argv[1]));
-		wdgmsg("unban", msg.from);
+		wdgmsg("unban", from.bid);
 		break;
 	    }
 	    default:
@@ -169,26 +257,29 @@ public class RealmChannel extends ChatUI.MultiChat {
 
     public void uimsg(String msg, Object... args) {
 	if(msg == "msg") {
-	    Integer from = (Integer)args[0];
-	    String line = (String)args[1];
+	    double now = Utils.ntime();
+	    Number cfrom = (Number)args[1];
+	    Number bfrom = (Number)args[2];
+	    String line = (String)args[3];
 	    String pname = null;
-	    if(args.length > 2)
-		pname = (String)args[2];
-	    if(from == null) {
+	    if(args.length > 4)
+		pname = (String)args[4];
+	    if(cfrom == null) {
 		append(new MyMessage(line, iw()));
 	    } else {
-		if((pname != null) && !pnames.containsKey(from))
-		    pnames.put(from, pname);
-		Message cmsg = new PNamedMessage(from, line, fromcolor(from), iw());
-		append(cmsg);
-		if(urgency > 0)
-		    notify(cmsg, urgency);
+		Sender from = frombyid(cfrom.longValue(), bfrom.intValue());
+		if((pname != null) && (from.name == null))
+		    from.name = pname;
+		from.lastseen = now;
+		if(now > from.muted) {
+		    Message cmsg = new PNamedMessage(from, line, iw());
+		    append(cmsg);
+		}
 	    }
 	} else if(msg == "err") {
 	    String err = (String)args[0];
 	    Message cmsg = new SimpleMessage(err, wcol, iw());
 	    append(cmsg);
-	    notify(cmsg, 3);
 	} else if(msg == "enter") {
 	} else if(msg == "leave") {
 	} else {

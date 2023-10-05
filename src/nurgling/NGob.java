@@ -2,6 +2,7 @@ package nurgling;
 
 import haven.*;
 import haven.Composite;
+import haven.res.lib.globfx.GlobEffector;
 import haven.res.lib.tree.TreeScale;
 import nurgling.tools.AreasID;
 
@@ -580,7 +581,7 @@ public class NGob {
 
 
     protected static void updateCustom(Gob gob) {
-        if (gob.status != Status.updated) {
+        if (gob.status != Status.updated && !(gob.attr.size()==1 && (gob.attr.get(Drawable.class) instanceof GlobEffector))) {
             if (gob.status == Status.undefined) {
                 updateRes(gob);
             }
@@ -685,23 +686,6 @@ public class NGob {
                     } else if (gob.isTag(Tags.barrel)) {
                         gob.addcustomattr(new NBarrelColor(gob));
                     } else if (gob.isTag(Tags.minesupport)) {
-                        if (NConfiguration.getInstance().rings.get("minesup").isEnable && gob.findol(NAreaRad.class) == null) {
-                            if (NUtils.checkName(gob.getResName(), new NAlias(new ArrayList<>(Arrays.asList("natural"))))) {
-                                gob.addcustomol(new NAreaRange(gob, "minesup", 93.5f, new Color(128, 128, 128, 128), new Color(0, 192, 192, 255)));
-                            } else if (NUtils.checkName(gob.getResName(), new NAlias(new ArrayList<>(Arrays.asList("ladder", "minesupport", "towercap"))))) {
-                                if (gob.isTag(Tags.growth)) {
-                                    TreeScale ts = gob.getattr(TreeScale.class);
-                                    int scale = (int) Math.round(100 * (ts.scale - 0.1) / 0.9);
-                                    gob.addcustomol(new NAreaRange(gob, "minesup", scale, new Color(128, 128, 128, 128), new Color(0, 192, 192, 255)));
-                                } else {
-                                    gob.addcustomol(new NAreaRange(gob, "minesup", 100, new Color(128, 128, 128, 128), new Color(0, 192, 192, 255)));
-                                }
-                            } else if (NUtils.checkName(gob.getResName(), new NAlias("minebeam"))) {
-                                gob.addcustomol(new NAreaRange(gob, "minesup", 150, new Color(128, 128, 128, 128), new Color(0, 192, 192, 255)));
-                            } else if (NUtils.checkName(gob.getResName(), new NAlias("column"))) {
-                                gob.addcustomol(new NAreaRange(gob, "minesup", 125, new Color(128, 128, 128, 128), new Color(0, 192, 192, 255)));
-                            }
-                        }
                         if (gob.findol(NOverlayMap.class) == null) {
                             if (NUtils.checkName(gob.getResName(), new NAlias(new ArrayList<>(Arrays.asList("natural"))))) {
                                 gob.addcustomol(new NOverlayMap(gob, "minesup", 93.5f));

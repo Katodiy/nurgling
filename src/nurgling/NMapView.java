@@ -513,7 +513,7 @@ public class NMapView extends MapView {
     protected void oltick() {
         if (terrain.area != null) {
             for (NOverlayInfo olinf : olsinf.values()) {
-                if ((olinf.needUpdate || olinf.gobs.isEmpty()) && custom_ols.get(olinf.id) != null) {
+                if ((olinf.needUpdate && !olinf.gobs.isEmpty()) && custom_ols.get(olinf.id) != null) {
                     synchronized (NUtils.getGameUI().getMap().glob.map.grids) {
                         for (MCache.Grid grid : NUtils.getGameUI().getMap().glob.map.grids.values()) {
                             for (int i = 0; i < grid.cuts.length; i++) {

@@ -262,8 +262,8 @@ public class GameUI extends ConsoleHost implements Console.Directory, UI.Message
 //	blpanel.add(new Img(Resource.loadtex("gfx/hud/blframe")), 0, 0);
 	minimapc = new Coord(UI.scale(4), UI.scale(34));
 	Tex rbtnbg = Resource.loadtex("gfx/hud/csearch-bg");
-	Img brframe = brpanel.add(new Img(Resource.loadtex("gfx/hud/brframe")), rbtnbg.sz().x - UI.scale(22), 0);
-	menugridc = brframe.c.add(UI.scale(20), UI.scale(34));
+	//Img brframe = brpanel.add(new Img(Resource.loadtex("gfx/hud/brframe")), rbtnbg.sz().x - UI.scale(22), 0);
+	menugridc = new Coord(rbtnbg.sz().x - UI.scale(22),0).add(UI.scale(20), UI.scale(34));
 	Img rbtnimg = brpanel.add(new Img(rbtnbg), 0, brpanel.sz.y - rbtnbg.sz().y);
 	menupanel.add(new MainMenu(), 0, 0);
 	menubuttons(rbtnimg);

@@ -198,10 +198,7 @@ public class NLoginScreen extends LoginScreen {
                 }
                 else if ( c.x < sz.x - 35 ) {
                     parent.wdgmsg ( "forget" );
-                    if(!itm.isTokenUsed)
-                        parent.wdgmsg ( "login", new Object[]{ new AuthClient.NativeCred ( itm.name, itm.pass ), false } );
-                    else
-                        parent.wdgmsg ( "login", new Object[]{ new AuthClient.TokenCred ( itm.name, itm.token ), false } );
+                    parent.wdgmsg ( "login", new Object[]{ new AuthClient.NativeCred ( itm.name, itm.pass ), false } );
                 }
                 super.itemclick ( itm, button );
             }

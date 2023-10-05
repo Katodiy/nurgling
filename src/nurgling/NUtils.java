@@ -1595,14 +1595,14 @@ public class NUtils {
             NInventory targetinv
     )
             throws InterruptedException {
-        int space = inv.getFreeSpace();
-        int oldspace = targetinv.getFreeSpace();
-        if (item != null) {
-            if(targetinv.getNumberFreeCoord(item)==0)
-                return false;
-            item.wdgmsg("transfer", item.sz, 1);
-            waitEvent(() -> space != inv.getFreeSpace() && targetinv.getFreeSpace()!=oldspace, 200);
-            return oldspace != targetinv.getFreeSpace();
+        if (item != null && item.sz!=null) {
+            int space = targetinv.getNumberFreeCoord(item);
+            if(space>0)
+            {
+                item.wdgmsg("transfer", item.sz, 1);
+                waitEvent(() -> targetinv.getNumberFreeCoord(item)!=space, 5000,100);
+            }
+            return targetinv.getNumberFreeCoord(item)!=space;
         }
         return false;
     }

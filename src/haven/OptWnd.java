@@ -1061,16 +1061,6 @@ public class OptWnd extends Window {
 						a = val;
 					}
 				}, prev.pos("bl").adds(0, 5));
-				prev = add(new CheckBox("Mine support:") {
-					{
-						a = NConfiguration.getInstance().rings.get("minesup").isEnable;
-					}
-
-					public void set(boolean val) {
-						NConfiguration.getInstance().rings.get("minesup").isEnable = val;
-						a = val;
-					}
-				}, prev.pos("bl").adds(0, 5));
 
 				prev = add(new CheckBox("Bee Skep:") {
 					{

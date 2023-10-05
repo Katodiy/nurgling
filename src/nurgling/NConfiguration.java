@@ -749,8 +749,6 @@ public class NConfiguration {
             JSONObject userobj = new JSONObject ();
             userobj.put ( "name", user.name );
             userobj.put ( "pass", user.pass );
-            userobj.put ( "isTokenUsed", user.isTokenUsed );
-            userobj.put ( "token", user.token );
             users.add ( userobj );
         }
         obj.put("users",users);
@@ -1131,17 +1129,6 @@ public class NConfiguration {
                 while (iterator.hasNext()) {
                     JSONObject item = iterator.next();
                     NLoginData logData = new NLoginData(item.get("name").toString(), item.get("pass").toString());
-                    if(item.get("isTokenUsed")!=null)
-                    {
-                        if((boolean) item.get("isTokenUsed")) {
-                            logData.isTokenUsed = true;
-                            JSONArray tokenArray = ( JSONArray ) item.get ( "token" );
-                            logData.token = new byte[tokenArray.size()];
-                            for (int i = 0; i < tokenArray.size(); i++) {
-                                logData.token[i]=(byte)(((long)tokenArray.get(i)) & 0xFF);
-                            }
-                        }
-                    }
                     logins.add(logData);
                 }
             }
