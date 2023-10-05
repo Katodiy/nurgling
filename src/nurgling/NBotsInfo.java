@@ -63,7 +63,7 @@ public class NBotsInfo extends NDraggableWidget implements KeyBinding.Bindable {
             layouts.get ( 0 ).add ( new NButton ( "Chipper", new Chipper ( gui ), "bots/icons/chip" ) );
             layouts.get ( 0 ).add ( new NButton ( "Clay Coollector", new ClayCollector ( gui ), "bots/icons/clay" ) );
             layouts.get ( 0 ).add ( new NButton ( "Sand Coollector", new SandCollector ( gui ), "bots/icons/sand" ) );
-            //layouts.get ( 0 ).add ( new NButton ( "Fishing", new Fisher ( gui ), "bots/icons/fishing" ) );
+            layouts.get ( 0 ).add ( new NButton ( "Fishing", new Fisher ( gui ), "bots/icons/fishing" ) );
             layouts.get ( 0 ).add ( new NButton ( "Plow", new Plower ( gui ), "bots/icons/plow" ) );
             layouts.get ( 0 ).add ( new NButton ( "Cattail", new CattailPicker ( gui ),"bots/icons/cattail" ) );
             layouts.get ( 0 ).add ( new NButton ( "Butcher", new Butcher ( gui ),

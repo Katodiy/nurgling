@@ -29,7 +29,7 @@ public class Fisher extends Bot{
     public void initAction ()
             throws InterruptedException { super.initAction();
         int y = 0;
-        window.add ( new Button ( window.buttons_size, "Инструменты" ) {
+        window.add ( new Button ( window.buttons_size, "Instruments" ) {
             @Override
             public void click () {
 
@@ -42,7 +42,7 @@ public class Fisher extends Bot{
             }
         }, new Coord ( 0, y  ) );
         y+=25;
-        window.add ( new Button ( window.buttons_size, "Наживка" ) {
+        window.add ( new Button ( window.buttons_size, "Baits" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable.set(true);
@@ -54,7 +54,7 @@ public class Fisher extends Bot{
             }
         }, new Coord ( 0, y ) );
         y+=25;
-        window.add ( new Button ( window.buttons_size, "Место рыбалки" ) {
+        window.add ( new Button ( window.buttons_size, "Fishing place" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable.set(true);
@@ -66,7 +66,7 @@ public class Fisher extends Bot{
             }
         }, new Coord ( 0, y ) );
         y+=25;
-        Widget prev = window.add (new Button ( window.buttons_size, "Пайлы" ) {
+        Widget prev = window.add (new Button ( window.buttons_size, "Piles" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable.set(true);
@@ -78,7 +78,7 @@ public class Fisher extends Bot{
             }
         }, new Coord ( 0, y ) );
 
-        prev = window.add(new CheckBox("Отключить сброс"){
+        prev = window.add(new CheckBox("Disable drop items"){
             {
                 a = disable_dropper.get();
             }
