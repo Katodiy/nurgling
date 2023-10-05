@@ -31,7 +31,7 @@ public class CollectQuicksilver implements Action {
             /// Находим одетое ведро и берем его в руку
             WItem activeBucket = null;
             for ( WItem bucket : buckets ) {
-                if ( NUtils.checkName ( NUtils.getContent ( bucket.item ),
+                if ( NUtils.getContent ( bucket.item )!= null && NUtils.checkName ( NUtils.getContent ( bucket.item ),
                         new NAlias ( new ArrayList<> ( Arrays.asList ( "quicksilver", "free" ) ) ) ) ) {
                     activeBucket = bucket;
                 }
