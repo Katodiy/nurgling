@@ -28,7 +28,7 @@ public class LFExplorer extends Bot {
     @Override
     public void initAction ()
             throws InterruptedException { super.initAction();
-        window.add ( new Button ( window.buttons_size, "Деревья" ) {
+        window.add ( new Button ( window.buttons_size, "Objects" ) {
             @Override
             public void click () {
                 gameUI.getMap ().isAreaSelectorEnable.set(true);

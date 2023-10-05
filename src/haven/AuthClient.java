@@ -322,8 +322,6 @@ public class AuthClient implements Closeable {
 		{
 			if (logdata.name.equals(acctname))
 			{
-				logdata.token = Arrays.copyOf(token, token.length);
-				logdata.isTokenUsed = true;
 				isFound = true;
 				NConfiguration.getInstance().write();
 				break;
@@ -332,8 +330,6 @@ public class AuthClient implements Closeable {
 		if(!isFound)
 		{
 			NLoginData logdata = new NLoginData(this.acctname,"");
-			logdata.token = Arrays.copyOf(token, token.length);
-			logdata.isTokenUsed = true;
 			NConfiguration.getInstance().logins.add(logdata);
 			NConfiguration.getInstance().write();
 		}

@@ -56,7 +56,7 @@ public class LPExplorer implements Action {
                 writer = new OutputStreamWriter ( str, StandardCharsets.UTF_8 );
                 writer_is_ready = true;
                 ArrayList<Gob> gobs = Finder.findObjectsInArea ( new NAlias( new ArrayList<> ( Arrays.asList ( "" )),
-                        new ArrayList<> ( Arrays.asList ( "items", "oldstump","oldtrunk", "terobjs/arch","runestone",
+                        new ArrayList<> ( Arrays.asList ( "items","pile", "oldstump","oldtrunk", "terobjs/arch","runestone",
                                 "reflectingpool","kritter", "borka", "road", "ants","boostspeed", "birdsnest", "beeswarm", "s/dreca", "s/pow") ) ),
                         area );
 //                System.out.println ( "Total gobs " + gobs.size () );
@@ -66,7 +66,7 @@ public class LPExplorer implements Action {
                     NFlowerMenu ofm = NUtils.getFlowerMenu();
                     if(ofm!=null) {
                         ofm.cancel();
-                        NUtils.waitEvent(() -> NUtils.getFlowerMenu() == null, 10);
+                        NUtils.waitEvent(() -> NUtils.getFlowerMenu() == null, 50);
                     }
                     NAlias opt = NUtils.getMenuOpt ( gob, keys );
                     opt.keys.add ( "branch" );
@@ -78,10 +78,12 @@ public class LPExplorer implements Action {
                         isChecked = true;
                         gui.map.wdgmsg ( "click", Coord.z, gob.rc.floor ( posres ), 3, 0, 0, ( int ) gob.id,
                                 gob.rc.floor ( posres ), 0, -1 );
+                        NUtils.waitEvent(() -> NUtils.getFlowerMenu() != null, 50);
                         NFlowerMenu fm = NUtils.getFlowerMenu();
                         if (  fm != null ) {
                             for ( FlowerMenu.Petal p : fm.opts ) {
                                 if ( !NUtils.checkName ( p.name, opt ) ) {
+                                    NUtils.getGameUI().msg(p.name);
                                     isChecked = false;
                                     PathFinder pf = new PathFinder ( gui, gob );
 //                                    pf.setDisableGrid ( true );
