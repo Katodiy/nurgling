@@ -12,7 +12,7 @@ public class ChipperAction implements Action {
     public static ArrayList<String> chip_tools = new ArrayList<String> ( Arrays.asList ( "pickaxe", "stoneaxe" ) );
     public static NAlias stones = new NAlias ( new ArrayList<String> (
             Arrays.asList ( "granite", "hornblende", "feldspar", "gabbro", "catgold", "dolomit", "mica", "diorite",
-                    "alabaster", "gneiss", "sandstone", "arkose", "schist", "olivine" , "diabase", "cinnabar", "chert", "basalt", "porphyry" ) ) );
+                    "alabaster", "gneiss", "sandstone", "arkose", "schist", "olivine" , "diabase", "cinnabar", "chert", "basalt", "porphyry", "flint" ) ) );
     
     @Override
     public Results run ( NGameUI gui )

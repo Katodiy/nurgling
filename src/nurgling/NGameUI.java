@@ -421,6 +421,25 @@ public class NGameUI extends GameUI {
         return null;
     }
 
+    public Window getBuildWindow ( String cap ) {
+        for ( Widget w = lchild ; w != null ; w = w.prev ) {
+            if ( w instanceof Window ) {
+                Window wnd = ( Window ) w;
+                if ( ( wnd.cap != null && NUtils.checkName ( wnd.cap,
+                        new NAlias ( new ArrayList<>( Arrays.asList ( cap ) ),
+                                new ArrayList<> ( Arrays.asList ( "Crafte", "Build" ) ) ) ) ) ) {
+                    for (Widget sp = w.lchild; sp != null; sp = sp.prev) {
+                        /// Выбираем внутренний контейнер
+                        if (sp instanceof Button) {
+                            return ( Window ) w;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     public Window getWindowWithButton ( String cap, String button ) {
         for ( Widget w = lchild ; w != null ; w = w.prev ) {
             if ( w instanceof Window ) {

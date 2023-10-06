@@ -1861,21 +1861,18 @@ public class NUtils {
         }
         while (Finder.findObjectInArea(new NAlias("consobj"), 1000, area) == null);
 
-        waitEvent(()->gameUI.getWindow(name)!=null,50);
-        spwnd = gameUI.getWindow(name);
-
-
+        waitEvent(()->NUtils.isPose(NUtils.getGameUI().map.player(),new NAlias("thinkan")), 500);
+        spwnd = gameUI.getBuildWindow(name);
         if (spwnd != null) {
             for (Widget sp = spwnd.lchild; sp != null; sp = sp.prev) {
                 /// Выбираем внутренний контейнер
                 if (sp instanceof Button) {
                     ((Button) sp).click();
-                    Thread.sleep(100);
                 }
             }
-            waitEvent(()->getProg()>=0, 20);
+            waitEvent(()->NUtils.isPose(NUtils.getGameUI().map.player(),new NAlias("buildan")), 500);
             /// Ждем завершения крафта
-            waitEvent(()->getProg()<0, 1000);
+            waitEvent(()->!NUtils.isPose(NUtils.getGameUI().map.player(),new NAlias("buildan")), 10000);
             return true;
         }
         return false;
@@ -1901,7 +1898,8 @@ public class NUtils {
             String name
     )
             throws InterruptedException {
-        Window spwnd = gameUI.getWindow(name);
+        waitEvent(()->gameUI.getBuildWindow(name)!=null,50);
+        Window spwnd = gameUI.getBuildWindow(name);
 
         if (spwnd != null) {
             for (Widget sp = spwnd.lchild; sp != null; sp = sp.prev) {
@@ -2003,9 +2001,9 @@ public class NUtils {
         }
         while (Finder.findObjectInArea(new NAlias("consobj"), 1000, area) == null);
 
-        //        gameUI.hand
-        waitEvent(()->gameUI.getWindow(name)!=null,50);
-        spwnd = gameUI.getWindow(name);
+        waitEvent(()->NUtils.isPose(NUtils.getGameUI().map.player(),new NAlias("thinkan")), 500);
+        waitEvent(()->gameUI.getBuildWindow(name)!=null,500);
+        spwnd = gameUI.getBuildWindow(name);
 
         if (spwnd != null) {
             for (Widget sp = spwnd.lchild; sp != null; sp = sp.prev) {
@@ -2015,9 +2013,9 @@ public class NUtils {
                     break;
                 }
             }
-            waitEvent(()->getProg()>=0, 20);
+            waitEvent(()->NUtils.isPose(NUtils.getGameUI().map.player(),new NAlias("buildan")), 500);
             /// Ждем завершения крафта
-            waitEvent(()->getProg()<0, 1000);
+            waitEvent(()->!NUtils.isPose(NUtils.getGameUI().map.player(),new NAlias("buildan")), 10000);
             return true;
         }
         return false;
