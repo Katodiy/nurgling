@@ -69,6 +69,11 @@ public class NMapView extends MapView {
                 imgs.add(tile);
                 imgs.add(RichText.render(ttip.get("tile"), 0).img);
             }
+            if (ttip.get("tilerc") != null) {
+                BufferedImage gob = RichText.render(String.format("$col[128,128,128]{%s}:", "TCoord"), 0).img;
+                imgs.add(gob);
+                imgs.add(RichText.render(ttip.get("tilerc"), 0).img);
+            }
             if (ttip.get("tags") != null) {
                 BufferedImage gob = RichText.render(String.format("$col[255,128,128]{%s}:", "Tags"), 0).img;
                 imgs.add(gob);
@@ -205,6 +210,7 @@ public class NMapView extends MapView {
                     Resource res = mCache.tilesetr(tile);
                     if (res != null) {
                         ttip.put("tile", res.name);
+                        ttip.put("tilerc", mc.div(MCache.tilesz).floor().mul(MCache.tilesz).add(MCache.tilesz.div(2)).toString());
                     }
             }
 

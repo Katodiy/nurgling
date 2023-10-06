@@ -66,10 +66,13 @@ public class Fishing implements Action {
                     new Equip(primrod_name).run(gui);
                 }
                 /// Идем на рыболовное место
-                new PathFinder(gui, fishing_place.center).run();
+                PathFinder pf = new PathFinder(gui, fishing_place.center);
+                pf.setPhantom ( fishing_place.center, NHitBox.getByName ( "cupboard" ) );
+                pf.setHardMode(true);
+                pf.run();
                 /// Рыбачим
                 NUtils.command(new char[]{'a', 'i'});
-                gui.map.wdgmsg("click", Coord.z, gui.map.player().rc.floor(posres), 1, 0);
+                gui.map.wdgmsg("click", Coord.z, fishing_place.center.floor(posres), 1, 0);
                 if (!disableDropper.get()) {
                     dropper = new Thread(new Dropper(gui, new NAlias("fish", "oldboot")), "Dropper");
                     dropper.start();
