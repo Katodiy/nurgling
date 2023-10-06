@@ -26,7 +26,7 @@ public class BuildBeacon extends Bot {
         win_sz.y = 170;
         
         CraftCommand command = new CraftCommand();
-        command.command = new char[]{ 'b', 'e' };
+        command.command = new char[]{ 'a', 'h' };
         command.name = "Wilderness Beacon";
         command.ingredients = new ArrayList<Ingredient> ();
         Ingredient clay = new Ingredient();
