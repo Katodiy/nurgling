@@ -37,7 +37,7 @@ public class NWoolMarker extends NSprite implements RenderTree.Node, PView.Rende
 
 	@Override
 	public void draw(GOut g, Pipe state) {
-		if(((Gob)owner).isTag(NGob.Tags.wool)) {
+		if(((Gob)owner).isTag(NGob.Tags.wool) && !((Gob)owner).isTag(NGob.Tags.knocked)) {
 			Coord3f markerPos = new Coord3f(0, 0, z + NUtils.getDeltaZ());
 			Coord sc = Homo3D.obj2view(markerPos, state, Area.sized(g.sz())).round2();
 			g.aimage(img, sc, 0.5, 0.5);

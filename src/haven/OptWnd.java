@@ -1839,6 +1839,7 @@ public class OptWnd extends Window {
 					AreasID.parseJson((JSONObject) main.get("areas"));
 					NConfiguration.getInstance().parseIngredients((JSONArray) main.get("ingredients"));
 					NConfiguration.getInstance().write();
+					AreasID.write();
 				} catch (IOException | ParseException ex) {
 					System.out.println("Incorrect import file");
 				}

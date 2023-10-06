@@ -67,7 +67,7 @@ public class HarvestSeedAction implements Action {
         return new Results ( Results.Types.SUCCESS );
     }
 
-    public HarvestSeedAction(NAlias crop, AreasID harvest_area, boolean isMaxStage) {
+    public  HarvestSeedAction(NAlias crop, AreasID harvest_area, boolean isMaxStage) {
         this.crop = crop;
         this.harvest_area = harvest_area;
         this.isMaxStage = isMaxStage;

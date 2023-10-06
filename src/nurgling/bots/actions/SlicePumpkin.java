@@ -42,7 +42,9 @@ public class SlicePumpkin implements Action{
                 pf.run();
             }
             /// Подбираем предмет
+            int size = NUtils.getGameUI().getInventory().getFreeSpace();
             NUtils.takeFromEarth ( item );
+            NUtils.waitEvent(()->size!=NUtils.getGameUI().getInventory().getFreeSpace(),50);
         }
         while (gui.getInventory ().getItem ( pumpkin_name)!=null) {
             GItem pumpkin = gui.getInventory().getItem(pumpkin_name);
