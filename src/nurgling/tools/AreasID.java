@@ -45,33 +45,36 @@ public enum AreasID {
         read(( ((HashDirCache) ResCache.global).base +"/../" + "./calibr.json" ));
     }
 
+    public static void parseJson(JSONObject jsonObject){
+        JSONArray widgetsPos = ( JSONArray ) jsonObject.get ( "data" );
+        if(widgetsPos!=null) {
+            Iterator<JSONObject> iterator2 = widgetsPos.iterator();
+            while (iterator2.hasNext()) {
+                JSONObject item = iterator2.next();
+                try {
+                    data.put(AreasID.valueOf(item.get("key").toString()), item.get("value").toString());
+                    thresholds.put(AreasID.valueOf(item.get("key").toString()), item.get("th")!=null ? Double.parseDouble(item.get("th").toString()): 0);
+                }catch (IllegalArgumentException e){
+                    // skip old fields
+                }
+            }
+        }
+    }
+
     public static void read(String path){
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(
                     new InputStreamReader( new FileInputStream(path), "UTF-8" ) );
             JSONParser parser = new JSONParser();
-            JSONObject jsonObject = ( JSONObject ) parser.parse ( reader );
-            JSONArray widgetsPos = ( JSONArray ) jsonObject.get ( "data" );
-            if(widgetsPos!=null) {
-                Iterator<JSONObject> iterator2 = widgetsPos.iterator();
-                while (iterator2.hasNext()) {
-                    JSONObject item = iterator2.next();
-                    try {
-                        data.put(AreasID.valueOf(item.get("key").toString()), item.get("value").toString());
-                        thresholds.put(AreasID.valueOf(item.get("key").toString()), item.get("th")!=null ? Double.parseDouble(item.get("th").toString()): 0);
-                    }catch (IllegalArgumentException e){
-                        // skip old fields
-                    }
-
-                }
-            }
+            parseJson(( JSONObject ) parser.parse ( reader ));
         } catch (IOException | ParseException ex) {
             System.out.println("No areas settings. calibr.json not found");
         }
     }
 
-    public static void write(){
+
+    public static JSONObject constructJson(){
         JSONObject obj = new JSONObject ();
         JSONArray is = new JSONArray ();
         Double value = 0.;
@@ -83,8 +86,12 @@ public enum AreasID {
             is.add(is_obj);
         }
         obj.put("data",is);
+        return obj;
+    }
+
+    public static void write(){
         try (OutputStreamWriter file = new OutputStreamWriter(Files.newOutputStream(Paths.get((((HashDirCache) ResCache.global).base +"/../" + "./calibr.json" ))), StandardCharsets.UTF_8)) {
-            file.write ( obj.toJSONString () );
+            file.write ( constructJson().toJSONString () );
             file.close();
         }
         catch ( IOException e ) {

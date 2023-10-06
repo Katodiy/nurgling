@@ -29,9 +29,20 @@ package haven;
 import haven.render.Lighting;
 import nurgling.*;
 import nurgling.bots.settings.*;
+import nurgling.json.JSONArray;
+import nurgling.json.JSONObject;
+import nurgling.json.parser.JSONParser;
+import nurgling.json.parser.ParseException;
 import nurgling.tools.AreasID;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.KeyEvent;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -1793,9 +1804,66 @@ public class OptWnd extends Window {
 				}, name.pos("ur").adds(5, -2));
 				prev = add(new Label("Setup correct image, using marker key (PRESS SHIFT and MOVE cursor on SIGN with image) or enter resName without PATH"),prev.pos("bl").adds(0, 10));
 				prev = area = (AreaIconSelecter)add(new AreaIconSelecter(AreasID.branch),prev.pos("bl").adds(0, 10));
-
+				prev = add(new Button(UI.scale(200),"Import..."){
+					@Override
+					public void click() {
+						importdata();
+					}
+				}, prev.pos("bl").adds(0, UI.scale(10)));
+				prev = add(new Button(UI.scale(200),"Export..."){
+					@Override
+					public void click() {
+						exportdata();
+					}
+				}, prev.pos("ur").adds( UI.scale(5), 0));
 				pack();
 			}
+
+		}
+
+		public void importdata() {
+			java.awt.EventQueue.invokeLater(() -> {
+				JFileChooser fc = new JFileChooser();
+				fc.setFileFilter(new FileNameExtensionFilter("Exported Nurgling data", "ndata"));
+				if(fc.showOpenDialog(null) != JFileChooser.APPROVE_OPTION)
+					return;
+				Path path = fc.getSelectedFile().toPath();
+				if(path.getFileName().toString().indexOf('.') < 0)
+					path = path.resolveSibling(path.getFileName() + ".ndata");
+				BufferedReader reader = null;
+				try {
+					reader = new BufferedReader(
+							new InputStreamReader(Files.newInputStream(path), "UTF-8" ) );
+					JSONParser parser = new JSONParser();
+					JSONObject main = ( JSONObject ) parser.parse ( reader );
+					AreasID.parseJson((JSONObject) main.get("areas"));
+					NConfiguration.getInstance().parseIngredients((JSONArray) main.get("ingredients"));
+					NConfiguration.getInstance().write();
+				} catch (IOException | ParseException ex) {
+					System.out.println("Incorrect import file");
+				}
+			});
+		}
+
+		public void exportdata() {
+			java.awt.EventQueue.invokeLater(() -> {
+				JFileChooser fc = new JFileChooser();
+				fc.setFileFilter(new FileNameExtensionFilter("Import Nurgling data", "ndata"));
+				if(fc.showSaveDialog(null) != JFileChooser.APPROVE_OPTION)
+					return;
+				Path path = fc.getSelectedFile().toPath();
+				if(path.getFileName().toString().indexOf('.') < 0)
+					path = path.resolveSibling(path.getFileName() + ".ndata");
+				try (OutputStreamWriter file = new OutputStreamWriter(Files.newOutputStream(path), StandardCharsets.UTF_8)) {
+					JSONObject obj = new JSONObject();
+					obj.put("areas", AreasID.constructJson());
+					obj.put("ingredients", NConfiguration.getInstance().getIngredientsArray());
+					file.write ( obj.toJSONString () );
+				}
+				catch ( IOException e ) {
+					e.printStackTrace ();
+				}
+			});
 		}
 
 		class BotSettings extends Widget {
