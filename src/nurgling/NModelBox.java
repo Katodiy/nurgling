@@ -33,7 +33,7 @@ public class NModelBox extends NSprite implements RenderTree.Node {
 		Resource res = getResource(gob);
 		if(res!=null) {
 			Collection<Resource.Neg> negs = res.layers(Resource.Neg.class);
-			if (negs != null) {
+			if (negs != null && negs.size()>0) {
 				ArrayList<NBoundingBox.Polygon> polygons = new ArrayList<>();
 				for (Resource.Neg neg : negs) {
 					Coord2d[] box = new Coord2d[4];
@@ -43,10 +43,84 @@ public class NModelBox extends NSprite implements RenderTree.Node {
 					box[3] = (new Coord2d(neg.bc.x, -neg.bc.y));
 					polygons.add(new NBoundingBox.Polygon(box));
 				}
-
 				return new NModelBox(new NBoundingBox(polygons, true), gob);
 			}
+			else if(gob.getResName()!= null)
+			{
+				NBoundingBox box;
+				if((box = findCustom(gob.getResName()))!=null)
+					return new NModelBox(box,gob);
+				else
+					return new NModelBox(new NBoundingBox(new ArrayList<>(), true), gob);
+			}
 		}
+		return null;
+	}
+
+	private final static HashMap<String, NBoundingBox> custom = new HashMap<String, NBoundingBox>()
+	{
+		{
+			put("log", new NBoundingBox(new Coord(-10,-2),new Coord(10,2)));
+			put("gfx/terobjs/vehicle/dugout", new NBoundingBox(new Coord(-10,-2),new Coord(10,2)));
+			put("bumlings", new NBoundingBox(new Coord(-3,-3),new Coord(3,3)));
+			put("gfx/terobjs/arch/stonemansion", new NBoundingBox(new Coord(-50,-50),new Coord(50,50)));
+			put("gfx/terobjs/arch/logcabin", new NBoundingBox(new Coord(-23,-23),new Coord(23,23)));
+			put("gfx/terobjs/arch/greathall", new NBoundingBox(new Coord(-80,-55),new Coord(80,55)));
+			put("gfx/terobjs/arch/timberhouse", new NBoundingBox(new Coord(-33,-33),new Coord(33,33)));
+			put("gfx/terobjs/arch/stonetower", new NBoundingBox(new Coord(-39,-39),new Coord(39,39)));
+			put("gfx/terobjs/arch/windmill", new NBoundingBox(new Coord(-28,-28),new Coord(28,28)));
+			put("gfx/terobjs/arch/stonestead", new NBoundingBox(new Coord(-45,-28),new Coord(45,28)));
+			put("gfx/terobjs/villageidol", new NBoundingBox(new Coord(-11,-17),new Coord(11,17)));
+			put("gfx/terobjs/pclaim", new NBoundingBox(new Coord(-3,-3),new Coord(3,3)));
+			put("gfx/terobjs/iconsign", new NBoundingBox(new Coord(-2,-2),new Coord(2,2)));
+			put("gfx/terobjs/candelabrum", new NBoundingBox(new Coord(-2,-2),new Coord(2,2)));
+			put("gfx/terobjs/lanternpost", new NBoundingBox(new Coord(-2,-2),new Coord(2,2)));
+			put("gfx/terobjs/cistern", new NBoundingBox(new Coord(-9,-9),new Coord(9,9)));
+			put("gfx/terobjs/oven", new NBoundingBox(new Coord(-9,-9),new Coord(9,9)));
+			put("gfx/terobjs/kiln", new NBoundingBox(new Coord(-9,-9),new Coord(9,9)));
+			put("gfx/terobjs/leanto", new NBoundingBox(new Coord(-9,-9),new Coord(9,9)));
+			put("gfx/terobjs/stonepillar", new NBoundingBox(new Coord(-12,-12),new Coord(12,12)));
+			put("gfx/terobjs/fineryforge", new NBoundingBox(new Coord(-9,-9),new Coord(9,9)));
+			put("gfx/terobjs/smelter", new NBoundingBox(new Coord(-11,-11),new Coord(11,19)));
+			put("gfx/terobjs/charterstone", new NBoundingBox(new Coord(-9,-9),new Coord(9,9)));
+			put("gfx/terobjs/steelcrucible", new NBoundingBox(new Coord(-3,-4),new Coord(3,4)));
+			put("gfx/terobjs/beehive", new NBoundingBox(new Coord(-4,-4),new Coord(4,4)));
+			put("gfx/terobjs/column", new NBoundingBox(new Coord(-4,-4),new Coord(4,4)));
+			put("gfx/terobjs/brazier", new NBoundingBox(new Coord(-4,-4),new Coord(4,4)));
+			put("gfx/terobjs/granary", new NBoundingBox(new Coord(-16,-16),new Coord(16,16)));
+			put("gfx/terobjs/pow", new NBoundingBox(new Coord(-4,-4),new Coord(4,4)));
+			put("gfx/terobjs/smokeshed", new NBoundingBox(new Coord(-6,-6),new Coord(6,6)));
+			put("gfx/terobjs/knarrdock", new NBoundingBox(new Coord(-60,-14),new Coord(62,14)));
+			put("gfx/terobjs/furn/bed-sturdy", new NBoundingBox(new Coord(-9,-6),new Coord(9,6)));
+			put("gfx/terobjs/vehicle/wreckingball-fold", new NBoundingBox(new Coord(-5,-11),new Coord(5,11)));
+			put("gfx/terobjs/quern", new NBoundingBox(new Coord(-4,-4),new Coord(4,4)));
+			put("gfx/terobjs/arch/palisadeseg", new NBoundingBox(new Coord(-5,-5),new Coord(5,5)));
+			put("gfx/terobjs/arch/palisadecp", new NBoundingBox(new Coord(-5,-5),new Coord(5,5)));
+			put("gfx/terobjs/arch/polecp", new NBoundingBox(new Coord(-5,-5),new Coord(5,5)));
+			put("gfx/terobjs/arch/poleseg", new NBoundingBox(new Coord(-5,-5),new Coord(5,5)));
+			put("gfx/terobjs/arch/drystonewallseg", new NBoundingBox(new Coord(-5,-5),new Coord(5,5)));
+			put("gfx/terobjs/arch/drystonewallcp", new NBoundingBox(new Coord(-5,-5),new Coord(5,5)));
+			put("gfx/terobjs/potterswheel", new NBoundingBox(new Coord(-2,-6),new Coord(2,6)));
+			put("gfx/terobjs/stockpile-oddtuber", new NBoundingBox(new Coord(-5,-5),new Coord(5,5)));
+			put("gfx/kritter/cattle/calf", new NBoundingBox(new Coord(-6,-2),new Coord(6,2)));
+			put("gfx/kritter/horse/stallion", new NBoundingBox(new Coord(-9,-3),new Coord(9,3)));
+			put("gfx/kritter/horse/mare", new NBoundingBox(new Coord(-9,-3),new Coord(9,3)));
+			put("gfx/kritter/horse/foal", new NBoundingBox(new Coord(-8,-3),new Coord(8,3)));
+			put("gfx/kritter/pig/piglet", new NBoundingBox(new Coord(-5,-2),new Coord(5,2)));
+			put("gfx/kritter/pig/sow", new NBoundingBox(new Coord(-5,-2),new Coord(5,2)));
+			put("gfx/kritter/pig/hog", new NBoundingBox(new Coord(-5,-2),new Coord(5,2)));
+		}
+	};
+
+	public static NBoundingBox findCustom(String name)
+	{
+		NBoundingBox res = custom.get(name);
+		if(res!=null)
+			return res;
+		if(name.endsWith("log") && name.startsWith("gfx/terobjs/trees"))
+			return custom.get("log");
+		if(name.startsWith("gfx/terobjs/bumlings"))
+			return custom.get("bumlings");
 		return null;
 	}
 

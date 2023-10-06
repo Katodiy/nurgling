@@ -127,7 +127,7 @@ public class NFlowerMenu extends FlowerMenu {
                         break;
                     if(item.parent!=null) {
                         new SelectFlowerAction((NGItem) item, action, SelectFlowerAction.Types.Item).run(NUtils.getGameUI());
-                        NUtils.waitEvent(() -> item.parent == null || !((NInventory) item.parent).findItem(item), 50);
+//                        NUtils.waitEvent(() -> item.parent == null || !((NInventory) item.parent).findItem(item), 500);
                     }
 
             }
