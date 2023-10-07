@@ -27,6 +27,7 @@
 package haven;
 
 import nurgling.NConfiguration;
+import nurgling.NFoodWriter;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -389,6 +390,9 @@ public class MainFrame extends java.awt.Frame implements Console.Directory {
     public static void resdump() {
 	dumplist(Resource.remote().loadwaited(), loadwaited.get());
 	dumplist(Resource.remote().cached(), allused.get());
+	NConfiguration.getInstance().write();
+	if(NConfiguration.getInstance().collectFoodInfo)
+		NFoodWriter.write();
 	if(ResCache.global != null) {
 	    try {
 		Writer w = new OutputStreamWriter(ResCache.global.store("tmp/allused"), "UTF-8");

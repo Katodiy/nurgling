@@ -26,6 +26,8 @@
 
 package haven;
 
+import nurgling.NConfiguration;
+import nurgling.NFoodWriter;
 import nurgling.NGItem;
 import nurgling.NUtils;
 
@@ -193,6 +195,8 @@ public class GItem extends AWidget implements ItemInfo.SpriteOwner, GSprite.Owne
 	    if(pg != null)
 		info.add(new ItemInfo.Pagina(this, pg.text));
 	    this.info = info;
+		if(NConfiguration.getInstance().collectFoodInfo)
+			NFoodWriter.addFood(info, getres().name);
 	}
 	return(this.info);
     }
