@@ -8,7 +8,7 @@ import java.util.function.*;
 import java.nio.*;
 import java.awt.Color;
 
-@FromResource(name = "gfx/fx/fishline", version = 3)
+@haven.FromResource(name = "gfx/fx/fishline", version = 4)
 public class FishLine extends Sprite {
     public final Pipe.Op linemat;
     public final long floatid;
@@ -46,7 +46,7 @@ public class FishLine extends Sprite {
 	    Skeleton.BoneOffset bo = spr.res.layer(Skeleton.BoneOffset.class, "l");
 	    if(bo == null)
 		throw(new RuntimeException("No line-offset (\"l\") in fish-float sprite"));
-	    off = bo.forpose(spr.pose);
+	    off = bo.from(spr.pose);
 	    this.flob = flob;
 	}
 	Location.Chain loc = new BufPipe().prep(flob.placed.placement()).prep(off.get()).get(Homo3D.loc);

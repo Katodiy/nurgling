@@ -8,7 +8,7 @@ import java.util.function.*;
 import java.nio.*;
 import java.awt.Color;
 
-@FromResource(name = "gfx/fx/fishline", version = 3)
+@haven.FromResource(name = "gfx/fx/fishline", version = 4)
 public class Pole extends StaticSprite {
     public final List<RenderTree.Slot> slots = new ArrayList<>(1);
 
@@ -36,7 +36,7 @@ public class Pole extends StaticSprite {
 	    Skeleton.BoneOffset bo = res.layer(Skeleton.BoneOffset.class, "l");
 	    if(bo == null)
 		throw(new RuntimeException("No line-offset (\"l\") in fishing pole sprite"));
-	    lineoff = bo.forpose(null).get();
+	    lineoff = bo.from(null).get();
 	}
 	return(lineoff);
     }

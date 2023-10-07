@@ -48,7 +48,8 @@ public class NPlayerMarker extends NSprite{
 			color = Color.WHITE;
 			prop = NConfiguration.getInstance().players.get("white");
 			fx = new NTargetRing(gob, color, r);
-			NAlarmManager.play(NGob.Tags.notmarked);
+			if(NConfiguration.getInstance().alarmWhite)
+				NAlarmManager.play(NGob.Tags.notmarked);
 			for (RenderTree.Slot slot : slots1)
 				slot.clear();
 			show();
@@ -56,7 +57,8 @@ public class NPlayerMarker extends NSprite{
 			color = Color.RED;
 			prop = NConfiguration.getInstance().players.get("red");
 			fx = new NTargetRing(gob, color, r);
-			NAlarmManager.play(NGob.Tags.notmarked);
+			if(NConfiguration.getInstance().alarmRed)
+				NAlarmManager.play(NGob.Tags.notmarked);
 			for (RenderTree.Slot slot : slots1)
 				slot.clear();
 			show();
