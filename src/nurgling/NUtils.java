@@ -478,7 +478,7 @@ public class NUtils {
                 Resource res = null;
                 res = item.item.getres();
                 if (res != null) {
-                    return checkName(res.name, regEx);
+                    return checkName(res.name, regEx) || (((NGItem)item.item).name()!=null && checkName(((NGItem)item.item).name(), regEx));
                 }
             } catch (Loading e) {
             }
