@@ -119,6 +119,7 @@ public class NHitBox extends NArea {
         hitboxes.put("gfx/terobjs/arch/stonetower-door", new NHitBox(new Coord2d(-2.75, -8.25), new Coord2d(2.75, 8.25)));
         hitboxes.put("gfx/terobjs/plants/trellis", new NHitBox(new Coord2d(-1.375, -5.5), new Coord2d(1.375, 5.5)));
         hitboxes.put("gfx/terobjs/arch/hwall", new NHitBox(new Coord2d(-0.02, -5.5), new Coord2d(0.02, 5.5)));
+        hitboxes.put("gfx/terobjs/pow", new NHitBox(new Coord2d(-5.5, -5.5), new Coord2d(5.5, 5.5)));
         hitboxes.put("gfx/terobjs/vehicle/dugout", new NHitBox(new Coord2d(-11, -2.75), new Coord2d(11, 2.75)));
         ///hitboxes.put("gfx/terobjs/trees/oldtrunk", new NHitBox(new Coord2d(-11, -2.75), new Coord2d(11, 2.75)));
         ///TODO:dreca

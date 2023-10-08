@@ -1,7 +1,7 @@
 package nurgling.bots.actions;
 
 import haven.Gob;
-import haven.res.gfx.terobjs.items.gridiron.Roastspit;
+import haven.res.gfx.terobjs.roastspit.Roastspit;
 import nurgling.*;
 import nurgling.tools.AreasID;
 import nurgling.tools.Finder;

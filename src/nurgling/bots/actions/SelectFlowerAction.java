@@ -1,7 +1,7 @@
 package nurgling.bots.actions;
 
 import haven.*;
-import haven.res.gfx.terobjs.items.gridiron.Roastspit;
+import haven.res.gfx.terobjs.roastspit.Roastspit;
 import nurgling.*;
 import nurgling.tools.Finder;
 
