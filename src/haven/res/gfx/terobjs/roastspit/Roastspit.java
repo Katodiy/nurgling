@@ -37,7 +37,7 @@ public class Roastspit extends SkelSprite {
 	    rbuf.add(equed);
     }
 
-	public String getContent(){
-		return equed.toString();
+	public String getContent() {
+		return equed != null ? equed.toString() : null;
 	}
 }

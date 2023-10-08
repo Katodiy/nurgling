@@ -777,7 +777,6 @@ public class ChatUI extends Widget {
 	private static final Tex bhb = new TexI(Resource.loadsimg("nurgling/hud/chat/hori"));
 	private static final Tex bvlb = new TexI(Resource.loadsimg("nurgling/hud/chat/vert"));
 	private static final Tex bvrb = bvlb;
-	private static final Tex bmf = new TexI(Resource.loadsimg("hud/chat-mid"));
 	private static final Tex bcbd = new TexI(Resource.loadsimg("nurgling/hud/chat/cbtng"));
 
 	public void draw(GOut g) {
@@ -788,7 +787,6 @@ public class ChatUI extends Widget {
 		g.rimagev(bvlb, new Coord(-bulc.sz().x/2+dmarg.x, bulc.sz().y/2+dmarg.y), sz.y );
 		g.rimagev(bvrb, new Coord(sz.x - burc.sz().x/2 - dmarg.x, bulc.sz().y/2+dmarg.y), sz.y);
 		g.rimageh(bhb, new Coord(bulc.sz().x/2+dmarg.x, -bulc.sz().y/2+dmarg.y), sz.x - bulc.sz().x/2 - burc.sz().x/2 - dmarg.x*2);
-		g.aimage(bmf, new Coord(sz.x / 2, 0), 0.5, 0);
 		if ((sel == null) || (sel.cb == null))
 			g.aimage(bcbd, new Coord(sz.x + marg.x - bcbd.sz().x, marg.y +bcbd.sz().y/2 +bcbd.sz().y), 1, 0);
 	}
