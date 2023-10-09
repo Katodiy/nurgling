@@ -34,6 +34,16 @@ public class Smelter extends Settings {
                 a = val;
             }
         }, prev.pos("bl").adds(0, 5));
+        prev = add(new CheckBox("Use bellows") {
+            {
+                a = NConfiguration.getInstance().smelterbellows;
+            }
+
+            public void set(boolean val) {
+                NConfiguration.getInstance().smelterbellows = val;
+                a = val;
+            }
+        }, prev.pos("bl").adds(0, 5));
         pack();
     }
 }

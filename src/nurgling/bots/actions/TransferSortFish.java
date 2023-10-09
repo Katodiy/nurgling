@@ -21,7 +21,7 @@ public class TransferSortFish implements Action{
         ArrayList<InContainer> icont = new ArrayList<>();
         do {
             new TakeMaxFromContainers ( new NAlias( "fish" ), area, icont ).run ( gui );
-            new TransferMeat ().run ( gui );
+            new TransferFish ().run ( gui );
         }while ( !allEmpty(icont) );
         return new Results ( Results.Types.SUCCESS );
     }

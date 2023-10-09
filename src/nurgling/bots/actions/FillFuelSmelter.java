@@ -14,10 +14,10 @@ public class FillFuelSmelter implements Action {
         if (Finder.findObjects(new NAlias("primsmelter"))
                 .size() == 0) {
             new FillFuelFromPiles(NConfiguration.getInstance().isMinerCredo ? 9 : 12, new NAlias("coal"), smelter_name, new NAlias("coal"),
-                    AreasID.coal, "Smelter").run(gui);
+                    AreasID.smelter, AreasID.coal, "Smelter").run(gui);
         } else {
-            new FillFuelFromPiles(NConfiguration.getInstance().isMinerCredo ? 4 : 5, new NAlias("block"), smelter_name, new NAlias("block"),
-                    AreasID.block, "Furnace").run(gui);
+            new FillFuelFromPiles(NConfiguration.getInstance().isMinerCredo ? 15 : 20, new NAlias("branch"), smelter_name, new NAlias("branch"),
+                    AreasID.smelter, AreasID.branch, "Furnace").run(gui);
         }
         return new Results(Results.Types.SUCCESS);
     }

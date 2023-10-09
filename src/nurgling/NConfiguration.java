@@ -88,6 +88,7 @@ public class NConfiguration {
     public boolean minesup = false;
     public boolean alarmWhite = false;
     public boolean alarmRed = false;
+    public boolean smelterbellows = false;
 
     public static void saveButtons(String name, NGameUI.NButtonBeltSlot[] custom) {
         String key = NUtils.getUI().sessInfo.username +"/" + NUtils.getUI().sessInfo.characterInfo.chrid;
@@ -875,6 +876,7 @@ public class NConfiguration {
         obj.put ( "nightVision", nightVision);
         obj.put ( "alarmWhite", alarmWhite);
         obj.put ( "alarmRed", alarmRed);
+        obj.put ( "smelterbellows", smelterbellows);
         obj.put ( "showAreas", showAreas);
         obj.put ( "playerSpeed", playerSpeed);
         obj.put ( "horseSpeed", horseSpeed);
@@ -1301,6 +1303,8 @@ public class NConfiguration {
                 alarmWhite = ( Boolean ) jsonObject.get ( "alarmWhite" );
             if(jsonObject.get ( "alarmRed" )!=null)
                 alarmRed = ( Boolean ) jsonObject.get ( "alarmRed" );
+            if(jsonObject.get ( "smelterbellows" )!=null)
+                smelterbellows = ( Boolean ) jsonObject.get ( "smelterbellows" );
             if(jsonObject.get ( "showAreas" )!=null)
                 showAreas = ( Boolean ) jsonObject.get ( "showAreas" );
             if(jsonObject.get ( "isEye" )!=null)

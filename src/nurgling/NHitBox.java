@@ -106,7 +106,7 @@ public class NHitBox extends NArea {
     private static HashMap<String, NHitBox> hitboxes = new HashMap<>();
 
     public static void init() {
-        hitboxes.put("gfx/terobjs/stockpile-branch", new NHitBox(new Coord2d(-3.4375, -3.4375), new Coord2d(3.4375, 3.4375)));
+        hitboxes.put("gfx/terobjs/stockpile-branch", new NHitBox(new Coord2d(-4.125, -4.125), new Coord2d(4.125, 4.125)));
         hitboxes.put("gfx/terobjs/barrel", new NHitBox(new Coord2d(-4.125, -4.125), new Coord2d(4.125, 4.125)));
         hitboxes.put("gfx/terobjs/churn", new NHitBox(new Coord2d(-4.125, -4.125), new Coord2d(4.125, 4.125)));
         hitboxes.put("gfx/borka/body", new NHitBox(new Coord2d(-4.125, -4.125), new Coord2d(4.125, 4.125)));
@@ -154,7 +154,7 @@ public class NHitBox extends NArea {
         hitboxes.put("gfx/terobjs/woodheart", new NHitBox(  new Coord2d ( -27.5, -27.5 ), new Coord2d ( 27.5, 27.5 )  ));
         hitboxes.put("gfx/terobjs/saltbasin", new NHitBox(  new Coord2d ( -27.5, -27.5 ), new Coord2d ( 27.5, 27.5 )  ));
         hitboxes.put("gfx/terobjs/tarkiln", new NHitBox( new Coord2d ( -25, -25 ), new Coord2d ( 25, 25 )   ));
-        hitboxes.put("gfx/terobjs/primsmelter", new NHitBox( new Coord2d ( -11, -8.25 ), new Coord2d ( 11, 8.25 )  ));
+        hitboxes.put("gfx/terobjs/primsmelter", new NHitBox( new Coord2d ( -12.375, -8.25 ), new Coord2d ( 12.375, 8.25 )  ));
         hitboxes.put("gfx/terobjs/smelter", new NHitBox(  new Coord2d ( -12.375, -22 ), new Coord2d ( 12.375, 22 )  ));
         hitboxes.put("gfx/terobjs/minehole", new NHitBox(  new Coord2d ( -12.375, -12.375 ), new Coord2d ( 12.375, 12.375 ) ));
         hitboxes.put("gfx/terobjs/trees/stonepine", new NHitBox(  new Coord2d ( -8.25, -8.25 ), new Coord2d ( 8.25, 8.25 )));

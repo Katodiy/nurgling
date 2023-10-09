@@ -45,6 +45,23 @@ public class NISBox extends ISBox {
         return Integer.MAX_VALUE;
     }
 
+    public int getCount()
+    {
+        if ( label == null || label.text == null ) {
+            return -1;
+        }
+        int sep = label.text.indexOf ( '/' );
+        if ( sep > 0 ) {
+            String count = label.text.substring ( 0, sep );
+            try {
+                return Integer.parseInt ( count );
+            }
+            catch ( NumberFormatException nfe ) {
+            }
+        }
+        return -1;
+    }
+
     @Override
     protected void added() {
         if(parent instanceof Window) {

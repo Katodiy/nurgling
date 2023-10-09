@@ -1622,7 +1622,7 @@ public class NUtils {
                     if (gameUI.getInventory().getFreeSpace() > 0) {
                         /// Берем один предмет
                         sp.wdgmsg("xfer");
-                        NUtils.waitEvent(() -> (freeSpace != nis.getFreeSpace()), 50, 10);
+                        NUtils.waitEvent(() -> (freeSpace != nis.getFreeSpace()), 500);
                         if(freeSpace != nis.getFreeSpace())
                         {
                             NUtils.waitEvent(() -> (minv_freeSpace != gameUI.getInventory().getFreeSpace() || findBundle()), 100, 10);
@@ -2095,5 +2095,18 @@ public class NUtils {
                     }
                 }
         }
+    }
+
+    public static NISBox getStockpile () {
+        Window spwnd = gameUI.getWindow ( "Stockpile" );
+        if(spwnd == null){
+            return null;
+        }
+        for ( Widget sp = spwnd.lchild ; sp != null ; sp = sp.prev ) {
+            if ( sp instanceof NISBox ) {
+                return ( ( NISBox ) sp );
+            }
+        }
+        return null;
     }
 }

@@ -1,10 +1,7 @@
 package nurgling.bots.actions;
 
 import haven.Gob;
-import nurgling.NAlias;
-import nurgling.NGameUI;
-import nurgling.NUtils;
-import nurgling.PathFinder;
+import nurgling.*;
 import nurgling.tools.AreasID;
 import nurgling.tools.Finder;
 import nurgling.tools.NArea;
@@ -56,14 +53,24 @@ public class TakeFromPile implements Action {
             }
             new PathFinder( gui, inPile ).run ();
             new OpenTargetContainer ( inPile, "Stockpile" ).run ( gui );
-        
-            while ( need > 0 && Finder.findObject ( inPile.id ) != null ) {
-                if(!NUtils.takeItemFromPile ())
-                    return new Results ( Results.Types.FULL );
-                need = count - gui.getInventory ().getWItems( items ).size ();
+
+            NISBox sp = null;
+            if((sp = NUtils.getStockpile())!=null && NUtils.getStockpile().getCount()>need) {
+                for (int i = 0; i < count; i++)
+                    sp.wdgmsg("xfer");
+                NUtils.waitEvent(() -> gui.getInventory().getWItems(items).size() == count, 200);
+                need = count - gui.getInventory().getWItems(items).size();
             }
-            if ( Finder.findObject ( inPile.id ) == null ) {
-                inPile = Finder.findObjectInArea ( iname, 1000, Finder.findNearestMark ( input ) );
+            else
+            {
+                while (need > 0 && Finder.findObject(inPile.id) != null) {
+                    if (!NUtils.takeItemFromPile())
+                        return new Results(Results.Types.FULL);
+                    need = count - gui.getInventory().getWItems(items).size();
+                }
+                if (Finder.findObject(inPile.id) == null) {
+                    inPile = Finder.findObjectInArea(iname, 1000, Finder.findNearestMark(input));
+                }
             }
         }
         while ( need > 0 );

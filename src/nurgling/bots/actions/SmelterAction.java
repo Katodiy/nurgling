@@ -1,21 +1,22 @@
 package nurgling.bots.actions;
 
+import haven.Coord;
 import haven.Gob;
-import nurgling.NAlias;
-import nurgling.NGameUI;
-import nurgling.NHitBox;
-import nurgling.NUtils;
+import nurgling.*;
 import nurgling.tools.AreasID;
 import nurgling.tools.Finder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import static haven.OCache.posres;
+
 /// TODO флаг 16 для мехов
 public class SmelterAction implements Action {
     static NAlias ores = new NAlias ( new ArrayList<> (
             Arrays.asList ( "cassiterite", "hematite", "peacockore", "chalcopyrite", "malachite", "leadglance",
                     "cinnabar", "galena", "ilmenite", "hornsilver", "argentite", "sylvanite" , "magnetite", "nagyagite", "petzite", "cuprite","limonite") ) );
-    private final NAlias smelter_name = new NAlias ( new ArrayList<> ( Arrays.asList ( "smelter" ) ),
+    private final NAlias smelter_name = new NAlias ( new ArrayList<> ( Arrays.asList ( "primsmelter" ) ),
             new ArrayList<> () );
 
     boolean isPrim = false;
@@ -26,18 +27,36 @@ public class SmelterAction implements Action {
             return new Results(Results.Types.NO_WORKSTATION);
         while ( !Finder.findObjectsInArea ( new NAlias ( "ore" ), Finder.findNearestMark ( AreasID.ore ) )
                        .isEmpty () ) {
-            /// Wait until the smelters go out
-            new WaitAction ( () -> {
+
+            while(true)
+            {
+                boolean needBreak = false;
                 for ( Gob gob : Finder.findObjectsInArea ( smelter_name, Finder.findNearestMark(AreasID.smelter) ) ) {
-                        if(NUtils.isIt(gob,"primsmelter")){
-                            isPrim = true;
+                    if (NUtils.isIt(gob, "primsmelter")) {
+                        isPrim = true;
+                        if (NConfiguration.getInstance().smelterbellows && (gob.getModelAttribute() & 16) == 0 && (gob.getModelAttribute() & 2) != 0) {
+                            new PathFinder(gui, gob).run();
+                            new Drink(0.9, false).run(gui);
+                            gui.map.wdgmsg("click", Coord.z, gob.rc.floor(posres), 3, 0, 0, (int) gob.id,
+                                    gob.rc.floor(posres), 0, 16);
+                            NUtils.waitEvent(() -> NUtils.isPose(NUtils.getGameUI().map.player(), new NAlias("primsmelter")), 500);
+                            NUtils.waitEvent(() -> NUtils.isPose(NUtils.getGameUI().map.player(), new NAlias("idle")), 5000);
                         }
-                        if ( ( gob.getModelAttribute() & 2 ) == 0 ) {
-                            return false;
+                        if ((gob.getModelAttribute() & 1) == 0) {
+                            needBreak = true;
                         }
+                    } else {
+                        if ((gob.getModelAttribute() & 2) == 0) {
+                            needBreak = true;
+                        }
+                    }
                 }
-                return true;
-            }, 50 ).run ( gui );
+                if(needBreak)
+                    break;
+                Thread.sleep(1000);
+            }
+            /// Wait until the smelters go out
+
 
             /// We pick up the ingots and transfer them to the chests
             Results.Types res;
@@ -45,7 +64,7 @@ public class SmelterAction implements Action {
                 res = new TakeMaxFromContainers (
                         new NAlias( new ArrayList<> ( Arrays.asList ( "bar", "nugget", "pebble-gold" ) ),
                                 new ArrayList<> ( Arrays.asList ( "cinna" ) ) ),
-                        new NAlias ( "smelter" ) , new ArrayList<>() ).run (
+                        AreasID.smelter, new ArrayList<>() ).run (
                         gui ).type;
                 new TransferBars ().run ( gui );
             }
@@ -67,7 +86,7 @@ public class SmelterAction implements Action {
             //Fill the smelter with fuel from the piles
             new FillFuelSmelter ( smelter_name ).run ( gui );
             /// Light fire
-            new LightGob ( new NAlias ( "smelter" ), 2 ).run ( gui );
+            new LightGob ( new NAlias ( "smelter" ), AreasID.smelter, 2 ).run ( gui );
         }
         return new Results ( Results.Types.SUCCESS );
     }
