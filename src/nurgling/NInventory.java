@@ -383,7 +383,7 @@ public class NInventory extends Inventory {
         for (Widget widget = child; widget != null; widget = widget.next) {
             if (widget instanceof WItem) {
                 NGItem wdg = (NGItem) ((WItem) widget).item;
-                if (NUtils.checkName(wdg.res.get().name, name)) {
+                if (NUtils.checkName(wdg.res.get().name, name) || NUtils.checkName(wdg.name(), name)) {
                     result.add(wdg);
                 }
             }
