@@ -1205,4 +1205,13 @@ public class MCache implements MapSource {
 	    }
 	}
     }
+
+
+	public boolean isLoaded() {
+		Reference<Grid> ref = cached.get();
+		Grid ret = (ref == null) ? null : ref.get();
+		if (NUtils.getGameUI() != null && NUtils.getGameUI().map != null && NUtils.getGameUI().map.player() != null)
+			return ((ret != null) && ret.gc.equals(NUtils.getGameUI().map.player().rc.div(MCache.tilesz).floor().div(cmaps)) && !ret.removed);
+		return false;
+	}
 }

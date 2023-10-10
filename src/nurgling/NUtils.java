@@ -682,7 +682,7 @@ public class NUtils {
 
         @Override
         public void run() {
-            while (getGameUI().map==null) {
+            while (getGameUI().map==null || !getGameUI ().ui.sess.glob.map.isLoaded()) {
                 try {
                     Thread.sleep(5000);
                 } catch (InterruptedException e) {

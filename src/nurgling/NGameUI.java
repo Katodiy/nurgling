@@ -264,7 +264,7 @@ public class NGameUI extends GameUI {
     }
 
     public boolean updated() {
-        return map!=null && map.glob!=null && map.glob.map!=null && map.player()!=null;
+        return map!=null && map.glob!=null && map.glob.map!=null && map.glob.map.isLoaded() && map.player()!=null;
     }
 
     public NQuestsStats getStats() {

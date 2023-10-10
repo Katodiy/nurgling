@@ -46,6 +46,7 @@ public class NomadCollector implements Action {
         NUtils.command ( new char[]{ 'a', 'h', 'h' });
         NUtils.waitEvent(()->gui.getProg()>=0,50);
         NUtils.waitEvent(()->gui.getProg()<0,10000);
+        NUtils.waitEvent(()->getGameUI ().ui.sess.glob.map.isLoaded(),5000);
         gui.msg("Map is loaded");
         NUtils.waitEvent(()->Finder.findObject (new NAlias ("pow") )!=null,5000);
         Thread.sleep(10000);
