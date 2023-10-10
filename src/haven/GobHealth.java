@@ -48,7 +48,7 @@ public class GobHealth extends GAttrib implements Gob.SetupMod {
 
     @OCache.DeltaType(OCache.OD_HEALTH)
     public static class $health implements OCache.Delta {
-	public void apply(Gob g, Message msg) {
+	public void apply(Gob g, OCache.AttrDelta msg) {
 	    int hp = msg.uint8();
 	    g.setattr(new NGobHealth(g, hp / 4.0f));
 	}
