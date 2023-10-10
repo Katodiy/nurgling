@@ -299,7 +299,7 @@ public class MCache implements MapSource {
 	public int seq = -1;
 	public boolean removed = false;
 	private int olseq = -1;
-	private final Cut cuts[];
+	public final Cut[] cuts;
 
 	public abstract class Deferred<T> implements Disposable {
 	    private Defer.Future<T> def;

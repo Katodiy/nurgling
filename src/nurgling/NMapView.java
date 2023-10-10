@@ -524,11 +524,11 @@ public class NMapView extends MapView {
                         for (MCache.Grid grid : NUtils.getGameUI().getMap().glob.map.grids.values()) {
                             for (int i = 0; i < grid.cuts.length; i++) {
                                 try {
-                                    MapMesh mesh = (grid.cuts[i].mesh != null) ? grid.cuts[i].mesh : grid.cuts[i].dmesh.get();
+                                    MCache.Grid.Deferred<MapMesh> mesh = grid.cuts[i].mesh;
                                     if (mesh == null)
                                         return;
-                                    grid.cuts[i].ols.put(olinf.id, mesh.makeol(olinf.id));
-                                    grid.cuts[i].olols.put(olinf.id, mesh.makeolol(olinf.id));
+                                    grid.cuts[i].ols.put(olinf.id, mesh.get().makeol(olinf.id));
+                                    grid.cuts[i].olols.put(olinf.id, mesh.get().makeolol(olinf.id));
                                 } catch (Loading l) {
                                     l.boostprio(2);
                                 }
