@@ -47,8 +47,9 @@ public class NWindow extends Window {
             String msg,
             Object... args
     ) {
-        if ( sender == deco ) {
+        if ( msg.equals("close") ) {
             bot.close ();
+            hide();
         }
         else {
             super.wdgmsg ( sender, msg, args );

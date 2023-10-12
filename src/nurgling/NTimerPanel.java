@@ -51,6 +51,8 @@ public class NTimerPanel extends Window {
 	if(sender == btnnew) {
 	   NUtils.getGameUI().add(new TimerAddWdg(this), c);
 	} else {
+		if(msg.equals("close"))
+			hide();
 	    super.wdgmsg(sender, msg, args);
 	}
     }
