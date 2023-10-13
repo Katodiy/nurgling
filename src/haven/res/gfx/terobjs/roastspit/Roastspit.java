@@ -1,11 +1,13 @@
-package haven.res.gfx.terobjs.roastspit;/* Preprocessed source code */
+/* Preprocessed source code */
+package haven.res.gfx.terobjs.roastspit;
+
 import haven.*;
 import haven.render.*;
 import java.util.*;
 import java.util.function.*;
 
 /* >spr: Roastspit */
-@haven.FromResource(name = "gfx/terobjs/roastspit", version = 53)
+@haven.FromResource(name = "gfx/terobjs/roastspit", version = 54)
 public class Roastspit extends SkelSprite {
     private RenderTree.Node equed;
     private Pipe.Op eqp;
@@ -28,7 +30,7 @@ public class Roastspit extends SkelSprite {
 	Resource eqr = owner.context(Resource.Resolver.class).getres(eqid).get();
 	Sprite eqs = Sprite.create(owner, eqr, Message.nil);
 	Skeleton.BoneOffset bo = eqr.layer(Skeleton.BoneOffset.class, "s");
-	return(RUtils.StateTickNode.from(eqs, bo.forpose(getpose())));
+	return(RUtils.StateTickNode.from(eqs, bo.from(getpose())));
     }
 
     public void iparts(int mask, Collection<RenderTree.Node> rbuf, Collection<Runnable> tbuf, Collection<Consumer<Render>> gbuf) {

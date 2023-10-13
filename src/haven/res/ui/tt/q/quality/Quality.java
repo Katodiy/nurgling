@@ -12,7 +12,7 @@ import nurgling.NGItem;
 import nurgling.NSearchable;
 
 /* >tt: Quality */
-@haven.FromResource(name = "ui/tt/q/quality", version = 25)
+@haven.FromResource(name = "ui/tt/q/quality", version = 26)
 public class Quality extends QBuff implements GItem.OverlayInfo<Tex> {
     NGItem ownitem = null;
     boolean withContent = false;
