@@ -1290,7 +1290,13 @@ public class NConfiguration {
                 Iterator<JSONObject> color_it = colors_arr.iterator();
                 while (color_it.hasNext()) {
                     JSONObject item = color_it.next();
-                    colors.put(item.get("name").toString(), new MixColor(new Color((float)((double) item.get("r")),(float)((double)item.get("g")),(float)((double)item.get("b")),(float)((double)item.get("a")))));
+                    try {
+                        colors.put(item.get("name").toString(), new MixColor(new Color((float) ((double) item.get("r")), (float) ((double) item.get("g")), (float) ((double) item.get("b")), (float) ((double) item.get("a")))));
+                    }
+                    catch (ClassCastException ignored)
+                    {
+                        // Loftar changed color type
+                    }
                 }
             }
             if(jsonObject.get ( "showCropStage" )!=null)
