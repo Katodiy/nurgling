@@ -47,7 +47,16 @@ public class MixColor extends State implements InstanceBatch.AttribState {
 	this.color = color;
     }
 
-    public MixColor(FColor color) {
+	public float[] getColor() {
+		return color;
+	}
+
+	public Color color() {
+		return new Color(color[0],color[1],color[2],color[3]);
+	}
+
+
+	public MixColor(FColor color) {
 	this(color.to4a());
     }
 

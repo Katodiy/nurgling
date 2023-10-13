@@ -28,8 +28,4 @@ public class NGobHealth extends GobHealth {
             }
         }
     }
-    public Pipe.Op gobstate() {
-        return(null);
-    }
-
 }

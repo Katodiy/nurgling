@@ -804,12 +804,12 @@ public class NConfiguration {
         JSONArray colorsarr = new JSONArray ();
         for(String key: colors.keySet()){
             JSONObject colorobj = new JSONObject ();
-            Color clr = colors.get(key).color();
+            float[] clr = colors.get(key).getColor();
             colorobj.put("name", key);
-            colorobj.put("r", clr.getRed());
-            colorobj.put("g", clr.getGreen());
-            colorobj.put("b", clr.getBlue());
-            colorobj.put("a", clr.getAlpha());
+            colorobj.put("r", clr[0]);
+            colorobj.put("g", clr[1]);
+            colorobj.put("b", clr[2]);
+            colorobj.put("a", clr[3]);
             colorsarr.add(colorobj);
         }
         obj.put("colors",colorsarr);
@@ -1290,7 +1290,7 @@ public class NConfiguration {
                 Iterator<JSONObject> color_it = colors_arr.iterator();
                 while (color_it.hasNext()) {
                     JSONObject item = color_it.next();
-                    colors.put(item.get("name").toString(), new MixColor(new Color((int)((long)item.get("r")),(int)((long)item.get("g")),(int)((long)item.get("b")),(int)((long)item.get("a")))));
+                    colors.put(item.get("name").toString(), new MixColor(new Color((float)((double) item.get("r")),(float)((double)item.get("g")),(float)((double)item.get("b")),(float)((double)item.get("a")))));
                 }
             }
             if(jsonObject.get ( "showCropStage" )!=null)
