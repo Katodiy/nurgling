@@ -8,7 +8,7 @@ import java.util.function.*;
 import java.nio.*;
 import java.awt.Color;
 
-@haven.FromResource(name = "gfx/fx/fishline", version = 4)
+@haven.FromResource(name = "gfx/fx/fishline", version = 5)
 public class Pole extends StaticSprite {
     public final List<RenderTree.Slot> slots = new ArrayList<>(1);
 

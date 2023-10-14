@@ -8,7 +8,7 @@ import java.util.function.*;
 import java.nio.*;
 import java.awt.Color;
 
-@haven.FromResource(name = "gfx/fx/fishline", version = 4)
+@haven.FromResource(name = "gfx/fx/fishline", version = 5)
 public class Line implements Rendered, RenderTree.Node, Disposable {
     public static final VertexArray.Layout fmt = new VertexArray.Layout(new VertexArray.Layout.Input(Homo3D.vertex, new VectorFormat(3, NumberFormat.FLOAT32), 0, 0, 16),
 									new VertexArray.Layout.Input(Homo3D.normal, new VectorFormat(3, NumberFormat.SNORM8),  0, 12, 16));

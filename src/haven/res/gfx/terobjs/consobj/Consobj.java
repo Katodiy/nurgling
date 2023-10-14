@@ -6,7 +6,7 @@ import haven.render.*;
 import static haven.MCache.tilesz;
 
 /* >spr: Consobj */
-@haven.FromResource(name = "gfx/terobjs/consobj", version = 33)
+@haven.FromResource(name = "gfx/terobjs/consobj", version = 34)
 public class Consobj extends Sprite implements Sprite.CUpd {
     public static Resource signres = null;
     public static Resource poleres = null;

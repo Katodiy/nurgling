@@ -6,7 +6,7 @@ import haven.render.*;
 import java.util.*;
 import haven.Skeleton.*;
 
-@FromResource(name = "lib/climb", version = 4)
+@haven.FromResource(name = "lib/climb", version = 5)
 public class Climb extends Sprite implements Gob.SetupMod, Sprite.CDel {
     public final Composited comp;
     public final Composited.Poses op;
@@ -17,7 +17,7 @@ public class Climb extends Sprite implements Gob.SetupMod, Sprite.CDel {
     public Climb(Owner owner, Resource res) {
 	super(owner, res);
 	try {
-	    comp = ((Gob)owner).getattr(Composite.class).comp;
+	    comp = owner.context(Gob.class).getattr(Composite.class).comp;
 	    op = comp.poses;
 	} catch(NullPointerException e) {
 	    throw(new Loading("Applying climbing effect to non-complete gob", e));

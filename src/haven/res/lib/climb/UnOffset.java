@@ -6,7 +6,7 @@ import haven.render.*;
 import java.util.*;
 import haven.Skeleton.*;
 
-@FromResource(name = "lib/climb", version = 4)
+@haven.FromResource(name = "lib/climb", version = 5)
 public class UnOffset extends TrackMod {
     public final float[] ft;
     public final float[][] toff;
@@ -66,7 +66,7 @@ public class UnOffset extends TrackMod {
 	return(super.tick(dt * tmod));
     }
 
-    public static UnOffset forres(ModOwner owner, Skeleton skel, ResPose pose, WrapMode mode) {
+    public static UnOffset forres(ModOwner owner, Skeleton skel, Skeleton.ResPose pose, WrapMode mode) {
 	if(mode == null)
 	    mode = pose.defmode;
 	Track[] tracks = new Track[pose.tracks.length];
