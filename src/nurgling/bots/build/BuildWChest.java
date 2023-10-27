@@ -21,7 +21,7 @@ public class BuildWChest extends Bot {
     
     public BuildWChest ( NGameUI gameUI ) {
         super ( gameUI );
-        win_title = "BuildWChest";
+        win_title = "BuildWches_t";
         win_sz.y = 100;
         
         CraftCommand command = new CraftCommand ();

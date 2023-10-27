@@ -40,6 +40,7 @@ public class NMapView extends MapView {
         super(sz, glob, cc, plgob);
         basic.add(((NOCache)glob.oc).paths);
         olsinf.put("minesup", new NOverlayInfo(Resource.remote().loadwait("map/overlay/minesup-o").flayer(MCache.ResOverlay.class),false));
+        NUtils.getGameUI().toggleol("minesup", true);
         ItemTex.tryLoad();
     }
 
@@ -143,75 +144,81 @@ public class NMapView extends MapView {
             @Override
             protected void hit(Coord pc, Coord2d mc, ClickData inf) {
                     ttip.clear();
-                    if (inf != null) {
-                        Gob gob = Gob.from(inf.ci);
-                        if (gob != null) {
-                            ttip.put("gob", gob.getResName());
+                    try {
+                        if (inf != null && NUtils.getGameUI()!=null && NUtils.getGameUI().map!=null && NUtils.getGameUI().map.player()!=null) {
+                            Gob gob = Gob.from(inf.ci);
+                            if (gob != null) {
+                                ttip.put("gob", gob.getResName());
 
-                            ttip.put("rc" , gob.rc.toString());
-                            if(!gob.ols.isEmpty()) {
-                                StringBuilder ols = new StringBuilder();
-                                boolean isPrinted = false;
-                                for (Gob.Overlay ol : gob.ols) {
-                                    if (ol.spr != null) {
-                                        isPrinted = true;
-                                        String res = ol.spr.getClass().toString();
-                                        if(!res.contains("$"))
-                                            ols.append(res + " ");
+                                ttip.put("rc" , gob.rc.toString());
+                                if(!gob.ols.isEmpty()) {
+                                    StringBuilder ols = new StringBuilder();
+                                    boolean isPrinted = false;
+                                    for (Gob.Overlay ol : gob.ols) {
+                                        if (ol.spr != null) {
+                                            isPrinted = true;
+                                            String res = ol.spr.getClass().toString();
+                                            if(!res.contains("$"))
+                                                ols.append(res + " ");
+                                        }
                                     }
+                                    if(isPrinted)
+                                        ttip.put("ols", ols.toString());
                                 }
-                                if(isPrinted)
-                                    ttip.put("ols", ols.toString());
-                            }
 
 
-                            ttip.put("id", String.valueOf(gob.id));
-                            if (!gob.tags.isEmpty()) {
-                                StringBuilder tags = new StringBuilder();
-                                Iterator<NGob.Tags> tag = gob.tags.iterator();
-                                while (tag.hasNext()) {
-                                    tags.append(tag.next().toString());
-                                    if (tag.hasNext())
-                                        tags.append(", ");
-                                }
-                                ttip.put("tags", tags.toString());
-                                if(!gob.properties.isEmpty()){
-                                    for(NProperties prop: gob.properties){
-                                        if(prop instanceof NProperties.Container){
-                                            NProperties.Container cont = (NProperties.Container) prop;
-                                            StringBuilder cont_str = new StringBuilder();
-                                            cont_str.append(String.format("Cap: %s Free: %d Full %d",cont.cap, cont.free, cont.full));
-                                            ttip.put("cont", cont_str.toString());
+                                ttip.put("id", String.valueOf(gob.id));
+                                if (!gob.tags.isEmpty()) {
+                                    StringBuilder tags = new StringBuilder();
+                                    Iterator<NGob.Tags> tag = gob.tags.iterator();
+                                    while (tag.hasNext()) {
+                                        tags.append(tag.next().toString());
+                                        if (tag.hasNext())
+                                            tags.append(", ");
+                                    }
+                                    ttip.put("tags", tags.toString());
+                                    if(!gob.properties.isEmpty()){
+                                        for(NProperties prop: gob.properties){
+                                            if(prop instanceof NProperties.Container){
+                                                NProperties.Container cont = (NProperties.Container) prop;
+                                                StringBuilder cont_str = new StringBuilder();
+                                                cont_str.append(String.format("Cap: %s Free: %d Full %d",cont.cap, cont.free, cont.full));
+                                                ttip.put("cont", cont_str.toString());
+                                            }
                                         }
                                     }
                                 }
-                            }
-                            ttip.put("status", gob.status.toString());
-                            if (NGob.getModelAttribute(gob)!=-1) {
-                                ttip.put("marker", String.valueOf(NGob.getModelAttribute(gob)));
-                            }
-
-                            if(gob.getattr(Drawable.class)!=null && gob.getattr(Drawable.class) instanceof Composite && ((Composite)gob.getattr(Drawable.class)).oldposes!=null)
-                            {
-                                StringBuilder poses = new StringBuilder();
-                                Iterator<ResData> pose = ((Composite)gob.getattr(Drawable.class)).oldposes.iterator();
-                                while (pose.hasNext()) {
-                                    poses.append(pose.next().res.get().name);
-                                    if (pose.hasNext())
-                                        poses.append(", ");
+                                ttip.put("status", gob.status.toString());
+                                if (NGob.getModelAttribute(gob)!=-1) {
+                                    ttip.put("marker", String.valueOf(NGob.getModelAttribute(gob)));
                                 }
-                                ttip.put("poses", poses.toString());
-                            }
 
+                                if(gob.getattr(Drawable.class)!=null && gob.getattr(Drawable.class) instanceof Composite && ((Composite)gob.getattr(Drawable.class)).oldposes!=null)
+                                {
+                                    StringBuilder poses = new StringBuilder();
+                                    Iterator<ResData> pose = ((Composite)gob.getattr(Drawable.class)).oldposes.iterator();
+                                    while (pose.hasNext()) {
+                                        poses.append(pose.next().res.get().name);
+                                        if (pose.hasNext())
+                                            poses.append(", ");
+                                    }
+                                    ttip.put("poses", poses.toString());
+                                }
+
+                            }
                         }
+                        MCache mCache = ui.sess.glob.map;
+                        int tile = mCache.gettile(mc.div(tilesz).floor());
+                        Resource res = mCache.tilesetr(tile);
+                        if (res != null) {
+                            ttip.put("tile", res.name);
+                            ttip.put("tilerc", mc.div(MCache.tilesz).floor().mul(MCache.tilesz).add(MCache.tilesz.div(2)).toString());
+                        }
+                    }catch (MCache.LoadingMap e)
+                    {
+
                     }
-                    MCache mCache = ui.sess.glob.map;
-                    int tile = mCache.gettile(mc.div(tilesz).floor());
-                    Resource res = mCache.tilesetr(tile);
-                    if (res != null) {
-                        ttip.put("tile", res.name);
-                        ttip.put("tilerc", mc.div(MCache.tilesz).floor().mul(MCache.tilesz).add(MCache.tilesz.div(2)).toString());
-                    }
+
             }
 
             @Override

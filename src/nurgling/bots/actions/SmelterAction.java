@@ -16,7 +16,7 @@ public class SmelterAction implements Action {
     static NAlias ores = new NAlias ( new ArrayList<> (
             Arrays.asList ( "cassiterite", "hematite", "peacockore", "chalcopyrite", "malachite", "leadglance",
                     "cinnabar", "galena", "ilmenite", "hornsilver", "argentite", "sylvanite" , "magnetite", "nagyagite", "petzite", "cuprite","limonite") ) );
-    private final NAlias smelter_name = new NAlias ( new ArrayList<> ( Arrays.asList ( "primsmelter" ) ),
+    private final NAlias smelter_name = new NAlias ( new ArrayList<> ( Arrays.asList ( "terobjs/primsmelter","terobjs/smelter" ) ),
             new ArrayList<> () );
 
     boolean isPrim = false;

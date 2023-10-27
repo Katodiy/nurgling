@@ -1854,14 +1854,9 @@ public class NUtils {
                 }
             }
         }
-        do {
-            gameUI.getMap()
-                    .wdgmsg("place", coord.floor(posres), (int) Math.round(rotation * 32768 / Math.PI), 1, 0);
-            Thread.sleep(50);
-        }
-        while (Finder.findObjectInArea(new NAlias("consobj"), 1000, area) == null);
+        gameUI.getMap().wdgmsg("place", coord.floor(posres), (int) Math.round(rotation * 32768 / Math.PI), 1, 0);
 
-        waitEvent(()->NUtils.isPose(NUtils.getGameUI().map.player(),new NAlias("thinkan")), 500);
+        waitEvent(()->NUtils.isPose(NUtils.getGameUI().map.player(),new NAlias("thinkan")) && gameUI.getBuildWindow(name)!=null, 500);
         spwnd = gameUI.getBuildWindow(name);
         if (spwnd != null) {
             for (Widget sp = spwnd.lchild; sp != null; sp = sp.prev) {

@@ -17,10 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class Chopper extends Bot {
-    
-    public static ArrayList<String> lumber_tools = new ArrayList<String> (
-            Arrays.asList ( "woodsmansaxe", "axe-m", "stoneaxe" ) );
-    public static ArrayList<String> shovel_tools = new ArrayList<String> ( Arrays.asList ( "shovel-m", "shovel-w" ) );
+
     
     public Chopper(NGameUI gameUI ) {
         super ( gameUI );

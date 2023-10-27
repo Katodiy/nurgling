@@ -758,13 +758,18 @@ public class MCache implements MapSource {
 		    }
 		}
 	    }
-		olids = Arrays.copyOf(olids, olids.length + 1);
-		ols = Arrays.copyOf(ols, ols.length + 1);
-		olids[olids.length-1] = Resource.remote().load("map/overlay/minesup-o");
-		ols[olids.length-1] = new boolean[cmaps.x * cmaps.y];
 	    this.ols = olids;
 	    this.ol = ols;
+		initcustom();
 	    fill_plots = null;
+	}
+
+	private void initcustom()
+	{
+		ols = Arrays.copyOf(ols, ols.length + 1);
+		ol = Arrays.copyOf(ol, ol.length + 1);
+		ols[ols.length-1] = Resource.remote().load("map/overlay/minesup-o");
+		ol[ol.length-1] = new boolean[cmaps.x * cmaps.y];
 	}
 
 	private void subfill(Message msg) {

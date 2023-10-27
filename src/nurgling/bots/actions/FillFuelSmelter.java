@@ -16,7 +16,7 @@ public class FillFuelSmelter implements Action {
             new FillFuelFromPiles(NConfiguration.getInstance().isMinerCredo ? 9 : 12, new NAlias("coal"), smelter_name, new NAlias("coal"),
                     AreasID.smelter, AreasID.coal, "Smelter").run(gui);
         } else {
-            new FillFuelFromPiles(NConfiguration.getInstance().isMinerCredo ? 15 : 20, new NAlias("branch"), smelter_name, new NAlias("branch"),
+            new FillFuelFromPiles(NConfiguration.getInstance().isMinerCredo ? 10 : 13, new NAlias("branch"), smelter_name, new NAlias("branch"),
                     AreasID.smelter, AreasID.branch, "Furnace").run(gui);
         }
         return new Results(Results.Types.SUCCESS);

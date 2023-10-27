@@ -19,8 +19,10 @@ public class ChopperAction implements Action {
     static NAlias tree_name = new NAlias(Arrays.asList("tree", "bushes"),
             Arrays.asList("log", "stump", "block", "oldtrunk"));
     static NAlias stump = new NAlias(Arrays.asList("stump"), Arrays.asList("block", "log", "oldtrunk"));
-    static ArrayList<String> lumber_tools = new ArrayList<String>(
-            Arrays.asList("woodsmansaxe", "axe-m", "stoneaxe"));
+
+
+    public static ArrayList<String> lumber_tools = new ArrayList<String> (
+            Arrays.asList ( "woodsmansaxe", "axe-m", "stoneaxe", "tinkersthrowingaxe" ) );
     static ArrayList<String> shovel_tools = new ArrayList<String>(Arrays.asList("shovel-m", "shovel-w","shovel-t"));
 
     @Override
