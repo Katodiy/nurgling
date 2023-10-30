@@ -1,6 +1,7 @@
 package nurgling;
 
 import haven.*;
+import nurgling.minimap.NSMarker;
 
 public class NMiniMapWnd extends NResizedWidget{
     NMapView map;
@@ -99,7 +100,7 @@ public class NMiniMapWnd extends NResizedWidget{
 
         public boolean clickmarker(DisplayMarker mark, Location loc, int button, boolean press) {
             if(mark.m instanceof MapFile.SMarker) {
-                Gob gob = MarkerID.find(ui.sess.glob.oc, ((MapFile.SMarker)mark.m).oid);
+                Gob gob = MarkerID.find(ui.sess.glob.oc, ((NSMarker)mark.m));
                 if(gob != null)
                     mvclick(map, null, loc, gob, button);
             }

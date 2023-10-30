@@ -1015,9 +1015,9 @@ public class GameUI extends ConsoleHost implements Console.Directory, UI.Message
 //	}
     }
     
-    private String iconconfname() {
+    private String iconconfname(String ver) {
 	StringBuilder buf = new StringBuilder();
-	buf.append("data/mm-icons");
+	buf.append("data/mm-icons" + ver);
 	if(genus != null)
 	    buf.append("/" + genus);
 	if(ui.sess != null)
@@ -1029,22 +1029,29 @@ public class GameUI extends ConsoleHost implements Console.Directory, UI.Message
 	if(ResCache.global == null)
 	    return(new GobIcon.Settings());
 	try {
-	    try(StreamMessage fp = new StreamMessage(ResCache.global.fetch(iconconfname()))) {
+	    try(StreamMessage fp = new StreamMessage(ResCache.global.fetch(iconconfname("-2")))) {
 		return(GobIcon.Settings.load(fp));
 	    }
 	} catch(java.io.FileNotFoundException e) {
-	    return(new GobIcon.Settings());
 	} catch(Exception e) {
 	    new Warning(e, "failed to load icon-conf").issue();
-	    return(new GobIcon.Settings());
 	}
+	try {
+	    try(StreamMessage fp = new StreamMessage(ResCache.global.fetch(iconconfname("")))) {
+		return(GobIcon.Settings.loadold(fp));
+	    }
+	} catch(java.io.FileNotFoundException e) {
+	} catch(Exception e) {
+	    new Warning(e, "failed to load old icon-conf").issue();
+	}
+	return(new GobIcon.Settings());
     }
 
     public void saveiconconf() {
 	if(ResCache.global == null)
 	    return;
 	try {
-	    try(StreamMessage fp = new StreamMessage(ResCache.global.store(iconconfname()))) {
+	    try(StreamMessage fp = new StreamMessage(ResCache.global.store(iconconfname("-2")))) {
 		iconconf.save(fp);
 	    }
 	} catch(Exception e) {
@@ -1064,7 +1071,7 @@ public class GameUI extends ConsoleHost implements Console.Directory, UI.Message
 
 	public boolean clickmarker(DisplayMarker mark, Location loc, int button, boolean press) {
 	    if(mark.m instanceof MapFile.SMarker) {
-		Gob gob = MarkerID.find(ui.sess.glob.oc, ((MapFile.SMarker)mark.m).oid);
+		Gob gob = MarkerID.find(ui.sess.glob.oc, (MapFile.SMarker)mark.m);
 		if(gob != null)
 		    mvclick(map, null, loc, gob, button);
 	    }

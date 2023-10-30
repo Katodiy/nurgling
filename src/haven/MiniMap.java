@@ -40,6 +40,7 @@ import nurgling.NGob;
 import nurgling.NMiniMap;
 import nurgling.NQuestInfo;
 import nurgling.NUtils;
+import nurgling.minimap.NSMarker;
 
 import static haven.MCache.cmaps;
 import static haven.MCache.tilesz;
@@ -233,6 +234,7 @@ public class MiniMap extends Widget {
 	public final GobIcon icon;
 	public final Gob gob;
 	public final GobIcon.Image img;
+	public final GobIcon.Setting conf;
 	public Coord2d rc = null;
 	public Coord sc = null;
 	public double ang = 0.0;
@@ -241,6 +243,7 @@ public class MiniMap extends Widget {
 	public double stime;
 	public boolean notify;
 	private Consumer<UI> snotify;
+	private boolean markchecked;
 
 	public DisplayIcon(GobIcon icon, GobIcon.Setting conf) {
 	    this.icon = icon;
@@ -248,6 +251,7 @@ public class MiniMap extends Widget {
 	    this.img = icon.img();
 	    this.z = this.img.z;
 	    this.stime = Utils.rtime();
+	    this.conf = conf;
 	    if(this.notify = conf.notify)
 		this.snotify = conf.notification();
 	}
@@ -301,18 +305,18 @@ public class MiniMap extends Widget {
     }
 
     public static class MarkerID extends GAttrib {
-	public final long id;
+	public final Marker mark;
 
-	public MarkerID(Gob gob, long id) {
+	public MarkerID(Gob gob, Marker mark) {
 	    super(gob);
-	    this.id = id;
+	    this.mark = mark;
 	}
 
-	public static Gob find(OCache oc, long id) {
+	public static Gob find(OCache oc, Marker mark) {
 	    synchronized(oc) {
 		for(Gob gob : oc) {
 		    MarkerID iattr = gob.getattr(MarkerID.class);
-		    if((iattr != null) && (iattr.id == id))
+		    if((iattr != null) && (iattr.mark == mark))
 			return(gob);
 		}
 	    }
@@ -698,12 +702,12 @@ public class MiniMap extends Widget {
 	return(null);
     }
 
-    public DisplayMarker findmarker(long id) {
+    public DisplayMarker findmarker(Marker rm) {
 	for(DisplayGrid dgrid : display) {
 	    if(dgrid == null)
 		continue;
 	    for(DisplayMarker mark : dgrid.markers(false)) {
-		if((mark.m instanceof SMarker) && (((SMarker)mark.m).oid == id))
+		if(mark.m == rm)
 		    return(mark);
 	    }
 	}
@@ -722,9 +726,56 @@ public class MiniMap extends Widget {
 	return(null);
     }
 
+    public void markobjs() {
+	for(DisplayIcon icon : icons) {
+	    try {
+		if(icon.markchecked)
+		    continue;
+		GobIcon.Image img = icon.icon.img();
+		if(!icon.conf.getmarkablep()) {
+		    icon.markchecked = true;
+		    continue;
+		}
+		Coord tc = icon.gob.rc.floor(tilesz);
+		MCache.Grid obg = ui.sess.glob.map.getgrid(tc.div(cmaps));
+		if(!file.lock.writeLock().tryLock())
+		    continue;
+		SMarker mid = null;
+		try {
+		    MapFile.GridInfo info = file.gridinfo.get(obg.id);
+		    if(info == null)
+			continue;
+		    Coord sc = tc.add(info.sc.sub(obg.gc).mul(cmaps));
+		    SMarker prev = file.smarker(img.res.name, info.seg, sc);
+		    if(prev == null) {
+			if(icon.conf.getmarkp()) {
+			    Resource.Tooltip tt = img.res.flayer(Resource.tooltip);
+			    mid = new NSMarker(info.seg, sc, tt.t, 0, new Resource.Spec(Resource.remote(), img.res.name, img.res.ver));
+			    file.add(mid);
+			} else {
+			    mid = null;
+			}
+		    } else {
+			mid = prev;
+		    }
+		} finally {
+		    file.lock.writeLock().unlock();
+		}
+		if(mid != null) {
+		    synchronized(icon.gob) {
+			icon.gob.setattr(new MarkerID(icon.gob, mid));
+		    }
+		}
+		icon.markchecked = true;
+	    } catch(Loading l) {
+		continue;
+	    }
+	}
+    }
+
     public boolean filter(DisplayIcon icon) {
 	MarkerID iattr = icon.gob.getattr(MarkerID.class);
-	if((iattr != null) && (findmarker(iattr.id) != null))
+	if((iattr != null) && (findmarker(iattr.mark) != null))
 	    return(true);
 	return(false);
     }
