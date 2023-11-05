@@ -16,7 +16,7 @@ public class DanserAction implements Action {
     @Override
     public Results run ( NGameUI gui )
             throws InterruptedException {
-        NUtils.waitEvent(() -> NUtils.getGameUI().cal.ui.sess.glob.ast.hh >= 5 && NUtils.getGameUI().cal.ui.sess.glob.ast.mm >= 1, 10000000);
+        NUtils.waitEvent(() -> NUtils.getGameUI().cal.ui.sess.glob.ast.hh >= 5 && NUtils.getGameUI().cal.ui.sess.glob.ast.mm >= 1 && NUtils.getGameUI().cal.ui.sess.glob.ast.hh <= 7, 10000000);
         NUtils.command(new char[]{'e', 'o'});
         NUtils.waitEvent(() -> NUtils.isCursor("gfx/hud/curs/hand"), 500);
         NUtils.getGameUI().map.wdgmsg("click", Coord.z, NUtils.getGameUI().map.player().rc.floor(posres), 1, 0);
