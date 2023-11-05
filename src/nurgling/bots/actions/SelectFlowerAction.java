@@ -18,6 +18,17 @@ public class SelectFlowerAction implements Action {
         this.type = type;
     }
 
+    boolean skip = false;
+    public SelectFlowerAction(
+            NGItem item,
+            String action,
+            Types type,
+            boolean skip
+    ) {
+        this(item, action, type);
+        this.skip = skip;
+    }
+
     public SelectFlowerAction(
             NAlias name,
             String action,
@@ -58,7 +69,8 @@ public class SelectFlowerAction implements Action {
     @Override
     public Results run(NGameUI gui)
             throws InterruptedException {
-        NUtils.waitEvent(()->NUtils.isPose(NUtils.getGameUI().getMap().player(),new NAlias("idle")),1000);
+        if(!skip)
+            NUtils.waitEvent(()->NUtils.isPose(NUtils.getGameUI().getMap().player(),new NAlias("idle")),1000);
         Results res = null;
         switch (type) {
             case Item:

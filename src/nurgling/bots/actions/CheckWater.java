@@ -25,7 +25,7 @@ public class CheckWater implements Action {
         gui.map.wdgmsg ( "click", Coord.z, gui.getMap ().player ().rc.floor ( posres ), 3, 0, 0);
         NUtils.waitEvent ( () -> gui.getInventory ().getItem ( new NAlias ( "woodencup" ) ) != null, 60 );
         new SelectFlowerAction ( (NGItem) gui.getInventory ().getItem ( new NAlias ( "woodencup" )), "Empty",
-                SelectFlowerAction.Types.Item ).run ( gui );
+                SelectFlowerAction.Types.Item , true ).run ( gui );
         NUtils.waitEvent ( () -> NUtils.getContent (gui.getInventory ().getItem ( new NAlias ( "woodencup" )) ) == null, 10 );
         return new Results ( Results.Types.SUCCESS );
     }
