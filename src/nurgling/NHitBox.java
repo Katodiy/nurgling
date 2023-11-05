@@ -126,6 +126,7 @@ public class NHitBox extends NArea {
         hitboxes.put("gfx/terobjs/furn/boughbed", new NHitBox(new Coord2d(-11, -5.5), new Coord2d(11, 5.5)));
         hitboxes.put("gfx/terobjs/htable", new NHitBox(new Coord2d(-5.5, -8.25), new Coord2d(5.5, 8.25)));
         hitboxes.put("gfx/kritter/cattle/calf", new NHitBox(new Coord2d(-9.625, -5.5), new Coord2d(9.625, 5.5)));
+        hitboxes.put("gfx/kritter/greyseal", new NHitBox(new Coord2d(-9.625, -5.5), new Coord2d(9.625, 5.5)));
         hitboxes.put("gfx/kritter/horse/foal", new NHitBox(new Coord2d(-8.25, -5.5), new Coord2d(8.25, 5.5)));
         hitboxes.put("gfx/kritter/horse/stallion", new NHitBox(new Coord2d(-11, -5.5), new Coord2d(11, 5.5)));
         hitboxes.put("gfx/kritter/horse/mare", new NHitBox(new Coord2d(-11, -5.5), new Coord2d(11, 5.5)));
@@ -197,6 +198,7 @@ public class NHitBox extends NArea {
         hitboxes.put("gfx/kritter/moose", new NHitBox( new Coord2d ( -13.75, -8.25 ), new Coord2d ( 13.75, 8.25 ) ));
         hitboxes.put("gfx/kritter/walrus/walrus", new NHitBox( new Coord2d ( -13.75, -8.25 ), new Coord2d ( 13.75, 8.25 ) ));
         hitboxes.put("gfx/kritter/bear/bear", new NHitBox( new Coord2d ( -13.75, -8.25 ), new Coord2d ( 13.75, 8.25 ) ));
+        hitboxes.put("gfx/kritter/angler/angler", new NHitBox( new Coord2d ( -13.75, -8.25 ), new Coord2d ( 13.75, 8.25 ) ));
         hitboxes.put("gfx/kritter/moose/moose", new NHitBox( new Coord2d ( -13.75, -8.25 ), new Coord2d ( 13.75, 8.25 ) ));
         hitboxes.put("gfx/kritter/reddeer/reddeer", new NHitBox( new Coord2d ( -11, -5.5 ), new Coord2d ( 11, 5.5 ) ));
         hitboxes.put("gfx/kritter/roedeer/roedeer", new NHitBox( new Coord2d ( -8.25, -5.5 ), new Coord2d ( 8.25, 5.5 ) ));
@@ -208,7 +210,6 @@ public class NHitBox extends NArea {
         hitboxes.put("gfx/terobjs/shed", new NHitBox(new Coord2d ( -11, -11 ), new Coord2d ( 11, 11 ) ));
         hitboxes.put("gfx/terobjs/chickencoop", new NHitBox(new Coord2d ( -11, -11 ), new Coord2d ( 11, 11 ) ));
         hitboxes.put("gfx/terobjs/rabbithutch", new NHitBox(new Coord2d ( -11, -11 ), new Coord2d ( 11, 11 ) ));
-        hitboxes.put("gfx/kritter/greyseal", new NHitBox( new Coord2d ( -8.25, -5.5 ), new Coord2d ( 8.25, 5.5 )));
         hitboxes.put("gfx/terobjs/arch/stonestead", new NHitBox( new Coord2d ( -48.125, -27.5 ), new Coord2d ( 48.125, 27.5 )));
         hitboxes.put("gfx/terobjs/vehicle/wheelbarrow", new NHitBox( new Coord2d ( -8.25, -5.5 ), new Coord2d ( 8.25, 5.5 )));
         hitboxes.put("gfx/terobjs/vehicle/plow", new NHitBox( new Coord2d ( -8.25, -5.5 ), new Coord2d ( 8.25, 5.5 )));

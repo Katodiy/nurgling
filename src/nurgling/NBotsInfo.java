@@ -199,6 +199,8 @@ public class NBotsInfo extends NDraggableWidget implements KeyBinding.Bindable {
                     "bots/icons/carrot" ) );
             layouts.get ( 5 ).add ( new NButton ( "Flax", new FarmerFlax (  gui ),
                     "bots/icons/flax" ) );
+            layouts.get ( 5 ).add ( new NButton ( "Hemp", new FarmerHemp (  gui ),
+                    "bots/icons/hemp" ) );
             layouts.get ( 5 ).add ( new NButton ( "Pigs", new Pigs ( gui ),
                     "bots/icons/pigs" ) );
             layouts.get ( 5 ).add ( new NButton ( "Ochs", new Cows ( gui ),
@@ -329,6 +331,8 @@ public class NBotsInfo extends NDraggableWidget implements KeyBinding.Bindable {
                     "bots/icons/fillwaterskin"  ) );
             layouts.get ( 5000 ).add ( new NButton ( "DreamHarvester", new DreamHarvester ( gui ),
                     "bots/icons/dreamer"  ) );
+            layouts.get ( 5000 ).add ( new NButton ( "DanserAction", new Dancer( gui ),
+                    "bots/icons/dance"  ) );
             layouts.get ( 5000 ).add ( new NButton ( "CollectAll", new AllToPile ( gui ),
                     "bots/icons/collectitemstopiles"  ) );
 

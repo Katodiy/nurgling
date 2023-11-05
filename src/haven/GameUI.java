@@ -269,13 +269,15 @@ public class GameUI extends ConsoleHost implements Console.Directory, UI.Message
 	menubuttons(rbtnimg);
 	portrait = ulpanel.add(Frame.with(new Avaview(Avaview.dasz, plid, "avacam"), false), UI.scale(10, 10));
 	buffs = ulpanel.add(new Bufflist(), portrait.c.x + portrait.sz.x + UI.scale(10), portrait.c.y + ((IMeter.fsz.y + UI.scale(2)) * 2) + UI.scale(5 - 2));
-	umpanel.add(new Cal(), Coord.z);
+	umpanel.add(cal = new Cal(), Coord.z);
 //	syslog = chat.add(new ChatUI.Log("System"));
 	opts = add(new OptWnd());
 	opts.hide();
 	zerg = add(new Zergwnd(), Utils.getprefc("wndc-zerg", UI.scale(new Coord(187, 50))));
 	zerg.hide();
     }
+
+	public Cal cal;
 
     protected void attached() {
 	iconconf = loadiconconf();
