@@ -25,18 +25,13 @@ public class Butching implements Action {
     @Override
     public Results run(NGameUI gui)
             throws InterruptedException {
-
-        ArrayList<Gob> gobs = Finder.findObjectsInArea(new NAlias("kritter"),
-                Finder.findNearestMark(AreasID.kritter));
-
         if (new Equip(new NAlias("butcherscleaver")).run(gui).type != Results.Types.SUCCESS)
             new Equip(new NAlias(tools, new ArrayList<String>())).run(gui);
-
-        for (Gob gob : gobs) {
-            if (gob == null) {
-                return new Results(Results.Types.NO_ITEMS);
-            }
-
+        ArrayList<Gob> targets = Finder.findObjectsInArea(new NAlias("kritter"),
+                Finder.findNearestMark(AreasID.kritter));
+        while(targets.size()>0) {
+            targets.sort(NUtils.d_comp);
+            Gob gob = targets.get(0);
             /// Снимаем шкуры
             new CollectFromGob("Skin", gob, new NAlias("butch")).run(gui);
             NUtils.waitEvent(() -> !gui.getInventory().getWItems(hides).isEmpty(), 5);
@@ -52,7 +47,7 @@ public class Butching implements Action {
 
             new TransferIngredient("Suckling's Maw").run(gui);
 
-           // new TransferButCury().run(gui);
+            // new TransferButCury().run(gui);
             if (!NUtils.isIt(gob, new NAlias(new ArrayList<>(Arrays.asList("orca", "spermwhale"))))) {
                 /// Собираем мясо
                 new CollectFromGob("Butcher", gob, new NAlias("butch")).run(gui);
@@ -62,7 +57,7 @@ public class Butching implements Action {
             new TransferMeat().run(gui);
 
             ArrayList<GItem> fat_and_other = gui.getInventory().getWItems(new NAlias("animalfat", "fishyeyeball"));
-            if(fat_and_other.size()>0) {
+            if (fat_and_other.size() > 0) {
                 if (Finder.findObjectInArea(new NAlias("barter"), 1000, Finder.findNearestMark(AreasID.fat)) !=
                         null) {
                     new TransferItemsToBarter(AreasID.fat, new NAlias("animalfat"), false).run(gui);
@@ -71,9 +66,8 @@ public class Butching implements Action {
                 }
             }
 
-            for(GItem item : gui.getInventory().getWItems(new NAlias("Bollock")))
-            {
-                new TransferItemsToBarter(Ingredient.get(item).barter_out, new NAlias(NUtils.getInfo(item)),true).run(gui);
+            for (GItem item : gui.getInventory().getWItems(new NAlias("Bollock"))) {
+                new TransferItemsToBarter(Ingredient.get(item).barter_out, new NAlias(NUtils.getInfo(item)), true).run(gui);
             }
 
             new TransferIngredient("Beast Unborn").run(gui);
@@ -83,7 +77,12 @@ public class Butching implements Action {
             new TransferBones().run(gui);
 
 
+            targets = Finder.findObjectsInArea(new NAlias("kritter"),
+                    Finder.findNearestMark(AreasID.kritter));
         }
+
+
+
         return new Results(Results.Types.SUCCESS);
     }
 
