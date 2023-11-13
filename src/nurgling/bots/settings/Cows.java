@@ -27,6 +27,7 @@ public class Cows extends Settings {
 
     CheckBox ic;
     CheckBox dk;
+    CheckBox ignorebd;
     public Cows() {
         prev = els = add(new NEntryListSet(NConfiguration.getInstance().cowsHerd.keySet()) {
             @Override
@@ -104,6 +105,18 @@ public class Cows extends Settings {
         }, prev.pos("bl").add(0, UI.scale(5))));
         if(!NConfiguration.getInstance().selected_cowsHerd.isEmpty()) {
             dk.set(NConfiguration.getInstance().cowsHerd.get(NConfiguration.getInstance().selected_cowsHerd).disable_killing);
+        }
+        ignorebd = (CheckBox)(prev = add (new CheckBox("Ignore breading for female"){
+            @Override
+            public void changed(boolean val) {
+                if(!NConfiguration.getInstance().selected_cowsHerd.isEmpty()) {
+                    NConfiguration.getInstance().cowsHerd.get(NConfiguration.getInstance().selected_cowsHerd).ignoreBD = val;
+                }
+            }
+        }, prev.pos("bl").add(0, UI.scale(5))));
+
+        if(!NConfiguration.getInstance().selected_cowsHerd.isEmpty()) {
+            ignorebd.set(NConfiguration.getInstance().cowsHerd.get(NConfiguration.getInstance().selected_cowsHerd).ignoreBD);
         }
 
         prev = totalAdult = add(new NSettinsSetI("Total adult:"), prev.pos("bl").add(0, 5));

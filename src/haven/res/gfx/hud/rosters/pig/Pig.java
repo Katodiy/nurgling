@@ -76,7 +76,7 @@ public class Pig extends Entry {
 
 		NConfiguration.PigsHerd herd = NConfiguration.getInstance().pigsHerd.get(NConfiguration.getInstance().selected_pigsHerd);
 
-		double ql = (q > (seedq - herd.breedingGap.get())) ? (q + seedq - herd.breedingGap.get()) / 2. : q + ((seedq - herd.breedingGap.get()) - q) * herd.coverbreed.get();
+		double ql = (!herd.ignoreBD || hog)?(q > (seedq - herd.breedingGap.get())) ? (q + seedq - herd.breedingGap.get()) / 2. : q + ((seedq - herd.breedingGap.get()) - q) * herd.coverbreed.get():q;
 		double m = ql * herd.meatq.get() * meatq / 100.;
 		double qm = meat * herd.meatquan1.get() + ((meat > herd.meatquanth.get()) ? ((meat - herd.meatquanth.get()) * (herd.meatquan2.get() - herd.meatquan1.get())) : 0);
 		double qtruf = prc * herd.trufquan1.get() + ((prc > herd.trufquanth.get()) ? ((prc - herd.trufquanth.get()) * (herd.trufquan2.get() - herd.trufquan1.get())) : 0);

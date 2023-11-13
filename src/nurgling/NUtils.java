@@ -682,12 +682,10 @@ public class NUtils {
 
         @Override
         public void run() {
-            while (getGameUI().map==null || !getGameUI ().ui.sess.glob.map.isLoaded()) {
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
             switch (NConfiguration.botmod.bot){
                 case "Dreamer":
@@ -748,10 +746,6 @@ public class NUtils {
     public static void setGameUI(NGameUI nGameUI) {
         gameUI = nGameUI;
         NTimer.start(gameUI);
-
-        if(NConfiguration.botmod!=null){
-            new Thread(new AutoBot()).start();
-        }
     }
 
     static Optional<Integer> speedValue = Optional.empty();

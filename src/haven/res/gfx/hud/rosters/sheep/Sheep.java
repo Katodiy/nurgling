@@ -77,7 +77,7 @@ public class Sheep extends Entry {
 
 		NConfiguration.SheepsHerd herd = NConfiguration.getInstance().sheepsHerd.get(NConfiguration.getInstance().selected_sheepsHerd);
 
-		double ql = (q > (seedq - herd.breedingGap.get())) ? (q + seedq - herd.breedingGap.get()) / 2. : q + ((seedq - herd.breedingGap.get())-q)*herd.coverbreed.get();
+		double ql = (!herd.ignoreBD || ram)?(q > (seedq - herd.breedingGap.get())) ? (q + seedq - herd.breedingGap.get()) / 2. : q + ((seedq - herd.breedingGap.get())-q)*herd.coverbreed.get():q;
 		double m = ql * herd.meatq.get()* meatq/100.;
 		double qm = meat * herd.meatquan1.get() + (( meat > herd.meatquanth.get()) ? ((meat - herd.meatquanth.get()) * (herd.meatquan2.get() - herd.meatquan1.get())) : 0);
 		double _milk = ql * herd.milkq.get()* milkq/100.;

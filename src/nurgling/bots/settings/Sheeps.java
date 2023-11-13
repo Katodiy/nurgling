@@ -2,6 +2,7 @@ package nurgling.bots.settings;
 
 import haven.CheckBox;
 import haven.Label;
+import haven.UI;
 import nurgling.NConfiguration;
 import nurgling.NEntryListSet;
 import nurgling.NSettinsSetD;
@@ -10,6 +11,7 @@ import nurgling.NSettinsSetI;
 import java.util.ArrayList;
 
 public class Sheeps extends Settings {
+    private final CheckBox ignorebd;
     NEntryListSet els;
     NSettinsSetI totalAdult;
     NSettinsSetI gap;
@@ -113,6 +115,19 @@ public class Sheeps extends Settings {
         }, prev.pos("bl").add(0, 5)));
         if(!NConfiguration.getInstance().selected_sheepsHerd.isEmpty()) {
             dk.set(NConfiguration.getInstance().sheepsHerd.get(NConfiguration.getInstance().selected_sheepsHerd).disable_killing);
+        }
+
+        ignorebd = (CheckBox)(prev = add (new CheckBox("Ignore breading for female"){
+            @Override
+            public void changed(boolean val) {
+                if(!NConfiguration.getInstance().selected_sheepsHerd.isEmpty()) {
+                    NConfiguration.getInstance().sheepsHerd.get(NConfiguration.getInstance().selected_sheepsHerd).ignoreBD = val;
+                }
+            }
+        }, prev.pos("bl").add(0, UI.scale(5))));
+
+        if(!NConfiguration.getInstance().selected_sheepsHerd.isEmpty()) {
+            ignorebd.set(NConfiguration.getInstance().sheepsHerd.get(NConfiguration.getInstance().selected_sheepsHerd).ignoreBD);
         }
 
         prev = totalAdult = add(new NSettinsSetI("Total adult:"), prev.pos("bl").add(0, 5));

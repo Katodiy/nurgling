@@ -77,7 +77,7 @@ public class Horse extends Entry {
 
 		NConfiguration.HorsesHerd herd = NConfiguration.getInstance().horsesHerd.get(NConfiguration.getInstance().selected_horsesHerd);
 
-		double ql = (q > (seedq - herd.breedingGap.get())) ? (q + seedq - herd.breedingGap.get()) / 2. : q + ((seedq - herd.breedingGap.get()) - q) * herd.coverbreed.get();
+		double ql = (!herd.ignoreBD || stallion)?(q > (seedq - herd.breedingGap.get())) ? (q + seedq - herd.breedingGap.get()) / 2. : q + ((seedq - herd.breedingGap.get()) - q) * herd.coverbreed.get():q;
 		double m = ql * herd.meatq.get() * meatq / 100.;
 		double qm = meat * herd.meatquan1.get() + ((meat > herd.meatquanth.get()) ? ((meat - herd.meatquanth.get()) * (herd.meatquan2.get() - herd.meatquan1.get())) : 0);
 		double _stam = milk * herd.stam1.get() + ((milk > herd.stamth.get()) ? ((milk - herd.stamth.get()) * (herd.stam2.get() - herd.stam1.get())) : 0);

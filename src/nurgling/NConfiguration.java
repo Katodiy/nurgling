@@ -143,6 +143,7 @@ public class NConfiguration {
 
     public static class GoatsHerd{
         public boolean ignoreChildren = false;
+        public boolean ignoreBD = false;
         public boolean disable_killing = false;
         public NInteger adultGoats = new NInteger(4);
         public NInteger breedingGap = new NInteger(10);
@@ -164,6 +165,7 @@ public class NConfiguration {
 
     public static class HorsesHerd{
         public boolean ignoreChildren = false;
+        public boolean ignoreBD = false;
         public boolean disable_killing = false;
         public NInteger adultHorse = new NInteger(4);
         public NInteger breedingGap = new NInteger(10);
@@ -228,6 +230,7 @@ public class NConfiguration {
 
     public static class SheepsHerd{
         public boolean ignoreChildren = false;
+        public boolean ignoreBD = false;
         public boolean disable_killing = false;
         public NInteger adultSheeps = new NInteger(4);
         public NInteger breedingGap = new NInteger(10);
@@ -249,6 +252,7 @@ public class NConfiguration {
 
     public static class PigsHerd{
         public boolean ignoreChildren = false;
+        public boolean ignoreBD = false;
         public boolean disable_killing = false;
         public NInteger adultPigs = new NInteger(4);
         public NInteger breedingGap = new NInteger(10);
@@ -266,6 +270,7 @@ public class NConfiguration {
 
     public static class CowsHerd{
         public boolean ignoreChildren = false;
+        public boolean ignoreBD = false;
         public boolean disable_killing = false;
         public NInteger adultCows = new NInteger(4);
         public NInteger breedingGap = new NInteger(10);
@@ -602,6 +607,7 @@ public class NConfiguration {
             jGoatHerd.put("meatquan2", gh.meatquan2);
             jGoatHerd.put("meatquanth", gh.meatquanth);
             jGoatHerd.put("ic", gh.ignoreChildren);
+            jGoatHerd.put("bd", gh.ignoreBD);
             jGoatHerd.put("dk", gh.disable_killing);
             jGoatHerd.put("name", val);
             jgoatsHerds.add(jGoatHerd);
@@ -628,6 +634,7 @@ public class NConfiguration {
             jShepsHerd.put("meatquan2", sh.meatquan2);
             jShepsHerd.put("meatquanth", sh.meatquanth);
             jShepsHerd.put("ic", sh.ignoreChildren);
+            jShepsHerd.put("bd", sh.ignoreBD);
             jShepsHerd.put("dk", sh.disable_killing);
             jShepsHerd.put("name", val);
             jsheepHerds.add(jShepsHerd);
@@ -650,6 +657,7 @@ public class NConfiguration {
             jCowsHerd.put("meatquan2", ch.meatquan2);
             jCowsHerd.put("meatquanth", ch.meatquanth);
             jCowsHerd.put("ic", ch.ignoreChildren);
+            jCowsHerd.put("bd", ch.ignoreBD);
             jCowsHerd.put("dk", ch.disable_killing);
             jCowsHerd.put("name", val);
             jcowsHerds.add(jCowsHerd);
@@ -672,6 +680,7 @@ public class NConfiguration {
             jPigsHerd.put("meatquan2", ph.meatquan2);
             jPigsHerd.put("meatquanth", ph.meatquanth);
             jPigsHerd.put("ic", ph.ignoreChildren);
+            jPigsHerd.put("bd", ph.ignoreBD);
             jPigsHerd.put("dk", ph.disable_killing);
             jPigsHerd.put("name", val);
             jpigsHerds.add(jPigsHerd);
@@ -695,6 +704,7 @@ public class NConfiguration {
             jhorsesHerd.put("meatquan2", hh.meatquan2);
             jhorsesHerd.put("meatquanth", hh.meatquanth);
             jhorsesHerd.put("ic", hh.ignoreChildren);
+            jhorsesHerd.put("bd", hh.ignoreBD);
             jhorsesHerd.put("dk", hh.disable_killing);
             jhorsesHerd.put("name", val);
             jhorsesHerds.add(jhorsesHerd);
@@ -959,6 +969,7 @@ public class NConfiguration {
                     gh.meatquan2.set((jGoatHerd.get("meatquan2") != null ? Double.parseDouble(jGoatHerd.get("meatquan2").toString()) : 0.));
                     gh.meatquanth.set((jGoatHerd.get("meatquanth") != null ? Double.parseDouble(jGoatHerd.get("meatquanth").toString()) : 0.));
                     gh.ignoreChildren = jGoatHerd.get("ic") != null && (boolean) jGoatHerd.get("ic");
+                    gh.ignoreBD = jGoatHerd.get("bd") != null && (boolean) jGoatHerd.get("bd");
                     gh.disable_killing = jGoatHerd.get("dk") != null && (boolean) jGoatHerd.get("dk");
                     if (jGoatHerd.get("name") != null)
                     {
@@ -994,6 +1005,7 @@ public class NConfiguration {
                     sh.meatquan2.set((jShepsHerd.get("meatquan2") != null ? Double.parseDouble(jShepsHerd.get("meatquan2").toString()) : 0.));
                     sh.meatquanth.set((jShepsHerd.get("meatquanth") != null ? Double.parseDouble(jShepsHerd.get("meatquanth").toString()) : 0.));
                     sh.ignoreChildren = jShepsHerd.get("ic") != null && (boolean) jShepsHerd.get("ic");
+                    sh.ignoreBD = jShepsHerd.get("bd") != null && (boolean) jShepsHerd.get("bd");
                     sh.disable_killing = jShepsHerd.get("dk") != null && (boolean) jShepsHerd.get("dk");
                     if (jShepsHerd.get("name") != null) {
                         sheepsHerd.put(jShepsHerd.get("name").toString(), sh);
@@ -1023,6 +1035,7 @@ public class NConfiguration {
                     ch.meatquan2.set((jCowsHerd.get("meatquan2") != null ? Double.parseDouble(jCowsHerd.get("meatquan2").toString()) : 0.));
                     ch.meatquanth.set((jCowsHerd.get("meatquanth") != null ? Double.parseDouble(jCowsHerd.get("meatquanth").toString()) : 0.));
                     ch.ignoreChildren = jCowsHerd.get("ic") != null && (boolean) jCowsHerd.get("ic");
+                    ch.ignoreBD = jCowsHerd.get("bd") != null && (boolean) jCowsHerd.get("bd");
                     ch.disable_killing = jCowsHerd.get("dk") != null && (boolean) jCowsHerd.get("dk");
                     if (jCowsHerd.get("name") != null) {
                         cowsHerd.put(jCowsHerd.get("name").toString(), ch);
@@ -1052,6 +1065,7 @@ public class NConfiguration {
                     ph.meatquan2.set((jPigsHerd.get("meatquan2") != null ? Double.parseDouble(jPigsHerd.get("meatquan2").toString()) : 0.));
                     ph.meatquanth.set((jPigsHerd.get("meatquanth") != null ? Double.parseDouble(jPigsHerd.get("meatquanth").toString()) : 0.));
                     ph.ignoreChildren = jPigsHerd.get("ic") != null && (boolean) jPigsHerd.get("ic");
+                    ph.ignoreBD = jPigsHerd.get("bd") != null && (boolean) jPigsHerd.get("bd");
                     ph.disable_killing = jPigsHerd.get("dk") != null && (boolean) jPigsHerd.get("dk");
                     if (jPigsHerd.get("name") != null) {
                         pigsHerd.put(jPigsHerd.get("name").toString(), ph);
@@ -1084,6 +1098,7 @@ public class NConfiguration {
                     hh.meatquan2.set((jHorsesHerd.get("meatquan2") != null ? Double.parseDouble(jHorsesHerd.get("meatquan2").toString()) : 0.));
                     hh.meatquanth.set((jHorsesHerd.get("meatquanth") != null ? Double.parseDouble(jHorsesHerd.get("meatquanth").toString()) : 0.));
                     hh.ignoreChildren = jHorsesHerd.get("ic") != null && (boolean) jHorsesHerd.get("ic");
+                    hh.ignoreBD = jHorsesHerd.get("bd") != null && (boolean) jHorsesHerd.get("bd");
                     hh.disable_killing = jHorsesHerd.get("dk") != null && (boolean) jHorsesHerd.get("dk");
                     if (jHorsesHerd.get("name") != null) {
                         horsesHerd.put(jHorsesHerd.get("name").toString(), hh);

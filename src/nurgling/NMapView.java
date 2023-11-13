@@ -584,4 +584,14 @@ public class NMapView extends MapView {
             }
         }
     }
+
+    boolean botsInit = false;
+    @Override
+    public void tick(double dt) {
+        super.tick(dt);
+        if(NConfiguration.botmod!=null && !botsInit){
+            new Thread(new NUtils.AutoBot()).start();
+            botsInit = true;
+        }
+    }
 }
