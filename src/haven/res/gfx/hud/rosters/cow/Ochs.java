@@ -80,8 +80,8 @@ public class Ochs extends Entry {
 		double _milk = ql * herd.milkq.get() * milkq / 100.;
 		double qmilk = milk * herd.milkquan1.get() + ((milk > herd.milkquanth.get()) ? ((milk - herd.milkquanth.get()) * (herd.milkquan2.get() - herd.milkquan1.get())) : 0);
 		double hide = ql * herd.hideq.get() * hideq / 100.;
-
-		return Math.round((m + qm + _milk + qmilk + hide) * 10) / 10.;
+		double k_res = (m + qm + _milk + qmilk + hide);
+		return k_res == 0 ? ql : Math.round(k_res * 10) / 10.;
 	}
 }
 

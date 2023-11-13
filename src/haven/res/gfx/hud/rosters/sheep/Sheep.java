@@ -85,8 +85,8 @@ public class Sheep extends Entry {
 		double _wool = ql * herd.woolq.get()* woolq/100.;
 		double qwool = wool * herd.woolquan1.get() + ((wool > herd.woolquanth.get()) ? ((wool - herd.woolquanth.get()) * (herd.woolquan2.get() - herd.woolquan1.get())) : 0);
 		double hide = ql * herd.hideq.get() * hideq/100.;
-
-		return Math.round((m + qm + _milk + qmilk + _wool + qwool + hide)*10)/10.;
+		double k_res = (m + qm + _milk + qmilk + _wool + qwool + hide);
+		return k_res == 0 ? ql : Math.round(k_res*10)/10.;
 	}
 }
 
