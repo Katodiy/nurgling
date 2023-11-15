@@ -58,7 +58,7 @@ public class NOverlayMap extends NSprite{
             for (History h : current) {
                 try {
                     if (isInstalled)
-                        for (int i = 0; i < h.g.ols.length; i++) {
+                        for (int i = 0; i < h.g.ols.length && i < h.g.ol.length; i++) {
                             if (h.g.ols[i]!=null && h.g.ols[i].get().layer(MCache.ResOverlay.class) == id.id) {
                                 if (h.g.ol[i]!=null && h.g.ol[i][h.t.x + (h.t.y * MCache.cmaps.x)] != h.val) {
                                     needUpdate = true;
