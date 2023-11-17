@@ -24,7 +24,7 @@ public class NMap {
 
     public NMap(
             NGameUI gui,
-            long id,
+            ArrayList<Long> id,
             Coord2d endCoord,
             double icell_half,
             int icell_num,
@@ -72,10 +72,19 @@ public class NMap {
 
         synchronized ( gui.ui.sess.glob.oc ) {
             for (Gob gob : gui.ui.sess.glob.oc) {
-                if (gob != null && gob != gui.map.player() && gob.id != id && !NUtils.isLifted(gob)) {
-                    NHitBox checkedHitBox = NHitBox.get(gob, trellis);
-                    if (checkedHitBox != null) {
-                        checkGob(checkedHitBox, gob);
+                if (gob != null && gob != gui.map.player()  && !NUtils.isLifted(gob)) {
+                    boolean ign = false;
+                    for (Long _id : id) {
+                        if (gob.id == _id) {
+                            ign = true;
+                            break;
+                        }
+                    }
+                    if (!ign) {
+                        NHitBox checkedHitBox = NHitBox.get(gob, trellis);
+                        if (checkedHitBox != null) {
+                            checkGob(checkedHitBox, gob);
+                        }
                     }
                 }
             }

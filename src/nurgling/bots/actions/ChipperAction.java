@@ -83,7 +83,7 @@ public class ChipperAction implements Action {
             {
                 new PathFinder( gui, mountain ).run ();
                 do {
-                    if (gui.getInventory().getFreeSpace() < 2) {
+                    if (gui.getInventory().getFreeSpace() < 3) {
                         new TransferToPile(out_area, NHitBox.get(), new NAlias("stockpile-stone"),
                                 stones).run(gui);
                         new PathFinder(gui, mountain).run();
@@ -93,14 +93,11 @@ public class ChipperAction implements Action {
                     gui.map.wdgmsg("click", Coord.z, mountain.floor(posres), 1, 0);
                     NUtils.waitEvent(() -> NUtils.getProg() >= 0, 200);
                     NUtils.waitEvent(() -> (NUtils.getProg() < 0 || NUtils.getStamina() < 0.3 ||
-                            gui.getInventory().getFreeSpace() < 2), 2000);
-                    if (NUtils.getStamina() < 0.3 ||
-                            gui.getInventory().getFreeSpace() < 2) {
-                        NUtils.stopWithClick();
+                            gui.getInventory().getFreeSpace() < 3), 20000);
+                    NUtils.stopWithClick();
+                    if (NUtils.getStamina() < 0.3) {
                         /// Пить
-                        if (NUtils.getStamina() < 0.3) {
-                            new Drink(0.9, withDrop).run(gui);
-                        }
+                        new Drink(0.9, withDrop).run(gui);
                     }
                 }
                 while (NUtils.getStamina() > 0.3);

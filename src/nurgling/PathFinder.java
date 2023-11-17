@@ -155,6 +155,8 @@ public class PathFinder {
 
         @Override
         public void run() {
+
+
             if(vertex.get(start) == null)
                 return;
             vertex.get(start).length = 0;
@@ -230,14 +232,15 @@ public class PathFinder {
                 if(checkBattle()){
                     return;
                 }
-                horseMode = (Finder.findObject(new NAlias("horse"))!= null && gui.map.player().isTag(NGob.Tags.mounted)) ;
-                if(horseMode){
-                    horse = Finder.findObject(new NAlias("horse"));
-                }
+
                 calculateGridSize();
 
-
-                map = new NMap(gui, ignored_id, endCoord, cell_half, cell_num,
+                ArrayList<Long> ignored = new ArrayList<>();
+                if(ignored_id!=-1)
+                    ignored.add(ignored_id);
+                if(horse!=null)
+                    ignored.add(horse.id);
+                map = new NMap(gui, ignored, endCoord, cell_half, cell_num,
                         (enableWater) ? 1 : enableAllWater ? 2 : 0, horseMode, trellis);
                 if (phantom != null) {
                     map.checkGob(phantom_hitbox, new Gob(null, phantom, 0));
@@ -728,7 +731,10 @@ public class PathFinder {
 
         boolean isSuccess = false;
         boolean isReset = false;
-
+        horseMode = NUtils.isPose(NUtils.getGameUI().map.player(),new NAlias("riding-idle"));
+        if(horseMode){
+            horse = Finder.findObject(new NAlias("horse"));
+        }
         Coord2d currentCoord = (target!=null)?target.rc:null;
         while (!isSuccess) {
             endCoord = (target==null)?endCoord:target.rc;
@@ -743,7 +749,7 @@ public class PathFinder {
                     do {
 
                         NUtils.waitEvent(()->NUtils.isPose(gui.map.player(),new NAlias("walk")),10,50);
-                        while ( NUtils.isPose(gui.map.player(), new NAlias("walk"))) {
+                        while ( (NUtils.isPose(gui.map.player(), new NAlias("walk")) && horse == null) || !NUtils.isPose(horse, new NAlias("idle"))) {
                             if (withAlarm) {
                                 if (NUtils.alarm()) {
                                     /// Тревога валим
