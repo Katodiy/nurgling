@@ -42,6 +42,25 @@ public class NArea {
         return count;
     }
 
+    public Coord2d findMountain()
+    {
+        Coord2d pos = new Coord2d ( begin.x, begin.y );
+        int count = 0;
+        while ( pos.x <= end.x ) {
+            while ( pos.y <= end.y ) {
+                Coord pltc = ( new Coord2d ( pos.x / 11, pos.y / 11 ) ).floor ();
+                Resource res_beg = NUtils.getGameUI().ui.sess.glob.map.tilesetr ( NUtils.getGameUI().ui.sess.glob.map.gettile ( pltc ) );
+                if ( NUtils.checkName ( res_beg.name, new NAlias( "mountain" ) ) ) {
+                    return new Coord2d(pos.x, pos.y);
+                }
+                pos.y += MCache.tilesz.y;
+            }
+            pos.y = begin.y;
+            pos.x += MCache.tilesz.x;
+        }
+        return null;
+    }
+
     ArrayList<Coord2d> farm_tiles = new ArrayList<>();
 
     public Coord2d findFarmTile(Coord2d pos){
