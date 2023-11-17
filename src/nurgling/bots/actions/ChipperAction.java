@@ -100,10 +100,7 @@ public class ChipperAction implements Action {
                         new Drink(0.9, withDrop).run(gui);
                     }
                 }
-                while (NUtils.getStamina() > 0.3);
-
-                NUtils.waitEvent(()->NUtils.isPose(NUtils.getGameUI().getMap().player(),new NAlias("idle")),1000);
-                NUtils.stopWithClick ();
+                while (true);
             }
         }
         new TransferToPile(out_area, NHitBox.get(), new NAlias("stockpile-stone"), stones).run(gui);

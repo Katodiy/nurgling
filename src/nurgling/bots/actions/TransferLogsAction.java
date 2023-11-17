@@ -3,6 +3,8 @@ package nurgling.bots.actions;
 import haven.Gob;
 import nurgling.NAlias;
 import nurgling.NGameUI;
+import nurgling.NUI;
+import nurgling.NUtils;
 import nurgling.tools.Finder;
 import nurgling.tools.NArea;
 
@@ -16,10 +18,12 @@ public class TransferLogsAction implements Action {
 
     @Override
     public Results run(NGameUI gui) throws InterruptedException {
-        ArrayList<Gob> logs = Finder.findObjectsInArea(new NAlias("log", "oldtrunk"), input_area);
-        for(Gob log : logs){
-            new LiftObject(log).run(gui);
-            new PlaceLifted(output_area,log.getHitBox(),log).run(gui);
+        while (!Finder.findObjectsInArea(new NAlias("log", "oldtrunk"), input_area).isEmpty()) {
+            ArrayList<Gob> logs = Finder.findObjectsInArea(new NAlias("log", "oldtrunk"), input_area);
+            logs.sort(NUtils.d_comp);
+
+            new LiftObject(logs.get(0)).run(gui);
+            new PlaceLifted(output_area, logs.get(0).getHitBox(), logs.get(0)).run(gui);
         }
         return new Results(Results.Types.SUCCESS);
     }
