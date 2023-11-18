@@ -754,8 +754,8 @@ public class PathFinder {
                     int reset_count = 0;
                     do {
 
-                        NUtils.waitEvent(()->NUtils.isPose(gui.map.player(),new NAlias("walk")),10,50);
-                        while ( (NUtils.isPose(gui.map.player(), new NAlias("walk")) && horse == null) || !NUtils.isPose(horse, new NAlias("idle"))) {
+                        NUtils.waitEvent(()->NUtils.isPose(gui.map.player(),new NAlias("walk") ),10,50);
+                        while ( (NUtils.isPose(gui.map.player(), new NAlias("walk")) && horse == null) || (horse!=null && !NUtils.isPose(horse, new NAlias("idle")))) {
                             if (withAlarm) {
                                 if (NUtils.alarm()) {
                                     /// Тревога валим
