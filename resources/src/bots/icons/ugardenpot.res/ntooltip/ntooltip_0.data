@@ -1,0 +1,6 @@
+#name
+Pot burner
+#req
+kiln, branch, readyPot, ugardenpot
+#text
+This is an garden pot burner. You need to specify the area with unburned garden pots(in containers), fuel (branch only), area where ready gardens pots are stored. You will also need a way to ignite kiln (candelabrum or branches).

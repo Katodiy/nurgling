@@ -272,7 +272,9 @@ public class MCache implements MapSource {
 		Gob second;
 
 		public boolean tick(){
-			return NUtils.getGob(first.id) == null || NUtils.getGob(second.id) == null;
+			if(first!=null && second!=null)
+				return NUtils.getGob(first.id) == null || NUtils.getGob(second.id) == null;
+			return true;
 		}
 	}
 
