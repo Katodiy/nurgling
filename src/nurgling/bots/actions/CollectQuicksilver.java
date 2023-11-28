@@ -19,9 +19,17 @@ public class CollectQuicksilver implements Action {
     public Results run ( NGameUI gui )
             throws InterruptedException {
         if ( name == null ) {
-            NUtils.ContainerProp iprop = NUtils.getContainerType ( Finder.findObject ( new NAlias("smelter")) );
-            name = iprop.name;
-            cap = iprop.cap;
+            if(!Finder.findObjectsInArea(new NAlias("primsmelter"), Finder.findNearestMark(AreasID.smelter)).isEmpty())
+            {
+                NUtils.ContainerProp iprop = NUtils.getContainerType ( Finder.findObject ( new NAlias("smelter")) );
+                name = iprop.name;
+                cap = iprop.cap;
+            }
+            else
+            {
+                cap = "Smelter";
+                name = new NAlias("smelter");
+            }
         }
         
         ArrayList<Gob> in = Finder.findObjects ( name );
