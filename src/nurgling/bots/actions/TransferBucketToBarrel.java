@@ -47,7 +47,7 @@ public class TransferBucketToBarrel implements Action {
             new PathFinder( gui, gob ).run ();
             NUtils.activateItem ( gob );
             int counter = 0;
-            while ( NUtils.checkName ( NUtils.getContent ( gui.vhand.item ), items ) &&
+            while ( NUtils.getContent ( gui.vhand.item )!= null && NUtils.checkName ( NUtils.getContent ( gui.vhand.item ), items ) &&
                     counter < 20 ) {
                 
                 Thread.sleep ( 50 );

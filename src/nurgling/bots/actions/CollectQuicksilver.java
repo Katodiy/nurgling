@@ -27,7 +27,7 @@ public class CollectQuicksilver implements Action {
             }
             else
             {
-                cap = "Smelter";
+                cap = "Ore Smelter";
                 name = new NAlias("smelter");
             }
         }
@@ -40,7 +40,7 @@ public class CollectQuicksilver implements Action {
             WItem activeBucket = null;
             for ( WItem bucket : buckets ) {
                 if ( NUtils.getContent ( bucket.item )!= null && NUtils.checkName ( NUtils.getContent ( bucket.item ),
-                        new NAlias ( new ArrayList<> ( Arrays.asList ( "quicksilver", "free" ) ) ) ) ) {
+                        new NAlias ( new ArrayList<> ( Arrays.asList ( "quicksilver", "free" ) ) ) ) ||  NUtils.getContent ( bucket.item ) == null ) {
                     activeBucket = bucket;
                 }
             }
@@ -58,7 +58,7 @@ public class CollectQuicksilver implements Action {
             }
     
             for ( Gob gob : in ) {
-                if ( NUtils.checkName ( NUtils.getContent ( gui.vhand.item ), new NAlias ( new ArrayList<> ( Arrays.asList ( "quicksilver" ) ) ) ) ) {
+                if ( NUtils.getContent ( gui.vhand.item ) != null && NUtils.checkName ( NUtils.getContent ( gui.vhand.item ), new NAlias ( new ArrayList<> ( Arrays.asList ( "quicksilver" ) ) ) ) ) {
                     if ( NUtils.getContentNumber ( gui.vhand ) > 1 ) {
                         /// Сливаем лишнюю ртуть
                         new TransferBucketToBarrel ( AreasID.barrels, new NAlias ( new ArrayList<> ( Arrays.asList ( "quicksilver", "mercury" ) ) ) ).run (

@@ -51,7 +51,7 @@ public class SmelterAction implements Action {
                         }
                     }
                 }
-                if(needBreak)
+                if(!needBreak)
                     break;
                 Thread.sleep(1000);
             }
