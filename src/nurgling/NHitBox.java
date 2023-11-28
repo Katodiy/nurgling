@@ -200,7 +200,7 @@ public class NHitBox extends NArea {
         hitboxes.put("gfx/kritter/moose", new NHitBox( new Coord2d ( -13.75, -8.25 ), new Coord2d ( 13.75, 8.25 ) ));
         hitboxes.put("gfx/kritter/walrus/walrus", new NHitBox( new Coord2d ( -13.75, -8.25 ), new Coord2d ( 13.75, 8.25 ) ));
         hitboxes.put("gfx/kritter/bear/bear", new NHitBox( new Coord2d ( -13.75, -8.25 ), new Coord2d ( 13.75, 8.25 ) ));
-        hitboxes.put("gfx/kritter/angler/angler", new NHitBox( new Coord2d ( -13.75, -8.25 ), new Coord2d ( 13.75, 8.25 ) ));
+        hitboxes.put("gfx/kritter/caveangler/caveangler", new NHitBox( new Coord2d ( -13.75, -8.25 ), new Coord2d ( 13.75, 8.25 ) ));
         hitboxes.put("gfx/kritter/moose/moose", new NHitBox( new Coord2d ( -13.75, -8.25 ), new Coord2d ( 13.75, 8.25 ) ));
         hitboxes.put("gfx/kritter/reddeer/reddeer", new NHitBox( new Coord2d ( -11, -5.5 ), new Coord2d ( 11, 5.5 ) ));
         hitboxes.put("gfx/kritter/roedeer/roedeer", new NHitBox( new Coord2d ( -8.25, -5.5 ), new Coord2d ( 8.25, 5.5 ) ));
