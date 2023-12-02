@@ -13,6 +13,11 @@ public class Drink implements Action {
     @Override
     public Results run ( NGameUI gui )
             throws InterruptedException {
+        if ( NUtils.getEnergy() < 2500)
+        {
+            NUtils.getUI().msg("ALERT: LOW ENERGY!!!!");
+            throw new RuntimeException();
+        }
         if ( NUtils.getStamina() < stopLvl ) {
             NUtils.stopWithClick ();
             Results.Types bucket;

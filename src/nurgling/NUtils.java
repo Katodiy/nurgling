@@ -1413,6 +1413,11 @@ public class NUtils {
         return stam.a;
     }
 
+    public static double getEnergy() {
+        IMeter.Meter stam = getGameUI().getmeter ( "nrj", 0 );
+        return stam.a*10000;
+    }
+
     public static int getEqupmentId () {
         int id = 0;
         /// Проверяем все зарегистрированные виджеты
