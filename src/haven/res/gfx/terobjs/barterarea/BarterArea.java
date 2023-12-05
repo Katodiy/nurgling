@@ -8,11 +8,12 @@ import nurgling.NConfiguration;
 import static haven.MCache.tilesz;
 
 /* >spr: BarterArea */
-@haven.FromResource(name = "gfx/terobjs/barterarea", version = 1)
+@haven.FromResource(name = "gfx/terobjs/barterarea", version = 2)
 public class BarterArea extends Sprite {
     public final static Indir<Resource> poleres = Resource.remote().load("gfx/terobjs/arch/marketpole", 1);
     public final static Indir<Resource> roperes = Resource.remote().load("gfx/terobjs/barterarea-string", 1);
     public final static float bscale = 1f / 11;
+    final Gob gob = owner.context(Gob.class);
     final Material extramat;
     final Coord3f cc;
     final Sprite pole;
@@ -21,7 +22,7 @@ public class BarterArea extends Sprite {
     final RenderTree.Node bound;
 
     Coord3f gnd(float rx, float ry) {
-	double a = -((Gob)owner).a;
+	double a = -gob.a;
 	float s = (float)Math.sin(a), c = (float)Math.cos(a);
 	float gx = rx * c + ry * s, gy = ry * c - rx * s;
 	if(!NConfiguration.getInstance().flatsurface)
@@ -51,7 +52,7 @@ public class BarterArea extends Sprite {
 	    face = new int[] {4};
 	}
 	pole = Sprite.create(owner, poleres.get(), Message.nil);
-	this.cc = ((Gob)owner).getrc();
+	this.cc = gob.getrc();
 	poles = new Location[vert.length];
 	float bu = vert[0].x, bl = vert[0].y, bb = vert[0].x, br = vert[0].y;
 	for(int i = 0; i < vert.length; i++) {

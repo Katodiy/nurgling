@@ -3,15 +3,18 @@ package haven.res.gfx.terobjs.consobj;
 
 import haven.*;
 import haven.render.*;
+import nurgling.NConfiguration;
+
 import static haven.MCache.tilesz;
 
 /* >spr: Consobj */
 @haven.FromResource(name = "gfx/terobjs/consobj", version = 34)
 public class Consobj extends Sprite implements Sprite.CUpd {
-    public static Resource signres = null;
-    public static Resource poleres = null;
-    private static Material bmat = null;
+    public final static Indir<Resource> signres = Resource.remote().load("gfx/terobjs/sign", 6);
+    public final static Indir<Resource> poleres = Resource.remote().load("gfx/terobjs/arch/conspole", 2);
     public final static float bscale = 1f / 11;
+    private static Material bmat = null;
+    public final Gob gob = owner.context(Gob.class);
     public final ResData built;
     public float done;
     final Coord3f cc;
@@ -21,20 +24,17 @@ public class Consobj extends Sprite implements Sprite.CUpd {
     final RenderTree.Node bound;
 
     Coord3f gnd(float rx, float ry) {
-	double a = -((Gob)owner).a;
+	double a = -gob.a;
 	float s = (float)Math.sin(a), c = (float)Math.cos(a);
 	float gx = rx * c + ry * s, gy = ry * c - rx * s;
-	return(new Coord3f(rx, -ry, map.getcz(gx + cc.x, gy + cc.y) - cc.z));
-    }
+		if(!NConfiguration.getInstance().flatsurface)
+			return(new Coord3f(rx, -ry, map.getcz(gx + cc.x, gy + cc.y) - cc.z));
+		else
+			return(new Coord3f(rx, -ry, 0));
+	}
 
     public Consobj(Owner owner, Resource res, Message sdt) {
 	super(owner, res);
-	if(signres == null){
-		signres = Resource.remote().loadwait("gfx/terobjs/sign", 6);
-	}
-    if(poleres == null){
-        poleres = Resource.remote().loadwait("gfx/terobjs/arch/conspole", 2);
-    }
 	this.map = owner.context(Glob.class).map;
 	if(bmat == null)
 	{
@@ -73,9 +73,9 @@ public class Consobj extends Sprite implements Sprite.CUpd {
 	} else {
 	    built = null;
 	}
-	sign = Sprite.create(owner, signres, Message.nil);
-	pole = Sprite.create(owner, poleres, Message.nil);
-	this.cc = ((Gob)owner).getrc();
+	sign = Sprite.create(owner, signres.get(), Message.nil);
+	pole = Sprite.create(owner, poleres.get(), Message.nil);
+	this.cc = gob.getrc();
 	poles = new Location[vert.length];
 	if(vert.length > 0) {
 	    float bu = vert[0].x, bl = vert[0].y, bb = vert[0].x, br = vert[0].y;

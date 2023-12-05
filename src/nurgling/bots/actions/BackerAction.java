@@ -12,10 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class BackerAction implements Action {
-    final NAlias backed = new NAlias ( new ArrayList<> (
-            Arrays.asList ( "ringofbrodgar", "meatpie", "bread", "jellycake", "pirozhki", "seedcrispbread", "fishpie",
-                    "wellplaicedpie", "marrowcake", "mushroompie", "greenleafpie", "lardycake", "strawberrycake",
-                    "blueberryslice", "honeybun","shepherdspie", "grubpie", "raisinbuttercake" )),
+    final NAlias backed = new NAlias ( new ArrayList<> (Arrays.asList ( "invobjs" )) ,
             new ArrayList<> (Arrays.asList ( "dough" ))  );
     
     @Override

@@ -3,6 +3,8 @@ package nurgling;
 import haven.*;
 import nurgling.minimap.NSMarker;
 
+import java.net.MalformedURLException;
+
 public class NMiniMapWnd extends NResizedWidget{
     NMapView map;
     public Map miniMap;
@@ -32,8 +34,9 @@ public class NMiniMapWnd extends NResizedWidget{
         ResCache mapstore = ResCache.global;
         if(MapFile.mapbase.get() != null) {
             try {
-                mapstore = HashDirCache.get(MapFile.mapbase.get().toURI());
-            } catch(java.net.URISyntaxException e) {
+                mapstore = HashDirCache.get(String.valueOf(MapFile.mapbase.get().toURL()));
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
             }
         }
         if(mapstore != null) {

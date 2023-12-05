@@ -1249,11 +1249,13 @@ public class ChatUI extends Widget {
 		protected void clicked(CharPos pos) {
 			AttributedCharacterIterator inf = pos.part.ti();
 			inf.setIndex(pos.ch.getCharIndex() + pos.part.start);
-			FuckMeGentlyWithAChainsaw url = (FuckMeGentlyWithAChainsaw) inf.getAttribute(ChatAttribute.HYPERLINK);
-			if ((url != null) && (WebBrowser.self != null)) {
+			URI uri = (URI)inf.getAttribute(ChatAttribute.HYPERLINK);
+			if(uri != null) {
 				try {
-					WebBrowser.self.show(url.url);
-				} catch (WebBrowser.BrowserException e) {
+					WebBrowser.sshow(uri.toURL());
+				} catch(java.net.MalformedURLException e) {
+					getparent(GameUI.class).error("Could not follow link.");
+				} catch(WebBrowser.BrowserException e) {
 					getparent(GameUI.class).error("Could not launch web browser.");
 				}
 			}
