@@ -38,7 +38,7 @@ import java.awt.font.TextHitInfo;
 import java.awt.image.BufferedImage;
 import java.text.*;
 import java.text.AttributedCharacterIterator.Attribute;
-import java.net.URL;
+import java.net.URI;
 import java.util.regex.*;
 import java.io.IOException;
 import java.awt.datatransfer.*;
@@ -88,61 +88,47 @@ public class ChatUI extends Widget {
 		public static final Attribute HYPERLINK = new ChatAttribute("hyperlink");
 	}
 
-	public static class FuckMeGentlyWithAChainsaw {
-		/* This wrapper class exists to work around the possibly most
-		 * stupid Java bug ever (and that's saying a lot): That
-		 * URL.equals and URL.hashCode do DNS lookups and
-		 * block. Which, of course, not only sucks performance-wise
-		 * but also breaks actual correct URL equality. */
-		public final URL url;
-
-		public FuckMeGentlyWithAChainsaw(URL url) {
-			this.url = url;
-		}
-	}
-
-	public static class ChatParser extends RichText.Parser {
-		public static final Pattern urlpat = Pattern.compile("\\b((https?://)|(www\\.[a-z0-9_.-]+\\.[a-z0-9_.-]+))[a-z0-9/_.~#%+?&:*=-]*", Pattern.CASE_INSENSITIVE);
-		public static final Map<? extends Attribute, ?> urlstyle = RichText.fillattrs(TextAttribute.FOREGROUND, new Color(64, 64, 255),
-				TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+    public static class ChatParser extends RichText.Parser {
+	public static final Pattern urlpat = Pattern.compile("\\b((https?://)|(www\\.[a-z0-9_.-]+\\.[a-z0-9_.-]+))[a-z0-9/_.~#%+?&:*=-]*", Pattern.CASE_INSENSITIVE);
+	public static final Map<? extends Attribute, ?> urlstyle = RichText.fillattrs(TextAttribute.FOREGROUND, new Color(64, 64, 255),
+										      TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
 
 		public ChatParser(Object... args) {
 			super(args);
 		}
 
-		protected RichText.Part text(PState s, String text, Map<? extends Attribute, ?> attrs) throws IOException {
-			RichText.Part ret = null;
-			int p = 0;
-			while (true) {
-				Matcher m = urlpat.matcher(text);
-				if (!m.find(p))
-					break;
-				URL url;
-				try {
-					String su = text.substring(m.start(), m.end());
-					if (su.indexOf(':') < 0)
-						su = "http://" + su;
-					url = new URL(su);
-				} catch (java.net.MalformedURLException e) {
-					p = m.end();
-					continue;
-				}
-				RichText.Part lead = new RichText.TextPart(text.substring(p, m.start()), attrs);
-				if (ret == null) ret = lead;
-				else ret.append(lead);
-				Map<Attribute, Object> na = new HashMap<Attribute, Object>(attrs);
-				na.putAll(urlstyle);
-				na.put(ChatAttribute.HYPERLINK, new FuckMeGentlyWithAChainsaw(url));
-				ret.append(new RichText.TextPart(text.substring(m.start(), m.end()), na));
-				p = m.end();
-			}
-			if (ret == null)
-				ret = new RichText.TextPart(text, attrs);
-			else
-				ret.append(new RichText.TextPart(text.substring(p), attrs));
-			return (ret);
+	protected RichText.Part text(PState s, String text, Map<? extends Attribute, ?> attrs) throws IOException {
+	    RichText.Part ret = null;
+	    int p = 0;
+	    while(true) {
+		Matcher m = urlpat.matcher(text);
+		if(!m.find(p))
+		    break;
+		URI uri;
+		try {
+		    String su = text.substring(m.start(), m.end());
+		    if(su.indexOf(':') < 0)
+			su = "http://" + su;
+		    uri = Utils.uri(su);
+		} catch(IllegalArgumentException e) {
+		    p = m.end();
+		    continue;
 		}
+		RichText.Part lead = new RichText.TextPart(text.substring(p, m.start()), attrs);
+		if(ret == null) ret = lead; else ret.append(lead);
+		Map<Attribute, Object> na = new HashMap<Attribute, Object>(attrs);
+		na.putAll(urlstyle);
+		na.put(ChatAttribute.HYPERLINK, uri);
+		ret.append(new RichText.TextPart(text.substring(m.start(), m.end()), na));
+		p = m.end();
+	    }
+	    if(ret == null)
+		ret = new RichText.TextPart(text, attrs);
+	    else
+		ret.append(new RichText.TextPart(text.substring(p), attrs));
+	    return(ret);
 	}
+    }
 
 
 	public static class Log extends Channel {
