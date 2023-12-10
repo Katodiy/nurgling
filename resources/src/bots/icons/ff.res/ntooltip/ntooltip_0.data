@@ -1,0 +1,6 @@
+#name
+FineryForge
+#req
+coal, dros, fineryforge, cast_iron
+#text
+This is an Finery forge bot. This is an automatic bot that can be run by the scheduler(hhrunner). You need to specify the area with bars of cast iron, fuel (coal), dros and finery forge area. Can work with the Ingredients system. You will also need a way to ignite ff (candelabrum or branches).

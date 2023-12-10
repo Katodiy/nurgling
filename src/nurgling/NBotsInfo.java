@@ -129,6 +129,8 @@ public class NBotsInfo extends NDraggableWidget implements KeyBinding.Bindable {
                     "bots/icons/cloth" ) );
             layouts.get ( 3 ).add ( new NButton ( "Craft Tarsticks", new TarSticker ( gui ),
                     "bots/icons/tarsticks" ) );
+            layouts.get ( 3 ).add ( new NButton ( "Craft WIron", new FineryForge ( gui ),
+                    "bots/icons/ff" ) );
 //            layouts.get ( 3 ).add ( new NButton ( "Bone Glue", new nurgler.bots.crafting.BoneGlue (  gui ),
 //                    Special.getPath () + "/icons/boneglue.png" ) );
 //            layouts.get ( 3 ).add ( new NButton ( "Harden Leather", new HardenLeatherMaker (  gui ),
