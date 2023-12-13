@@ -41,12 +41,13 @@ public class FFAction implements Action
             for (InContainer ff : ffs) {
                 new PathFinder(gui, ff.gob).run();
                 new OpenTargetContainer(ff.gob, "Finery Forge").run(gui);
-                new TakeMaxFromContainer("Finery Forge", new NAlias("bloom")).run(gui);
+                new TakeMaxFromContainer("Finery Forge", new NAlias("Bloom", "bloom")).run(gui);
                 if (NUtils.getGameUI().getInventory().getWItems(new NAlias("Bloom", "bloom")).size() > 0) {
                     new UseWorkStation(new NAlias("anvil")).run(gui);
                     new Craft("Wrought Iron", new char[]{'c', 'p', 'm', 'w'}).run(gui);
                     new TransferBars().run(gui);
                 }
+                new FillContainers(new NAlias("Dross", "dross"), AreasID.dros, new ArrayList<>(), new TakeMaxFromContainers( new NAlias("Dross", "dross"), AreasID.fineryforge, new ArrayList<>())).run(gui);
             }
 
             new FillContainers(new NAlias("bar-castiron", "Bar of Cast Iron"), AreasID.fineryforge, new ArrayList<>(), new TakeMaxFromContainers(new NAlias("bar-castiron", "Bar of Cast Iron"), AreasID.cast_iron, new ArrayList<>())).run(gui);
