@@ -38,12 +38,12 @@ public class ResDrawable extends Drawable implements EquipTarget {
     public MessageBuf sdt;
 
     public ResDrawable(Gob gob, Indir<Resource> res, Message sdt, boolean old) {
-	super(gob);
-	this.res = res;
-	this.sdt = new MessageBuf(sdt);
-	this.rres = res.get();
-	spr = Sprite.create(gob, rres, this.sdt.clone());
-    spr.age();
+        super(gob);
+        this.res = res;
+        this.sdt = new MessageBuf(sdt);
+        this.rres = res.get();
+        spr = Sprite.create(gob, rres, this.sdt.clone());
+        spr.age();
     }
 
     public ResDrawable(Gob gob, Indir<Resource> res, Message sdt) {

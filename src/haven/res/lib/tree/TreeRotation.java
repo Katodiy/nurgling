@@ -7,9 +7,11 @@ package haven.res.lib.tree;
 
 import haven.*;
 import haven.render.*;
+import haven.res.lib.leaves.*;
+import haven.res.lib.svaj.*;
+import java.util.*;
 
-
-@FromResource(name = "lib/tree", version = 14)
+@haven.FromResource(name = "lib/tree", version = 15)
 public class TreeRotation extends GAttrib implements Gob.SetupMod {
     public final Location rot;
 

@@ -8,7 +8,7 @@ import static haven.render.sl.Cons.*;
 import static haven.render.sl.Type.*;
 import static haven.render.sl.Function.PDir.*;
 
-@FromResource(name = "lib/svaj", version = 24)
+@haven.FromResource(name = "lib/svaj", version = 25)
 public class Svaj extends State implements InstanceBatch.AttribState {
     private static final float[] nildat = {0, 0, 0, 0};
     public static final Slot<Svaj> slot = new Slot<Svaj>(Slot.Type.GEOM, Svaj.class)

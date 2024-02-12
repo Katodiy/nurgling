@@ -11,8 +11,9 @@ import haven.res.lib.leaves.*;
 import haven.res.lib.svaj.*;
 import java.util.*;
 
-@FromResource(name = "lib/tree", version = 14)
+@haven.FromResource(name = "lib/tree", version = 15)
 public class Tree extends Sprite {
+    public final Gob gob = (owner instanceof Gob) ? (Gob)owner : owner.fcontext(Gob.class, false);
     public final float fscale;
     public final RenderTree.Node[][] parts;
     public int stage, sel;
@@ -89,17 +90,16 @@ public class Tree extends Sprite {
 	return(Location.rot(axis, (float)ra));
     }
 
-    public static Location rndrot(Owner owner) {
+    public static Location rndrot(Gob owner) {
 	if(owner instanceof Gob)
-	    return(rndrot(randoom((Gob)owner)));
+	    return(rndrot(randoom(owner)));
 	return(null);
     }
 
     public Tree(Owner owner, Resource res, float scale, int s, int fl) {
 	super(owner, res);
 	this.fscale = scale;
-	if(owner instanceof Gob) {
-	    Gob gob = (Gob)owner;
+	if(gob != null) {
 	    gob.setattr(new TreeRotation(gob, rndrot(gob)));
 	    gob.setattr(new GobSvaj(gob));
 	    if(fscale != 1.0f)
@@ -136,9 +136,9 @@ public class Tree extends Sprite {
 		    break leaves;
 		}
 		Random rrand = lrand;
-		if(owner instanceof Gob) {
+		if(gob != null) {
 		    try {
-			rrand = randoom((Gob)owner);
+			rrand = randoom(gob);
 		    } catch(Loading l) {
 			break leaves;
 		    }
@@ -150,7 +150,7 @@ public class Tree extends Sprite {
 	    try {
 		if(!slots.isEmpty() && (lrand.nextDouble() > Math.pow(lrate, dt))) {
 		    Location.Chain loc = Utils.el(slots).state().get(Homo3D.loc);
-		    FallingLeaves fx = FallingLeaves.get(((Gob)owner).glob);
+		    FallingLeaves fx = FallingLeaves.get(gob.glob);
 		    Material mat = leaves.mat[lrand.nextInt(leaves.mat.length)];
 		    fx.addleaf(new StdLeaf(fx, fx.onevertex(loc, leaves.mesh), mat));
 		}

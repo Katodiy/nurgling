@@ -8,9 +8,10 @@ import static haven.render.sl.Cons.*;
 import static haven.render.sl.Type.*;
 import static haven.render.sl.Function.PDir.*;
 
-@FromResource(name = "lib/svaj", version = 24)
+@haven.FromResource(name = "lib/svaj", version = 25)
 public class SvajOl extends Sprite implements Gob.SetupMod {
     public static final float v1 = 0.5f, v2 = 0.5f;
+    public final Gob gob = (owner instanceof Gob) ? (Gob)owner : owner.fcontext(Gob.class, false);
     public final Coord3f zhvec, chvec;
     public final float zhfreq, chfreq;
 
@@ -32,17 +33,14 @@ public class SvajOl extends Sprite implements Gob.SetupMod {
 
     private Svaj cur = null;
     private State st() {
-	if(!(owner instanceof Gob))
-	    return(null);
-	Gob gob = (Gob)owner;
 	Coord3f origin;
 	try {
 	    origin = gob.getc();
 	} catch(Loading l) {
 	    return(cur);
 	}
+	origin.y = -origin.y;
 	if((cur == null) || !Utils.eq(origin, cur.origin)) {
-	    origin.y = -origin.y;
 	    cur = new Svaj(zhvec, zhfreq, chvec, chfreq, origin);
 	}
 	return(cur);

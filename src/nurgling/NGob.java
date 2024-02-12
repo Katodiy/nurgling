@@ -736,7 +736,7 @@ public class NGob {
                         if (gob.isTag(Tags.stalagoomba))
                             NAlarmManager.play(Tags.stalagoomba);
 
-                        if (gob.getattr(Composite.class) != null && gob.getpose() != null && !gob.isTag(Tags.knocked) && gob.isTag(Tags.kritter_is_ready)) {
+                        if (gob.getattr(Composite.class) != null && !gob.isTag(Tags.knocked) && gob.isTag(Tags.kritter_is_ready)) {
                             for (String ring : NConfiguration.getInstance().rings.keySet()) {
                                 if (gob.getResName().contains(ring)) {
                                     NConfiguration.Ring ringprop = NConfiguration.getInstance().rings.get(ring);
