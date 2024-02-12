@@ -296,36 +296,40 @@ public class OCache implements Iterable<Gob> {
 		sdt = new MessageBuf(sdt);
 		Gob.Overlay nol = null;
 		if(ol == null) {
-		    g.addol(nol = new Gob.Overlay(g, olid, res, sdt), false);
-			if(sdt.rt == 7) {
-				MessageBuf buf = new MessageBuf(sdt);
-				int dmg = buf.int32();
-				buf.uint8();
-				int type = buf.uint16();
-				if(type == 64527) { // hhp
-					Gob.Overlay ool = g.findol(2777);
-					if(ool == null)
-						g.addol(ool = new Gob.Overlay(g, new NDmgOverlay(nol.gob, res.get ()), 2777));
-					((NDmgOverlay)ool.spr).updDmg(dmg, 1);
-				} else if(type == 36751) { // armor
-					Gob.Overlay ool = g.findol(2777);
-					if(ool == null)
-						g.addol(ool = new Gob.Overlay(g, new NDmgOverlay(nol.gob, res.get()), 2777));
-					((NDmgOverlay)ool.spr).updDmg(dmg, 2);
-				} else if(type == 61455) { // soft hp
-					Gob.Overlay ool = g.findol(2777);
-					if(ool == null)
-						g.addol(ool = new Gob.Overlay(g, new NDmgOverlay(nol.gob, res.get()), 2777));
-					((NDmgOverlay)ool.spr).updDmg(dmg, 0);
-				}
-			}
+		    nol = new Gob.Overlay(g, olid, res, sdt);
+		    nol.old = msg.old;
+		    g.addol(nol, false);
+            if(sdt.rt == 7) {
+                MessageBuf buf = new MessageBuf(sdt);
+                int dmg = buf.int32();
+                buf.uint8();
+                int type = buf.uint16();
+                if(type == 64527) { // hhp
+                    Gob.Overlay ool = g.findol(2777);
+                    if(ool == null)
+                        g.addol(ool = new Gob.Overlay(g, new NDmgOverlay(nol.gob, res.get ()), 2777));
+                    ((NDmgOverlay)ool.spr).updDmg(dmg, 1);
+                } else if(type == 36751) { // armor
+                    Gob.Overlay ool = g.findol(2777);
+                    if(ool == null)
+                        g.addol(ool = new Gob.Overlay(g, new NDmgOverlay(nol.gob, res.get()), 2777));
+                    ((NDmgOverlay)ool.spr).updDmg(dmg, 2);
+                } else if(type == 61455) { // soft hp
+                    Gob.Overlay ool = g.findol(2777);
+                    if(ool == null)
+                        g.addol(ool = new Gob.Overlay(g, new NDmgOverlay(nol.gob, res.get()), 2777));
+                    ((NDmgOverlay)ool.spr).updDmg(dmg, 0);
+                }
+            }
 		} else if(!ol.sdt.equals(sdt)) {
 		    if(ol.spr instanceof Sprite.CUpd) {
 			MessageBuf copy = new MessageBuf(sdt);
 			((Sprite.CUpd)ol.spr).update(copy);
 			ol.sdt = copy;
 		    } else {
-			g.addol(nol = new Gob.Overlay(g, olid, res, sdt), false);
+			nol = new Gob.Overlay(g, olid, res, sdt);
+			nol.old = msg.old;
+			g.addol(nol, false);
 			ol.remove(false);
 		    }
 		}

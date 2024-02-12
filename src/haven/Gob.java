@@ -35,7 +35,7 @@ import haven.render.*;
 import nurgling.*;
 import nurgling.bots.actions.NGAttrib;
 
-public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, EquipTarget, Skeleton.HasPose {
+public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton.ModOwner, EquipTarget {
     public Coord2d rc;
     public double a;
     public boolean virtual = false;
@@ -57,7 +57,7 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 	public final Indir<Resource> res;
 	public MessageBuf sdt;
 	public Sprite spr;
-	public boolean delign = false;
+	public boolean delign = false, old = false;
 	private Collection<RenderTree.Slot> slots = null;
 	private boolean added = false;
 
@@ -88,6 +88,8 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 	private void init() {
 	    if(spr == null) {
 		spr = Sprite.create(gob, res.get(), sdt);
+		if(old)
+		    spr.age();
 		if(added && (spr instanceof SetupMod))
 		    gob.setupmods.add((SetupMod)spr);
 	    }
@@ -122,10 +124,20 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 	    }
 	    remove0();
 	    gob.ols.remove(this);
+	    removed();
 	}
 
 	public void remove() {
 	    remove(true);
+	}
+
+	protected void removed() {
+	}
+
+	public boolean tick(double dt) {
+	    if(spr == null)
+		return(false);
+	    return(spr.tick(dt));
 	}
 
 	public void added(RenderTree.Slot slot) {
@@ -459,7 +471,7 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 		    ol.init();
 		} catch(Loading e) {}
 	    } else {
-		boolean done = ol.spr.tick(dt);
+		boolean done = ol.tick(dt);
 		if((!ol.delign || (ol.spr instanceof Sprite.CDel)) && done) {
 		    ol.remove0();
 		    i.remove();
@@ -472,7 +484,6 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 	if(NUtils.getGameUI()!= null && NUtils.getGameUI().getMap()!=null)
 		updateCustom(this);
     }
-
 
     public void gtick(Render g) {
 	Drawable d = getattr(Drawable.class);
@@ -526,9 +537,7 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 	}
 	ol.init();
 	ol.add0();
-	if(ols.add(ol)) {
-//		updateOverlays(this);
-	}
+	ols.add(ol);
     }
     public void addol(Overlay ol) {
 	addol(ol, true);
@@ -850,13 +859,6 @@ public class Gob extends NGob implements RenderTree.Node, Sprite.Owner, Skeleton
 	Drawable d = getattr(Drawable.class);
 	if(d != null)
 	    return(d.getres());
-	return(null);
-    }
-
-    public Skeleton.Pose getpose() {
-	Drawable d = getattr(Drawable.class);
-	if(d != null)
-	    return(d.getpose());
 	return(null);
     }
 

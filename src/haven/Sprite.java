@@ -50,13 +50,15 @@ public abstract class Sprite implements RenderTree.Node {
 	public Resource getres();
     }
 
-    public class RecOwner implements Owner, Skeleton.HasPose {
+    public class RecOwner implements Owner {
 	public Random mkrandoom() {return(owner.mkrandoom());}
 	public <T> T context(Class<T> cl) {return(owner.context(cl));}
 
 	public Resource getres() {return(res);}
 
-	public Skeleton.Pose getpose() {return(Skeleton.getpose(Sprite.this));}
+	public String toString() {
+	    return(String.format("#<rec-owner of %s, owned by %s>", Sprite.this, owner));
+	}
     }
 
     public static interface CDel {
@@ -138,6 +140,9 @@ public abstract class Sprite implements RenderTree.Node {
     }
 
     public void gtick(Render g) {
+    }
+
+    public void age() {
     }
 
     public void dispose() {

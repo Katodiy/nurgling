@@ -36,14 +36,18 @@ public class ResDrawable extends Drawable implements EquipTarget {
     public final Resource rres;
     public final Sprite spr;
     public MessageBuf sdt;
-    // private double delay = 0; XXXRENDER
 
-    public ResDrawable(Gob gob, Indir<Resource> res, Message sdt) {
+    public ResDrawable(Gob gob, Indir<Resource> res, Message sdt, boolean old) {
 	super(gob);
 	this.res = res;
 	this.sdt = new MessageBuf(sdt);
 	this.rres = res.get();
 	spr = Sprite.create(gob, rres, this.sdt.clone());
+    spr.age();
+    }
+
+    public ResDrawable(Gob gob, Indir<Resource> res, Message sdt) {
+	this(gob, res, sdt, false);
     }
 
     public ResDrawable(Gob gob, Resource res) {
@@ -70,10 +74,6 @@ public class ResDrawable extends Drawable implements EquipTarget {
 
     public Resource getres() {
 	return(rres);
-    }
-
-    public Skeleton.Pose getpose() {
-	return(Skeleton.getpose(spr));
     }
 
     public Gob.Placer placer() {
@@ -113,7 +113,7 @@ public class ResDrawable extends Drawable implements EquipTarget {
 		((Sprite.CUpd)d.spr).update(sdt);
 		d.sdt = sdt;
 	    } else if((d == null) || (d.res != res) || !d.sdt.equals(sdt)) {
-		g.setattr(new ResDrawable(g, res, sdt));
+		g.setattr(new ResDrawable(g, res, sdt, msg.old));
 	    }
 	}
     }
